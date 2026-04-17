@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Torah · Paracha</title>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&family=Noto+Sans+Hebrew:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:16px;min-height:100vh}
+
+/* HEADER */
+#hdr{position:sticky;top:0;z-index:100;background:#1a1208;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
+#hdr-title{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#c9a84c}
+#hdr-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;color:#c9a84c}
+#btn-back{display:none;background:none;border:1px solid #c9a84c;color:#c9a84c;padding:6px 14px;font-size:13px;letter-spacing:2px;cursor:pointer;-webkit-appearance:none;border-radius:0;font-family:Georgia,serif}
+
+/* HOME */
+#view-home{padding:18px 16px;max-width:860px;margin:0 auto}
+.datebar{padding:13px 16px;margin-bottom:24px;background:#1a1208;border-radius:2px;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:14px}
+.datebar:active{background:#2a2010}
+.datebar-icon{font-size:28px;flex-shrink:0}
+.datebar-text{flex:1;text-align:right}
+.datebar .dh{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;color:#e8c870;direction:rtl;margin-bottom:3px}
+.datebar .df{font-size:13px;color:#c9a84c;letter-spacing:1px}
+.datebar .dtap{font-size:10px;color:#8a6820;letter-spacing:2px;margin-top:3px}
+
+.wbanner{background:#1a1208;padding:20px 18px;margin-bottom:28px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;border-left:4px solid #c9a84c}
+.wlabel{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#c9a84c;margin-bottom:6px}
+.wname{font-family:'Frank Ruhl Libre',serif;font-size:26px;color:#f5f0e8;margin-bottom:3px}
+.wheb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;color:#e8c870;direction:rtl;margin-bottom:5px}
+.wmeta{font-size:13px;color:#9a8860;font-style:italic}
+.warrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#c9a84c;font-size:20px}
+
+.bsec{margin-bottom:28px}
+.btitle{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6a5e40;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid #d4c8a8;display:flex;align-items:center;gap:10px}
+.btitle span{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;letter-spacing:0}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#d4c8a8;border:1px solid #d4c8a8}
+.pcard{background:#fdf9f2;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pcard:active{background:#ede8d8}
+.pcard.cur{background:#1a1208}
+.pnum{font-size:9px;color:#9a8860;letter-spacing:1px;margin-bottom:2px}
+.pname{font-family:'Frank Ruhl Libre',serif;font-size:14px;color:#1a1208;line-height:1.2}
+.pheb{font-family:'Noto Sans Hebrew',sans-serif;font-size:12px;color:#6a5e40;direction:rtl;margin-top:2px}
+.pcard.cur .pname{color:#e8c870}
+.pcard.cur .pnum{color:#8a7040}
+.pcard.cur .pheb{color:#c9a84c}
+
+/* BANNERS */
+.bday-banner{background:#c9a84c;color:#1a1208;padding:10px 16px;margin-bottom:10px;font-size:14px;font-weight:bold;border-radius:2px;display:flex;align-items:center;gap:8px}
+.fete-banner{background:#1a1208;border-left:4px solid #e8c870;color:#e8c870;padding:10px 16px;margin-bottom:10px;font-size:14px;border-radius:2px}
+.fete-banner .fete-name{font-family:'Frank Ruhl Libre',serif;font-size:16px;font-weight:bold}
+.fete-banner .fete-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;direction:rtl;color:#c9a84c;margin-top:2px}
+.shabbat-banner{background:#f2ede2;border:1px solid #c9a84c;padding:12px 16px;margin-bottom:16px;border-radius:2px;display:flex;align-items:center;gap:12px}
+.shabbat-icon{font-size:22px;flex-shrink:0}
+.shabbat-info{flex:1}
+.shabbat-title{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8a6820;margin-bottom:4px}
+.shabbat-times{font-size:15px;color:#1a1208;font-weight:bold}
+.shabbat-times span{color:#8a6820;font-weight:normal;font-size:13px;margin:0 4px}
+
+/* DETAIL */
+#view-detail{display:none;padding:18px 16px;max-width:860px;margin:0 auto}
+.dhdr{margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid #1a1208}
+.dbook{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6a5e40;margin-bottom:5px}
+.dname{font-family:'Frank Ruhl Libre',serif;font-size:30px;color:#1a1208;line-height:1.1;margin-bottom:3px}
+.dheb{font-family:'Noto Sans Hebrew',sans-serif;font-size:21px;color:#8a6820;direction:rtl;margin-bottom:5px}
+.dref{font-size:13px;color:#6a5e40;font-style:italic}
+.tabs{display:flex;border-bottom:1px solid #d4c8a8;margin-bottom:20px;margin-top:20px}
+.tab{flex:1;text-align:center;padding:10px 4px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#6a5e40;cursor:pointer;border-bottom:2px solid transparent;-webkit-tap-highlight-color:transparent}
+.tab.active{color:#1a1208;border-bottom-color:#c9a84c;font-weight:bold}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Hebrew */
+.hebblock{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;line-height:2.3;color:#1a1208;direction:rtl;text-align:right;font-weight:400}
+.vrow{display:block;margin-bottom:8px;padding:6px 12px 6px 6px;border-right:3px solid #c9a84c;background:#fdf9f2}
+.vn{font-size:11px;color:#8a6820;margin-left:8px;vertical-align:super;font-style:italic}
+.sefaria-credit{text-align:center;font-size:11px;color:#9a8860;padding:12px;margin-top:8px;border-top:1px solid #d4c8a8;letter-spacing:1px}
+
+/* Loading */
+.loading-txt{text-align:center;padding:40px 20px;color:#6a5e40;font-style:italic;font-size:15px}
+.dots{display:inline-flex;gap:5px;margin-top:10px}
+.dots span{width:6px;height:6px;background:#c9a84c;border-radius:50%;animation:blink 1.2s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+/* Summary */
+.sumblock{font-size:16px;line-height:1.9;color:#1a1208}
+.sumblock p{margin-bottom:14px}
+.sumblock strong{color:#5a3800}
+
+/* Commentary */
+.comblock{font-size:16px;line-height:2.0;color:#f0e6d0;font-style:italic;background:#1a1208;padding:20px 18px;margin:0 -16px}
+.comblock p{margin-bottom:16px}
+.comblock strong{color:#e8c870;font-style:normal;font-weight:bold}
+.sources{display:block;font-size:12px;font-style:normal;color:#c9a84c;border-top:1px solid #3a3020;padding-top:12px;margin-top:8px;letter-spacing:1px}
+
+/* CALENDAR MODAL */
+#cal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto}
+#cal-overlay.open{display:flex}
+#cal-box{background:#fdf9f2;width:100%;max-width:420px;border-top:3px solid #c9a84c;margin:0 12px 40px;font-family:Georgia,serif;color:#1a1208}
+#cal-header{background:#1a1208;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+#cal-header-dates{flex:1}
+#cal-greg{font-size:13px;color:#c9a84c;letter-spacing:1px;margin-bottom:3px}
+#cal-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;color:#e8c870;direction:rtl}
+#cal-close{background:none;border:1px solid #c9a84c;color:#c9a84c;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none}
+#cal-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #d4c8a8;background:#f2ede2}
+#cal-nav button{background:none;border:none;font-size:20px;cursor:pointer;color:#8a6820;padding:4px 10px;-webkit-appearance:none}
+#cal-month-label{font-size:14px;font-weight:bold;color:#1a1208;text-align:center}
+#cal-month-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:#8a6820;text-align:center}
+#cal-grid{padding:8px 12px 4px}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+.cal-dow{text-align:center;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#9a8860;padding:4px 0}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
+.cal-day{text-align:center;padding:5px 2px;cursor:pointer;border-radius:2px;-webkit-tap-highlight-color:transparent;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px}
+.cal-day:active{background:#ede8d8}
+.cal-day.empty{cursor:default}
+.cal-day.today{background:#1a1208;border-radius:2px}
+.cal-day.today .cal-gday{color:#e8c870}
+.cal-day.today .cal-hday{color:#c9a84c}
+.cal-day.has-event{border-bottom:2px solid #c9a84c}
+.cal-gday{font-size:14px;color:#1a1208;font-weight:bold;line-height:1}
+.cal-hday{font-family:'Noto Sans Hebrew',sans-serif;font-size:10px;color:#8a6820;line-height:1}
+.cal-edot{width:5px;height:5px;background:#c9a84c;border-radius:50%;margin-top:1px}
+
+/* Day info popup */
+#cal-dayinfo{display:none;padding:12px 16px;background:#1a1208;border-top:1px solid #3a3020}
+
+/* Conversion */
+#cal-conv{padding:14px 16px;border-top:1px solid #d4c8a8;background:#f7f3eb}
+#cal-conv h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:10px}
+.conv-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.conv-row label{font-size:12px;color:#6a5e40;width:70px;flex-shrink:0}
+.conv-row input,.conv-row select{flex:1;min-width:60px;padding:6px 8px;border:1px solid #d4c8a8;background:#fdf9f2;color:#1a1208;font-size:14px;font-family:Georgia,serif;-webkit-appearance:none;border-radius:0}
+.conv-btn{width:100%;padding:9px;background:#1a1208;color:#c9a84c;border:none;font-size:13px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;margin-top:4px;-webkit-appearance:none}
+#conv-result{margin-top:10px;padding:10px 12px;background:#1a1208;font-size:15px;color:#e8c870;display:none;text-align:center;font-family:'Noto Sans Hebrew',sans-serif;line-height:1.8}
+
+/* Add event */
+#cal-addevent{padding:14px 16px;border-top:1px solid #d4c8a8}
+#cal-addevent h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:10px}
+#cal-addevent input[type=text]{width:100%;padding:8px 10px;border:1px solid #d4c8a8;background:#fdf9f2;color:#1a1208;font-size:14px;font-family:Georgia,serif;margin-bottom:8px;-webkit-appearance:none;border-radius:0}
+.ev-type-row{display:flex;gap:8px;margin-bottom:8px}
+.ev-type-btn{flex:1;padding:7px 4px;border:1px solid #d4c8a8;background:#fdf9f2;font-size:12px;cursor:pointer;text-align:center;color:#6a5e40;-webkit-appearance:none;border-radius:0;font-family:Georgia,serif}
+.ev-type-btn.sel{background:#1a1208;color:#c9a84c;border-color:#1a1208}
+#ev-date-display{font-size:13px;color:#8a6820;font-style:italic;margin-bottom:8px}
+.add-ev-btn{width:100%;padding:9px;background:#c9a84c;color:#1a1208;border:none;font-size:13px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;font-weight:bold;-webkit-appearance:none}
+#events-list{padding:0 16px 16px}
+#events-list h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:8px;padding-top:12px;border-top:1px solid #d4c8a8}
+.ev-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ede8d8;font-size:14px}
+.ev-item-name{color:#1a1208;font-weight:bold}
+.ev-item-date{font-size:12px;color:#8a6820;font-style:italic}
+.ev-del{background:none;border:none;color:#c9a84c;font-size:18px;cursor:pointer;padding:0 4px}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div id="hdr-title">Torah · Paracha</div>
+  <div id="hdr-heb">תּוֹרָה</div>
+  <button id="btn-back" onclick="goHome()">← Retour</button>
+</div>
+
+<!-- CALENDAR MODAL -->
+<div id="cal-overlay" onclick="calOverlayClick(event)">
+ <div id="cal-box">
+  <div id="cal-header">
+   <div id="cal-header-dates"><div id="cal-greg"></div><div id="cal-heb"></div></div>
+   <button id="cal-close" onclick="closeCal()">✕</button>
+  </div>
+  <div id="cal-nav">
+   <button onclick="calMove(-1)">‹</button>
+   <div><div id="cal-month-label"></div><div id="cal-month-heb"></div></div>
+   <button onclick="calMove(1)">›</button>
+  </div>
+  <div id="cal-grid"></div>
+  <div id="cal-dayinfo"><div id="cal-dayinfo-content"></div></div>
+  <div id="cal-conv">
+   <h4>Conversion de date</h4>
+   <div class="conv-row">
+    <label>Jour</label>
+    <input type="number" id="cv-day" min="1" max="31" value="17">
+    <select id="cv-mon">
+     <option value="0">Janvier</option><option value="1">Février</option><option value="2">Mars</option>
+     <option value="3">Avril</option><option value="4">Mai</option><option value="5">Juin</option>
+     <option value="6">Juillet</option><option value="7">Août</option><option value="8">Septembre</option>
+     <option value="9">Octobre</option><option value="10">Novembre</option><option value="11">Décembre</option>
+    </select>
+    <input type="number" id="cv-year" min="1900" max="2100" value="2026" style="max-width:80px">
+   </div>
+   <button class="conv-btn" onclick="doConvert()">→ Convertir en date hébraïque</button>
+   <div id="conv-result"></div>
+  </div>
+  <div id="cal-addevent">
+   <h4>Ajouter un anniversaire / événement</h4>
+   <input type="text" id="ev-name" placeholder="Nom de l'événement">
+   <div class="ev-type-row">
+    <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
+    <button class="ev-type-btn" id="evt-heb" onclick="setEvType('heb')">Date hébraïque</button>
+   </div>
+   <div id="ev-date-display">Sélectionnez un jour →</div>
+   <button class="add-ev-btn" onclick="addEvent()">+ Ajouter l'événement</button>
+  </div>
+  <div id="events-list"></div>
+ </div>
+</div>
+
+<div id="view-home"></div>
+
+<div id="view-detail">
+  <div class="dhdr">
+    <div class="dbook" id="d-book"></div>
+    <div class="dname" id="d-name"></div>
+    <div class="dheb"  id="d-heb"></div>
+    <div class="dref"  id="d-ref"></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('heb')">Hébreu</div>
+    <div class="tab" onclick="showTab('sum')">Résumé</div>
+    <div class="tab" onclick="showTab('com')">Commentaire</div>
+  </div>
+  <div id="tab-heb" class="tab-panel active">
+    <div id="d-verses"></div>
+    <div class="sefaria-credit">Texte massorétique · Sefaria Open Library</div>
+  </div>
+  <div id="tab-sum" class="tab-panel"><div class="sumblock" id="d-summary"></div></div>
+  <div id="tab-com" class="tab-panel"><div class="comblock" id="d-commentary"></div></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// PARACHA LIST
+// ═══════════════════════════════════════════════════════════
+var P=[
+ {id:1, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Bereshit",      heb:"בְּרֵאשִׁית",         ref:"Gn 1:1–6:8",      sr:"Genesis 1-6"},
+ {id:2, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Noach",          heb:"נֹחַ",                ref:"Gn 6:9–11:32",    sr:"Genesis 6.9-11.32"},
+ {id:3, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Lekh Lekha",     heb:"לֶךְ-לְךָ",           ref:"Gn 12:1–17:27",   sr:"Genesis 12-17"},
+ {id:4, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayera",         heb:"וַיֵּרָא",            ref:"Gn 18:1–22:24",   sr:"Genesis 18-22"},
+ {id:5, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Chayei Sarah",   heb:"חַיֵּי שָׂרָה",       ref:"Gn 23:1–25:18",   sr:"Genesis 23-25.18"},
+ {id:6, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Toldot",         heb:"תּוֹלְדֹת",           ref:"Gn 25:19–28:9",   sr:"Genesis 25.19-28.9"},
+ {id:7, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayetze",        heb:"וַיֵּצֵא",            ref:"Gn 28:10–32:3",   sr:"Genesis 28.10-32.3"},
+ {id:8, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayishlach",     heb:"וַיִּשְׁלַח",         ref:"Gn 32:4–36:43",   sr:"Genesis 32.4-36.43"},
+ {id:9, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayeshev",       heb:"וַיֵּשֶׁב",           ref:"Gn 37:1–40:23",   sr:"Genesis 37-40"},
+ {id:10,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Miketz",         heb:"מִקֵּץ",              ref:"Gn 41:1–44:17",   sr:"Genesis 41-44.17"},
+ {id:11,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayigash",       heb:"וַיִּגַּשׁ",          ref:"Gn 44:18–47:27",  sr:"Genesis 44.18-47.27"},
+ {id:12,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayechi",        heb:"וַיְחִי",             ref:"Gn 47:28–50:26",  sr:"Genesis 47.28-50.26"},
+ {id:13,book:"Shemot",  bh:"שְׁמוֹת",    name:"Shemot",         heb:"שְׁמוֹת",             ref:"Ex 1:1–6:1",      sr:"Exodus 1-6.1"},
+ {id:14,book:"Shemot",  bh:"שְׁמוֹת",    name:"Va'era",         heb:"וָאֵרָא",             ref:"Ex 6:2–9:35",     sr:"Exodus 6.2-9.35"},
+ {id:15,book:"Shemot",  bh:"שְׁמוֹת",    name:"Bo",             heb:"בֹּא",                ref:"Ex 10:1–13:16",   sr:"Exodus 10-13.16"},
+ {id:16,book:"Shemot",  bh:"שְׁמוֹת",    name:"Beshalach",      heb:"בְּשַׁלַּח",          ref:"Ex 13:17–17:16",  sr:"Exodus 13.17-17.16"},
+ {id:17,book:"Shemot",  bh:"שְׁמוֹת",    name:"Yitro",          heb:"יִתְרוֹ",             ref:"Ex 18:1–20:23",   sr:"Exodus 18-20.23"},
+ {id:18,book:"Shemot",  bh:"שְׁמוֹת",    name:"Mishpatim",      heb:"מִשְׁפָּטִים",        ref:"Ex 21:1–24:18",   sr:"Exodus 21-24.18"},
+ {id:19,book:"Shemot",  bh:"שְׁמוֹת",    name:"Teruma",         heb:"תְּרוּמָה",           ref:"Ex 25:1–27:19",   sr:"Exodus 25-27.19"},
+ {id:20,book:"Shemot",  bh:"שְׁמוֹת",    name:"Tetzaveh",       heb:"תְּצַוֶּה",           ref:"Ex 27:20–30:10",  sr:"Exodus 27.20-30.10"},
+ {id:21,book:"Shemot",  bh:"שְׁמוֹת",    name:"Ki Tissa",       heb:"כִּי תִשָּׂא",        ref:"Ex 30:11–34:35",  sr:"Exodus 30.11-34.35"},
+ {id:22,book:"Shemot",  bh:"שְׁמוֹת",    name:"Vayakhel",       heb:"וַיַּקְהֵל",          ref:"Ex 35:1–38:20",   sr:"Exodus 35-38.20"},
+ {id:23,book:"Shemot",  bh:"שְׁמוֹת",    name:"Pekudei",        heb:"פְקוּדֵי",            ref:"Ex 38:21–40:38",  sr:"Exodus 38.21-40.38"},
+ {id:24,book:"Vayikra", bh:"וַיִּקְרָא", name:"Vayikra",        heb:"וַיִּקְרָא",          ref:"Lv 1:1–5:26",     sr:"Leviticus 1-5.26"},
+ {id:25,book:"Vayikra", bh:"וַיִּקְרָא", name:"Tzav",           heb:"צַו",                 ref:"Lv 6:1–8:36",     sr:"Leviticus 6.1-8.36"},
+ {id:26,book:"Vayikra", bh:"וַיִּקְרָא", name:"Shemini",        heb:"שְׁמִינִי",           ref:"Lv 9:1–11:47",    sr:"Leviticus 9-11.47"},
+ {id:27,book:"Vayikra", bh:"וַיִּקְרָא", name:"Tazria-Metzora", heb:"תַזְרִיעַ-מְּצֹרָע", ref:"Lv 12:1–15:33",   sr:"Leviticus 12-15.33"},
+ {id:29,book:"Vayikra", bh:"וַיִּקְרָא", name:"Acharei Mot-Kedoshim",heb:"אַחֲרֵי מוֹת-קְדֹשִׁים",ref:"Lv 16:1–20:27",sr:"Leviticus 16-20.27"},
+ {id:31,book:"Vayikra", bh:"וַיִּקְרָא", name:"Emor",           heb:"אֱמֹר",               ref:"Lv 21:1–24:23",   sr:"Leviticus 21-24.23"},
+ {id:32,book:"Vayikra", bh:"וַיִּקְרָא", name:"Behar-Bechukotai",heb:"בְּהַר-בְּחֻקֹּתַי", ref:"Lv 25:1–27:34",  sr:"Leviticus 25-27.34"},
+ {id:34,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Bamidbar",       heb:"בְּמִדְבַּר",         ref:"Nb 1:1–4:20",     sr:"Numbers 1-4.20"},
+ {id:35,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Nasso",          heb:"נָשֹׂא",              ref:"Nb 4:21–7:89",    sr:"Numbers 4.21-7.89"},
+ {id:36,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Beha'alotcha",   heb:"בְּהַעֲלֹתְךָ",       ref:"Nb 8:1–12:16",    sr:"Numbers 8-12.16"},
+ {id:37,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Shelach",        heb:"שְׁלַח",              ref:"Nb 13:1–15:41",   sr:"Numbers 13-15.41"},
+ {id:38,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Korach",         heb:"קֹרַח",               ref:"Nb 16:1–18:32",   sr:"Numbers 16-18.32"},
+ {id:39,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Chukat-Balak",   heb:"חֻקַּת-בָּלָק",       ref:"Nb 19:1–25:9",    sr:"Numbers 19-25.9"},
+ {id:41,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Pinchas",        heb:"פִּינְחָס",           ref:"Nb 25:10–30:1",   sr:"Numbers 25.10-30.1"},
+ {id:42,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Matot-Massei",   heb:"מַּטּוֹת-מַסְעֵי",    ref:"Nb 30:2–36:13",   sr:"Numbers 30.2-36.13"},
+ {id:44,book:"Devarim", bh:"דְּבָרִים",  name:"Devarim",        heb:"דְּבָרִים",           ref:"Dt 1:1–3:22",     sr:"Deuteronomy 1-3.22"},
+ {id:45,book:"Devarim", bh:"דְּבָרִים",  name:"Va'etchanan",    heb:"וָאֶתְחַנַּן",        ref:"Dt 3:23–7:11",    sr:"Deuteronomy 3.23-7.11"},
+ {id:46,book:"Devarim", bh:"דְּבָרִים",  name:"Ekev",           heb:"עֵקֶב",               ref:"Dt 7:12–11:25",   sr:"Deuteronomy 7.12-11.25"},
+ {id:47,book:"Devarim", bh:"דְּבָרִים",  name:"Re'eh",          heb:"רְאֵה",               ref:"Dt 11:26–16:17",  sr:"Deuteronomy 11.26-16.17"},
+ {id:48,book:"Devarim", bh:"דְּבָרִים",  name:"Shoftim",        heb:"שֹׁפְטִים",           ref:"Dt 16:18–21:9",   sr:"Deuteronomy 16.18-21.9"},
+ {id:49,book:"Devarim", bh:"דְּבָרִים",  name:"Ki Tetze",       heb:"כִּי-תֵצֵא",          ref:"Dt 21:10–25:19",  sr:"Deuteronomy 21.10-25.19"},
+ {id:50,book:"Devarim", bh:"דְּבָרִים",  name:"Ki Tavo",        heb:"כִּי-תָבוֹא",         ref:"Dt 26:1–29:8",    sr:"Deuteronomy 26-29.8"},
+ {id:51,book:"Devarim", bh:"דְּבָרִים",  name:"Nitzavim-Vayeilech",heb:"נִצָּבִים-וַיֵּלֶךְ",ref:"Dt 29:9–31:30", sr:"Deuteronomy 29.9-31.30"},
+ {id:53,book:"Devarim", bh:"דְּבָרִים",  name:"Haazinu",        heb:"הַאֲזִינוּ",          ref:"Dt 32:1–52",      sr:"Deuteronomy 32"},
+ {id:54,book:"Devarim", bh:"דְּבָרִים",  name:"Vezot HaBerakha",heb:"וְזֹאת הַבְּרָכָה",  ref:"Dt 33:1–34:12",   sr:"Deuteronomy 33-34"}
+];
+var BOOKS=["Bereshit","Shemot","Vayikra","Bamidbar","Devarim"];
+var CID=27;
+var currentTab='heb';
+
+// ═══════════════════════════════════════════════════════════
+// META CACHE — Claude API loads résumé+commentaire on demand
+// ═══════════════════════════════════════════════════════════
+var MC={};
+// Pre-load current week
+MC[27]={
+s:"<p><strong>Tazria — Naissance et pureté</strong> — Après l'accouchement, la mère observe une période d'impureté rituelle : 7 jours pour un garçon puis 33 jours de purification ; 14 jours pour une fille puis 66 jours. Au terme elle apporte un agneau et un pigeon au Temple — ou deux pigeons si elle est dans le besoin. La Torah adapte toujours ses exigences aux capacités de chacun.</p><p><strong>Tazria — Le tsaraat</strong> — Cette affliction spirituelle (souvent traduite par lèpre mais distincte de toute maladie médicale) se manifeste sous trois formes sur la peau. Seul le cohen l'examine et prononce le verdict. En cas de doute, isolement de 7 jours puis réexamen. La personne déclarée impure déchire ses vêtements et vit seule hors du camp.</p><p><strong>Metzora — Purification et réintégration</strong> — Quand la guérison survient, le cohen constate hors du camp. Rituel des deux oiseaux, cèdre, fil écarlate, hysope. L'oiseau sacrifié, l'autre libéré sur les champs — image de l'âme purifiée retrouvant sa liberté. Après 7 jours supplémentaires, réintégration complète avec de nouveaux sacrifices.</p><p><strong>Metzora — Maisons et flux</strong> — Le tsaraat peut atteindre les pierres des maisons en Canaan. Si la plaie persiste, la maison est démolie. La paracha se clôt sur les flux d'impureté (zav, nidda, zava) et l'immersion au mikvé — fondement de la taharat hamichpacha.</p>",
+co:"<p><strong>La parole qui crée ou détruit</strong> — Le Talmud (Erkhin 16a) est formel : la cause du tsaraat est la lachon hara, la médisance. Le Baal Shem Tov enseigne que chaque parole crée des mondes ou en détruit — « La vie et la mort sont au pouvoir de la langue » (Proverbes 18:21). La médisance ne blesse pas seulement la victime : elle déchire le tissu de la Création. C'est pourquoi D-ieu la rend visible sur le corps — pour que la guérison soit enfin possible.</p><p><strong>L'isolement comme espace sacré</strong> — L'Admour HaZaken (Tanya, Iggeret HaTéchouva ch.1) : le tsaraat est un acte de miséricorde. D-ieu rend visible ce qui est corrompu dans l'âme non pour punir mais pour guérir. L'isolement n'est pas une honte — c'est une retraite spirituelle forcée, comparable au retrait de Moïse au Sinaï. Seul avec lui-même, l'homme peut enfin entendre la voix divine et opérer un retour sincère.</p><p><strong>Le huitième jour — transcender la nature</strong> — Le Sfat Emet (Tazria 5643) : les sept jours représentent le cycle naturel du monde créé en sept jours. Le huitième jour — la brit mila — représente ce qui transcende la nature, l'alliance éternelle. Le tsaraat survient quand l'homme reste prisonnier du cycle naturel sans aspirer à sa dimension supérieure. La guérison vient quand il retrouve son élan vers le huitième jour.</p><p><strong>Roch Hodech Iyar — le renouveau du Omer</strong> — En ce 1er Iyar, Tazria-Metzora résonne avec une force particulière. Iyar est le mois du Omer, de la montée spirituelle entre Pessa'h et Chavouot. Chaque jour est un travail sur soi (עֲבוֹדַת הַמִּדּוֹת). La liberté de Pessa'h doit se traduire en libération de nos penchants négatifs : orgueil, jalousie, médisance.</p>",
+so:"Talmud Erkhin 16a · Tanya Iggeret HaTéchouva ch.1 · Sfat Emet Tazria 5643 · Vayikra Rabba 16 · Proverbes 18:21"
+};
+
+function loadMeta(id,cb){
+  if(MC[id]){cb(MC[id]);return;}
+  var p=getP(id);
+  document.getElementById('d-summary').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+  document.getElementById('d-commentary').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':'ignored','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:1400,
+      system:'Tu es un érudit Torah et hassidisme. Réponds UNIQUEMENT en JSON valide sans backticks, format: {"s":"résumé HTML <p><strong> 3-4 paragraphes","co":"commentaire hassidique HTML <p><strong> 4 paragraphes avec Baal Shem Tov Tanya Sfat Emet etc","so":"sources courtes séparées par ·"}',
+      messages:[{role:'user',content:'Paracha '+p.name+' ('+p.heb+') '+p.ref+' livre de '+p.book+'. Génère résumé détaillé et commentaire hassidique profond.'}]
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var raw=(d.content||[]).find(function(b){return b.type==='text';});
+    var txt=raw?raw.text:'';
+    var parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    MC[id]=parsed;cb(parsed);
+  })
+  .catch(function(){
+    var fb={s:'<p>Connexion requise pour charger le résumé de <strong>'+p.name+'</strong>.</p>',co:'<p>Connexion requise pour le commentaire hassidique.</p>',so:''};
+    cb(fb);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// HEBREW CALENDAR ENGINE
+// ═══════════════════════════════════════════════════════════
+var HM=["Tichri","Hechvan","Kislev","Tevet","Chevat","Adar","Nissan","Iyar","Sivan","Tamouz","Av","Eloul"];
+var HMH=["תִּשְׁרֵי","חֶשְׁוָן","כִּסְלֵו","טֵבֵת","שְׁבָט","אֲדָר","נִיסָן","אִיָּר","סִיוָן","תַּמּוּז","אָב","אֱלוּל"];
+var HML=["Tichri","Hechvan","Kislev","Tevet","Chevat","Adar I","Adar II","Nissan","Iyar","Sivan","Tamouz","Av","Eloul"];
+var HMLH=["תִּשְׁרֵי","חֶשְׁוָן","כִּסְלֵו","טֵבֵת","שְׁבָט","אֲדָר א׳","אֲדָר ב׳","נִיסָן","אִיָּר","סִיוָן","תַּמּוּז","אָב","אֱלוּל"];
+var HNUM=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","יג","יד","טו","טז","יז","יח","יט","כ","כא","כב","כג","כד","כה","כו","כז","כח","כט","ל"];
+var HUNDS=["","ק","ר","ש","ת","תק","תר","תש","תת","תתק"];
+var TENS=["","י","כ","ל","מ","נ","ס","ע","פ","צ"];
+var UNITS=["","א","ב","ג","ד","ה","ו","ז","ח","ט"];
+
+function hebLeap(y){return((7*y)+1)%19<7;}
+function hebMonthsInYear(y){return hebLeap(y)?13:12;}
+function hebElapsed(y){var m=Math.floor((235*y-234)/19);var p=12084+13753*m;var d=m*29+Math.floor(p/25920);if((3*(d+1))%7<3)d++;return d;}
+function hebDIY(y){return hebElapsed(y+1)-hebElapsed(y);}
+function hebDIM(m,y){switch(m){case 1:case 3:case 5:case 7:case 11:return 30;case 13:return 29;case 6:return hebLeap(y)?30:29;case 8:return(hebDIY(y)%10)===5?30:29;case 9:return(hebDIY(y)%10)===3?29:30;default:return 29;}}
+function gregToJD(d,m,y){m=m+1;return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d-1524.5-(y>1582||(y===1582&&m>10)||(y===1582&&m===10&&d>=15)?Math.floor(y/100)-Math.floor(y/400)-2:0);}
+function jdToHeb(jd){jd=Math.floor(jd)+0.5;var yr=Math.floor((jd-347997)/365.25)+1;while(hebElapsed(yr+1)<=jd-347997)yr++;while(hebElapsed(yr)>jd-347997)yr--;var st=hebElapsed(yr)+347997;var mo=1;var nm=hebMonthsInYear(yr);while(mo<nm&&st+hebDIM(mo,yr)<=jd){st+=hebDIM(mo,yr);mo++;}return{d:jd-st+1,m:mo,y:yr};}
+function g2h(d,m,y){return jdToHeb(gregToJD(d,m,y));}
+function hmName(m,y,heb){var lp=hebLeap(y);if(heb)return lp?HMLH[m-1]:HMH[m-1];return lp?HML[m-1]:HM[m-1];}
+function hDay(d){return HNUM[d]||String(d);}
+function hYear(y){var mod=y%1000;var h=Math.floor(mod/100);var t=Math.floor((mod%100)/10);var u=mod%10;var s=HUNDS[h];if(t===1&&u===5)s+="טו";else if(t===1&&u===6)s+="טז";else s+=TENS[t]+UNITS[u];if(s.length===1)s+="׳";else s=s.slice(0,-1)+"״"+s.slice(-1);return s;}
+function fmtHeb(h){return hDay(h.d)+" "+hmName(h.m,h.y,true)+" "+hYear(h.y);}
+function fmtHebLat(h){return h.d+" "+hmName(h.m,h.y,false)+" "+h.y;}
+var FR_M=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+var FR_D=["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+
+// ═══════════════════════════════════════════════════════════
+// JEWISH HOLIDAYS 5785-5787
+// ═══════════════════════════════════════════════════════════
+var FETES=[
+  {name:"Roch Hachana 5785",    heb:"רֹאשׁ הַשָּׁנָה",        d:3,  m:9, y:2024,days:2,e:"🍎"},
+  {name:"Yom Kippour 5785",     heb:"יוֹם כִּפּוּר",          d:12, m:9, y:2024,days:1,e:"📖"},
+  {name:"Souccot 5785",         heb:"סֻכּוֹת",                 d:17, m:9, y:2024,days:7,e:"🌿"},
+  {name:"Chemini Atseret 5785", heb:"שְׁמִינִי עֲצֶרֶת",      d:24, m:9, y:2024,days:1,e:"✡️"},
+  {name:"Sim'hat Torah 5785",   heb:"שִׂמְחַת תּוֹרָה",       d:25, m:9, y:2024,days:1,e:"📜"},
+  {name:"Hanoucca 5785",        heb:"חֲנֻכָּה",                d:26, m:11,y:2024,days:8,e:"🕎"},
+  {name:"Tou BiChevat 5785",    heb:"טוּ בִּשְׁבָט",          d:13, m:0, y:2025,days:1,e:"🌳"},
+  {name:"Pourim 5785",          heb:"פּוּרִים",                d:14, m:2, y:2025,days:1,e:"🎭"},
+  {name:"Pessa'h 5785",         heb:"פֶּסַח",                  d:13, m:3, y:2025,days:8,e:"🍷"},
+  {name:"Lag BaOmer 5785",      heb:"ל\"ג בָּעֹמֶר",          d:16, m:4, y:2025,days:1,e:"🔥"},
+  {name:"Chavouot 5785",        heb:"שָׁבוּעוֹת",             d:2,  m:5, y:2025,days:2,e:"📜"},
+  {name:"Tich'a BeAv 5785",     heb:"תִּשְׁעָה בְּאָב",       d:3,  m:7, y:2025,days:1,e:"😢"},
+  {name:"Roch Hachana 5786",    heb:"רֹאשׁ הַשָּׁנָה",        d:23, m:8, y:2025,days:2,e:"🍎"},
+  {name:"Yom Kippour 5786",     heb:"יוֹם כִּפּוּר",          d:2,  m:9, y:2025,days:1,e:"📖"},
+  {name:"Souccot 5786",         heb:"סֻכּוֹת",                 d:7,  m:9, y:2025,days:7,e:"🌿"},
+  {name:"Chemini Atseret 5786", heb:"שְׁמִינִי עֲצֶרֶת",      d:14, m:9, y:2025,days:1,e:"✡️"},
+  {name:"Sim'hat Torah 5786",   heb:"שִׂמְחַת תּוֹרָה",       d:15, m:9, y:2025,days:1,e:"📜"},
+  {name:"Hanoucca 5786",        heb:"חֲנֻכָּה",                d:15, m:11,y:2025,days:8,e:"🕎"},
+  {name:"Tou BiChevat 5786",    heb:"טוּ בִּשְׁבָט",          d:2,  m:1, y:2026,days:1,e:"🌳"},
+  {name:"Pourim 5786",          heb:"פּוּרִים",                d:3,  m:2, y:2026,days:1,e:"🎭"},
+  {name:"Pessa'h 5786",         heb:"פֶּסַח",                  d:2,  m:3, y:2026,days:8,e:"🍷"},
+  {name:"Yom HaAtsmaout 5786",  heb:"יוֹם הָעַצְמָאוּת",      d:23, m:3, y:2026,days:1,e:"🇮🇱"},
+  {name:"Lag BaOmer 5786",      heb:"ל\"ג בָּעֹמֶר",          d:6,  m:4, y:2026,days:1,e:"🔥"},
+  {name:"Chavouot 5786",        heb:"שָׁבוּעוֹת",             d:22, m:4, y:2026,days:2,e:"📜"},
+  {name:"Tich'a BeAv 5786",     heb:"תִּשְׁעָה בְּאָב",       d:23, m:6, y:2026,days:1,e:"😢"},
+  {name:"Roch Hachana 5787",    heb:"רֹאשׁ הַשָּׁנָה",        d:12, m:8, y:2026,days:2,e:"🍎"},
+  {name:"Yom Kippour 5787",     heb:"יוֹם כִּפּוּר",          d:21, m:8, y:2026,days:1,e:"📖"},
+  {name:"Souccot 5787",         heb:"סֻכּוֹת",                 d:26, m:8, y:2026,days:7,e:"🌿"},
+  {name:"Hanoucca 5787",        heb:"חֲנֻכָּה",                d:5,  m:11,y:2026,days:8,e:"🕎"}
+];
+
+function getFetesOn(gd,gm,gy){
+  return FETES.filter(function(f){
+    var s=new Date(f.y,f.m,f.d),e=new Date(f.y,f.m,f.d+f.days-1),t=new Date(gy,gm,gd);
+    return t>=s&&t<=e;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// SHABBAT TIMES
+// ═══════════════════════════════════════════════════════════
+var uLat=48.85,uLng=2.35,uCity="Paris";
+function initLoc(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(function(p){
+    uLat=p.coords.latitude;uLng=p.coords.longitude;
+    fetch('https://nominatim.openstreetmap.org/reverse?lat='+uLat+'&lon='+uLng+'&format=json')
+      .then(function(r){return r.json();})
+      .then(function(d){uCity=d.address.city||d.address.town||d.address.village||"votre ville";buildHome();})
+      .catch(function(){buildHome();});
+  },function(){});
+}
+function sunCalc(date,lat,lng,rise){
+  var J=(date.getTime()/86400000)+2440587.5;
+  var n=Math.ceil(J-2451545.0+0.0008);
+  var Js=n-lng/360;
+  var M=(357.5291+0.98560028*Js)%360,Mr=M*Math.PI/180;
+  var C=1.9148*Math.sin(Mr)+0.0200*Math.sin(2*Mr)+0.0003*Math.sin(3*Mr);
+  var lam=(M+C+180+102.9372)%360,lr=lam*Math.PI/180;
+  var Jt=2451545.0+Js+0.0053*Math.sin(Mr)-0.0069*Math.sin(2*lr);
+  var decl=Math.asin(Math.sin(lr)*Math.sin(23.4397*Math.PI/180));
+  var latr=lat*Math.PI/180;
+  var cosH=(Math.sin(-0.8333*Math.PI/180)-Math.sin(latr)*Math.sin(decl))/(Math.cos(latr)*Math.cos(decl));
+  if(cosH<-1||cosH>1)return null;
+  var H=Math.acos(cosH)*180/Math.PI;
+  var Jss=Jt+(rise?-H/360:H/360);
+  return new Date((Jss-2440587.5)*86400000);
+}
+function fmtT(d){var h=d.getHours(),m=d.getMinutes();return(h<10?'0':'')+h+'h'+(m<10?'0':'')+m;}
+function getShabbat(fri){
+  var sf=sunCalc(fri,uLat,uLng,false);
+  var sat=new Date(fri.getTime()+86400000);
+  var ss=sunCalc(sat,uLat,uLng,false);
+  if(!sf||!ss)return null;
+  return{candle:fmtT(new Date(sf.getTime()-18*60000)),havdala:fmtT(new Date(ss.getTime()+42*60000))};
+}
+
+// ═══════════════════════════════════════════════════════════
+// HOME BANNERS
+// ═══════════════════════════════════════════════════════════
+var calEvents=[];
+try{calEvents=JSON.parse(localStorage.getItem('torah_ev')||'[]');}catch(e){}
+function saveEv(){try{localStorage.setItem('torah_ev',JSON.stringify(calEvents));}catch(e){}}
+function getTodayEv(){
+  var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear(),hd=g2h(gd,gm,gy);
+  return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});
+}
+
+function getHomeBanners(){
+  var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear();
+  var html='';
+  getTodayEv().forEach(function(ev){html+='<div class="bday-banner">🎂 Aujourd\'hui : <strong>'+ev.name+'</strong></div>';});
+  getFetesOn(gd,gm,gy).forEach(function(f){
+    var dn=Math.floor((t-new Date(f.y,f.m,f.d))/86400000)+1;
+    var suf=f.days>1?' ('+['1er','2e','3e','4e','5e','6e','7e','8e'][dn-1]+' jour)':'';
+    html+='<div class="fete-banner"><div class="fete-name">'+f.e+' '+f.name+suf+'</div><div class="fete-heb">'+f.heb+'</div></div>';
+  });
+  var dow=t.getDay();
+  if(dow>=4||dow===6){
+    var fri=new Date(t);
+    if(dow===6)fri=new Date(t.getTime()-86400000);
+    else if(dow<5)fri=new Date(t.getTime()+86400000);
+    fri.setHours(12,0,0,0);
+    var sh=getShabbat(fri);
+    if(sh){
+      var sat=new Date(fri.getTime()+86400000);
+      html+='<div class="shabbat-banner"><div class="shabbat-icon">🕯</div><div class="shabbat-info">'
+           +'<div class="shabbat-title">Chabbat · '+fri.getDate()+' '+FR_M[fri.getMonth()]+' – '+sat.getDate()+' '+FR_M[sat.getMonth()]+' · '+uCity+'</div>'
+           +'<div class="shabbat-times">Allumage <span>vendredi</span> '+sh.candle+' &nbsp;|&nbsp; Havdala <span>samedi</span> '+sh.havdala+'</div>'
+           +'</div></div>';
+    }
+  }
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CALENDAR UI
+// ═══════════════════════════════════════════════════════════
+var calY,calM,calSel=null,calEvType='greg';
+function openCal(){
+  var t=new Date();calY=t.getFullYear();calM=t.getMonth();calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
+  renderCalHdr(t);renderCalGrid();renderEvList();
+  document.getElementById('cv-day').value=t.getDate();document.getElementById('cv-mon').value=t.getMonth();document.getElementById('cv-year').value=t.getFullYear();
+  updEvDisp();document.getElementById('cal-overlay').classList.add('open');
+}
+function closeCal(){document.getElementById('cal-overlay').classList.remove('open');}
+function calOverlayClick(e){if(e.target===document.getElementById('cal-overlay'))closeCal();}
+function renderCalHdr(d){
+  var hd=g2h(d.getDate(),d.getMonth(),d.getFullYear());
+  document.getElementById('cal-greg').textContent=FR_D[d.getDay()]+' '+d.getDate()+' '+FR_M[d.getMonth()]+' '+d.getFullYear();
+  document.getElementById('cal-heb').textContent=fmtHeb(hd);
+}
+function calMove(dir){calM+=dir;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCalGrid();}
+function renderCalGrid(){
+  var h1=g2h(1,calM,calY);
+  document.getElementById('cal-month-label').textContent=FR_M[calM]+' '+calY;
+  document.getElementById('cal-month-heb').textContent=hmName(h1.m,h1.y,true)+' '+hYear(h1.y);
+  var fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate();
+  var t=new Date(),todStr=t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate();
+  var html='<div class="cal-dow-row">';
+  ['Di','Lu','Ma','Me','Je','Ve','Sa'].forEach(function(d){html+='<div class="cal-dow">'+d+'</div>';});
+  html+='</div>';
+  var day=1;
+  for(var w=0;w<6;w++){
+    if(day>dim)break;
+    html+='<div class="cal-week">';
+    for(var dow=0;dow<7;dow++){
+      var cd=(w===0&&dow<fd)?0:day;
+      if(w>0&&day>dim)cd=0;
+      if(cd===0){html+='<div class="cal-day empty"></div>';}
+      else{
+        var isT=(calY+'-'+(calM+1)+'-'+cd)===todStr;
+        var hd=g2h(cd,calM,calY);
+        var evs=getEvOnDay(cd,calM,calY,hd);
+        var fts=getFetesOn(cd,calM,calY);
+        var cls='cal-day'+(isT?' today':'')+(evs.length||fts.length?' has-event':'');
+        html+='<div class="'+cls+'" onclick="calDayClick('+cd+')">'
+             +'<span class="cal-gday">'+cd+'</span>'
+             +'<span class="cal-hday">'+hDay(hd.d)+'</span>'
+             +(fts.length?'<div style="font-size:10px;line-height:1">'+fts[0].e+'</div>':'')
+             +(evs.length?'<div class="cal-edot"></div>':'')
+             +'</div>';
+        day++;
+      }
+    }
+    html+='</div>';
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+}
+function calDayClick(d){
+  calSel={d:d,m:calM,y:calY};
+  renderCalHdr(new Date(calY,calM,d));
+  updEvDisp();
+  // Show fêtes + events for this day
+  var hd=g2h(d,calM,calY);
+  var fts=getFetesOn(d,calM,calY);
+  var evs=getEvOnDay(d,calM,calY,hd);
+  var el=document.getElementById('cal-dayinfo');
+  var ct=document.getElementById('cal-dayinfo-content');
+  if(fts.length||evs.length){
+    var html='';
+    var ords=['1er','2e','3e','4e','5e','6e','7e','8e'];
+    fts.forEach(function(f){
+      var dn=Math.floor((new Date(calY,calM,d)-new Date(f.y,f.m,f.d))/86400000)+1;
+      var suf=f.days>1?' — '+ords[dn-1]+' jour':'';
+      html+='<div style="margin-bottom:8px"><div style="font-size:15px;color:#e8c870;font-family:Frank Ruhl Libre,serif;font-weight:bold">'+f.e+' '+f.name+suf+'</div>'
+           +'<div style="font-family:Noto Sans Hebrew,sans-serif;font-size:13px;color:#c9a84c;direction:rtl">'+f.heb+'</div></div>';
+    });
+    evs.forEach(function(ev){html+='<div style="font-size:14px;color:#e8c870">🎂 '+ev.name+'</div>';});
+    ct.innerHTML=html;el.style.display='block';
+  } else {el.style.display='none';}
+  document.getElementById('cal-addevent').scrollIntoView({behavior:'smooth'});
+}
+function getEvOnDay(gd,gm,gy,hd){
+  return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});
+}
+function hasEvOnDay(gd,gm,gy,hd){return getEvOnDay(gd,gm,gy,hd).length>0;}
+function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
+function updEvDisp(){
+  var el=document.getElementById('ev-date-display');
+  if(!calSel){el.textContent='Sélectionnez un jour →';return;}
+  var hd=g2h(calSel.d,calSel.m,calSel.y);
+  if(calEvType==='greg')el.textContent='Date choisie : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';
+  else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';
+}
+function addEvent(){
+  var name=document.getElementById('ev-name').value.trim();
+  if(!name){alert('Entrez un nom.');return;}
+  if(!calSel){alert('Sélectionnez un jour.');return;}
+  var hd=g2h(calSel.d,calSel.m,calSel.y);
+  calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});
+  saveEv();document.getElementById('ev-name').value='';
+  renderCalGrid();renderEvList();buildHome();
+}
+function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();}
+function renderEvList(){
+  var el=document.getElementById('events-list');
+  if(!calEvents.length){el.innerHTML='';return;}
+  var h='<h4>Mes événements</h4>';
+  calEvents.forEach(function(ev,i){
+    var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';
+    h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';
+  });
+  el.innerHTML=h;
+}
+function doConvert(){
+  var d=parseInt(document.getElementById('cv-day').value)||1,m=parseInt(document.getElementById('cv-mon').value),y=parseInt(document.getElementById('cv-year').value)||2026;
+  var hd=g2h(d,m,y);
+  var res=document.getElementById('conv-result');res.style.display='block';
+  res.innerHTML=fmtHeb(hd)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd)+'</small>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// BUILD HOME
+// ═══════════════════════════════════════════════════════════
+function getP(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i];return null;}
+
+function buildHome(){
+  var cur=getP(CID);
+  var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear();
+  var ht=g2h(gd,gm,gy);
+  var h=getHomeBanners();
+  h+='<div class="datebar" onclick="openCal()">'
+    +'<div class="datebar-icon">📅</div>'
+    +'<div class="datebar-text">'
+    +'<div class="dh">'+fmtHeb(ht)+'</div>'
+    +'<div class="df">'+FR_D[t.getDay()]+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
+    +'<div class="dtap">Ouvrir le calendrier →</div>'
+    +'</div></div>';
+  h+='<div class="wbanner" onclick="openP('+cur.id+')">'
+    +'<div class="wlabel">Paracha de la semaine · שַׁבָּת</div>'
+    +'<div class="wname">'+cur.name+'</div>'
+    +'<div class="wheb">'+cur.heb+'</div>'
+    +'<div class="wmeta">'+cur.ref+' · '+cur.book+'</div>'
+    +'<div class="warrow">→</div></div>';
+  BOOKS.forEach(function(bk){
+    var list=P.filter(function(x){return x.book===bk;});
+    h+='<div class="bsec"><div class="btitle">'+bk+' <span>'+list[0].bh+'</span></div><div class="pgrid">';
+    list.forEach(function(p){
+      var cc=p.id===CID?' cur':'';
+      h+='<div class="pcard'+cc+'" onclick="openP('+p.id+')">'
+        +'<div class="pnum">'+String(p.id).padStart(2,'0')+'</div>'
+        +'<div class="pname">'+p.name+'</div>'
+        +'<div class="pheb">'+p.heb+'</div></div>';
+    });
+    h+='</div></div>';
+  });
+  document.getElementById('view-home').innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION & TABS
+// ═══════════════════════════════════════════════════════════
+function goHome(){
+  document.getElementById('view-home').style.display='block';
+  document.getElementById('view-detail').style.display='none';
+  document.getElementById('btn-back').style.display='none';
+  window.scrollTo(0,0);
+}
+function showTab(t){
+  currentTab=t;
+  ['heb','sum','com'].forEach(function(x){
+    document.getElementById('tab-'+x).className='tab-panel'+(x===t?' active':'');
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    el.className='tab'+(['heb','sum','com'][i]===t?' active':'');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// OPEN PARASHA
+// ═══════════════════════════════════════════════════════════
+var HNS=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","יג","יד","טו","טז","יז","יח","יט","כ","כא","כב","כג","כד","כה","כו","כז","כח","כט","ל","לא","לב","לג","לד","לה","לו","לז","לח","לט","מ","מא","מב","מג","מד","מה","מו","מז","מח","מט","נ","נא","נב","נג","נד","נה","נו","נז","נח","נט","ס"];
+function toHN(n){return(n>0&&n<HNS.length)?HNS[n]:String(n);}
+
+function openP(id){
+  var p=getP(id);
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-detail').style.display='block';
+  document.getElementById('btn-back').style.display='block';
+  showTab('heb');
+  document.getElementById('d-book').textContent=p.book+' · '+p.bh;
+  document.getElementById('d-name').textContent=p.name;
+  document.getElementById('d-heb').textContent=p.heb;
+  document.getElementById('d-ref').textContent=p.ref;
+
+  // Load summary + commentary via Claude API
+  loadMeta(id,function(m){
+    document.getElementById('d-summary').innerHTML=m.s;
+    document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'');
+  });
+
+  // Load Hebrew text via Sefaria
+  document.getElementById('d-verses').innerHTML='<div class="loading-txt">Chargement du texte hébreu…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+  fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(p.sr)+'?lang=he&context=0&pad=0')
+    .then(function(r){return r.json();})
+    .then(function(data){renderHeb(data,p);})
+    .catch(function(){
+      document.getElementById('d-verses').innerHTML='<div class="loading-txt">Texte non disponible.<br>Consultez les onglets Résumé et Commentaire.</div>';
+    });
+  window.scrollTo(0,0);
+}
+
+function renderHeb(data,p){
+  var verses=[];
+  if(Array.isArray(data.he)){
+    if(typeof data.he[0]==='string')verses=data.he;
+    else if(Array.isArray(data.he[0]))data.he.forEach(function(ch){ch.forEach(function(v){verses.push(v);});});
+  }
+  if(!verses.length){
+    document.getElementById('d-verses').innerHTML='<div class="loading-txt">Texte non disponible. Consultez Résumé et Commentaire.</div>';
+    return;
+  }
+  // Find start verse number
+  var vnum=1;
+  try{
+    var parts=p.sr.split(' ');var rp=parts.slice(1).join(' ');var sr=rp.split('-')[0].trim();var dp=sr.split('.');
+    vnum=dp.length>=2?parseInt(dp[1])||1:1;
+  }catch(e){}
+  var html='';
+  for(var i=0;i<verses.length;i++){
+    var v=verses[i];if(!v||v==='')continue;
+    v=v.replace(/<[^>]+>/g,'');
+    html+='<span class="vrow"><span class="vn">'+toHN(vnum)+'</span>'+v+'</span>';
+    vnum++;
+  }
+  document.getElementById('d-verses').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+buildHome();
+initLoc();
+</script>
+</body>
+</html>
