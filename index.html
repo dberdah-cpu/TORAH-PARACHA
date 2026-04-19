@@ -8,14 +8,10 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:16px;min-height:100vh}
-
-/* HEADER */
 #hdr{position:sticky;top:0;z-index:100;background:#1a1208;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
 #hdr-title{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#c9a84c}
 #hdr-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;color:#c9a84c}
 #btn-back{display:none;background:none;border:1px solid #c9a84c;color:#c9a84c;padding:6px 14px;font-size:13px;letter-spacing:2px;cursor:pointer;-webkit-appearance:none;border-radius:0;font-family:Georgia,serif}
-
-/* HOME */
 #view-home{padding:18px 16px;max-width:860px;margin:0 auto}
 .datebar{padding:13px 16px;margin-bottom:24px;background:#1a1208;border-radius:2px;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:14px}
 .datebar:active{background:#2a2010}
@@ -24,14 +20,12 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .datebar .dh{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;color:#e8c870;direction:rtl;margin-bottom:3px}
 .datebar .df{font-size:13px;color:#c9a84c;letter-spacing:1px}
 .datebar .dtap{font-size:10px;color:#8a6820;letter-spacing:2px;margin-top:3px}
-
 .wbanner{background:#1a1208;padding:20px 18px;margin-bottom:28px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;border-left:4px solid #c9a84c}
 .wlabel{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#c9a84c;margin-bottom:6px}
 .wname{font-family:'Frank Ruhl Libre',serif;font-size:26px;color:#f5f0e8;margin-bottom:3px}
 .wheb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;color:#e8c870;direction:rtl;margin-bottom:5px}
 .wmeta{font-size:13px;color:#9a8860;font-style:italic}
 .warrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#c9a84c;font-size:20px}
-
 .bsec{margin-bottom:28px}
 .btitle{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6a5e40;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid #d4c8a8;display:flex;align-items:center;gap:10px}
 .btitle span{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;letter-spacing:0}
@@ -45,12 +39,10 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .pcard.cur .pname{color:#e8c870}
 .pcard.cur .pnum{color:#8a7040}
 .pcard.cur .pheb{color:#c9a84c}
-
-/* BANNERS */
 .bday-banner{background:#c9a84c;color:#1a1208;padding:10px 16px;margin-bottom:10px;font-size:14px;font-weight:bold;border-radius:2px;display:flex;align-items:center;gap:8px}
 .fete-banner{background:#1a1208;border-left:4px solid #e8c870;color:#e8c870;padding:10px 16px;margin-bottom:10px;font-size:14px;border-radius:2px}
-.fete-banner .fete-name{font-family:'Frank Ruhl Libre',serif;font-size:16px;font-weight:bold}
-.fete-banner .fete-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;direction:rtl;color:#c9a84c;margin-top:2px}
+.fete-banner .fn{font-family:'Frank Ruhl Libre',serif;font-size:16px;font-weight:bold}
+.fete-banner .fh{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;direction:rtl;color:#c9a84c;margin-top:2px}
 .shabbat-banner{background:#f2ede2;border:1px solid #c9a84c;padding:12px 16px;margin-bottom:16px;border-radius:2px;display:flex;align-items:center;gap:12px}
 .shabbat-icon{font-size:22px;flex-shrink:0}
 .shabbat-info{flex:1}
@@ -58,7 +50,43 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .shabbat-times{font-size:15px;color:#1a1208;font-weight:bold}
 .shabbat-times span{color:#8a6820;font-weight:normal;font-size:13px;margin:0 4px}
 
-/* DETAIL */
+/* QUICK ACCESS CARDS */
+.qcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.qcard{border-radius:4px;padding:16px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
+.qcard:active{opacity:.85}
+.qcard-icon{font-size:22px;margin-bottom:8px}
+.qcard-title{font-family:'Frank Ruhl Libre',serif;font-size:16px;font-weight:bold;color:#fff;margin-bottom:3px}
+.qcard-sub{font-size:12px;color:rgba(255,255,255,0.75);letter-spacing:1px}
+.qcard.hayom{background:linear-gradient(135deg,#c97c1a,#e8a830)}
+.qcard.sefer{background:linear-gradient(135deg,#6a3fa0,#9b59d0)}
+
+/* VERSET DU JOUR */
+.verset-card{background:#fdf9f2;border:1px solid #d4c8a8;padding:16px;margin-bottom:24px}
+.verset-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#9a8860;margin-bottom:10px}
+.verset-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;color:#1a1208;direction:rtl;text-align:right;line-height:1.8;margin-bottom:8px}
+.verset-fr{font-size:14px;color:#6a5e40;font-style:italic}
+
+/* HAYOM YOM & SEFER detail pages */
+#view-hayom,#view-sefer{display:none;padding:18px 16px;max-width:860px;margin:0 auto}
+.hyd-header{background:#c97c1a;padding:20px 18px;margin:-18px -16px 24px;display:flex;align-items:center;gap:12px}
+.hyd-header.sefer{background:#6a3fa0}
+.hyd-icon{font-size:30px}
+.hyd-title{font-family:'Frank Ruhl Libre',serif;font-size:22px;color:#fff;font-weight:bold}
+.hyd-subtitle{font-size:13px;color:rgba(255,255,255,0.8)}
+.hyd-date{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#9a8860;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #d4c8a8}
+.hyd-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;color:#1a1208;direction:rtl;text-align:right;line-height:2.0;background:#fdf9f2;padding:16px;margin-bottom:16px;border-right:4px solid #c9a84c}
+.hyd-fr{font-size:16px;color:#1a1208;line-height:1.9;margin-bottom:16px}
+.hyd-fr p{margin-bottom:12px}
+.hyd-source{font-size:12px;color:#9a8860;font-style:italic;border-top:1px solid #d4c8a8;padding-top:10px}
+.mitsva-block{background:#fdf9f2;border:1px solid #d4c8a8;padding:16px;margin-bottom:14px}
+.mitsva-type{font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;font-weight:bold}
+.mitsva-type.pos{color:#2a7a2a}
+.mitsva-type.neg{color:#8a2020}
+.mitsva-num{font-size:13px;color:#9a8860;margin-bottom:6px}
+.mitsva-title{font-family:'Frank Ruhl Libre',serif;font-size:18px;color:#1a1208;margin-bottom:8px}
+.mitsva-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:16px;direction:rtl;text-align:right;color:#5a3800;margin-bottom:8px;line-height:1.8}
+.mitsva-text{font-size:15px;color:#1a1208;line-height:1.85}
+.mitsva-text p{margin-bottom:10px}
 #view-detail{display:none;padding:18px 16px;max-width:860px;margin:0 auto}
 .dhdr{margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid #1a1208}
 .dbook{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6a5e40;margin-bottom:5px}
@@ -70,33 +98,23 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .tab.active{color:#1a1208;border-bottom-color:#c9a84c;font-weight:bold}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
-
-/* Hebrew */
 .hebblock{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;line-height:2.3;color:#1a1208;direction:rtl;text-align:right;font-weight:400}
 .vrow{display:block;margin-bottom:8px;padding:6px 12px 6px 6px;border-right:3px solid #c9a84c;background:#fdf9f2}
 .vn{font-size:11px;color:#8a6820;margin-left:8px;vertical-align:super;font-style:italic}
 .sefaria-credit{text-align:center;font-size:11px;color:#9a8860;padding:12px;margin-top:8px;border-top:1px solid #d4c8a8;letter-spacing:1px}
-
-/* Loading */
 .loading-txt{text-align:center;padding:40px 20px;color:#6a5e40;font-style:italic;font-size:15px}
 .dots{display:inline-flex;gap:5px;margin-top:10px}
 .dots span{width:6px;height:6px;background:#c9a84c;border-radius:50%;animation:blink 1.2s ease-in-out infinite}
 .dots span:nth-child(2){animation-delay:.2s}
 .dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-
-/* Summary */
 .sumblock{font-size:16px;line-height:1.9;color:#1a1208}
 .sumblock p{margin-bottom:14px}
 .sumblock strong{color:#5a3800}
-
-/* Commentary */
 .comblock{font-size:16px;line-height:2.0;color:#f0e6d0;font-style:italic;background:#1a1208;padding:20px 18px;margin:0 -16px}
 .comblock p{margin-bottom:16px}
 .comblock strong{color:#e8c870;font-style:normal;font-weight:bold}
 .sources{display:block;font-size:12px;font-style:normal;color:#c9a84c;border-top:1px solid #3a3020;padding-top:12px;margin-top:8px;letter-spacing:1px}
-
-/* CALENDAR MODAL */
 #cal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto}
 #cal-overlay.open{display:flex}
 #cal-box{background:#fdf9f2;width:100%;max-width:420px;border-top:3px solid #c9a84c;margin:0 12px 40px;font-family:Georgia,serif;color:#1a1208}
@@ -113,7 +131,7 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
 .cal-dow{text-align:center;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#9a8860;padding:4px 0}
 .cal-week{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
-.cal-day{text-align:center;padding:5px 2px;cursor:pointer;border-radius:2px;-webkit-tap-highlight-color:transparent;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px}
+.cal-day{text-align:center;padding:5px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px}
 .cal-day:active{background:#ede8d8}
 .cal-day.empty{cursor:default}
 .cal-day.today{background:#1a1208;border-radius:2px}
@@ -123,11 +141,7 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .cal-gday{font-size:14px;color:#1a1208;font-weight:bold;line-height:1}
 .cal-hday{font-family:'Noto Sans Hebrew',sans-serif;font-size:10px;color:#8a6820;line-height:1}
 .cal-edot{width:5px;height:5px;background:#c9a84c;border-radius:50%;margin-top:1px}
-
-/* Day info popup */
 #cal-dayinfo{display:none;padding:12px 16px;background:#1a1208;border-top:1px solid #3a3020}
-
-/* Conversion */
 #cal-conv{padding:14px 16px;border-top:1px solid #d4c8a8;background:#f7f3eb}
 #cal-conv h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:10px}
 .conv-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
@@ -135,8 +149,6 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .conv-row input,.conv-row select{flex:1;min-width:60px;padding:6px 8px;border:1px solid #d4c8a8;background:#fdf9f2;color:#1a1208;font-size:14px;font-family:Georgia,serif;-webkit-appearance:none;border-radius:0}
 .conv-btn{width:100%;padding:9px;background:#1a1208;color:#c9a84c;border:none;font-size:13px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;margin-top:4px;-webkit-appearance:none}
 #conv-result{margin-top:10px;padding:10px 12px;background:#1a1208;font-size:15px;color:#e8c870;display:none;text-align:center;font-family:'Noto Sans Hebrew',sans-serif;line-height:1.8}
-
-/* Add event */
 #cal-addevent{padding:14px 16px;border-top:1px solid #d4c8a8}
 #cal-addevent h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:10px}
 #cal-addevent input[type=text]{width:100%;padding:8px 10px;border:1px solid #d4c8a8;background:#fdf9f2;color:#1a1208;font-size:14px;font-family:Georgia,serif;margin-bottom:8px;-webkit-appearance:none;border-radius:0}
@@ -154,14 +166,11 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 </style>
 </head>
 <body>
-
 <div id="hdr">
   <div id="hdr-title">Torah · Paracha</div>
   <div id="hdr-heb">תּוֹרָה</div>
   <button id="btn-back" onclick="goHome()">← Retour</button>
 </div>
-
-<!-- CALENDAR MODAL -->
 <div id="cal-overlay" onclick="calOverlayClick(event)">
  <div id="cal-box">
   <div id="cal-header">
@@ -169,9 +178,9 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
    <button id="cal-close" onclick="closeCal()">✕</button>
   </div>
   <div id="cal-nav">
-   <button onclick="calMove(-1)">‹</button>
+   <button onclick="calMove(-1)">&#8249;</button>
    <div><div id="cal-month-label"></div><div id="cal-month-heb"></div></div>
-   <button onclick="calMove(1)">›</button>
+   <button onclick="calMove(1)">&#8250;</button>
   </div>
   <div id="cal-grid"></div>
   <div id="cal-dayinfo"><div id="cal-dayinfo-content"></div></div>
@@ -188,7 +197,7 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
     </select>
     <input type="number" id="cv-year" min="1900" max="2100" value="2026" style="max-width:80px">
    </div>
-   <button class="conv-btn" onclick="doConvert()">→ Convertir en date hébraïque</button>
+   <button class="conv-btn" onclick="doConvert()">Convertir en date hébraïque</button>
    <div id="conv-result"></div>
   </div>
   <div id="cal-addevent">
@@ -198,21 +207,39 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
     <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
     <button class="ev-type-btn" id="evt-heb" onclick="setEvType('heb')">Date hébraïque</button>
    </div>
-   <div id="ev-date-display">Sélectionnez un jour →</div>
-   <button class="add-ev-btn" onclick="addEvent()">+ Ajouter l'événement</button>
+   <div id="ev-date-display">Sélectionnez un jour dans le calendrier</div>
+   <button class="add-ev-btn" onclick="addEvent()">+ Ajouter</button>
   </div>
   <div id="events-list"></div>
  </div>
 </div>
-
 <div id="view-home"></div>
 
+<!-- HAYOM YOM -->
+<div id="view-hayom">
+  <div class="hyd-header">
+    <div class="hyd-icon">☀️</div>
+    <div><div class="hyd-title">Hayom Yom</div><div class="hyd-subtitle">Enseignement du jour</div></div>
+  </div>
+  <div class="hyd-date" id="hy-date"></div>
+  <div id="hy-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
+</div>
+
+<!-- SEFER HAMITSVOT -->
+<div id="view-sefer">
+  <div class="hyd-header sefer">
+    <div class="hyd-icon">📋</div>
+    <div><div class="hyd-title">Sefer HaMitsvot</div><div class="hyd-subtitle">Mitsva du jour · Rambam</div></div>
+  </div>
+  <div class="hyd-date" id="sf-date"></div>
+  <div id="sf-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
+</div>
 <div id="view-detail">
   <div class="dhdr">
     <div class="dbook" id="d-book"></div>
     <div class="dname" id="d-name"></div>
-    <div class="dheb"  id="d-heb"></div>
-    <div class="dref"  id="d-ref"></div>
+    <div class="dheb" id="d-heb"></div>
+    <div class="dref" id="d-ref"></div>
   </div>
   <div class="tabs">
     <div class="tab active" onclick="showTab('heb')">Hébreu</div>
@@ -226,106 +253,244 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
   <div id="tab-sum" class="tab-panel"><div class="sumblock" id="d-summary"></div></div>
   <div id="tab-com" class="tab-panel"><div class="comblock" id="d-commentary"></div></div>
 </div>
-
 <script>
-// ═══════════════════════════════════════════════════════════
-// PARACHA LIST
-// ═══════════════════════════════════════════════════════════
+// PARACHIOT
 var P=[
- {id:1, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Bereshit",      heb:"בְּרֵאשִׁית",         ref:"Gn 1:1–6:8",      sr:"Genesis 1-6"},
- {id:2, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Noach",          heb:"נֹחַ",                ref:"Gn 6:9–11:32",    sr:"Genesis 6.9-11.32"},
- {id:3, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Lekh Lekha",     heb:"לֶךְ-לְךָ",           ref:"Gn 12:1–17:27",   sr:"Genesis 12-17"},
- {id:4, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayera",         heb:"וַיֵּרָא",            ref:"Gn 18:1–22:24",   sr:"Genesis 18-22"},
- {id:5, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Chayei Sarah",   heb:"חַיֵּי שָׂרָה",       ref:"Gn 23:1–25:18",   sr:"Genesis 23-25.18"},
- {id:6, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Toldot",         heb:"תּוֹלְדֹת",           ref:"Gn 25:19–28:9",   sr:"Genesis 25.19-28.9"},
- {id:7, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayetze",        heb:"וַיֵּצֵא",            ref:"Gn 28:10–32:3",   sr:"Genesis 28.10-32.3"},
- {id:8, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayishlach",     heb:"וַיִּשְׁלַח",         ref:"Gn 32:4–36:43",   sr:"Genesis 32.4-36.43"},
- {id:9, book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayeshev",       heb:"וַיֵּשֶׁב",           ref:"Gn 37:1–40:23",   sr:"Genesis 37-40"},
- {id:10,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Miketz",         heb:"מִקֵּץ",              ref:"Gn 41:1–44:17",   sr:"Genesis 41-44.17"},
- {id:11,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayigash",       heb:"וַיִּגַּשׁ",          ref:"Gn 44:18–47:27",  sr:"Genesis 44.18-47.27"},
- {id:12,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayechi",        heb:"וַיְחִי",             ref:"Gn 47:28–50:26",  sr:"Genesis 47.28-50.26"},
- {id:13,book:"Shemot",  bh:"שְׁמוֹת",    name:"Shemot",         heb:"שְׁמוֹת",             ref:"Ex 1:1–6:1",      sr:"Exodus 1-6.1"},
- {id:14,book:"Shemot",  bh:"שְׁמוֹת",    name:"Va'era",         heb:"וָאֵרָא",             ref:"Ex 6:2–9:35",     sr:"Exodus 6.2-9.35"},
- {id:15,book:"Shemot",  bh:"שְׁמוֹת",    name:"Bo",             heb:"בֹּא",                ref:"Ex 10:1–13:16",   sr:"Exodus 10-13.16"},
- {id:16,book:"Shemot",  bh:"שְׁמוֹת",    name:"Beshalach",      heb:"בְּשַׁלַּח",          ref:"Ex 13:17–17:16",  sr:"Exodus 13.17-17.16"},
- {id:17,book:"Shemot",  bh:"שְׁמוֹת",    name:"Yitro",          heb:"יִתְרוֹ",             ref:"Ex 18:1–20:23",   sr:"Exodus 18-20.23"},
- {id:18,book:"Shemot",  bh:"שְׁמוֹת",    name:"Mishpatim",      heb:"מִשְׁפָּטִים",        ref:"Ex 21:1–24:18",   sr:"Exodus 21-24.18"},
- {id:19,book:"Shemot",  bh:"שְׁמוֹת",    name:"Teruma",         heb:"תְּרוּמָה",           ref:"Ex 25:1–27:19",   sr:"Exodus 25-27.19"},
- {id:20,book:"Shemot",  bh:"שְׁמוֹת",    name:"Tetzaveh",       heb:"תְּצַוֶּה",           ref:"Ex 27:20–30:10",  sr:"Exodus 27.20-30.10"},
- {id:21,book:"Shemot",  bh:"שְׁמוֹת",    name:"Ki Tissa",       heb:"כִּי תִשָּׂא",        ref:"Ex 30:11–34:35",  sr:"Exodus 30.11-34.35"},
- {id:22,book:"Shemot",  bh:"שְׁמוֹת",    name:"Vayakhel",       heb:"וַיַּקְהֵל",          ref:"Ex 35:1–38:20",   sr:"Exodus 35-38.20"},
- {id:23,book:"Shemot",  bh:"שְׁמוֹת",    name:"Pekudei",        heb:"פְקוּדֵי",            ref:"Ex 38:21–40:38",  sr:"Exodus 38.21-40.38"},
- {id:24,book:"Vayikra", bh:"וַיִּקְרָא", name:"Vayikra",        heb:"וַיִּקְרָא",          ref:"Lv 1:1–5:26",     sr:"Leviticus 1-5.26"},
- {id:25,book:"Vayikra", bh:"וַיִּקְרָא", name:"Tzav",           heb:"צַו",                 ref:"Lv 6:1–8:36",     sr:"Leviticus 6.1-8.36"},
- {id:26,book:"Vayikra", bh:"וַיִּקְרָא", name:"Shemini",        heb:"שְׁמִינִי",           ref:"Lv 9:1–11:47",    sr:"Leviticus 9-11.47"},
- {id:27,book:"Vayikra", bh:"וַיִּקְרָא", name:"Tazria-Metzora", heb:"תַזְרִיעַ-מְּצֹרָע", ref:"Lv 12:1–15:33",   sr:"Leviticus 12-13|Leviticus 14-15"},
- {id:29,book:"Vayikra", bh:"וַיִּקְרָא", name:"Acharei Mot-Kedoshim",heb:"אַחֲרֵי מוֹת-קְדֹשִׁים",ref:"Lv 16:1–20:27",sr:"Leviticus 16-18|Leviticus 19-20"},
- {id:31,book:"Vayikra", bh:"וַיִּקְרָא", name:"Emor",           heb:"אֱמֹר",               ref:"Lv 21:1–24:23",   sr:"Leviticus 21-24"},
- {id:32,book:"Vayikra", bh:"וַיִּקְרָא", name:"Behar-Bechukotai",heb:"בְּהַר-בְּחֻקֹּתַי", ref:"Lv 25:1–27:34",  sr:"Leviticus 25-26|Leviticus 27"},
- {id:34,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Bamidbar",       heb:"בְּמִדְבַּר",         ref:"Nb 1:1–4:20",     sr:"Numbers 1-4.20"},
- {id:35,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Nasso",          heb:"נָשֹׂא",              ref:"Nb 4:21–7:89",    sr:"Numbers 4.21-7.89"},
- {id:36,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Beha'alotcha",   heb:"בְּהַעֲלֹתְךָ",       ref:"Nb 8:1–12:16",    sr:"Numbers 8-12.16"},
- {id:37,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Shelach",        heb:"שְׁלַח",              ref:"Nb 13:1–15:41",   sr:"Numbers 13-15.41"},
- {id:38,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Korach",         heb:"קֹרַח",               ref:"Nb 16:1–18:32",   sr:"Numbers 16-18.32"},
- {id:39,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Chukat-Balak",   heb:"חֻקַּת-בָּלָק",       ref:"Nb 19:1–25:9",    sr:"Numbers 19-21|Numbers 22-25"},
- {id:41,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Pinchas",        heb:"פִּינְחָס",           ref:"Nb 25:10–30:1",   sr:"Numbers 25.10-30"},
- {id:42,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Matot-Massei",   heb:"מַּטּוֹת-מַסְעֵי",    ref:"Nb 30:2–36:13",   sr:"Numbers 30-32|Numbers 33-36"},
- {id:44,book:"Devarim", bh:"דְּבָרִים",  name:"Devarim",        heb:"דְּבָרִים",           ref:"Dt 1:1–3:22",     sr:"Deuteronomy 1-3.22"},
- {id:45,book:"Devarim", bh:"דְּבָרִים",  name:"Va'etchanan",    heb:"וָאֶתְחַנַּן",        ref:"Dt 3:23–7:11",    sr:"Deuteronomy 3.23-7.11"},
- {id:46,book:"Devarim", bh:"דְּבָרִים",  name:"Ekev",           heb:"עֵקֶב",               ref:"Dt 7:12–11:25",   sr:"Deuteronomy 7.12-11.25"},
- {id:47,book:"Devarim", bh:"דְּבָרִים",  name:"Re'eh",          heb:"רְאֵה",               ref:"Dt 11:26–16:17",  sr:"Deuteronomy 11.26-16.17"},
- {id:48,book:"Devarim", bh:"דְּבָרִים",  name:"Shoftim",        heb:"שֹׁפְטִים",           ref:"Dt 16:18–21:9",   sr:"Deuteronomy 16.18-21.9"},
- {id:49,book:"Devarim", bh:"דְּבָרִים",  name:"Ki Tetze",       heb:"כִּי-תֵצֵא",          ref:"Dt 21:10–25:19",  sr:"Deuteronomy 21.10-25.19"},
- {id:50,book:"Devarim", bh:"דְּבָרִים",  name:"Ki Tavo",        heb:"כִּי-תָבוֹא",         ref:"Dt 26:1–29:8",    sr:"Deuteronomy 26-29.8"},
- {id:51,book:"Devarim", bh:"דְּבָרִים",  name:"Nitzavim-Vayeilech",heb:"נִצָּבִים-וַיֵּלֶךְ",ref:"Dt 29:9–31:30", sr:"Deuteronomy 29-30|Deuteronomy 31"},
- {id:53,book:"Devarim", bh:"דְּבָרִים",  name:"Haazinu",        heb:"הַאֲזִינוּ",          ref:"Dt 32:1–52",      sr:"Deuteronomy 32"},
- {id:54,book:"Devarim", bh:"דְּבָרִים",  name:"Vezot HaBerakha",heb:"וְזֹאת הַבְּרָכָה",  ref:"Dt 33:1–34:12",   sr:"Deuteronomy 33-34"}
+ {id:1,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Bereshit",heb:"בְּרֵאשִׁית",ref:"Gn 1:1–6:8",sr:"Genesis 1-6"},
+ {id:2,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Noach",heb:"נֹחַ",ref:"Gn 6:9–11:32",sr:"Genesis 6.9-11.32"},
+ {id:3,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Lekh Lekha",heb:"לֶךְ-לְךָ",ref:"Gn 12:1–17:27",sr:"Genesis 12-17"},
+ {id:4,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayera",heb:"וַיֵּרָא",ref:"Gn 18:1–22:24",sr:"Genesis 18-22"},
+ {id:5,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Chayei Sarah",heb:"חַיֵּי שָׂרָה",ref:"Gn 23:1–25:18",sr:"Genesis 23-25.18"},
+ {id:6,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Toldot",heb:"תּוֹלְדֹת",ref:"Gn 25:19–28:9",sr:"Genesis 25.19-28.9"},
+ {id:7,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayetze",heb:"וַיֵּצֵא",ref:"Gn 28:10–32:3",sr:"Genesis 28.10-32.3"},
+ {id:8,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayishlach",heb:"וַיִּשְׁלַח",ref:"Gn 32:4–36:43",sr:"Genesis 32.4-36.43"},
+ {id:9,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayeshev",heb:"וַיֵּשֶׁב",ref:"Gn 37:1–40:23",sr:"Genesis 37-40"},
+ {id:10,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Miketz",heb:"מִקֵּץ",ref:"Gn 41:1–44:17",sr:"Genesis 41-44.17"},
+ {id:11,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayigash",heb:"וַיִּגַּשׁ",ref:"Gn 44:18–47:27",sr:"Genesis 44.18-47.27"},
+ {id:12,book:"Bereshit",bh:"בְּרֵאשִׁית",name:"Vayechi",heb:"וַיְחִי",ref:"Gn 47:28–50:26",sr:"Genesis 47.28-50.26"},
+ {id:13,book:"Shemot",bh:"שְׁמוֹת",name:"Shemot",heb:"שְׁמוֹת",ref:"Ex 1:1–6:1",sr:"Exodus 1-6.1"},
+ {id:14,book:"Shemot",bh:"שְׁמוֹת",name:"Va'era",heb:"וָאֵרָא",ref:"Ex 6:2–9:35",sr:"Exodus 6.2-9.35"},
+ {id:15,book:"Shemot",bh:"שְׁמוֹת",name:"Bo",heb:"בֹּא",ref:"Ex 10:1–13:16",sr:"Exodus 10-13.16"},
+ {id:16,book:"Shemot",bh:"שְׁמוֹת",name:"Beshalach",heb:"בְּשַׁלַּח",ref:"Ex 13:17–17:16",sr:"Exodus 13.17-17.16"},
+ {id:17,book:"Shemot",bh:"שְׁמוֹת",name:"Yitro",heb:"יִתְרוֹ",ref:"Ex 18:1–20:23",sr:"Exodus 18-20.23"},
+ {id:18,book:"Shemot",bh:"שְׁמוֹת",name:"Mishpatim",heb:"מִשְׁפָּטִים",ref:"Ex 21:1–24:18",sr:"Exodus 21-24.18"},
+ {id:19,book:"Shemot",bh:"שְׁמוֹת",name:"Teruma",heb:"תְּרוּמָה",ref:"Ex 25:1–27:19",sr:"Exodus 25-27.19"},
+ {id:20,book:"Shemot",bh:"שְׁמוֹת",name:"Tetzaveh",heb:"תְּצַוֶּה",ref:"Ex 27:20–30:10",sr:"Exodus 27.20-30.10"},
+ {id:21,book:"Shemot",bh:"שְׁמוֹת",name:"Ki Tissa",heb:"כִּי תִשָּׂא",ref:"Ex 30:11–34:35",sr:"Exodus 30.11-34.35"},
+ {id:22,book:"Shemot",bh:"שְׁמוֹת",name:"Vayakhel",heb:"וַיַּקְהֵל",ref:"Ex 35:1–38:20",sr:"Exodus 35-38.20"},
+ {id:23,book:"Shemot",bh:"שְׁמוֹת",name:"Pekudei",heb:"פְקוּדֵי",ref:"Ex 38:21–40:38",sr:"Exodus 38.21-40.38"},
+ {id:24,book:"Vayikra",bh:"וַיִּקְרָא",name:"Vayikra",heb:"וַיִּקְרָא",ref:"Lv 1:1–5:26",sr:"Leviticus 1-5.26"},
+ {id:25,book:"Vayikra",bh:"וַיִּקְרָא",name:"Tzav",heb:"צַו",ref:"Lv 6:1–8:36",sr:"Leviticus 6.1-8.36"},
+ {id:26,book:"Vayikra",bh:"וַיִּקְרָא",name:"Shemini",heb:"שְׁמִינִי",ref:"Lv 9:1–11:47",sr:"Leviticus 9-11.47"},
+ {id:27,book:"Vayikra",bh:"וַיִּקְרָא",name:"Tazria-Metzora",heb:"תַזְרִיעַ-מְּצֹרָע",ref:"Lv 12:1–15:33",sr:"Leviticus 12-13|Leviticus 14-15"},
+ {id:29,book:"Vayikra",bh:"וַיִּקְרָא",name:"Acharei Mot-Kedoshim",heb:"אַחֲרֵי מוֹת-קְדֹשִׁים",ref:"Lv 16:1–20:27",sr:"Leviticus 16-18|Leviticus 19-20"},
+ {id:31,book:"Vayikra",bh:"וַיִּקְרָא",name:"Emor",heb:"אֱמֹר",ref:"Lv 21:1–24:23",sr:"Leviticus 21-24"},
+ {id:32,book:"Vayikra",bh:"וַיִּקְרָא",name:"Behar-Bechukotai",heb:"בְּהַר-בְּחֻקֹּתַי",ref:"Lv 25:1–27:34",sr:"Leviticus 25-26|Leviticus 27"},
+ {id:34,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Bamidbar",heb:"בְּמִדְבַּר",ref:"Nb 1:1–4:20",sr:"Numbers 1-4.20"},
+ {id:35,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Nasso",heb:"נָשֹׂא",ref:"Nb 4:21–7:89",sr:"Numbers 4.21-7.89"},
+ {id:36,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Beha'alotcha",heb:"בְּהַעֲלֹתְךָ",ref:"Nb 8:1–12:16",sr:"Numbers 8-12.16"},
+ {id:37,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Shelach",heb:"שְׁלַח",ref:"Nb 13:1–15:41",sr:"Numbers 13-15.41"},
+ {id:38,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Korach",heb:"קֹרַח",ref:"Nb 16:1–18:32",sr:"Numbers 16-18.32"},
+ {id:39,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Chukat-Balak",heb:"חֻקַּת-בָּלָק",ref:"Nb 19:1–25:9",sr:"Numbers 19-21|Numbers 22-25"},
+ {id:41,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Pinchas",heb:"פִּינְחָס",ref:"Nb 25:10–30:1",sr:"Numbers 25.10-30"},
+ {id:42,book:"Bamidbar",bh:"בְּמִדְבַּר",name:"Matot-Massei",heb:"מַּטּוֹת-מַסְעֵי",ref:"Nb 30:2–36:13",sr:"Numbers 30-32|Numbers 33-36"},
+ {id:44,book:"Devarim",bh:"דְּבָרִים",name:"Devarim",heb:"דְּבָרִים",ref:"Dt 1:1–3:22",sr:"Deuteronomy 1-3.22"},
+ {id:45,book:"Devarim",bh:"דְּבָרִים",name:"Va'etchanan",heb:"וָאֶתְחַנַּן",ref:"Dt 3:23–7:11",sr:"Deuteronomy 3.23-7.11"},
+ {id:46,book:"Devarim",bh:"דְּבָרִים",name:"Ekev",heb:"עֵקֶב",ref:"Dt 7:12–11:25",sr:"Deuteronomy 7.12-11.25"},
+ {id:47,book:"Devarim",bh:"דְּבָרִים",name:"Re'eh",heb:"רְאֵה",ref:"Dt 11:26–16:17",sr:"Deuteronomy 11.26-16.17"},
+ {id:48,book:"Devarim",bh:"דְּבָרִים",name:"Shoftim",heb:"שֹׁפְטִים",ref:"Dt 16:18–21:9",sr:"Deuteronomy 16.18-21.9"},
+ {id:49,book:"Devarim",bh:"דְּבָרִים",name:"Ki Tetze",heb:"כִּי-תֵצֵא",ref:"Dt 21:10–25:19",sr:"Deuteronomy 21.10-25.19"},
+ {id:50,book:"Devarim",bh:"דְּבָרִים",name:"Ki Tavo",heb:"כִּי-תָבוֹא",ref:"Dt 26:1–29:8",sr:"Deuteronomy 26-29.8"},
+ {id:51,book:"Devarim",bh:"דְּבָרִים",name:"Nitzavim-Vayeilech",heb:"נִצָּבִים-וַיֵּלֶךְ",ref:"Dt 29:9–31:30",sr:"Deuteronomy 29-30|Deuteronomy 31"},
+ {id:53,book:"Devarim",bh:"דְּבָרִים",name:"Haazinu",heb:"הַאֲזִינוּ",ref:"Dt 32:1–52",sr:"Deuteronomy 32"},
+ {id:54,book:"Devarim",bh:"דְּבָרִים",name:"Vezot HaBerakha",heb:"וְזֹאת הַבְּרָכָה",ref:"Dt 33:1–34:12",sr:"Deuteronomy 33-34"}
 ];
 var BOOKS=["Bereshit","Shemot","Vayikra","Bamidbar","Devarim"];
-var CID=27;
 var currentTab='heb';
 
-// ═══════════════════════════════════════════════════════════
-// META CACHE — Claude API loads résumé+commentaire on demand
-// ═══════════════════════════════════════════════════════════
-var MC={};
-// Pre-load current week
-MC[27]={
-s:"<p><strong>Tazria — Naissance et pureté</strong> — Après l'accouchement, la mère observe une période d'impureté rituelle : 7 jours pour un garçon puis 33 jours de purification ; 14 jours pour une fille puis 66 jours. Au terme elle apporte un agneau et un pigeon au Temple — ou deux pigeons si elle est dans le besoin. La Torah adapte toujours ses exigences aux capacités de chacun.</p><p><strong>Tazria — Le tsaraat</strong> — Cette affliction spirituelle (souvent traduite par lèpre mais distincte de toute maladie médicale) se manifeste sous trois formes sur la peau. Seul le cohen l'examine et prononce le verdict. En cas de doute, isolement de 7 jours puis réexamen. La personne déclarée impure déchire ses vêtements et vit seule hors du camp.</p><p><strong>Metzora — Purification et réintégration</strong> — Quand la guérison survient, le cohen constate hors du camp. Rituel des deux oiseaux, cèdre, fil écarlate, hysope. L'oiseau sacrifié, l'autre libéré sur les champs — image de l'âme purifiée retrouvant sa liberté. Après 7 jours supplémentaires, réintégration complète avec de nouveaux sacrifices.</p><p><strong>Metzora — Maisons et flux</strong> — Le tsaraat peut atteindre les pierres des maisons en Canaan. Si la plaie persiste, la maison est démolie. La paracha se clôt sur les flux d'impureté (zav, nidda, zava) et l'immersion au mikvé — fondement de la taharat hamichpacha.</p>",
-co:"<p><strong>La parole qui crée ou détruit</strong> — Le Talmud (Erkhin 16a) est formel : la cause du tsaraat est la lachon hara, la médisance. Le Baal Shem Tov enseigne que chaque parole crée des mondes ou en détruit — « La vie et la mort sont au pouvoir de la langue » (Proverbes 18:21). La médisance ne blesse pas seulement la victime : elle déchire le tissu de la Création. C'est pourquoi D-ieu la rend visible sur le corps — pour que la guérison soit enfin possible.</p><p><strong>L'isolement comme espace sacré</strong> — L'Admour HaZaken (Tanya, Iggeret HaTéchouva ch.1) : le tsaraat est un acte de miséricorde. D-ieu rend visible ce qui est corrompu dans l'âme non pour punir mais pour guérir. L'isolement n'est pas une honte — c'est une retraite spirituelle forcée, comparable au retrait de Moïse au Sinaï. Seul avec lui-même, l'homme peut enfin entendre la voix divine et opérer un retour sincère.</p><p><strong>Le huitième jour — transcender la nature</strong> — Le Sfat Emet (Tazria 5643) : les sept jours représentent le cycle naturel du monde créé en sept jours. Le huitième jour — la brit mila — représente ce qui transcende la nature, l'alliance éternelle. Le tsaraat survient quand l'homme reste prisonnier du cycle naturel sans aspirer à sa dimension supérieure. La guérison vient quand il retrouve son élan vers le huitième jour.</p><p><strong>Roch Hodech Iyar — le renouveau du Omer</strong> — En ce 1er Iyar, Tazria-Metzora résonne avec une force particulière. Iyar est le mois du Omer, de la montée spirituelle entre Pessa'h et Chavouot. Chaque jour est un travail sur soi (עֲבוֹדַת הַמִּדּוֹת). La liberté de Pessa'h doit se traduire en libération de nos penchants négatifs : orgueil, jalousie, médisance.</p>",
-so:"Talmud Erkhin 16a · Tanya Iggeret HaTéchouva ch.1 · Sfat Emet Tazria 5643 · Vayikra Rabba 16 · Proverbes 18:21"
-};
+// PARACHA SCHEDULE — samedi de lecture (année 5785-5787)
+// Format: [id, annee, mois0, jour]
+var SCHED=[
+ [1,2024,9,5],[2,2024,9,12],[3,2024,9,19],[4,2024,9,26],[5,2024,10,2],[6,2024,10,9],
+ [7,2024,10,16],[8,2024,10,23],[9,2024,10,30],[10,2024,11,7],[11,2024,11,14],[12,2024,11,21],
+ [13,2025,0,4],[14,2025,0,11],[15,2025,0,18],[16,2025,0,25],[17,2025,1,1],[18,2025,1,8],
+ [19,2025,1,22],[20,2025,2,1],[21,2025,2,8],[22,2025,2,15],[24,2025,2,22],[25,2025,3,5],
+ [26,2025,4,3],[27,2025,4,10],[29,2025,4,17],[31,2025,4,24],[32,2025,5,7],[34,2025,5,14],
+ [35,2025,5,21],[36,2025,5,28],[37,2025,6,5],[38,2025,6,12],[39,2025,6,19],[41,2025,7,2],
+ [42,2025,7,9],[44,2025,7,16],[45,2025,7,23],[46,2025,7,30],[47,2025,8,6],[48,2025,8,13],
+ [49,2025,8,20],[50,2025,8,27],[51,2025,9,4],[53,2025,9,27],[54,2025,10,16],
+ // 5786 — dates précises des samedis de lecture
+ [1,2025,10,25],[2,2025,11,1],[3,2025,11,8],[4,2025,11,15],[5,2025,11,22],[6,2025,11,29],
+ [7,2026,0,3],[8,2026,0,10],[9,2026,0,17],[10,2026,0,24],[11,2026,0,31],[12,2026,1,7],
+ [13,2026,1,14],[14,2026,1,21],[15,2026,1,28],[16,2026,2,7],[17,2026,2,14],[18,2026,2,21],
+ [19,2026,2,28],[20,2026,3,4],[21,2026,3,11],[22,2026,3,18],
+ // Après Pessa'h 5786 (2-9 avril 2026) — reprise le 18 avril
+ [24,2026,3,11], // Vayikra          — sam 11 avril 2026 (pendant Pessa'h, lu spécialement)
+ [27,2026,3,18], // Tazria-Metzora   — sam 18 avril 2026  ← ce chabbat passé
+ [29,2026,3,25], // Acharei Mot-Kedoshim — sam 25 avril 2026  ← prochain chabbat
+ [31,2026,4,2],  // Emor             — sam 2 mai 2026
+ [32,2026,4,9],  // Behar-Bechukotai — sam 9 mai 2026
+ [34,2026,4,16], // Bamidbar         — sam 16 mai 2026
+ [35,2026,4,23], // Nasso            — sam 23 mai 2026
+ [36,2026,5,6],  // Beha'alotcha     — sam 6 juin 2026
+ [37,2026,5,13], // Shelach          — sam 13 juin 2026
+ [38,2026,5,20], // Korach           — sam 20 juin 2026
+ [39,2026,5,27], // Chukat-Balak     — sam 27 juin 2026
+ [41,2026,6,4],  // Pinchas          — sam 4 juil 2026
+ [42,2026,6,11], // Matot-Massei     — sam 11 juil 2026
+ [44,2026,6,18], // Devarim          — sam 18 juil 2026
+ [45,2026,7,8],  // Va'etchanan      — sam 8 août 2026
+ [46,2026,7,15], // Ekev             — sam 15 août 2026
+ [47,2026,7,22], // Re'eh            — sam 22 août 2026
+ [48,2026,7,29], // Shoftim          — sam 29 août 2026
+ [49,2026,8,5],  // Ki Tetze         — sam 5 sept 2026
+ [50,2026,8,12], // Ki Tavo          — sam 12 sept 2026
+ [51,2026,8,19], // Nitzavim-Vayeilech — sam 19 sept 2026
+ [53,2026,9,3],  // Haazinu          — sam 3 oct 2026
+ [54,2026,9,11], // Vezot HaBerakha  — sam 11 oct 2026
+ [1,2026,9,17],[2,2026,9,24]
+];
 
-function loadMeta(id,cb){
-  if(MC[id]){cb(MC[id]);return;}
-  var p=getP(id);
-  document.getElementById('d-summary').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-  document.getElementById('d-commentary').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-  fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':'ignored','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',max_tokens:1400,
-      system:'Tu es un érudit Torah et hassidisme. Réponds UNIQUEMENT en JSON valide sans backticks, format: {"s":"résumé HTML <p><strong> 3-4 paragraphes","co":"commentaire hassidique HTML <p><strong> 4 paragraphes avec Baal Shem Tov Tanya Sfat Emet etc","so":"sources courtes séparées par ·"}',
-      messages:[{role:'user',content:'Paracha '+p.name+' ('+p.heb+') '+p.ref+' livre de '+p.book+'. Génère résumé détaillé et commentaire hassidique profond.'}]
-    })
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    var raw=(d.content||[]).find(function(b){return b.type==='text';});
-    var txt=raw?raw.text:'';
-    var parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
-    MC[id]=parsed;cb(parsed);
-  })
-  .catch(function(){
-    var fb={s:'<p>Connexion requise pour charger le résumé de <strong>'+p.name+'</strong>.</p>',co:'<p>Connexion requise pour le commentaire hassidique.</p>',so:''};
-    cb(fb);
-  });
+function getCurrentParashaId(){
+  var now=new Date();
+  var dow=now.getDay(); // 0=dim, 6=sam
+  var todayMs=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+
+  // Règle :
+  // - Samedi avant 20h : paracha de CE samedi (on est encore en Chabbat)
+  // - Samedi après 20h + tous les autres jours : paracha du PROCHAIN samedi
+  var isCurShabbat=(dow===6 && now.getHours()<20);
+
+  if(isCurShabbat){
+    // Trouver la dernière entrée dont le samedi <= aujourd'hui
+    var best=SCHED[0][0],bestMs=-Infinity;
+    for(var i=0;i<SCHED.length;i++){
+      var e=SCHED[i];
+      var d=new Date(e[1],e[2],e[3]).getTime();
+      if(d<=todayMs && d>bestMs){bestMs=d;best=e[0];}
+    }
+    return best;
+  } else {
+    // Trouver la première entrée dont le samedi est STRICTEMENT après aujourd'hui
+    var nextBest=SCHED[SCHED.length-1][0],nextMs=Infinity;
+    for(var i=0;i<SCHED.length;i++){
+      var e=SCHED[i];
+      var d=new Date(e[1],e[2],e[3]).getTime();
+      if(d>todayMs && d<nextMs){nextMs=d;nextBest=e[0];}
+    }
+    return nextBest;
+  }
 }
 
-// ═══════════════════════════════════════════════════════════
-// HEBREW CALENDAR ENGINE
-// ═══════════════════════════════════════════════════════════
+// CONTENU PRÉ-CHARGÉ
+var MC={};
+function m(id,s,co,so){MC[id]={s:s,co:co,so:so};}
+
+m(1,"<p><strong>La Création en six jours</strong> — D-ieu crée le monde : lumière, firmament, mers, astres, animaux, puis l'homme et la femme à Son image. Le septième jour, Il sanctifie le Chabbat.</p><p><strong>Le jardin d'Éden</strong> — Adam et Ève mangent le fruit défendu et sont exilés du paradis. D-ieu leur confectionne des habits de peau.</p><p><strong>Caïn et Abel</strong> — Caïn tue son frère par jalousie. La paracha se clôt sur la généalogie jusqu'à Noé et la corruption croissante de l'humanité.</p>","<p><strong>La lumière primordiale</strong> — Le Baal Shem Tov : la lumière du premier jour n'est pas celle du soleil (créé le 4e jour) mais la lumière de la Torah, cachée pour les justes dans le monde à venir. Chaque étude de Torah en ravive une étincelle.</p><p><strong>L'image divine</strong> — L'Admour HaZaken (Tanya ch.2) : l'homme porte une âme divine, « partie de D-ieu d'en haut ». Notre mission est de révéler cette étincelle dans chaque acte du quotidien — transformer la matière en sainteté.</p><p><strong>Le Chabbat comme but</strong> — Le Sfat Emet : le Chabbat n'est pas la fin mais le but de la semaine. Chaque action des six jours prend son sens à la lumière du septième.","Baal Shem Tov, Keter Shem Tov · Tanya ch.2 · Sfat Emet Bereshit 5631");
+
+m(2,"<p><strong>Noé et le déluge</strong> — Noé, homme juste dans sa génération, construit une arche selon les instructions divines. Le déluge efface toute vie pendant quarante jours. Sa famille et les animaux survivent.</p><p><strong>L'alliance de l'arc-en-ciel</strong> — D-ieu conclut une alliance avec toute l'humanité : Il ne détruira plus la terre par les eaux. L'arc-en-ciel en est le signe éternel.</p><p><strong>La tour de Babel</strong> — Les hommes bâtissent une tour vers les cieux par orgueil. D-ieu confond leur langage et les disperse sur toute la terre. La paracha se clôt avec la généalogie menant à Abraham.","<p><strong>L'arche comme mot de Torah</strong> — תֵּבָה signifie à la fois « arche » et « mot ». Le Baal Shem Tov : quand le monde est submergé par le déluge des tentations, l'homme doit s'enfermer dans les mots de la Torah pour sauvegarder son âme.</p><p><strong>Juste dans sa génération</strong> — Le Sfat Emet : Noé est juste malgré son environnement corrompu. La sainteté est toujours possible quel que soit le contexte. Chaque génération a ses défis propres et son propre chemin vers D-ieu.</p><p><strong>L'arc-en-ciel et la promesse</strong> — La lumière blanche décomposée en sept couleurs est l'image des âmes d'Israël dispersées dans la galout. La promesse divine est leur réunification en une lumière unifiée aux temps messianiques.","Baal Shem Tov §68 · Sfat Emet Noach · Likoutei Sichos");
+
+m(3,"<p><strong>L'appel divin — Lekh Lekha</strong> — D-ieu ordonne à Abraham de quitter sa terre, sa famille, la maison de son père. Il part à 75 ans avec Sara et Lot. C'est la première des dix épreuves d'Abraham.</p><p><strong>Les voyages et l'alliance</strong> — Abraham traverse Canaan, séjourne en Égypte, se sépare de Lot. D-ieu lui promet la terre et une descendance innombrable comme les étoiles. Il conclut l'alliance entre les morceaux (brit bein habetarim).</p><p><strong>La circoncision</strong> — À 99 ans, Abraham reçoit la brit mila et se circoncit lui-même. Son nom passe d'Abram à Abraham.","<p><strong>Va vers toi-même</strong> — « Lekh Lekha » signifie littéralement « va vers toi-même ». Le Baal Shem Tov : cet appel est avant tout intérieur — dépasser son moi superficiel pour atteindre son âme divine. Le vrai voyage d'Abraham est un voyage vers l'intérieur.</p><p><strong>Les trois obstacles spirituels</strong> — L'Admour HaZaken (Likoutei Torah) : quitter « ta terre » (habitudes corporelles), « ta patrie » (influences de l'éducation), « la maison de ton père » (limites de l'intellect). La liberté spirituelle exige de transcender ces trois enveloppes.</p><p><strong>Sois une bénédiction</strong> — Le Sfat Emet : celui qui accomplit son Lekh Lekha intérieur devient source de bénédiction pour tous. La sainteté personnelle rayonne nécessairement vers l'extérieur.","Baal Shem Tov §12 · Admour HaZaken, Likoutei Torah · Sfat Emet 5638");
+
+m(4,"<p><strong>Les trois anges</strong> — Abraham, convalescent après sa circoncision, accueille trois anges déguisés en voyageurs avec une hospitalité exemplaire. Ils annoncent la naissance d'Isaac. Sara rit d'incrédulité.</p><p><strong>Sodome et l'intercession</strong> — D-ieu informe Abraham de la destruction de Sodome. Abraham intercède courageusement pour les justes. Les anges sauvent Lot. Sa femme se transforme en statue de sel.</p><p><strong>L'Akéda — la ligature d'Isaac</strong> — D-ieu éprouve Abraham en lui demandant d'offrir Isaac sur le mont Moriah. Au dernier moment un ange retient son bras. Un bélier est sacrifié à sa place. C'est la suprême épreuve.","<p><strong>L'hospitalité prime sur tout</strong> — Le Talmud (Chabbat 127a) : l'hospitalité est plus grande que recevoir la Présence divine. Abraham interrompt sa prophétie pour courir vers les voyageurs. Le Baal Shem Tov : l'amour de l'autre doit primer sur le repli spirituel, aussi élevé soit-il.</p><p><strong>L'Akéda et la prière</strong> — L'Admour HaZaken : l'Akéda est le fondement de toute prière juive. Nous prions avec le mérite d'Abraham qui accepta de tout sacrifier. Chaque son du Chofar à Roch Hachana rappelle le bélier d'Abraham.</p><p><strong>Les épreuves comme élévations</strong> — Le Sfat Emet : D-ieu n'a jamais voulu le sacrifice d'Isaac — Il voulait mesurer la profondeur de la foi. Chaque épreuve n'est pas une punition mais une invitation à gravir un échelon vers D-ieu.","Talmud Chabbat 127a · Torah Or Vayera · Sfat Emet 5644");
+
+m(5,"<p><strong>La mort de Sara</strong> — Sara décède à 127 ans à Hébron. Abraham achète la caverne de Makhpéla aux Hittites — premier bien immobilier des patriarches en terre de Canaan.</p><p><strong>La mission d'Eliezer</strong> — Abraham envoie son serviteur chercher une femme pour Isaac. Eliezer prie D-ieu de le guider par un signe précis. Rébecca remplit le signe et accepte de partir.</p><p><strong>Le mariage d'Isaac et Rébecca</strong> — Isaac méditait dans les champs au coucher du soleil — origine de la prière de Mincha. Leur rencontre et leur mariage consolent Isaac du deuil de sa mère.","<p><strong>Les années de Sara inaltérables</strong> — À cent ans elle était comme à vingt, à vingt comme à sept. Le Sfat Emet : la véritable sainteté ne vieillit pas — l'âme divine reste toujours jeune et lumineuse, hors du temps.</p><p><strong>La prière d'Eliezer — la première spontanée</strong> — Le Baal Shem Tov : cette prière enseigne à voir les signes divins dans le quotidien. D-ieu répond avant même que nous ayons fini de prier — la réponse est déjà dans la demande sincère.</p><p><strong>Isaac méditait dans les champs</strong> — L'Admour HaZaken : chaque prière est une rencontre entre l'âme et sa Source divine — comme Isaac rencontrant Rébecca au coucher du soleil.","Rachi sur Gn 23:1 · Baal Shem Tov §56 · Sfat Emet 5636");
+
+m(6,"<p><strong>Jacob et Ésaü</strong> — Des jumeaux se battent dans le ventre de Rébecca. D-ieu annonce : « deux nations sont en toi ». Ésaü naît le premier, rouge et velu. Jacob tient son talon.</p><p><strong>Le droit d'aînesse et les bénédictions</strong> — Ésaü vend son droit d'aînesse pour un plat de lentilles. Isaac vieillit. Jacob, déguisé sur les conseils de Rébecca, reçoit la bénédiction principale. Ésaü pleure amèrement.</p><p><strong>La fuite vers Haran</strong> — Jacob fuit la colère d'Ésaü. Isaac le bénit solennellement avant son départ en lui interdisant d'épouser une femme cananéenne.","<p><strong>Les deux nations — le combat intérieur</strong> — Le Sfat Emet : le combat des jumeaux représente le conflit permanent entre le yetzer hatov et le yetzer hara. Notre tâche est d'élever les étincelles de sainteté cachées même dans la force brute d'Ésaü.</p><p><strong>La spiritualité ne s'hérite pas</strong> — L'Admour HaZaken : Jacob comprend la valeur de la bekhorat qu'Ésaü méprise pour une soupe. La bekhorat ne peut pas être héritée — elle doit être désirée et conquise par l'effort.</p><p><strong>Le talon qui aspire au plus haut</strong> — יַעֲקֹב vient de עָקֵב (talon). Le Maharal : Jacob représente ce qui aspire au plus haut depuis le plus bas. C'est le secret de la guéoula — la délivrance vient de ceux qui paraissent les plus humbles.","Sfat Emet Toldot · Admour HaZaken · Maharal, Guevourot Hachem");
+
+m(7,"<p><strong>L'échelle de Jacob</strong> — Jacob fuit vers Haran. La nuit, il rêve d'une échelle entre la terre et les cieux avec des anges qui montent et descendent. D-ieu lui renouvelle les promesses des patriarches.</p><p><strong>Jacob chez Laban</strong> — Il travaille sept ans pour Rachel mais Laban lui donne Léa. Il travaille encore sept ans pour Rachel. Douze fils naissent de ses quatre femmes.</p><p><strong>La fuite de chez Laban</strong> — Après vingt ans, Jacob part secrètement avec sa famille et ses troupeaux. Laban les poursuit mais D-ieu lui apparaît. Ils concluent un accord.","<p><strong>L'échelle et la Torah</strong> — סֻלָּם a la même valeur numérique que סִינַי. Le Zohar : l'échelle est l'image de la Torah — son pied dans la terre (les mitsvot pratiques), son sommet dans les cieux (les secrets mystiques).</p><p><strong>Les anges montent sur Jacob lui-même</strong> — Le Baal Shem Tov : les anges montent et descendent sur Jacob lui-même. Chaque âme juive est une échelle — parfois elle s'élève, parfois elle descend dans la matière pour en élever les étincelles.</p><p><strong>D-ieu est en ce lieu et je ne le savais pas</strong> — L'Admour HaZaken : c'est l'image de la galout. Nous ne réalisons pas toujours la sainteté du lieu où nous nous trouvons. Chaque endroit peut devenir « la porte des cieux ».","Zohar Vayetze 149b · Baal Shem Tov · Torah Or Vayetze");
+
+m(8,"<p><strong>Le retour vers Ésaü</strong> — Jacob envoie des cadeaux à Ésaü qui vient avec 400 hommes. Jacob prie, divise son camp. La nuit, il reste seul et lutte avec un être mystérieux jusqu'à l'aube.</p><p><strong>Le combat avec l'ange</strong> — L'ange touche le nerf sciatique de Jacob. Jacob reçoit le nom Israël : « tu as lutté avec D-ieu et les hommes, et tu as vaincu ».</p><p><strong>La réconciliation avec Ésaü</strong> — La rencontre se passe bien. Jacob s'installe à Shechem puis à Béthel où il érige une stèle.","<p><strong>Le combat de l'âme d'Israël</strong> — Le Zohar : l'ange était le « sar » (prince céleste) d'Ésaü, la force spirituelle de l'exil occidental. Israël peut être blessé mais ne peut être vaincu que s'il lâche prise — et il ne lâche jamais.</p><p><strong>La marque de la lutte transforme</strong> — L'Admour HaZaken : Jacob sort boiteux mais victorieux. Celui qui a vraiment lutté avec D-ieu ne marche plus tout à fait comme avant — il est à jamais transformé par cette rencontre.</p><p><strong>Israël — la tête aspirant vers le haut</strong> — Le Sfat Emet : l'identité d'Israël se définit par l'aspiration vers le haut — même et surtout dans les moments de lutte et d'obscurité.","Zohar Vayishlach 170a · Admour HaZaken · Sfat Emet 5641");
+
+m(9,"<p><strong>Joseph et la tunique</strong> — Jacob aime Joseph par-dessus tous et lui offre une tunique de couleurs. Les rêves prophétiques de Joseph attisent la jalousie de ses frères.</p><p><strong>La vente de Joseph</strong> — Les frères complotent. Joseph est jeté dans un puits puis vendu pour vingt pièces d'argent à des marchands. Jacob reçoit la tunique ensanglantée et pleure.</p><p><strong>Joseph en Égypte</strong> — Vendu à Potiphar, Joseph monte en grade. Accusé faussement, il est emprisonné. Il interprète les songes du panetier et de l'échanson.","<p><strong>La Providence cachée dans la vente</strong> — Le Baal Shem Tov : rien n'arrive par hasard. Même la jalousie des frères et la vente font partie du plan divin conduisant à la libération d'Égypte. La Providence divine guide chaque détail de l'histoire.</p><p><strong>Joseph — Sefirat Yessod</strong> — Joseph représente le fondement (יסוד), canal entre le ciel et la terre. Sa descente en Égypte est le prototype du Kiddouch Hachem dans l'exil — rester fidèle à D-ieu dans les profondeurs de la matière.</p><p><strong>Jacob voulait s'établir en paix</strong> — L'Admour HaZaken : les justes ne peuvent connaître le repos complet en ce monde — leur mission est d'élever des étincelles dans les profondeurs de l'exil.","Baal Shem Tov §207 · Torah Or Vayeshev · Zohar Vayeshev");
+
+m(10,"<p><strong>Les songes de Pharaon</strong> — Sept vaches grasses dévorées par sept maigres ; sept épis pleins avalés par sept vides. Aucun sage ne les interprète. L'échanson se souvient de Joseph en prison.</p><p><strong>L'élévation de Joseph</strong> — Joseph interprète : sept années d'abondance puis sept de famine. Pharaon le nomme vice-roi d'Égypte à trente ans. Joseph administre l'Égypte avec sagesse.</p><p><strong>Les frères en Égypte</strong> — La famine frappe tout le Proche-Orient. Les frères de Joseph viennent acheter du grain. Joseph les reconnaît mais ne se révèle pas. Il retient Siméon en otage.","<p><strong>Deux ans d'attente supplémentaires</strong> — Joseph avait cherché une aide humaine (l'échanson). Le Sfat Emet : quand on cherche d'abord l'aide humaine avant l'aide divine, la délivrance est retardée. Le bitahon doit être la force première.</p><p><strong>Révélateur de mystères divins</strong> — L'Admour HaZaken : Joseph incarne la capacité de voir la Providence divine cachée derrière les apparences du monde naturel. Les vaches grasses et maigres sont l'image du rythme de l'histoire.</p><p><strong>Joseph et la téchouva des frères</strong> — Joseph se présente comme un étranger menaçant pour que ses frères fassent téchouva. Le Maharal : le vrai pardon ne peut venir qu'après la prise de conscience totale de la faute commise.","Sfat Emet Miketz · Torah Or Miketz · Maharal");
+
+m(11,"<p><strong>Juda s'avance</strong> — Joseph cache la coupe dans le sac de Benjamin. Juda plaide avec une éloquence bouleversante, offrant de rester esclave à la place de son frère Benjamin.</p><p><strong>Les retrouvailles</strong> — Joseph ne peut plus se retenir et révèle son identité en pleurant : « Je suis Joseph ! Mon père vit-il encore ? » Les frères sont stupéfaits. Ils se réconcilient.</p><p><strong>La descente en Égypte</strong> — Joseph invite toute la famille à s'installer à Goshen. Jacob apprend que son fils vit. 70 âmes descendent en Égypte.","<p><strong>Juda — modèle de téchouva parfaite</strong> — L'Admour HaZaken : Juda avait proposé de vendre Joseph — maintenant il offre sa propre liberté pour Benjamin. C'est le modèle de la téchouva qui transforme le passé en force positive.</p><p><strong>Je suis Joseph — la révélation finale</strong> — Le Baal Shem Tov : au moment de la révélation, tout s'éclaire. Les épreuves, la jalousie, la vente — tout avait un sens. C'est ainsi que sera la guéoula : soudaine, totale, la Providence divine se révèle derrière toute l'histoire.</p><p><strong>Soixante-dix âmes — soixante-dix nations</strong> — Le Sfat Emet : les 70 âmes qui descendent correspondent aux 70 nations du monde. La mission d'Israël est de porter la lumière divine dans toutes les strates de l'humanité.","Admour HaZaken, Likoutei Torah · Baal Shem Tov §310 · Sfat Emet 5645");
+
+m(12,"<p><strong>Les bénédictions de Jacob</strong> — Jacob bénit les fils de Joseph en croisant les mains, donnant la préséance au cadet Ephraïm sur Manassé. Il bénit ensuite chacun de ses douze fils avec une prophétie personnelle.</p><p><strong>La mort de Jacob</strong> — Jacob demande à être enterré dans la caverne de Makhpéla. Il meurt à 147 ans. Un grand deuil est observé. Joseph et ses frères l'enterrent en Canaan.</p><p><strong>La mort de Joseph</strong> — Joseph rassure ses frères qu'il ne se vengera pas : « Vous aviez voulu me faire du mal, D-ieu l'a voulu pour le bien. » Il meurt à 110 ans.","<p><strong>Les mains croisées — contre l'ordre naturel</strong> — L'Admour HaZaken : la Torah renverse constamment l'ordre naturel. La grandeur spirituelle ne s'hérite pas — elle se mérite par l'effort et la dévotion personnelle.</p><p><strong>D-ieu a voulu pour le bien</strong> — Le Baal Shem Tov : la phrase la plus profonde de la Genèse. Derrière chaque épreuve, une volonté divine bienveillante. Voir D-ieu dans la totalité de l'histoire — voilà la foi d'Israël.</p><p><strong>Le cercueil en Égypte</strong> — Le Sfat Emet : la Genèse se clôt sur « un cercueil en Égypte ». La promesse que l'histoire n'est pas finie. Le cercueil de Joseph porté dans le désert rappellera à chaque génération la délivrance à venir.","Torah Or Vayechi · Baal Shem Tov §88 · Sfat Emet 5650");
+
+m(13,"<p><strong>L'oppression en Égypte</strong> — Un nouveau Pharaon asservit les Hébreux. Plus ils sont opprimés, plus ils se multiplient. Pharaon ordonne de jeter les nouveau-nés mâles dans le Nil.</p><p><strong>La naissance et la vocation de Moïse</strong> — Moïse naît, est sauvé par la fille de Pharaon. Il grandit au palais. Il tue un Égyptien qui frappait un Hébreu et fuit à Midian où il épouse Tsipora.</p><p><strong>Le buisson ardent</strong> — D-ieu apparaît à Moïse dans un buisson qui brûle sans se consumer. Il révèle Son Nom : « Je suis qui Je serai ». Moïse est envoyé libérer Israël. Aaron est désigné comme porte-parole.","<p><strong>Le buisson ardent et l'humilité</strong> — D-ieu se révèle dans le plus humble des arbrisseaux. Le Baal Shem Tov : la Présence divine réside là où règne l'humilité. Plus on s'abaisse devant D-ieu, plus on est capable de recevoir la révélation.</p><p><strong>Ehyé asher Ehyé — l'être pur</strong> — L'Admour HaZaken (Tanya) : ce Nom exprime l'être pur et absolu de D-ieu, au-delà de toute définition. La Torah nous révèle non ce qu'est D-ieu — car Il est indéfinissable — mais comment Il se relie à nous.</p><p><strong>Le feu qui ne consume pas</strong> — Le Sfat Emet : le peuple d'Israël est comme ce buisson — même dans les flammes de l'exil, il ne se consume pas. La présence divine en lui le préserve de la destruction totale.","Baal Shem Tov · Tanya ch.4 · Sfat Emet Shemot 5634");
+
+m(14,"<p><strong>Les six premières plaies</strong> — D-ieu envoie sur l'Égypte : le sang, les grenouilles, les poux, les bêtes sauvages, la mort du bétail, les furoncles. Pharaon endurcit son cœur après chaque plaie.</p><p><strong>Le message de la délivrance</strong> — D-ieu dit à Moïse : « Je suis D-ieu, je vous tirerai de sous les fardeaux d'Égypte. » Les six termes de la délivrance fondent les six coupes du Séder de Pessa'h.</p><p><strong>La résistance de Pharaon</strong> — D-ieu endurcit progressivement le cœur de Pharaon pour que la gloire divine soit pleinement révélée à travers les plaies.","<p><strong>D-ieu endurcit le cœur — la liberté préservée</strong> — L'Admour HaZaken (Tanya, Iggeret HaTéchouva) : Pharaon avait péché librement les premières fois. D-ieu lui retire ensuite la possibilité de téchouva pour que la délivrance soit totale et révèle la gloire divine au monde entier.</p><p><strong>Les plaies comme purification cosmique</strong> — Le Sfat Emet : les dix plaies correspondent aux dix paroles de la Création. L'Égypte est purifiée progressivement de chaque sphère d'impureté pour préparer la sortie du peuple saint.</p><p><strong>Ani Hachem — Je suis D-ieu</strong> — Le Baal Shem Tov : D-ieu est présent dans chaque situation, même la plus obscure. Même dans la plus profonde servitude, la présence divine n'abandonne jamais Israël.","Tanya, Iggeret HaTéchouva · Sfat Emet Va'era · Baal Shem Tov");
+
+m(15,"<p><strong>Les trois dernières plaies</strong> — Les sauterelles, les ténèbres épaisses pendant trois jours, et la mort des premiers-nés. Après la dixième plaie, Pharaon renvoie le peuple dans la nuit.</p><p><strong>La Pâque en Égypte</strong> — Institution du sacrifice pascal : agneau sans défaut, sang sur les linteaux, repas mangé en hâte. Le mois de Nissan devient le premier mois. Les lois du Pessa'h et des premiers-nés sont instituées.</p><p><strong>La sortie d'Égypte</strong> — Six cent mille hommes sortent avec une multitude mêlée et des troupeaux. L'Égypte est ravagée. La Torah prescrit les lois du Pessa'h pour les générations futures.","<p><strong>Les ténèbres — la lumière intérieure</strong> — Les Hébreux avaient de la lumière dans leurs demeures. Le Baal Shem Tov : même dans l'obscurité la plus totale, la lumière divine brille pour ceux qui la cherchent. L'exil est une obscurité extérieure — la lumière intérieure reste toujours accessible.</p><p><strong>L'agneau pascal — surmonter la peur</strong> — L'agneau était le dieu égyptien. Le sacrifice exigeait un courage immense. L'Admour HaZaken : la sortie d'Égypte commence par la victoire sur la peur du regard de l'autre — l'intériorisation de la foi avant la liberté extérieure.</p><p><strong>Mitsraïm — l'étroitesse intérieure</strong> — Le Sfat Emet : מִצְרַיִם vient de מֵצַר (étroitesse). Chaque homme a son Mitsraïm intérieur — ses limites, ses peurs, ses habitudes. Pessa'h est une invitation annuelle à en sortir.","Baal Shem Tov · Torah Or Bo · Sfat Emet Bo");
+
+m(16,"<p><strong>La traversée de la mer Rouge</strong> — Les Hébreux se retrouvent coincés entre la mer et l'armée de Pharaon. Moïse lève son bâton, la mer se fend. Les Hébreux passent à pied sec. L'armée égyptienne est engloutie.</p><p><strong>Le cantique de la mer — Az Yachir</strong> — Moïse et tout Israël chantent l'un des plus beaux poèmes de la Torah. Myriam conduit les femmes avec des tambourins.</p><p><strong>Les premières épreuves du désert</strong> — L'eau amère de Mara est adoucie. La manne commence à tomber. D-ieu prescrit le Chabbat. Amalek attaque et est vaincu par Josué grâce aux mains levées de Moïse.","<p><strong>Nachshon et le premier pas de foi</strong> — La mer ne s'est pas ouverte quand Moïse a levé son bâton, mais quand Nachshon est entré dans l'eau jusqu'au cou. Le Baal Shem Tov : les miracles attendent l'initiative humaine. D-ieu ne s'ouvre que quand l'homme fait le premier pas.</p><p><strong>La manne et la confiance quotidienne</strong> — L'Admour HaZaken : la manne enseignait le bitahon quotidien. Vivre dans le présent, sans s'inquiéter du lendemain — la Providence divine pourvoit à chaque jour pour qui Lui fait confiance.</p><p><strong>Az Yachir — le passé au futur</strong> — Le Sfat Emet : la Torah utilise un temps ambigu — « alors Moïse chantera ». Le cantique de la mer est si profond qu'il sera chanté à nouveau aux temps messianiques — il transcende le temps.","Baal Shem Tov · Torah Or Beshalach · Sfat Emet 5638");
+
+m(17,"<p><strong>Yitro et la délégation du pouvoir</strong> — Yitro, beau-père de Moïse, entend tout ce que D-ieu a fait pour Israël. Il rejoint le camp et conseille à Moïse d'instituer des juges pour alléger sa charge.</p><p><strong>La préparation au don de la Torah</strong> — D-ieu demande au peuple de se sanctifier pendant trois jours avant la révélation. Tonnerre, éclairs, nuage épais et son du Chofar sur le Sinaï. Le peuple tremble de crainte et de ferveur.</p><p><strong>Les Dix Commandements</strong> — D-ieu prononce les Dix Paroles devant tout le peuple d'Israël assemblé au pied du Sinaï. C'est le moment central de la révélation divine dans l'histoire humaine.","<p><strong>Yitro — le premier prosélyte</strong> — Yitro vient librement vers D-ieu après avoir « entendu ». Le Baal Shem Tov : la conversion sincère de Yitro enseigne que chaque âme humaine peut trouver le chemin vers D-ieu. La porte de la téchouva est toujours ouverte.</p><p><strong>Anokhi Hachem — Je suis D-ieu</strong> — L'Admour HaZaken (Tanya) : le mot אָנֹכִי vient de l'égyptien signifiant « moi-même ». D-ieu dit : c'est Ma propre essence — non Mes attributs ou Mes actions — qui s'est révélée au Sinaï. Révélation sans précédent dans l'histoire.</p><p><strong>Le Chofar et l'Infini</strong> — Le son du Chofar au Sinaï était le son de l'Infini se manifestant dans le fini. Le Sfat Emet : chaque Roch Hachana, ce son se répète — une invitation à retrouver l'intensité du Sinaï.","Baal Shem Tov · Tanya ch.36 · Sfat Emet Yitro 5639");
+
+m(18,"<p><strong>Les lois civiles et sociales</strong> — La Torah détaille les lois sur l'esclavage hébreu, les atteintes à la personne, les dommages corporels, les responsabilités des gardiens et les relations sociales fondamentales.</p><p><strong>Lois économiques et éthiques</strong> — Protection de l'étranger, de la veuve et de l'orphelin. Interdiction du prêt à intérêt. Les trois fêtes de pèlerinage. Interdiction de faire bouillir un chevreau dans le lait de sa mère.</p><p><strong>L'alliance au Sinaï</strong> — Moïse écrit le Livre de l'Alliance. Le peuple répond : « Naaseh venishma — nous ferons et nous écouterons. » Moïse monte sur la montagne pour 40 jours.","<p><strong>Naaseh venishma — le paradoxe d'Israël</strong> — « Nous ferons et nous écouterons » : d'abord l'action, ensuite la compréhension. Le Baal Shem Tov : on comprend en faisant, pas avant. La foi précède la raison — c'est le secret du service divin d'Israël.</p><p><strong>La loi civile comme loi divine</strong> — L'Admour HaZaken : les Mishpatim (lois civiles) font suite immédiatement aux Dix Commandements pour enseigner que le droit humain est sacré. Léser son prochain est léser D-ieu lui-même.</p><p><strong>L'étranger — test ultime de la spiritualité</strong> — Le Sfat Emet : la Torah mentionne 36 fois l'obligation d'aimer l'étranger. Le traitement de celui qui est différent est le test ultime de la spiritualité. L'amour de D-ieu se mesure à l'amour de l'autre.","Baal Shem Tov · Torah Or Mishpatim · Sfat Emet 5642");
+
+m(19,"<p><strong>Les contributions pour le Tabernacle</strong> — D-ieu demande à chaque Israélite de donner volontairement pour construire le Tabernacle. Les matériaux : or, argent, cuivre, tissus de couleurs, bois d'acacia, huile, épices.</p><p><strong>Les objets du Tabernacle</strong> — Plans détaillés de l'Arche d'Alliance, de la Table des pains de proposition, du Candélabre d'or (Menora), des rideaux et des planches, de l'Autel des holocaustes.</p><p><strong>Le Tabernacle — demeure divine</strong> — Le Tabernacle est la continuation du Sinaï. D-ieu souhaitant résider en permanence au milieu d'Israël. « Ils me feront un sanctuaire et Je résiderai en leur sein. »","<p><strong>La teruma du cœur</strong> — La contribution doit venir de « tout homme dont le cœur est généreux ». Le Baal Shem Tov : D-ieu n'a pas besoin de l'or et de l'argent — Il demande le cœur. La qualité de l'intention transforme le matériel en sainteté.</p><p><strong>Un sanctuaire dans chaque cœur</strong> — L'Admour HaZaken : « Et Je résiderai en leur sein » — en eux, dans chaque cœur humain, pas seulement dans l'édifice. Chaque Juif est un Tabernacle ambulant pour la Présence divine.</p><p><strong>La Menora et les sept niveaux de sagesse</strong> — Le Sfat Emet : la Menora représente la sagesse de la Torah. Ses sept branches symbolisent les sept niveaux de compréhension. Elle brûle de la nuit vers le matin — la Torah éclaire les ténèbres pour révéler la lumière.","Baal Shem Tov · Torah Or Teruma · Sfat Emet 5635");
+
+m(20,"<p><strong>L'huile et les lampes</strong> — Aaron est chargé d'allumer les lampes de la Menora chaque jour. C'est la mitsva de l'allumage perpétuel — la flamme ne doit jamais s'éteindre.</p><p><strong>Les huit vêtements sacerdotaux</strong> — Plans détaillés du pectoral, de l'éphod, du manteau bleu, de la tunique, de la tiare et du diadème d'or gravé « Saint pour D-ieu ». Ces vêtements transforment Aaron en Grand Prêtre.</p><p><strong>L'Autel des parfums</strong> — Construction de l'Autel des parfums en or pur. Aaron offrira l'encens chaque matin et chaque soir — symbole de la prière montant vers les cieux.","<p><strong>Moïse absent de cette paracha</strong> — C'est la seule paracha depuis Shemot où le nom de Moïse n'apparaît pas. Il avait dit « efface-moi du Livre ». Le Baal Shem Tov : même absent par son nom, Moïse est présent dans chaque lettre — l'âme du juste est présente même quand elle semble absente.</p><p><strong>Les vêtements qui transforment</strong> — L'Admour HaZaken : les huit vêtements correspondent aux huit aspects de l'âme. S'habiller pour le service divin est un acte de transformation intérieure — on s'habille en saint pour devenir saint.</p><p><strong>L'encens et la prière la plus haute</strong> — Le Sfat Emet : l'encens (ketoret) monte sans retour — image de la prière pure. Son parfum pénètre là où les sacrifices n'accèdent pas. La prière sincère atteint les sphères les plus élevées.","Baal Shem Tov · Admour HaZaken · Sfat Emet Tetzaveh");
+
+m(21,"<p><strong>Le demi-shekel</strong> — Chaque Israélite donne un demi-shekel comme rançon de son âme lors du recensement. Le riche ne donne pas plus, le pauvre pas moins — tous égaux devant D-ieu.</p><p><strong>Le veau d'or</strong> — Pendant l'absence de Moïse, le peuple construit un veau d'or. D-ieu veut détruire le peuple. Moïse intercède, brise les Tables, détruit le veau et punit les coupables.</p><p><strong>Le renouveau de l'alliance</strong> — D-ieu révèle à Moïse les Treize Attributs de Miséricorde. Moïse redescend avec les secondes Tables. Son visage rayonne d'un éclat si intense qu'il doit porter un voile.","<p><strong>Les Treize Attributs — le remède avant la maladie</strong> — Le Baal Shem Tov : D-ieu a préparé les attributs de miséricorde avant même la faute du veau d'or. D-ieu sait que l'homme faillira et prépare déjà le pardon — c'est Sa miséricorde infinie.</p><p><strong>Les secondes Tables plus précieuses</strong> — L'Admour HaZaken : les secondes Tables, fruit de la téchouva, sont plus précieuses que les premières. Là où arrivent les ba'alei téchouva (repentants), même les justes parfaits ne peuvent atteindre.</p><p><strong>Le demi-shekel</strong> — Le Sfat Emet : chacun donne un demi seulement. L'homme seul est incomplet. L'union avec D-ieu et avec la communauté d'Israël complète l'être humain.","Baal Shem Tov · Iggeret HaTéchouva · Sfat Emet Ki Tissa");
+
+m(22,"<p><strong>Le Chabbat avant la construction</strong> — Moïse rappelle d'abord l'obligation du Chabbat — même pour construire le saint Tabernacle, on ne travaille pas le septième jour.</p><p><strong>Les dons affleurent</strong> — Le peuple donne avec une telle générosité que les artisans demandent à Moïse d'arrêter les contributions. Betsalel et Oholiav dirigent les travaux.</p><p><strong>La construction complète</strong> — Construction de tous les éléments : rideaux, planches, Arche, Table, Menora, autels. Tout est fait exactement selon les instructions divines.","<p><strong>Le Chabbat — tabernacle dans le temps</strong> — D-ieu mentionne le Chabbat avant la construction pour enseigner que la sainteté du temps précède la sainteté de l'espace. Le Baal Shem Tov : le Chabbat est le Tabernacle dans le temps — construit non avec des mains mais avec l'âme.</p><p><strong>La générosité comme signe de réparation</strong> — L'Admour HaZaken : le peuple donne trop — il faut arrêter. C'est le signe que la faute du veau d'or est réparée. L'âme juive purifiée retrouve naturellement sa générosité envers le divin.</p><p><strong>Betsalel — dans l'ombre de D-ieu</strong> — Le Sfat Emet : בְּצַלְאֵל signifie « dans l'ombre de D-ieu ». L'artisan qui construit le lieu saint travaille dans l'ombre de D-ieu — ses mains sont guidées d'en haut. Tout art véritable est un canal de créativité divine.","Baal Shem Tov · Admour HaZaken, Likoutei Torah · Sfat Emet");
+
+m(23,"<p><strong>Le bilan de la construction</strong> — Moïse recense tous les matériaux utilisés : l'argent du demi-shekel sert aux socles de l'édifice, le cuivre aux crochets et aux bases de l'enceinte.</p><p><strong>Les vêtements sacerdotaux terminés</strong> — Les vêtements d'Aaron et de ses fils sont confectionnés avec soin, exactement selon les instructions divines. Moïse constate la conformité parfaite de tous les travaux.</p><p><strong>La Présence divine s'installe</strong> — Quand tout est terminé et béni par Moïse, la nuée recouvre le Tabernacle et la gloire de D-ieu le remplit entièrement. Même Moïse ne peut y entrer. La nuée guidera le peuple dans ses déplacements.","<p><strong>Ka'asher tsiva Hachem — dix-huit fois</strong> — Cette formule se répète 18 fois dans Pekudei. Le Baal Shem Tov : même un acte répété peut être fait avec une intention nouvelle chaque fois. La routine spirituelle n'est pas un obstacle — c'est une opportunité de renouvellement perpétuel.</p><p><strong>La nuée et le tsimtsum divin</strong> — L'Admour HaZaken : la nuée qui remplit le Tabernacle est la même nuée du Sinaï. D-ieu se « contracte » (tsimtsum) pour résider dans un espace limité — c'est le miracle central du Tabernacle et de chaque âme humaine qui L'accueille.</p><p><strong>La transparence du leader</strong> — Le Sfat Emet : Moïse rend compte de chaque demi-shekel au peuple. Les leaders d'Israël doivent rendre des comptes. La transparence et l'intégrité dans la gestion des biens sacrés sont une obligation absolue.","Baal Shem Tov · Torah Or Pekudei · Sfat Emet");
+
+m(24,"<p><strong>Les sacrifices d'holocauste</strong> — D-ieu appelle Moïse du Tabernacle et lui enseigne les lois des sacrifices. L'olah (holocauste) est entièrement consumée sur l'autel. Les espèces animales et végétales sont précisées.</p><p><strong>Les sacrifices de paix, de péché et de culpabilité</strong> — La shlamim (paix) est partiellement consommée par les prêtres. Le hatat (péché) et l'acham (culpabilité) exigent la confession. La repentance est au cœur du système sacrificiel.</p><p><strong>L'impureté et ses conséquences</strong> — Les lois d'impureté transmise par contact et les obligations de purification qui en découlent.","<p><strong>Le aleph minuscule — humilité de Moïse</strong> — Le mot « vayikra » est écrit avec un aleph minuscule, signe d'humilité de Moïse. Le Baal Shem Tov : le plus grand prophète s'humiliait davantage que tous. Plus on approche du divin, plus on prend conscience de sa petitesse.</p><p><strong>Les sacrifices — rapprochement vers D-ieu</strong> — L'Admour HaZaken : קָרְבָּן (sacrifice) vient de קָרוֹב (proche). Chaque sacrifice est un mouvement de l'âme vers D-ieu. En l'absence du Temple, la prière remplace les sacrifices — mais l'intention de rapprochement reste identique.</p><p><strong>Adam ki yakriv — l'humilité de la terre</strong> — Le Sfat Emet : adam vient d'adamah (terre). L'humilité — se reconnaître comme poussière et cendre — est la condition première du service divin authentique.","Baal Shem Tov · Admour HaZaken, Likoutei Torah Vayikra · Sfat Emet");
+
+m(25,"<p><strong>Le feu perpétuel sur l'autel</strong> — L'holocauste brûle toute la nuit sur l'autel. Les cendres sont enlevées le matin dans un rituel précis. La flamme de l'autel ne doit jamais s'éteindre — mitsva permanente.</p><p><strong>Les offrandes alimentaires</strong> — La mincha (offrande végétale) est préparée avec huile, sel et sans levain. Une partie est consumée sur l'autel, le reste revient aux cohanim.</p><p><strong>Les sacrifices de paix et de péché des cohanim</strong> — Lois détaillées pour le sacrifice de paix, pour le sacrifice de péché du Cohen Gadol et de toute l'assemblée d'Israël.","<p><strong>La flamme perpétuelle dans le cœur</strong> — « Ech tamid toukad — un feu perpétuel brûlera. » Le Baal Shem Tov : ce feu est l'image de l'amour divin qui doit brûler perpetuellement dans le cœur de l'homme. Même quand la flamme semble s'affaiblir, il faut l'entretenir chaque jour.</p><p><strong>Tsav — l'urgence du service divin</strong> — Le mot tsav exprime l'urgence et l'ardeur. L'Admour HaZaken : le service de D-ieu exige une zrizout (ardeur) constante — ne jamais se laisser envahir par la tiédeur spirituelle qui est l'ennemi de la sainteté.</p><p><strong>La cendre — l'humilité après la sublimation</strong> — Le Sfat Emet : même l'humble tâche d'enlever les cendres de l'autel est un service divin noble. Il n'y a pas de petit acte dans le service de D-ieu — chaque geste, même le plus simple, peut être accompli avec une intention sainte.","Baal Shem Tov · Admour HaZaken, Tanya ch.1 · Sfat Emet Tzav");
+
+m(26,"<p><strong>L'inauguration du Tabernacle</strong> — Aaron et ses fils sont consacrés pendant sept jours. Le huitième jour, Aaron offre les premiers sacrifices officiels. La gloire divine apparaît et un feu divin consume les offrandes — signe d'agrément divin.</p><p><strong>La mort de Nadav et Avihou</strong> — Les deux fils aînés d'Aaron offrent un « feu étranger » et meurent aussitôt. Aaron accepte le décret divin en silence. Moïse interdit à Aaron de pleurer publiquement.</p><p><strong>Les lois de la cacherout</strong> — D-ieu enseigne les animaux permis (ruminants à sabots fendus, poissons avec nageoires et écailles) et interdits. Les insectes, reptiles et animaux rampants sont tous interdits.","<p><strong>Le huitième jour — transcender la nature</strong> — Le Sfat Emet : les sept jours de consécration représentent le cycle naturel. Le huitième jour le transcende — c'est le moment où la Présence divine descend spontanément. Le service humain parfait ouvre la porte au divin.</p><p><strong>Nadav et Avihou — une mort par excès d'amour</strong> — Le Zohar : ils moururent d'un excès d'amour divin — leur âme fut attirée vers le haut et ne put revenir. Le Baal Shem Tov : même une mort sainte laisse un vide. Le service divin doit rester ancré dans ce monde.</p><p><strong>La cacherout et la sensibilité de l'âme</strong> — L'Admour HaZaken : ce que l'homme mange influence son âme. La cacherout n'est pas hygiénique mais spirituelle — elle modèle la sensibilité de l'âme à travers le corps qu'elle habite.","Sfat Emet Shemini · Zohar · Admour HaZaken, Tanya ch.7");
+
+m(27,"<p><strong>Tazria — Naissance et pureté</strong> — Après l'accouchement : 7 jours d'impureté puis 33 jours de purification pour un garçon ; 14 jours puis 66 jours pour une fille. Au terme, un agneau et un pigeon au Temple — ou deux pigeons si on est dans le besoin. La Torah adapte ses exigences aux capacités de chacun.</p><p><strong>Tazria — Le tsaraat de la peau</strong> — Affliction spirituelle se manifestant sous trois formes sur la peau. Seul le cohen l'examine et prononce le verdict. En cas de doute, isolement de 7 jours puis réexamen. La personne impure déchire ses vêtements et vit seule hors du camp.</p><p><strong>Metzora — Purification et réintégration</strong> — Rituel des deux oiseaux, cèdre, fil écarlate, hysope. L'oiseau libéré sur les champs — image de l'âme purifiée retrouvant sa liberté. La paracha se clôt sur les flux d'impureté et l'immersion au mikvé.","<p><strong>La parole qui crée ou détruit</strong> — Le Talmud (Erkhin 16a) : la cause principale du tsaraat est la lachon hara, la médisance. Le Baal Shem Tov : chaque parole crée des mondes ou en détruit — « La vie et la mort sont au pouvoir de la langue » (Proverbes 18:21).</p><p><strong>L'isolement comme espace sacré</strong> — L'Admour HaZaken (Tanya, Iggeret HaTéchouva ch.1) : l'isolement n'est pas une honte — c'est une retraite spirituelle. Seul avec lui-même, sans les distractions du monde, l'homme peut entendre la voix divine et opérer un retour sincère.</p><p><strong>Le huitième jour — transcender la nature</strong> — Le Sfat Emet (Tazria 5643) : les sept jours représentent le cycle naturel. Le huitième jour — la brit mila — transcende la nature, l'alliance éternelle. Le tsaraat survient quand l'homme reste prisonnier du cycle naturel sans aspirer au-delà.","Talmud Erkhin 16a · Tanya Iggeret HaTéchouva ch.1 · Sfat Emet Tazria 5643 · Proverbes 18:21");
+
+m(29,"<p><strong>Acharei Mot — Le service de Yom Kippour</strong> — Description détaillée du service du Cohen Gadol : deux boucs (un pour D-ieu, un pour Azazel), bain rituel, habits blancs, encens dans le Saint des Saints. C'est le seul jour où le Grand Prêtre entre dans le lieu le plus sacré.</p><p><strong>Kedoshim — Soyez saints</strong> — Le grand code éthique d'Israël : honorer ses parents, observer le Chabbat, ne pas voler ni mentir, ne pas haïr son frère dans son cœur. Le commandement central : « Tu aimeras ton prochain comme toi-même. »</p><p><strong>Les lois de pureté familiale et sociale</strong> — Interdictions des unions illicites, des relations idolâtres, des pratiques cananéennes. Interdiction du sang. Les animaux sauvages chassés.","<p><strong>Le Saint des Saints et l'intimité divine</strong> — Le Cohen Gadol entre seul, sans aucun témoin humain. Le Baal Shem Tov : le rapport le plus intime avec D-ieu est personnel et silencieux. La vraie prière de Yom Kippour se fait dans le secret absolu du cœur.</p><p><strong>Ve'ahavta lere'akha kamokha</strong> — Le Baal Shem Tov fit de ce commandement le fondement de tout son enseignement. L'amour du prochain est la porte vers l'amour de D-ieu — on ne peut aimer D-ieu qu'à travers l'amour sincère de Ses créatures.</p><p><strong>Kedochim tihyu — un mouvement perpétuel</strong> — L'Admour HaZaken : la sainteté n'est pas un état acquis mais un mouvement perpétuel. « Soyez saints » est au présent continu — une aspiration constante, jamais définitivement accomplie.","Baal Shem Tov · Admour HaZaken, Tanya ch.32 · Sfat Emet Kedoshim");
+
+m(31,"<p><strong>La sainteté des cohanim</strong> — Les prêtres sont soumis à des règles de pureté strictes : interdiction de se souiller au contact des morts (sauf parents proches), interdiction d'épouser certaines femmes, obligation de sainteté particulière pour le Cohen Gadol.</p><p><strong>Le calendrier des fêtes</strong> — Calendrier sacré complet : Chabbat, Pessa'h, Chavouot, Roch Hachana, Yom Kippour, Souccot, Chemini Atseret. Les lois du compte du omer entre Pessa'h et Chavouot.</p><p><strong>Le pain de proposition et le blasphémateur</strong> — Les lois du lechem hapanim (pain de proposition). Un épisode de blasphème. Lois du talion. Ces lois encadrent les responsabilités civiles et les droits fondamentaux.","<p><strong>Le cohen peut se souiller pour ses parents</strong> — Même la sainteté la plus élevée a ses limites humaines. Le Baal Shem Tov : D-ieu veut des êtres humains saints — pas des anges. Le deuil est une mitsva, non une imperfection.</p><p><strong>Le calendrier — tabernacle du temps</strong> — L'Admour HaZaken : le calendrier juif est le « Tabernacle du temps ». Chaque fête est un portail temporel — la même énergie cosmique revient chaque année. Nous ne commémorons pas des événements passés, nous les vivons à nouveau.</p><p><strong>Le omer et l'élévation quotidienne</strong> — Le Sfat Emet : les 49 jours du omer correspondent aux 49 portes de la sagesse. Chaque jour est une invitation à travailler sur une qualité de l'âme, pour être prêt à recevoir à nouveau la Torah à Chavouot.","Baal Shem Tov · Admour HaZaken, Likoutei Torah Emor · Sfat Emet");
+
+m(32,"<p><strong>Behar — L'année sabbatique (shemita)</strong> — Toutes les sept ans, la terre d'Israël se repose. Interdiction de semer, tailler et récolter. Les fruits qui poussent spontanément appartiennent à tous. Après sept cycles de sept ans : le Jubilé (yovel).</p><p><strong>Le Jubilé et la liberté</strong> — L'année du jubilé : les esclaves hébreux sont libérés, les terres vendues reviennent à leurs familles d'origine. « Vous proclamerez la liberté dans tout le pays pour tous ses habitants. »</p><p><strong>Bechukotai — bénédictions et malédictions</strong> — Si Israël suit les lois divines, D-ieu bénira abondamment. Si Israël abandonne la Torah, de terribles châtiments s'abattront. La paracha se termine par l'espoir d'une réconciliation éternelle.","<p><strong>La shemita et la confiance totale en D-ieu</strong> — Laisser la terre en jachère une année entière demande un bitahon absolu. Le Baal Shem Tov : la shemita enseigne que la terre appartient à D-ieu. Nous sommes des gérants temporaires — jamais des propriétaires absolus.</p><p><strong>Dror — la liberté intérieure</strong> — דְּרוֹר (liberté du jubilé) signifie aussi « hirondelle » — oiseau qui ne peut vivre en captivité. L'Admour HaZaken : la vraie liberté est intérieure — se libérer de l'emprise de l'ego et du matérialisme qui enchaîne l'âme.</p><p><strong>La tocheha comme amour paternel</strong> — Le Sfat Emet : les malédictions terribles de la tocheha sont prononcées à voix basse dans la synagogue car elles naissent de l'amour. Un père qui corrige son enfant souffre autant que lui.","Baal Shem Tov · Admour HaZaken, Likoutei Torah Behar · Sfat Emet");
+
+m(34,"<p><strong>Le recensement d'Israël</strong> — D-ieu ordonne de recenser tous les hommes de vingt ans et plus, aptes au combat. Le total est de 603 550. Les Lévites sont recensés séparément — non pour la guerre mais pour le service du Tabernacle.</p><p><strong>L'organisation du camp</strong> — Organisation précise du campement autour du Tabernacle : chaque tribu a sa place assignée, son drapeau et ses chefs. Les Lévites campent immédiatement autour du Tabernacle pour le protéger.</p><p><strong>Les Lévites — la tribu de D-ieu</strong> — Les Lévites sont consacrés au service du Tabernacle en lieu et place des premiers-nés d'Israël. Ils ont 35 ans de service actif (de 30 à 65 ans).","<p><strong>Le désert — état d'esprit idéal</strong> — La Torah est donnée dans le désert — terre de personne, appartenant à tous. Le Baal Shem Tov : pour recevoir la Torah, il faut se vider comme un désert — abandonner les préjugés et l'orgueil. Le désert intérieur est l'état d'âme idéal pour apprendre.</p><p><strong>Chaque homme est un monde entier</strong> — L'Admour HaZaken : pourquoi recenser individuellement chaque homme ? Car chaque âme juive est un monde entier. Qui détruit une âme détruit un monde, qui en sauve une sauve un monde. Le recensement est une célébration de l'unicité de chaque être.</p><p><strong>Les drapeaux — l'unité dans la diversité</strong> — Le Sfat Emet : chaque tribu a son drapeau et sa couleur propres. La diversité au sein de l'unité est un idéal divin. La richesse d'Israël réside dans la complémentarité de ses tribus — chacune porte un aspect différent de la Torah.","Baal Shem Tov · Admour HaZaken · Sfat Emet Bamidbar");
+
+m(35,"<p><strong>Le recensement des Lévites et leurs charges</strong> — Les trois familles lévitiques (Guershon, Kehat, Merari) et leurs charges dans le transport du Tabernacle. Les Kehatites portent les objets les plus saints.</p><p><strong>La bénédiction sacerdotale</strong> — D-ieu transmet à Aaron la triple bénédiction (Birkat Cohanim) : « Que D-ieu te bénisse et te garde, que D-ieu illumine Son visage vers toi, que D-ieu tourne Son visage vers toi et te donne la paix. »</p><p><strong>Les offrandes des princes des tribus</strong> — Chaque prince apporte des offrandes identiques pour l'inauguration de l'autel pendant douze jours consécutifs. La Torah décrit chaque offrande séparément malgré leur identité formelle.","<p><strong>La birkat cohanim — le visage de D-ieu</strong> — « Que D-ieu illumine Son visage vers toi. » Le Baal Shem Tov : le visage de D-ieu est Sa Présence directe dévoilée. Quand D-ieu tourne Son visage vers nous, toute la création rayonne de sens et de beauté.</p><p><strong>Chaque offrande est unique</strong> — Bien que les douze offrandes soient identiques, la Torah les décrit douze fois en détail. L'Admour HaZaken : l'intention et le contexte transforment un acte identique en acte unique. Deux personnes qui font la même chose ne font pas la même chose car chaque âme est différente.</p><p><strong>Nasso — élever la tête</strong> — נָשֹׂא signifie « élever, porter ». Le Sfat Emet : le service divin n'est pas un fardeau mais une élévation. Chaque mitsva accomplie avec joie « élève la tête » — elle grandit l'âme de celui qui la fait.","Baal Shem Tov · Admour HaZaken · Sfat Emet Nasso");
+
+m(36,"<p><strong>L'allumage de la Menora et la consécration des Lévites</strong> — Aaron allume les sept lampes. Les Lévites sont purifiés et consacrés au service. Loi du second Pessa'h (Pessah Cheni) pour ceux qui n'ont pu faire la Pâque au temps prescrit.</p><p><strong>La nuée et les trompettes</strong> — La nuée et le feu guidaient les déplacements. D-ieu ordonne de fabriquer deux trompettes d'argent pour convoquer le peuple et signaler les départs.</p><p><strong>Les plaintes et la révolte</strong> — Le peuple se plaint de la manne et demande de la viande. D-ieu envoie des cailles. Myriam et Aaron parlent contre Moïse. Myriam est frappée de tsaraat pendant sept jours.","<p><strong>Beha'alotcha — faire monter la lumière</strong> — « Quand tu fais monter les lampes. » Le Baal Shem Tov : allumer une lumière c'est faire monter l'étincelle divine de la matière vers sa source. Chaque mitsva accomplie « fait monter » une étincelle vers D-ieu.</p><p><strong>Le Pessah Cheni — une deuxième chance</strong> — D-ieu institue un second Pessa'h pour ceux qui ont manqué le premier. L'Admour HaZaken : le judaïsme ne rejette jamais celui qui a raté l'occasion — il lui offre une deuxième chance. Aucune porte n'est définitivement fermée.</p><p><strong>Myriam et la lachon hara</strong> — Myriam, grande prophétesse, est frappée de tsaraat pour avoir parlé contre Moïse. Le Sfat Emet : si même Myriam est punie, combien plus devons-nous surveiller notre langue. La grandeur spirituelle n'immunise pas contre le péché de la parole.","Baal Shem Tov · Admour HaZaken, Likoutei Torah · Sfat Emet");
+
+m(37,"<p><strong>Les espions envoyés en Canaan</strong> — D-ieu ordonne d'envoyer des explorateurs. Douze espions, un par tribu, reconnaissent Canaan pendant quarante jours. Ils reviennent avec un raisin si lourd que deux hommes peinent à le porter.</p><p><strong>Le mauvais rapport</strong> — Dix espions rapportent que le pays est imprenable : « Nous étions à nos propres yeux comme des sauterelles. » Seuls Calev et Josué soutiennent que D-ieu donnera la victoire. Le peuple pleure et veut retourner en Égypte.</p><p><strong>La punition et le tsitsit</strong> — D-ieu condamne la génération du désert à errer quarante ans. Seuls Calev et Josué entreront en Canaan. La paracha se clôt sur la mitsva du tsitsit.","<p><strong>La faute des espions — doute de soi</strong> — Les espions étaient des grands hommes. Leur faute subtile : ils croyaient en D-ieu mais doutaient d'eux-mêmes. Le Baal Shem Tov : douter de sa propre capacité à accomplir la mission divine est aussi grave que douter de D-ieu lui-même.</p><p><strong>Calev à Hébron — la force des ancêtres</strong> — Calev se recueillit sur les tombes des patriarches à Hébron pour puiser la force de résister. L'Admour HaZaken : la connexion aux ancêtres (zekhout avot) est une source de force spirituelle dans les moments de doute et de pression.</p><p><strong>Le tsitsit — mémoire totale</strong> — Le Sfat Emet : le tsitsit vaut autant que toutes les mitsvot car il les rappelle toutes. L'Exode d'Égypte est mentionné dans le tsitsit pour rappeler que chaque libération extérieure doit s'accompagner d'une libération intérieure.","Baal Shem Tov · Admour HaZaken · Sfat Emet Shelach");
+
+m(38,"<p><strong>La rébellion de Korach</strong> — Korach, Lévite de haute lignée, s'insurge contre Moïse et Aaron avec 250 chefs : « Toute la communauté est sainte ! » Datan et Aviram rejoignent la révolte.</p><p><strong>Le châtiment divin</strong> — La terre s'ouvre et engloutit Korach, Datan et Aviram avec leurs familles. Un feu divin consume les 250 hommes aux encensoirs.</p><p><strong>Le bâton d'Aaron et les prérogatives sacerdotales</strong> — D-ieu confirme le rôle d'Aaron par le miracle de son bâton qui fleurit et produit des amandes. Les dons (teroumot et maassrot) destinés aux cohanim et aux Lévites sont détaillés.","<p><strong>Korach — l'orgueil spiritual</strong> — Korach avait une grande âme et une intelligence remarquable. Sa faute était l'orgueil spirituel : vouloir la sainteté pour lui-même et non pour le service de D-ieu. Le Baal Shem Tov : l'orgueil spiritual est la faute la plus difficile à détecter car elle ressemble à la sainteté.</p><p><strong>Toute la communauté est sainte — juste mais mal conclu</strong> — L'Admour HaZaken : Korach avait raison sur le fond mais tort sur la conclusion. Même si tous sont saints, les structures et hiérarchies permettent à la sainteté de se manifester dans le monde de manière ordonnée.</p><p><strong>La terre qui s'ouvre — descente vers la rédemption</strong> — Le Sfat Emet : Korach descend vivant aux enfers — selon le Midrach, il y chante encore les louanges de D-ieu en attendant sa rédemption finale. Même la faute la plus grave n'est pas sans espoir de réparation.","Baal Shem Tov · Admour HaZaken, Likoutei Torah Korach · Sfat Emet");
+
+m(39,"<p><strong>Chukat — La vache rousse</strong> — Loi de la para adouma (vache rousse) : une vache sans défaut est brûlée hors du camp. Ses cendres mélangées à de l'eau purifient celui qui a touché un mort. C'est le « hok » par excellence — loi incompréhensible à la raison.</p><p><strong>La mort de Myriam et la faute de Moïse</strong> — Myriam meurt. Le puits de Myriam disparaît. Le peuple se plaint. D-ieu dit à Moïse de parler au rocher, mais Moïse le frappe deux fois. D-ieu lui annonce qu'il n'entrera pas en Canaan.</p><p><strong>Balak — Balaam et les bénédictions</strong> — Balak roi de Moab engage le prophète Balaam pour maudire Israël. L'ânesse de Balaam voit l'ange et parle. Chaque fois que Balaam ouvre la bouche, des bénédictions sortent à la place de malédictions.","<p><strong>La para adouma — au-delà de la raison</strong> — La vache rousse purifie l'impur et impurifie le pur. Le Baal Shem Tov : les hokim (lois irrationnelles) révèlent que la Torah vient d'une sagesse supérieure à la raison humaine. Les accepter élève l'âme plus haut que toute compréhension intellectuelle.</p><p><strong>Moïse frappe au lieu de parler</strong> — L'Admour HaZaken : à ce niveau de sainteté, Moïse aurait dû convertir la rigueur en douceur par la parole. Frapper était adapté à un niveau inférieur — mais pas à Moïse en cet instant de révélation.</p><p><strong>Mah tovu ohalekha Yaakov</strong> — « Que tes tentes sont belles, Jacob ! » — La plus grande bénédiction de la Torah vient d'un ennemi. Le Sfat Emet : D-ieu peut faire parler même les bouches malveillantes pour révéler la vérité. La beauté d'Israël s'impose même à ceux qui voudraient la nier.","Baal Shem Tov · Admour HaZaken · Sfat Emet Chukat");
+
+m(41,"<p><strong>Le zèle de Pinchas</strong> — Pinchas tue un prince israélite et une princesse madianite qui péchaient publiquement. Son acte arrête la peste qui avait tué 24 000 personnes. D-ieu lui accorde l'alliance éternelle de la paix.</p><p><strong>Le second recensement et les filles de Tselofhad</strong> — Nouveau recensement après la peste. Les filles de Tselofhad demandent leur part d'héritage en l'absence de frères. D-ieu leur accorde. Josué est désigné comme successeur de Moïse.</p><p><strong>Les sacrifices supplémentaires</strong> — Calendrier complet des sacrifices supplémentaires (moussafim) pour chaque Chabbat, Roch Hodesh, et chaque fête de l'année.","<p><strong>L'alliance de paix donnée au zélé</strong> — Pinchas agit avec violence mais reçoit une alliance de paix. Le Baal Shem Tov : le vrai zèle pour D-ieu finit toujours par la paix car il est motivé par l'amour et non par la haine. Seule la violence motivée par l'amour pur peut apporter une paix durable.</p><p><strong>Pinchas-Eliyahou — présent dans chaque génération</strong> — La tradition identifie Pinchas à Eliyahou le prophète. L'Admour HaZaken : cette âme traverse les générations pour être présente à chaque moment de crise d'Israël — au Séder de Pessa'h, à la brit mila, à la fin des temps.</p><p><strong>Les filles de Tselofhad — l'amour de la terre</strong> — Le Sfat Emet : ces cinq femmes aimaient tellement la terre d'Israël qu'elles réclamèrent leur part. Leur amour fut récompensé. L'amour de la terre d'Israël est une dimension spirituelle à part entière.","Baal Shem Tov · Admour HaZaken · Sfat Emet Pinchas");
+
+m(42,"<p><strong>Matot — Les vœux et la guerre contre Midian</strong> — Lois des vœux et serments : le père peut annuler les vœux de sa fille, le mari ceux de sa femme. Guerre totale contre Midian — victoire, partage du butin entre les combattants, la communauté et le Tabernacle.</p><p><strong>Les tribus de Gad et Ruben</strong> — Ces tribus demandent à s'installer en Transjordanie pour leurs nombreux troupeaux. Moïse accepte à condition qu'ils combattent avec leurs frères pour conquérir Canaan.</p><p><strong>Massei — Les 42 étapes du désert</strong> — Liste complète des 42 étapes du voyage. Lois de la répartition de la terre de Canaan. Les villes de refuge pour les meurtriers involontaires. Lois des mariages entre tribus.","<p><strong>Les 42 étapes — un voyage intérieur</strong> — Le Baal Shem Tov : les 42 étapes correspondent aux 42 lettres du Nom divin. Chaque étape du voyage dans le désert est une étape du voyage de l'âme vers D-ieu. Nos propres « déserts » de vie sont des étapes nécessaires de croissance spirituelle.</p><p><strong>Les vœux — la puissance de la parole</strong> — L'Admour HaZaken : l'homme est défini par sa parole — ce qui le distingue de l'animal. Les lois des vœux enseignent que chaque parole prononcée engage l'âme entière. Parler est un acte créateur de premier ordre.</p><p><strong>Les villes de refuge — la miséricorde pour l'involontaire</strong> — Le Sfat Emet : les villes de refuge protègent le meurtrier involontaire. Elles symbolisent la miséricorde divine — même pour celui qui a causé la mort par accident, il existe un espace de protection et de possible rédemption.","Baal Shem Tov · Admour HaZaken · Sfat Emet Matot-Massei");
+
+m(44,"<p><strong>Le discours d'adieu de Moïse</strong> — Moïse, à 120 ans, commence son dernier grand discours dans les plaines de Moab. Il rappelle les événements du désert : l'organisation des juges, l'envoi des espions, les guerres contre Sihon et Og.</p><p><strong>L'appel à entrer en Canaan</strong> — Moïse rappelle que D-ieu lui a refusé l'entrée en Canaan à cause de la faute au rocher. Il désigne Josué devant le peuple entier. Tout le Deutéronome est le testament spirituel de Moïse.</p><p><strong>Le ton du reproche avec amour</strong> — Moïse reproche au peuple ses fautes passées avec douceur, utilisant des allusions et des noms de lieux pour préserver leur honneur tout en leur transmettant les leçons essentielles.","<p><strong>Moïse reprend avec amour et discrétion</strong> — Moïse mentionne les fautes à travers des noms de lieux sans les nommer explicitement. Le Baal Shem Tov : le vrai reproche se fait avec amour et discrétion. Blesser quelqu'un publiquement pour son bien n'est pas du bien — c'est de la cruauté.</p><p><strong>Eleh hadevarim — peh Moshé</strong> — Le Zohar : le livre Devarim est la « bouche de Moïse ». Pour la première fois, un homme parle de sa propre voix dans la Torah. L'Admour HaZaken : la voix de Moïse est la voix de D-ieu habillée en voix humaine — le plus grand miracle.</p><p><strong>Les 120 ans de Moïse — les yeux non obscurcis</strong> — Le Sfat Emet : Moïse a 120 ans et « ses yeux ne s'étaient pas obscurcis ». La vieillesse du corps ne diminue pas la lumière de l'âme. L'étude et le service de D-ieu préservent la jeunesse intérieure.","Baal Shem Tov · Zohar · Sfat Emet Devarim 5635");
+
+m(45,"<p><strong>L'intercession de Moïse et le refus divin</strong> — Moïse rappelle avoir supplié D-ieu quarante jours et nuits après le veau d'or. D-ieu lui a pardonné le peuple mais lui-même n'entrera pas en Canaan. D-ieu lui permet de voir le pays depuis le mont Pisgah.</p><p><strong>Le Chema Israël</strong> — « Écoute Israël, D-ieu est notre D-ieu, D-ieu est Un. » Puis le « Véahavta » : aimer D-ieu de tout son cœur, de toute son âme, de tout son être. Les mitsvot des tefilines et de la mezouza découlent de ces versets.</p><p><strong>Avertissements contre l'idolâtrie</strong> — Moïse met en garde contre la séduction de l'idolâtrie dans la prospérité de Canaan. Il rappelle les Dix Commandements avec quelques variations significatives par rapport à Shemot.","<p><strong>Va'etchanan — la prière la plus intense</strong> — Moïse a supplié D-ieu 515 fois (valeur numérique de va'etchanan). Le Baal Shem Tov : la prière du cœur brisé perce tous les cieux. Même quand la réponse est « non », la prière elle-même est une connexion avec D-ieu qui n'est jamais perdue.</p><p><strong>Le Chema — l'Unité divine absolue</strong> — L'Admour HaZaken (Tanya ch.33) : « D-ieu est Un » signifie que D-ieu est la seule réalité véritable. Tout ce qui existe n'est qu'une expression de Son Être infini. La méditation quotidienne sur cette unité est le cœur du service hassidique.</p><p><strong>Bechol nafshecha — même au prix de la vie</strong> — Le Sfat Emet : « de toute ton âme » signifie même si D-ieu prend ton âme. Les martyrs d'Israël qui mouraient en prononçant le Chema exprimaient cette dimension ultime et absolue de l'amour divin.","Baal Shem Tov · Tanya ch.33 · Sfat Emet Va'etchanan");
+
+m(46,"<p><strong>La récompense de l'obéissance</strong> — Si Israël observe les commandements, D-ieu repoussera les nations. Moïse rappelle les miracles de l'Exode et les épreuves du désert — tout cela pour éduquer Israël à la confiance absolue en D-ieu.</p><p><strong>La manne comme leçon centrale</strong> — « L'homme ne vit pas seulement de pain mais de tout ce qui sort de la bouche de D-ieu. » La manne enseignait la dépendance totale envers D-ieu et la priorité absolue du spirituel sur le matériel.</p><p><strong>La terre et la birkat hamazon</strong> — Description de la beauté de la terre de Canaan. Mise en garde contre l'oubli de D-ieu dans la prospérité. « Et tu mangeras, tu seras rassasié et tu béniras D-ieu. » C'est l'origine de la bénédiction après les repas.","<p><strong>Ekev — le talon de la récompense</strong> — עֵקֶב signifie « talon, récompense ». Le Baal Shem Tov : les mitsvot accomplies avec les talons — par habitude, sans enthousiasme particulier — ont aussi leur récompense. Même un service divin imparfait a une valeur infinie.</p><p><strong>L'homme ne vit pas de pain seul</strong> — L'Admour HaZaken : cette phrase est le fondement de toute spiritualité. Le pain nourrit le corps, la Torah nourrit l'âme — et l'âme est la dimension fondamentale de l'être humain.</p><p><strong>La prospérité comme test difficile</strong> — Le Sfat Emet : « souviens-toi que c'est D-ieu qui te donne la force ». La prospérité est le test le plus difficile. L'adversité nous rapproche naturellement de D-ieu — la réussite peut nous en éloigner insidieusement.","Baal Shem Tov · Admour HaZaken, Tanya ch.4 · Sfat Emet Ekev");
+
+m(47,"<p><strong>La bénédiction et la malédiction</strong> — Moïse pose devant Israël le choix fondamental : bénédiction si vous obéissez, malédiction si vous désobéissez. Les deux seront proclamées sur les monts Guérizim et Eval en Canaan.</p><p><strong>L'unification du culte</strong> — Interdiction des hauts-lieux cananéens. Tout sacrifice doit être offert au lieu unique que D-ieu choisira (Jérusalem). Lois des animaux que l'on peut consommer hors du sanctuaire.</p><p><strong>Les faux prophètes et les lois sociales</strong> — Mise en garde contre les faux prophètes et les séducteurs. Les villes idolâtres. La dîme, l'année de la remise des dettes, la libération des esclaves hébreux, les trois fêtes de pèlerinage.","<p><strong>Ré'eh — vois aujourd'hui !</strong> — « Vois — je mets devant toi aujourd'hui la bénédiction et la malédiction. » Le Baal Shem Tov : « aujourd'hui » — la Torah est toujours actuelle, jamais passée. Et « vois » au singulier à tout Israël — chaque individu est responsable du tout.</p><p><strong>Le lieu que D-ieu choisira</strong> — L'Admour HaZaken : Jérusalem n'est jamais nommée dans le Deutéronome. La sainteté ne se limite pas à un lieu fixe — D-ieu se révèle là où l'homme Le cherche sincèrement, avec tout son cœur.</p><p><strong>L'esclave libéré avec générosité</strong> — Le Sfat Emet : la Torah commande de libérer l'esclave avec des cadeaux généreux, en souvenir de notre propre servitude en Égypte. Le souvenir de la souffrance doit nous rendre généreux envers ceux qui souffrent.","Baal Shem Tov · Admour HaZaken · Sfat Emet Re'eh");
+
+m(48,"<p><strong>Les juges et les rois</strong> — Des juges et officiers sont institués dans toutes les villes. Lois du roi : il ne doit pas multiplier les chevaux, les femmes ni l'or. Il doit écrire pour lui-même un rouleau de la Torah et le lire tous les jours.</p><p><strong>Les cohanim, les Lévites et les prophètes</strong> — Part des cohanim dans les sacrifices. Lois du vrai et du faux prophète — le vrai prophète parle au nom de D-ieu et ses prophéties se réalisent fidèlement.</p><p><strong>Les lois de la guerre</strong> — Avant la bataille, le prêtre harangue le peuple et exempte ceux qui ont planté une vigne, fiancé une femme ou construit une maison. Protection des arbres fruitiers lors des sièges.","<p><strong>Tsedek tsedek tirdof — la justice deux fois</strong> — « Justice, justice tu poursuivras. » Le Baal Shem Tov : la répétition enseigne que la justice doit être poursuivie même par des moyens justes. La fin ne justifie pas les moyens — même pour la justice la plus noble.</p><p><strong>Le roi qui lit la Torah chaque jour</strong> — L'Admour HaZaken : le roi doit toujours avoir la Torah avec lui. Le pouvoir sans la Torah corrompt inévitablement. Le leadership véritable est un service total — pas une domination.</p><p><strong>L'arbre comme métaphore de l'homme</strong> — Le Sfat Emet : « car l'homme est l'arbre des champs ». Interdire de couper des arbres fruitiers lors d'un siège enseigne le respect de la vie. Même en guerre, la sensibilité à la création doit être préservée.","Baal Shem Tov · Admour HaZaken · Sfat Emet Shoftim");
+
+m(49,"<p><strong>Les lois personnelles et familiales</strong> — Lois de la femme prise en captivité. Droit du premier-né même de la femme moins aimée. Le fils rebelle et indiscipliné jugé par le tribunal.</p><p><strong>Les lois sociales et environnementales</strong> — Obligation de rendre les biens perdus. Protection de la mère oiseau. Parapet obligatoire sur les toits. Interdiction des mélanges (kilaïm). Poids et mesures justes.</p><p><strong>Lois de pureté et de famille</strong> — Lois sur la diffamation d'une femme, l'adultère, le viol. La loi du lévirat (yibum). Cette paracha contient 74 des 613 commandements — la plus dense de la Torah.","<p><strong>74 mitsvot dans une paracha</strong> — Ki Tetze contient 74 des 613 commandements. Le Baal Shem Tov : la Torah est dans les détails du quotidien. La sainteté n'est pas réservée aux moments rares — elle habite chaque acte ordinaire de la vie.</p><p><strong>La mère oiseau — la compassion universelle</strong> — L'Admour HaZaken : la récompense de la mère oiseau est « de longs jours » — même récompense qu'honorer ses parents. La compassion pour un animal et la compassion pour ses parents sont au même niveau spirituel.</p><p><strong>Poids et mesures justes — le bitahon en action</strong> — Le Sfat Emet : celui qui utilise de faux poids nie implicitement la Providence divine — il croit devoir tricher pour survivre. La confiance totale en D-ieu rend l'honnêteté naturelle et joyeuse.","Baal Shem Tov · Admour HaZaken · Sfat Emet Ki Tetze");
+
+m(50,"<p><strong>Les prémices et la déclaration historique</strong> — En entrant en Canaan, chaque Israélite apporte ses prémices au Temple et récite : « Mon père était un Araméen errant... » — résumé de toute l'histoire d'Israël depuis Jacob jusqu'à l'Exode.</p><p><strong>Le renouvellement de l'alliance</strong> — Moïse et les anciens demandent au peuple d'observer toutes les lois. L'alliance est confirmée solennellement sur les monts Guérizim et Eval.</p><p><strong>La tocheha et l'espoir</strong> — Description des bénédictions et des malédictions terribles. Mais la paracha se termine par l'espoir : D-ieu n'oubliera jamais Son peuple et l'alliance reste éternelle.","<p><strong>Arami oved avi — gratitude et mémoire</strong> — « Mon père était un Araméen errant. » Le Baal Shem Tov : la première prière des prémices commence par l'humilité et la mémoire de la souffrance. La gratitude authentique naît du souvenir de ce que l'on a traversé.</p><p><strong>La tocheha — avertissement d'amour paternel</strong> — L'Admour HaZaken : les malédictions sont récitées rapidement et à voix basse dans la synagogue. Elles viennent de l'amour infini — un père qui avertit son enfant bien-aimé des conséquences de ses actes.</p><p><strong>La joie comme protection</strong> — Le Sfat Emet : au cœur des malédictions se trouve « parce que tu n'as pas servi D-ieu avec joie ». La source de toute souffrance est l'absence de joie dans le service divin. Servir D-ieu avec joie est la plus grande protection.","Baal Shem Tov · Iggeret HaTéchouva · Sfat Emet Ki Tavo");
+
+m(51,"<p><strong>Nitzavim — Vous vous tenez debout</strong> — Moïse convoque tout Israël devant D-ieu : grands et petits, hommes et femmes, étrangers, bûcherons et porteurs d'eau. Tous — présents et générations futures — entrent dans l'alliance divine.</p><p><strong>La Torah est très proche de toi</strong> — « Cette mitsva n'est pas au ciel... ni au-delà de la mer... elle est très proche de toi, dans ta bouche et dans ton cœur. » La Torah est accessible à chacun.</p><p><strong>Vayeilech — Le dernier jour de Moïse</strong> — Moïse, à 120 ans, va vers son peuple une dernière fois. Il annonce que Josué le conduira. Il écrit la Torah entière et la confie aux Lévites. D-ieu prédit que le peuple désobéira mais l'alliance reste éternelle.","<p><strong>Atem nitzavim — vous tenez debout après tout</strong> — Après la tocheha terrible, le peuple tient encore debout. Le Baal Shem Tov : la téchouva redresse celui qui était brisé. Quelle que soit la profondeur de la chute, l'âme juive peut toujours se relever.</p><p><strong>La Torah dans la bouche et dans le cœur</strong> — L'Admour HaZaken : « dans ta bouche » — la parole de Torah qui s'articule ; « dans ton cœur » — la méditation de Torah qui intériorise. Ces deux niveaux se complètent : la parole ancre la pensée, la pensée élève la parole.</p><p><strong>La téchouva — un retour à soi-même</strong> — Le Sfat Emet : « et tu reviendras vers D-ieu » — la téchouva est un retour, non une transformation. L'âme retrouve ce qu'elle a toujours été. On ne devient pas nouveau — on redevient soi-même, son moi authentique et profond.","Baal Shem Tov · Admour HaZaken, Tanya ch.29 · Sfat Emet Nitzavim");
+
+m(52,"<p><strong>Le dernier jour de Moïse</strong> — Moïse, à 120 ans, va vers son peuple une dernière fois. Il annonce qu'il ne les conduira pas en Canaan. Josué est officiellement investi comme successeur devant tout le peuple assemblé.</p><p><strong>La loi transmise au peuple</strong> — Moïse écrit la Torah et la confie aux prêtres lévites et aux anciens d'Israël. Il ordonne la lecture publique de la Torah tous les sept ans à Souccot (Hakhel) — tout le peuple entendra.</p><p><strong>La prophétie de la désobéissance</strong> — D-ieu dit à Moïse que le peuple l'abandonnera après sa mort. Il commande d'écrire le chant de Haazinou comme témoignage éternel.","<p><strong>Vayeilech — il alla jusqu'au bout</strong> — Moïse va vers le peuple le jour même de sa mort. Le Baal Shem Tov : le service divin ne s'arrête jamais — même face à la mort. La grandeur de Moïse est de continuer à donner et à enseigner jusqu'à son dernier souffle.</p><p><strong>Hakhel — le rassemblement sacré</strong> — Tous les sept ans, tout le peuple se rassemble pour entendre la Torah. L'Admour HaZaken : le rassemblement collectif crée une conscience spirituelle supérieure à la somme des individus. L'âme collective d'Israël est plus grande que chaque âme prise séparément.</p><p><strong>La Torah comme témoin d'amour</strong> — Le Sfat Emet : D-ieu sait que le peuple pèchera — et pourtant Il lui confie la Torah. C'est l'acte de confiance le plus profond : malgré tout ce qu'Il sait, D-ieu continue de croire en l'homme et en sa capacité de retour.","Baal Shem Tov · Admour HaZaken, Likoutei Torah · Sfat Emet");
+
+m(53,"<p><strong>Le chant de Moïse — Haazinou</strong> — Poème prophétique de 43 versets décrivant l'histoire entière d'Israël : l'élection divine, la prospérité, la corruption, le châtiment, et la délivrance finale.</p><p><strong>D-ieu comme Rocher</strong> — « Le Rocher — parfaites sont Ses œuvres, car toutes Ses voies sont justice. » D-ieu est comparé à un rocher : stable, permanent, fiable. Ses jugements sont toujours justes même quand ils nous semblent incompréhensibles.</p><p><strong>La délivrance finale</strong> — Le chant se termine sur l'espérance : « Réjouissez-vous, nations, avec Son peuple, car Il vengera le sang de Ses serviteurs. » La justice divine sera accomplie et le peuple sera délivré.","<p><strong>Haazinou — témoignage cosmique</strong> — « Prêtez l'oreille, ô cieux. » Le Baal Shem Tov : Moïse prend les cieux à témoin car le message dépasse le temps. La Torah de Moïse résonne dans toutes les dimensions de la création.</p><p><strong>Le Rocher dans l'adversité</strong> — L'Admour HaZaken : D-ieu est appelé « Rocher » dans ce chant de souffrance. Dans les moments les plus difficiles, D-ieu est le plus présent et le plus stable — comme un rocher qui ne cède jamais sous la pression.</p><p><strong>Comme l'aigle réveille son nid</strong> — « Ke'nesher ya'ir kino. » Le Sfat Emet : l'aigle réveille ses aiglons en battant ses ailes au-dessus d'eux — sans les toucher, uniquement par le courant d'air de sa présence. Ainsi D-ieu guide Israël — pas par la force mais par Sa présence et Sa lumière.","Baal Shem Tov · Admour HaZaken · Sfat Emet Haazinu");
+
+m(54,"<p><strong>La bénédiction de chaque tribu</strong> — Moïse bénit chacune des douze tribus avec une prophétie personnelle révélant la mission unique et la destinée particulière de chaque famille d'Israël.</p><p><strong>La mort de Moïse sur le mont Nébo</strong> — Moïse monte sur le mont Nébo. D-ieu lui montre toute la terre de Canaan. Moïse meurt selon la parole de D-ieu à 120 ans. « Ses yeux ne s'étaient pas obscurcis et sa vigueur n'avait pas fléchi. » D-ieu l'enterre Lui-même.</p><p><strong>L'éloge éternel de Moïse</strong> — « Il ne se leva plus en Israël un prophète comme Moïse, que D-ieu connaissait face à face. » La Torah se clôt sur le portrait du plus grand prophète — celui qui a reçu et transmis la Torah pour l'éternité.","<p><strong>D-ieu enterre Moïse Lui-même</strong> — D-ieu cache la tombe de Moïse — « nul ne connaît sa sépulture jusqu'à ce jour ». Le Baal Shem Tov : D-ieu cache la tombe pour que l'on vénère non le lieu mais l'enseignement. La Torah de Moïse est son véritable et éternel monument.</p><p><strong>Ses yeux n'étaient pas obscurcis</strong> — À 120 ans, Moïse voyait encore avec une clarté parfaite. L'Admour HaZaken : l'étude de la Torah et le service de D-ieu préservent les facultés spirituelles et même physiques. La lumière de l'âme entretient la lumière du corps.</p><p><strong>Vezot HaBerakha — et voici la bénédiction</strong> — Le Sfat Emet : la Torah se termine par une bénédiction et recommence par Bereshit (au commencement). La Torah est un cercle parfait sans fin. Chaque fin est un nouveau commencement — la Torah est éternellement jeune.","Baal Shem Tov · Admour HaZaken, Likoutei Torah · Sfat Emet Vezot HaBerakha");
+
+function loadMeta(id,cb){
+  var d=MC[id]||{s:'<p>Contenu non disponible.</p>',co:'<p>Contenu non disponible.</p>',so:''};
+  cb(d);
+}
+
+
+// CALENDRIER HÉBRAÏQUE
 var HM=["Tichri","Hechvan","Kislev","Tevet","Chevat","Adar","Nissan","Iyar","Sivan","Tamouz","Av","Eloul"];
 var HMH=["תִּשְׁרֵי","חֶשְׁוָן","כִּסְלֵו","טֵבֵת","שְׁבָט","אֲדָר","נִיסָן","אִיָּר","סִיוָן","תַּמּוּז","אָב","אֱלוּל"];
 var HML=["Tichri","Hechvan","Kislev","Tevet","Chevat","Adar I","Adar II","Nissan","Iyar","Sivan","Tamouz","Av","Eloul"];
@@ -334,7 +499,6 @@ var HNUM=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","י
 var HUNDS=["","ק","ר","ש","ת","תק","תר","תש","תת","תתק"];
 var TENS=["","י","כ","ל","מ","נ","ס","ע","פ","צ"];
 var UNITS=["","א","ב","ג","ד","ה","ו","ז","ח","ט"];
-
 function hebLeap(y){return((7*y)+1)%19<7;}
 function hebMonthsInYear(y){return hebLeap(y)?13:12;}
 function hebElapsed(y){var m=Math.floor((235*y-234)/19);var p=12084+13753*m;var d=m*29+Math.floor(p/25920);if((3*(d+1))%7<3)d++;return d;}
@@ -351,97 +515,51 @@ function fmtHebLat(h){return h.d+" "+hmName(h.m,h.y,false)+" "+h.y;}
 var FR_M=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
 var FR_D=["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
 
-// ═══════════════════════════════════════════════════════════
-// JEWISH HOLIDAYS 5785-5787
-// ═══════════════════════════════════════════════════════════
+// FÊTES 5785-5787
 var FETES=[
-  {name:"Roch Hachana 5785",    heb:"רֹאשׁ הַשָּׁנָה",        d:3,  m:9, y:2024,days:2,e:"🍎"},
-  {name:"Yom Kippour 5785",     heb:"יוֹם כִּפּוּר",          d:12, m:9, y:2024,days:1,e:"📖"},
-  {name:"Souccot 5785",         heb:"סֻכּוֹת",                 d:17, m:9, y:2024,days:7,e:"🌿"},
-  {name:"Chemini Atseret 5785", heb:"שְׁמִינִי עֲצֶרֶת",      d:24, m:9, y:2024,days:1,e:"✡️"},
-  {name:"Sim'hat Torah 5785",   heb:"שִׂמְחַת תּוֹרָה",       d:25, m:9, y:2024,days:1,e:"📜"},
-  {name:"Hanoucca 5785",        heb:"חֲנֻכָּה",                d:26, m:11,y:2024,days:8,e:"🕎"},
-  {name:"Tou BiChevat 5785",    heb:"טוּ בִּשְׁבָט",          d:13, m:0, y:2025,days:1,e:"🌳"},
-  {name:"Pourim 5785",          heb:"פּוּרִים",                d:14, m:2, y:2025,days:1,e:"🎭"},
-  {name:"Pessa'h 5785",         heb:"פֶּסַח",                  d:13, m:3, y:2025,days:8,e:"🍷"},
-  {name:"Lag BaOmer 5785",      heb:"ל\"ג בָּעֹמֶר",          d:16, m:4, y:2025,days:1,e:"🔥"},
-  {name:"Chavouot 5785",        heb:"שָׁבוּעוֹת",             d:2,  m:5, y:2025,days:2,e:"📜"},
-  {name:"Tich'a BeAv 5785",     heb:"תִּשְׁעָה בְּאָב",       d:3,  m:7, y:2025,days:1,e:"😢"},
-  {name:"Roch Hachana 5786",    heb:"רֹאשׁ הַשָּׁנָה",        d:23, m:8, y:2025,days:2,e:"🍎"},
-  {name:"Yom Kippour 5786",     heb:"יוֹם כִּפּוּר",          d:2,  m:9, y:2025,days:1,e:"📖"},
-  {name:"Souccot 5786",         heb:"סֻכּוֹת",                 d:7,  m:9, y:2025,days:7,e:"🌿"},
-  {name:"Chemini Atseret 5786", heb:"שְׁמִינִי עֲצֶרֶת",      d:14, m:9, y:2025,days:1,e:"✡️"},
-  {name:"Sim'hat Torah 5786",   heb:"שִׂמְחַת תּוֹרָה",       d:15, m:9, y:2025,days:1,e:"📜"},
-  {name:"Hanoucca 5786",        heb:"חֲנֻכָּה",                d:15, m:11,y:2025,days:8,e:"🕎"},
-  {name:"Tou BiChevat 5786",    heb:"טוּ בִּשְׁבָט",          d:2,  m:1, y:2026,days:1,e:"🌳"},
-  {name:"Pourim 5786",          heb:"פּוּרִים",                d:3,  m:2, y:2026,days:1,e:"🎭"},
-  {name:"Pessa'h 5786",         heb:"פֶּסַח",                  d:2,  m:3, y:2026,days:8,e:"🍷"},
-  {name:"Yom HaAtsmaout 5786",  heb:"יוֹם הָעַצְמָאוּת",      d:23, m:3, y:2026,days:1,e:"🇮🇱"},
-  {name:"Lag BaOmer 5786",      heb:"ל\"ג בָּעֹמֶר",          d:6,  m:4, y:2026,days:1,e:"🔥"},
-  {name:"Chavouot 5786",        heb:"שָׁבוּעוֹת",             d:22, m:4, y:2026,days:2,e:"📜"},
-  {name:"Tich'a BeAv 5786",     heb:"תִּשְׁעָה בְּאָב",       d:23, m:6, y:2026,days:1,e:"😢"},
-  {name:"Roch Hachana 5787",    heb:"רֹאשׁ הַשָּׁנָה",        d:12, m:8, y:2026,days:2,e:"🍎"},
-  {name:"Yom Kippour 5787",     heb:"יוֹם כִּפּוּר",          d:21, m:8, y:2026,days:1,e:"📖"},
-  {name:"Souccot 5787",         heb:"סֻכּוֹת",                 d:26, m:8, y:2026,days:7,e:"🌿"},
-  {name:"Hanoucca 5787",        heb:"חֲנֻכָּה",                d:5,  m:11,y:2026,days:8,e:"🕎"}
+  {name:"Roch Hachana 5785",heb:"רֹאשׁ הַשָּׁנָה",d:3,m:9,y:2024,days:2,e:"🍎"},
+  {name:"Yom Kippour 5785",heb:"יוֹם כִּפּוּר",d:12,m:9,y:2024,days:1,e:"📖"},
+  {name:"Souccot 5785",heb:"סֻכּוֹת",d:17,m:9,y:2024,days:7,e:"🌿"},
+  {name:"Chemini Atseret 5785",heb:"שְׁמִינִי עֲצֶרֶת",d:24,m:9,y:2024,days:1,e:"✡️"},
+  {name:"Sim'hat Torah 5785",heb:"שִׂמְחַת תּוֹרָה",d:25,m:9,y:2024,days:1,e:"📜"},
+  {name:"Hanoucca 5785",heb:"חֲנֻכָּה",d:26,m:11,y:2024,days:8,e:"🕎"},
+  {name:"Tou BiChevat 5785",heb:"טוּ בִּשְׁבָט",d:13,m:0,y:2025,days:1,e:"🌳"},
+  {name:"Pourim 5785",heb:"פּוּרִים",d:14,m:2,y:2025,days:1,e:"🎭"},
+  {name:"Pessa'h 5785",heb:"פֶּסַח",d:13,m:3,y:2025,days:8,e:"🍷"},
+  {name:"Lag BaOmer 5785",heb:"ל\"ג בָּעֹמֶר",d:16,m:4,y:2025,days:1,e:"🔥"},
+  {name:"Chavouot 5785",heb:"שָׁבוּעוֹת",d:2,m:5,y:2025,days:2,e:"📜"},
+  {name:"Tich'a BeAv 5785",heb:"תִּשְׁעָה בְּאָב",d:3,m:7,y:2025,days:1,e:"😢"},
+  {name:"Roch Hachana 5786",heb:"רֹאשׁ הַשָּׁנָה",d:23,m:8,y:2025,days:2,e:"🍎"},
+  {name:"Yom Kippour 5786",heb:"יוֹם כִּפּוּר",d:2,m:9,y:2025,days:1,e:"📖"},
+  {name:"Souccot 5786",heb:"סֻכּוֹת",d:7,m:9,y:2025,days:7,e:"🌿"},
+  {name:"Chemini Atseret 5786",heb:"שְׁמִינִי עֲצֶרֶת",d:14,m:9,y:2025,days:1,e:"✡️"},
+  {name:"Sim'hat Torah 5786",heb:"שִׂמְחַת תּוֹרָה",d:15,m:9,y:2025,days:1,e:"📜"},
+  {name:"Hanoucca 5786",heb:"חֲנֻכָּה",d:15,m:11,y:2025,days:8,e:"🕎"},
+  {name:"Tou BiChevat 5786",heb:"טוּ בִּשְׁבָט",d:2,m:1,y:2026,days:1,e:"🌳"},
+  {name:"Pourim 5786",heb:"פּוּרִים",d:3,m:2,y:2026,days:1,e:"🎭"},
+  {name:"Pessa'h 5786",heb:"פֶּסַח",d:2,m:3,y:2026,days:8,e:"🍷"},
+  {name:"Yom HaAtsmaout 5786",heb:"יוֹם הָעַצְמָאוּת",d:23,m:3,y:2026,days:1,e:"🇮🇱"},
+  {name:"Lag BaOmer 5786",heb:"ל\"ג בָּעֹמֶר",d:6,m:4,y:2026,days:1,e:"🔥"},
+  {name:"Chavouot 5786",heb:"שָׁבוּעוֹת",d:22,m:4,y:2026,days:2,e:"📜"},
+  {name:"Tich'a BeAv 5786",heb:"תִּשְׁעָה בְּאָב",d:23,m:6,y:2026,days:1,e:"😢"},
+  {name:"Roch Hachana 5787",heb:"רֹאשׁ הַשָּׁנָה",d:12,m:8,y:2026,days:2,e:"🍎"},
+  {name:"Yom Kippour 5787",heb:"יוֹם כִּפּוּר",d:21,m:8,y:2026,days:1,e:"📖"},
+  {name:"Souccot 5787",heb:"סֻכּוֹת",d:26,m:8,y:2026,days:7,e:"🌿"},
+  {name:"Hanoucca 5787",heb:"חֲנֻכָּה",d:5,m:11,y:2026,days:8,e:"🕎"}
 ];
+function getFetesOn(gd,gm,gy){return FETES.filter(function(f){var s=new Date(f.y,f.m,f.d),e=new Date(f.y,f.m,f.d+f.days-1),t=new Date(gy,gm,gd);return t>=s&&t<=e;});}
 
-function getFetesOn(gd,gm,gy){
-  return FETES.filter(function(f){
-    var s=new Date(f.y,f.m,f.d),e=new Date(f.y,f.m,f.d+f.days-1),t=new Date(gy,gm,gd);
-    return t>=s&&t<=e;
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-// SHABBAT TIMES
-// ═══════════════════════════════════════════════════════════
+// SHABBAT
 var uLat=48.85,uLng=2.35,uCity="Paris";
-function initLoc(){
-  if(!navigator.geolocation)return;
-  navigator.geolocation.getCurrentPosition(function(p){
-    uLat=p.coords.latitude;uLng=p.coords.longitude;
-    fetch('https://nominatim.openstreetmap.org/reverse?lat='+uLat+'&lon='+uLng+'&format=json')
-      .then(function(r){return r.json();})
-      .then(function(d){uCity=d.address.city||d.address.town||d.address.village||"votre ville";buildHome();})
-      .catch(function(){buildHome();});
-  },function(){});
-}
-function sunCalc(date,lat,lng,rise){
-  var J=(date.getTime()/86400000)+2440587.5;
-  var n=Math.ceil(J-2451545.0+0.0008);
-  var Js=n-lng/360;
-  var M=(357.5291+0.98560028*Js)%360,Mr=M*Math.PI/180;
-  var C=1.9148*Math.sin(Mr)+0.0200*Math.sin(2*Mr)+0.0003*Math.sin(3*Mr);
-  var lam=(M+C+180+102.9372)%360,lr=lam*Math.PI/180;
-  var Jt=2451545.0+Js+0.0053*Math.sin(Mr)-0.0069*Math.sin(2*lr);
-  var decl=Math.asin(Math.sin(lr)*Math.sin(23.4397*Math.PI/180));
-  var latr=lat*Math.PI/180;
-  var cosH=(Math.sin(-0.8333*Math.PI/180)-Math.sin(latr)*Math.sin(decl))/(Math.cos(latr)*Math.cos(decl));
-  if(cosH<-1||cosH>1)return null;
-  var H=Math.acos(cosH)*180/Math.PI;
-  var Jss=Jt+(rise?-H/360:H/360);
-  return new Date((Jss-2440587.5)*86400000);
-}
+function initLoc(){if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(function(p){uLat=p.coords.latitude;uLng=p.coords.longitude;fetch('https://nominatim.openstreetmap.org/reverse?lat='+uLat+'&lon='+uLng+'&format=json').then(function(r){return r.json();}).then(function(d){uCity=d.address.city||d.address.town||d.address.village||"votre ville";buildHome();}).catch(function(){buildHome();});},function(){});}
+function sunCalc(date,lat,lng,rise){var J=(date.getTime()/86400000)+2440587.5;var n=Math.ceil(J-2451545.0+0.0008);var Js=n-lng/360;var M=(357.5291+0.98560028*Js)%360,Mr=M*Math.PI/180;var C=1.9148*Math.sin(Mr)+0.0200*Math.sin(2*Mr)+0.0003*Math.sin(3*Mr);var lam=(M+C+180+102.9372)%360,lr=lam*Math.PI/180;var Jt=2451545.0+Js+0.0053*Math.sin(Mr)-0.0069*Math.sin(2*lr);var decl=Math.asin(Math.sin(lr)*Math.sin(23.4397*Math.PI/180));var latr=lat*Math.PI/180;var cosH=(Math.sin(-0.8333*Math.PI/180)-Math.sin(latr)*Math.sin(decl))/(Math.cos(latr)*Math.cos(decl));if(cosH<-1||cosH>1)return null;var H=Math.acos(cosH)*180/Math.PI;var Jss=Jt+(rise?-H/360:H/360);return new Date((Jss-2440587.5)*86400000);}
 function fmtT(d){var h=d.getHours(),m=d.getMinutes();return(h<10?'0':'')+h+'h'+(m<10?'0':'')+m;}
-function getShabbat(fri){
-  var sf=sunCalc(fri,uLat,uLng,false);
-  var sat=new Date(fri.getTime()+86400000);
-  var ss=sunCalc(sat,uLat,uLng,false);
-  if(!sf||!ss)return null;
-  return{candle:fmtT(new Date(sf.getTime()-18*60000)),havdala:fmtT(new Date(ss.getTime()+42*60000))};
-}
+function getShabbat(fri){var sf=sunCalc(fri,uLat,uLng,false);var sat=new Date(fri.getTime()+86400000);var ss=sunCalc(sat,uLat,uLng,false);if(!sf||!ss)return null;return{candle:fmtT(new Date(sf.getTime()-18*60000)),havdala:fmtT(new Date(ss.getTime()+42*60000))};}
 
-// ═══════════════════════════════════════════════════════════
-// HOME BANNERS
-// ═══════════════════════════════════════════════════════════
-var calEvents=[];
-try{calEvents=JSON.parse(localStorage.getItem('torah_ev')||'[]');}catch(e){}
+// BANNERS
+var calEvents=[];try{calEvents=JSON.parse(localStorage.getItem('torah_ev')||'[]');}catch(e){}
 function saveEv(){try{localStorage.setItem('torah_ev',JSON.stringify(calEvents));}catch(e){}}
-function getTodayEv(){
-  var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear(),hd=g2h(gd,gm,gy);
-  return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});
-}
+function getTodayEv(){var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear(),hd=g2h(gd,gm,gy);return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 
 function getHomeBanners(){
   var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear();
@@ -450,7 +568,7 @@ function getHomeBanners(){
   getFetesOn(gd,gm,gy).forEach(function(f){
     var dn=Math.floor((t-new Date(f.y,f.m,f.d))/86400000)+1;
     var suf=f.days>1?' ('+['1er','2e','3e','4e','5e','6e','7e','8e'][dn-1]+' jour)':'';
-    html+='<div class="fete-banner"><div class="fete-name">'+f.e+' '+f.name+suf+'</div><div class="fete-heb">'+f.heb+'</div></div>';
+    html+='<div class="fete-banner"><div class="fn">'+f.e+' '+f.name+suf+'</div><div class="fh">'+f.heb+'</div></div>';
   });
   var dow=t.getDay();
   if(dow>=4||dow===6){
@@ -461,32 +579,18 @@ function getHomeBanners(){
     var sh=getShabbat(fri);
     if(sh){
       var sat=new Date(fri.getTime()+86400000);
-      html+='<div class="shabbat-banner"><div class="shabbat-icon">🕯</div><div class="shabbat-info">'
-           +'<div class="shabbat-title">Chabbat · '+fri.getDate()+' '+FR_M[fri.getMonth()]+' – '+sat.getDate()+' '+FR_M[sat.getMonth()]+' · '+uCity+'</div>'
-           +'<div class="shabbat-times">Allumage <span>vendredi</span> '+sh.candle+' &nbsp;|&nbsp; Havdala <span>samedi</span> '+sh.havdala+'</div>'
-           +'</div></div>';
+      html+='<div class="shabbat-banner"><div class="shabbat-icon">🕯</div><div class="shabbat-info"><div class="shabbat-title">Chabbat · '+fri.getDate()+' '+FR_M[fri.getMonth()]+' – '+sat.getDate()+' '+FR_M[sat.getMonth()]+' · '+uCity+'</div><div class="shabbat-times">Allumage <span>vendredi</span> '+sh.candle+' &nbsp;|&nbsp; Havdala <span>samedi</span> '+sh.havdala+'</div></div></div>';
     }
   }
   return html;
 }
 
-// ═══════════════════════════════════════════════════════════
 // CALENDAR UI
-// ═══════════════════════════════════════════════════════════
 var calY,calM,calSel=null,calEvType='greg';
-function openCal(){
-  var t=new Date();calY=t.getFullYear();calM=t.getMonth();calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
-  renderCalHdr(t);renderCalGrid();renderEvList();
-  document.getElementById('cv-day').value=t.getDate();document.getElementById('cv-mon').value=t.getMonth();document.getElementById('cv-year').value=t.getFullYear();
-  updEvDisp();document.getElementById('cal-overlay').classList.add('open');
-}
+function openCal(){var t=new Date();calY=t.getFullYear();calM=t.getMonth();calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};renderCalHdr(t);renderCalGrid();renderEvList();document.getElementById('cv-day').value=t.getDate();document.getElementById('cv-mon').value=t.getMonth();document.getElementById('cv-year').value=t.getFullYear();updEvDisp();document.getElementById('cal-overlay').classList.add('open');}
 function closeCal(){document.getElementById('cal-overlay').classList.remove('open');}
 function calOverlayClick(e){if(e.target===document.getElementById('cal-overlay'))closeCal();}
-function renderCalHdr(d){
-  var hd=g2h(d.getDate(),d.getMonth(),d.getFullYear());
-  document.getElementById('cal-greg').textContent=FR_D[d.getDay()]+' '+d.getDate()+' '+FR_M[d.getMonth()]+' '+d.getFullYear();
-  document.getElementById('cal-heb').textContent=fmtHeb(hd);
-}
+function renderCalHdr(d){var hd=g2h(d.getDate(),d.getMonth(),d.getFullYear());document.getElementById('cal-greg').textContent=FR_D[d.getDay()]+' '+d.getDate()+' '+FR_M[d.getMonth()]+' '+d.getFullYear();document.getElementById('cal-heb').textContent=fmtHeb(hd);}
 function calMove(dir){calM+=dir;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCalGrid();}
 function renderCalGrid(){
   var h1=g2h(1,calM,calY);
@@ -528,7 +632,6 @@ function calDayClick(d){
   calSel={d:d,m:calM,y:calY};
   renderCalHdr(new Date(calY,calM,d));
   updEvDisp();
-  // Show fêtes + events for this day
   var hd=g2h(d,calM,calY);
   var fts=getFetesOn(d,calM,calY);
   var evs=getEvOnDay(d,calM,calY,hd);
@@ -540,81 +643,72 @@ function calDayClick(d){
     fts.forEach(function(f){
       var dn=Math.floor((new Date(calY,calM,d)-new Date(f.y,f.m,f.d))/86400000)+1;
       var suf=f.days>1?' — '+ords[dn-1]+' jour':'';
-      html+='<div style="margin-bottom:8px"><div style="font-size:15px;color:#e8c870;font-family:Frank Ruhl Libre,serif;font-weight:bold">'+f.e+' '+f.name+suf+'</div>'
-           +'<div style="font-family:Noto Sans Hebrew,sans-serif;font-size:13px;color:#c9a84c;direction:rtl">'+f.heb+'</div></div>';
+      html+='<div style="margin-bottom:8px"><div style="font-size:15px;color:#e8c870;font-family:Frank Ruhl Libre,serif;font-weight:bold">'+f.e+' '+f.name+suf+'</div><div style="font-family:Noto Sans Hebrew,sans-serif;font-size:13px;color:#c9a84c;direction:rtl">'+f.heb+'</div></div>';
     });
     evs.forEach(function(ev){html+='<div style="font-size:14px;color:#e8c870">🎂 '+ev.name+'</div>';});
     ct.innerHTML=html;el.style.display='block';
   } else {el.style.display='none';}
   document.getElementById('cal-addevent').scrollIntoView({behavior:'smooth'});
 }
-function getEvOnDay(gd,gm,gy,hd){
-  return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});
-}
-function hasEvOnDay(gd,gm,gy,hd){return getEvOnDay(gd,gm,gy,hd).length>0;}
+function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
-function updEvDisp(){
-  var el=document.getElementById('ev-date-display');
-  if(!calSel){el.textContent='Sélectionnez un jour →';return;}
-  var hd=g2h(calSel.d,calSel.m,calSel.y);
-  if(calEvType==='greg')el.textContent='Date choisie : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';
-  else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';
-}
-function addEvent(){
-  var name=document.getElementById('ev-name').value.trim();
-  if(!name){alert('Entrez un nom.');return;}
-  if(!calSel){alert('Sélectionnez un jour.');return;}
-  var hd=g2h(calSel.d,calSel.m,calSel.y);
-  calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});
-  saveEv();document.getElementById('ev-name').value='';
-  renderCalGrid();renderEvList();buildHome();
-}
+function updEvDisp(){var el=document.getElementById('ev-date-display');if(!calSel){el.textContent='Sélectionnez un jour';return;}var hd=g2h(calSel.d,calSel.m,calSel.y);if(calEvType==='greg')el.textContent='Date : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';}
+function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});saveEv();document.getElementById('ev-name').value='';renderCalGrid();renderEvList();buildHome();}
 function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();}
-function renderEvList(){
-  var el=document.getElementById('events-list');
-  if(!calEvents.length){el.innerHTML='';return;}
-  var h='<h4>Mes événements</h4>';
-  calEvents.forEach(function(ev,i){
-    var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';
-    h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';
-  });
-  el.innerHTML=h;
-}
-function doConvert(){
-  var d=parseInt(document.getElementById('cv-day').value)||1,m=parseInt(document.getElementById('cv-mon').value),y=parseInt(document.getElementById('cv-year').value)||2026;
-  var hd=g2h(d,m,y);
-  var res=document.getElementById('conv-result');res.style.display='block';
-  res.innerHTML=fmtHeb(hd)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd)+'</small>';
-}
+function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
+function doConvert(){var d=parseInt(document.getElementById('cv-day').value)||1,m=parseInt(document.getElementById('cv-mon').value),y=parseInt(document.getElementById('cv-year').value)||2026;var hd=g2h(d,m,y);var res=document.getElementById('conv-result');res.style.display='block';res.innerHTML=fmtHeb(hd)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd)+'</small>';}
 
-// ═══════════════════════════════════════════════════════════
-// BUILD HOME
-// ═══════════════════════════════════════════════════════════
+// HOME
 function getP(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i];return null;}
 
 function buildHome(){
-  var cur=getP(CID);
+  var CID=getCurrentParashaId();
+  var cur=getP(CID)||P[0];
+  if(!cur) return;
   var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear();
   var ht=g2h(gd,gm,gy);
+  var v=getVerset(ht)||VERSETS[0];
+
   var h=getHomeBanners();
-  h+='<div class="datebar" onclick="openCal()">'
-    +'<div class="datebar-icon">📅</div>'
-    +'<div class="datebar-text">'
-    +'<div class="dh">'+fmtHeb(ht)+'</div>'
-    +'<div class="df">'+FR_D[t.getDay()]+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
-    +'<div class="dtap">Ouvrir le calendrier →</div>'
-    +'</div></div>';
+
+  // Date bar
+  h+='<div class="datebar" onclick="openCal()"><div class="datebar-icon">📅</div><div class="datebar-text"><div class="dh">'+fmtHeb(ht)+'</div><div class="df">'+FR_D[t.getDay()]+' '+gd+' '+FR_M[gm]+' '+gy+'</div><div class="dtap">Ouvrir le calendrier →</div></div></div>';
+
+  // Paracha banner
   h+='<div class="wbanner" onclick="openP('+cur.id+')">'
     +'<div class="wlabel">Paracha de la semaine · שַׁבָּת</div>'
     +'<div class="wname">'+cur.name+'</div>'
     +'<div class="wheb">'+cur.heb+'</div>'
     +'<div class="wmeta">'+cur.ref+' · '+cur.book+'</div>'
     +'<div class="warrow">→</div></div>';
+
+  // Quick access cards — Hayom Yom & Sefer HaMitsvot
+  h+='<div class="qcards">'
+    +'<div class="qcard hayom" onclick="openHayomYom()">'
+    +'<div class="qcard-icon">☀️</div>'
+    +'<div class="qcard-title">Hayom Yom</div>'
+    +'<div class="qcard-sub">Enseignement du jour</div>'
+    +'</div>'
+    +'<div class="qcard sefer" onclick="openSefer()">'
+    +'<div class="qcard-icon">📋</div>'
+    +'<div class="qcard-title">Sefer HaMitsvot</div>'
+    +'<div class="qcard-sub">Mitsva du jour</div>'
+    +'</div>'
+    +'</div>';
+
+  // Verset du jour
+  h+='<div class="verset-card">'
+    +'<div class="verset-label">Verset du jour</div>'
+    +'<div class="verset-heb">'+v.heb+'</div>'
+    +'<div class="verset-fr">« '+v.fr+' » — '+v.ref+'</div>'
+    +'</div>';
+
+  // All parashiot by book
   BOOKS.forEach(function(bk){
     var list=P.filter(function(x){return x.book===bk;});
     h+='<div class="bsec"><div class="btitle">'+bk+' <span>'+list[0].bh+'</span></div><div class="pgrid">';
     list.forEach(function(p){
-      var cc=p.id===CID?' cur':'';
+      var cc=(p.id===CID)?' cur':'';
       h+='<div class="pcard'+cc+'" onclick="openP('+p.id+')">'
         +'<div class="pnum">'+String(p.id).padStart(2,'0')+'</div>'
         +'<div class="pname">'+p.name+'</div>'
@@ -622,31 +716,159 @@ function buildHome(){
     });
     h+='</div></div>';
   });
+
   document.getElementById('view-home').innerHTML=h;
 }
 
-// ═══════════════════════════════════════════════════════════
-// NAVIGATION & TABS
-// ═══════════════════════════════════════════════════════════
 function goHome(){
   document.getElementById('view-home').style.display='block';
   document.getElementById('view-detail').style.display='none';
+  document.getElementById('view-hayom').style.display='none';
+  document.getElementById('view-sefer').style.display='none';
   document.getElementById('btn-back').style.display='none';
   window.scrollTo(0,0);
 }
-function showTab(t){
-  currentTab=t;
-  ['heb','sum','com'].forEach(function(x){
-    document.getElementById('tab-'+x).className='tab-panel'+(x===t?' active':'');
-  });
-  document.querySelectorAll('.tab').forEach(function(el,i){
-    el.className='tab'+(['heb','sum','com'][i]===t?' active':'');
+
+// ── CACHE HAYOM YOM & SEFER ─────────────────────────────────────────────────
+var HY_CACHE={};  // key = heb date string
+var SF_CACHE={};  // key = day-of-year number
+
+// Sefer HaMitsvot de Rambam — cycle de 365 jours
+// Le cycle 5786 commence le 20 septembre 2025
+// Référence vérifiée : 19 avril 2026 = mitsva positive n°212
+var SEFER_CYCLE_START = new Date(2025, 8, 20); // 20 sept 2025 (mois 8 = septembre, 0-based)
+
+function getDayOfSeferCycle(gregDate){
+  var msPerDay = 86400000;
+  var startMs = new Date(SEFER_CYCLE_START.getFullYear(), SEFER_CYCLE_START.getMonth(), SEFER_CYCLE_START.getDate()).getTime();
+  var todayMs = new Date(gregDate.getFullYear(), gregDate.getMonth(), gregDate.getDate()).getTime();
+  var day = Math.floor((todayMs - startMs) / msPerDay) + 1;
+  // Cycle de 365 jours — boucler si besoin
+  day = ((day - 1) % 365) + 1;
+  if(day <= 0) day += 365;
+  return day;
+}
+
+function callClaude(prompt, cb){
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':'ignored','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514', max_tokens:1200,
+      system:'Tu es un érudit hassidique. Réponds UNIQUEMENT en JSON valide sans backticks ni markdown.',
+      messages:[{role:'user',content:prompt}]
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var raw=(d.content||[]).find(function(b){return b.type==='text';});
+    var txt=raw?raw.text:'{}';
+    cb(null, JSON.parse(txt.replace(/```json|```/g,'').trim()));
+  })
+  .catch(function(e){cb(e,null);});
+}
+
+function openHayomYom(){
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-hayom').style.display='block';
+  document.getElementById('btn-back').style.display='block';
+  window.scrollTo(0,0);
+  var t=new Date(), hd=g2h(t.getDate(),t.getMonth(),t.getFullYear());
+  var key=fmtHeb(hd);
+  document.getElementById('hy-date').textContent=key+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
+  if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
+  var prompt='Pour la date hébraïque '+key+' ('+hDay(hd.d)+' '+hmName(hd.m,hd.y,false)+'), fournis le Hayom Yom (calendrier hassidique du Rabbi de Loubavitch). '
+    +'Format JSON: {"heb":"texte hébreu original du Hayom Yom de ce jour","fr":"traduction française complète et fidèle","commentaire":"explication hassidique approfondie en 2-3 paragraphes HTML avec <p>","source":"source exacte (ex: Hayom Yom, 2 Iyar)"}';
+  callClaude(prompt, function(err,data){
+    if(err||!data){document.getElementById('hy-content').innerHTML='<div class="loading-txt">Connexion requise pour charger le Hayom Yom.</div>';return;}
+    HY_CACHE[key]=data;
+    renderHayomYom(data);
   });
 }
 
-// ═══════════════════════════════════════════════════════════
-// OPEN PARASHA
-// ═══════════════════════════════════════════════════════════
+function renderHayomYom(d){
+  var h='<div class="hyd-heb">'+d.heb+'</div>'
+      +'<div class="hyd-fr"><strong style="color:#c97c1a">'+d.fr+'</strong></div>'
+      +'<div class="hyd-fr" style="margin-top:14px">'+d.commentaire+'</div>'
+      +'<div class="hyd-source">'+d.source+'</div>';
+  document.getElementById('hy-content').innerHTML=h;
+}
+
+function openSefer(){
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-sefer').style.display='block';
+  document.getElementById('btn-back').style.display='block';
+  window.scrollTo(0,0);
+  var t=new Date();
+  var hd=g2h(t.getDate(),t.getMonth(),t.getFullYear());
+  var dayNum=getDayOfSeferCycle(t);
+  var key=String(dayNum);
+  document.getElementById('sf-date').textContent=fmtHeb(hd)+' · Jour '+dayNum+' du cycle annuel';
+  if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
+  // Selon le cycle Rambam : jours 1-365 correspondent aux mitsvot dans l'ordre officiel
+  // Le numéro de mitsva positive = dayNum (pour les 248 premiers jours)
+  // Pour les jours 249-365 : mitsvot négatives uniquement
+  var prompt='Selon le cycle quotidien du Sefer HaMitsvot du Rambam, le jour '+dayNum+' du cycle annuel (qui correspond au '+t.getDate()+'/'+('0'+(t.getMonth()+1)).slice(-2)+'/'+t.getFullYear()+'), '
+    +'fournis exactement la ou les mitsvot étudiées ce jour. '
+    +'Format JSON strict: {"pos":{"num":"numéro exact","titre":"nom français","heb":"nom et source hébraïque","texte":"explication approfondie HTML 2 paragraphes <p>","source":"Rambam, Sefer HaMitsvot, Mitsva X"},"neg":{"num":"numéro exact ou null si pas de mitsva négative ce jour","titre":"nom français","heb":"nom hébraïque","texte":"explication HTML 2 paragraphes <p>","source":"référence"}} '
+    +'Si ce jour n\'a qu\'une seule mitsva, mets null pour l\'autre.';
+  callClaude(prompt, function(err,data){
+    if(err||!data){document.getElementById('sf-content').innerHTML='<div class="loading-txt">Connexion requise pour charger le Sefer HaMitsvot.</div>';return;}
+    SF_CACHE[key]=data;
+    renderSefer(data);
+  });
+}
+
+function renderSefer(d){
+  var h='';
+  if(d.pos){
+    h+='<div class="mitsva-block">'
+      +'<div class="mitsva-type pos">✅ Commandement positif (מצות עשה)</div>'
+      +'<div class="mitsva-num">Mitsva n° '+d.pos.num+'</div>'
+      +'<div class="mitsva-title">'+d.pos.titre+'</div>'
+      +'<div class="mitsva-heb">'+d.pos.heb+'</div>'
+      +'<div class="mitsva-text">'+d.pos.texte+'</div>'
+      +'<div class="hyd-source">'+d.pos.source+'</div>'
+      +'</div>';
+  }
+  if(d.neg){
+    h+='<div class="mitsva-block">'
+      +'<div class="mitsva-type neg">🚫 Commandement négatif (מצות לא תעשה)</div>'
+      +'<div class="mitsva-num">Mitsva n° '+d.neg.num+'</div>'
+      +'<div class="mitsva-title">'+d.neg.titre+'</div>'
+      +'<div class="mitsva-heb">'+d.neg.heb+'</div>'
+      +'<div class="mitsva-text">'+d.neg.texte+'</div>'
+      +'<div class="hyd-source">'+d.neg.source+'</div>'
+      +'</div>';
+  }
+  document.getElementById('sf-content').innerHTML=h;
+}
+
+// VERSET DU JOUR — sélection selon le jour hébreu
+var VERSETS=[
+  {heb:"שִׁוִּיתִי יְהוָה לְנֶגְדִּי תָמִיד",fr:"J'ai placé l'Éternel constamment devant moi",ref:"Psaumes 16:8"},
+  {heb:"בְּכָל דְּרָכֶיךָ דָעֵהוּ וְהוּא יְיַשֵּׁר אֹרְחֹתֶיךָ",fr:"Reconnais-Le dans toutes tes voies, et Il rendra droits tes sentiers",ref:"Proverbes 3:6"},
+  {heb:"אֱהַב אֶת יְהוָה אֱלֹהֶיךָ בְּכָל לְבָבְךָ",fr:"Tu aimeras l'Éternel ton D-ieu de tout ton cœur",ref:"Deutéronome 6:5"},
+  {heb:"תּוֹרַת יְהוָה תְּמִימָה מְשִׁיבַת נָפֶשׁ",fr:"La Torah de l'Éternel est parfaite, elle restaure l'âme",ref:"Psaumes 19:8"},
+  {heb:"וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ",fr:"Tu aimeras ton prochain comme toi-même",ref:"Lévitique 19:18"},
+  {heb:"בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ",fr:"Au commencement, D-ieu créa les cieux et la terre",ref:"Genèse 1:1"},
+  {heb:"שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ יְהוָה אֶחָד",fr:"Écoute Israël, l'Éternel est notre D-ieu, l'Éternel est Un",ref:"Deutéronome 6:4"},
+  {heb:"קְדֹשִׁים תִּהְיוּ כִּי קָדוֹשׁ אֲנִי יְהוָה אֱלֹהֵיכֶם",fr:"Soyez saints, car Je suis saint, l'Éternel votre D-ieu",ref:"Lévitique 19:2"},
+  {heb:"לֵב טָהוֹר בְּרָא לִי אֱלֹהִים",fr:"Crée en moi un cœur pur, ô D-ieu",ref:"Psaumes 51:12"},
+  {heb:"עֵץ חַיִּים הִיא לַמַּחֲזִיקִים בָּהּ",fr:"Elle est un arbre de vie pour ceux qui s'y attachent",ref:"Proverbes 3:18"},
+  {heb:"הַצְנֵעַ לֶכֶת עִם אֱלֹהֶיךָ",fr:"Marcher humblement avec ton D-ieu",ref:"Michée 6:8"},
+  {heb:"חֲזַק וֶאֱמָץ אַל תִּירָא",fr:"Sois fort et courageux, ne crains pas",ref:"Josué 1:9"},
+  {heb:"אוֹר זָרֻעַ לַצַּדִּיק",fr:"La lumière est semée pour le juste",ref:"Psaumes 97:11"}
+];
+
+function getVerset(hd){
+  if(!hd||!VERSETS||!VERSETS.length) return VERSETS[0];
+  var idx=((hd.d||1) + (hd.m||1)*3) % VERSETS.length;
+  return VERSETS[idx]||VERSETS[0];
+}
+
+function showTab(t){currentTab=t;['heb','sum','com'].forEach(function(x){document.getElementById('tab-'+x).className='tab-panel'+(x===t?' active':'');});document.querySelectorAll('.tab').forEach(function(el,i){el.className='tab'+(['heb','sum','com'][i]===t?' active':'');});}
+
 var HNS=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","יג","יד","טו","טז","יז","יח","יט","כ","כא","כב","כג","כד","כה","כו","כז","כח","כט","ל","לא","לב","לג","לד","לה","לו","לז","לח","לט","מ","מא","מב","מג","מד","מה","מו","מז","מח","מט","נ","נא","נב","נג","נד","נה","נו","נז","נח","נט","ס"];
 function toHN(n){return(n>0&&n<HNS.length)?HNS[n]:String(n);}
 
@@ -660,70 +882,24 @@ function openP(id){
   document.getElementById('d-name').textContent=p.name;
   document.getElementById('d-heb').textContent=p.heb;
   document.getElementById('d-ref').textContent=p.ref;
-
-  // Load summary + commentary via Claude API
   loadMeta(id,function(m){
     document.getElementById('d-summary').innerHTML=m.s;
     document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'');
   });
-
-  // Load Hebrew — supports single or pipe-separated multi-part refs
   document.getElementById('d-verses').innerHTML='<div class="loading-txt">Chargement du texte hébreu…<br><div class="dots"><span></span><span></span><span></span></div></div>';
   var parts=p.sr.split('|');
-  if(parts.length===1){
-    fetchSefaria(parts[0],function(verses){renderVerses(verses);});
-  } else {
-    // Multi-part: fetch both then concatenate
-    var allVerses=[];var done=0;
-    parts.forEach(function(ref,i){
-      fetchSefaria(ref,function(verses){
-        allVerses[i]=verses;
-        done++;
-        if(done===parts.length){
-          var combined=[];
-          allVerses.forEach(function(v){combined=combined.concat(v);});
-          renderVerses(combined);
-        }
-      });
-    });
-  }
+  if(parts.length===1){fetchSef(parts[0],function(v){renderV(v);});}
+  else{var all=[],done=0;parts.forEach(function(ref,i){fetchSef(ref,function(v){all[i]=v;done++;if(done===parts.length){var c=[];all.forEach(function(a){c=c.concat(a);});renderV(c);}});});}
   window.scrollTo(0,0);
 }
-
-function fetchSefaria(ref,cb){
-  fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(ref)+'?lang=he&context=0&pad=0')
-    .then(function(r){return r.json();})
-    .then(function(data){
-      var verses=[];
-      if(Array.isArray(data.he)){
-        if(typeof data.he[0]==='string')verses=data.he;
-        else if(Array.isArray(data.he[0]))data.he.forEach(function(ch){ch.forEach(function(v){verses.push(v);});});
-      }
-      cb(verses);
-    })
-    .catch(function(){cb([]);});
-}
-
-function renderVerses(verses){
-  if(!verses.length){
-    document.getElementById('d-verses').innerHTML='<div class="loading-txt">Texte non disponible. Consultez les onglets Résumé et Commentaire.</div>';
-    return;
-  }
-  var html='';var n=1;
-  for(var i=0;i<verses.length;i++){
-    var v=verses[i];if(!v||v==='')continue;
-    v=v.replace(/<[^>]+>/g,'');
-    html+='<span class="vrow"><span class="vn">'+toHN(n)+'</span>'+v+'</span>';
-    n++;
-  }
+function fetchSef(ref,cb){fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(ref)+'?lang=he&context=0&pad=0').then(function(r){return r.json();}).then(function(d){var v=[];if(Array.isArray(d.he)){if(typeof d.he[0]==='string')v=d.he;else if(Array.isArray(d.he[0]))d.he.forEach(function(ch){ch.forEach(function(x){v.push(x);});});}cb(v);}).catch(function(){cb([]);});}
+function renderV(verses){
+  if(!verses.length){document.getElementById('d-verses').innerHTML='<div class="loading-txt">Texte non disponible. Consultez les onglets Résumé et Commentaire.</div>';return;}
+  var html='',n=1;
+  for(var i=0;i<verses.length;i++){var v=verses[i];if(!v||v==='')continue;v=v.replace(/<[^>]+>/g,'');html+='<span class="vrow"><span class="vn">'+toHN(n)+'</span>'+v+'</span>';n++;}
   document.getElementById('d-verses').innerHTML=html;
 }
 
-// ═══════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════
 buildHome();
 initLoc();
-</script>
-</body>
-</html>
+</script></body></html>
