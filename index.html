@@ -761,6 +761,41 @@ function doConvert(){var d=parseInt(document.getElementById('cv-day').value)||1,
 // HOME
 function getP(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i];return null;}
 
+var HNS=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","יג","יד","טו","טז","יז","יח","יט","כ","כא","כב","כג","כד","כה","כו","כז","כח","כט","ל","לא","לב","לג","לד","לה","לו","לז","לח","לט","מ","מא","מב","מג","מד","מה","מו","מז","מח","מט","נ","נא","נב","נג","נד","נה","נו","נז","נח","נט","ס"];
+function toHN(n){return(n>0&&n<HNS.length)?HNS[n]:String(n);}
+
+var VERSETS=[
+  {heb:"שִׁוִּיתִי יְהוָה לְנֶגְדִּי תָמִיד",fr:"J'ai placé l'Éternel constamment devant moi",ref:"Psaumes 16:8"},
+  {heb:"בְּכָל דְּרָכֶיךָ דָעֵהוּ וְהוּא יְיַשֵּׁר אֹרְחֹתֶיךָ",fr:"Reconnais-Le dans toutes tes voies, et Il rendra droits tes sentiers",ref:"Proverbes 3:6"},
+  {heb:"אֱהַב אֶת יְהוָה אֱלֹהֶיךָ בְּכָל לְבָבְךָ",fr:"Tu aimeras l'Éternel ton D-ieu de tout ton cœur",ref:"Deutéronome 6:5"},
+  {heb:"תּוֹרַת יְהוָה תְּמִימָה מְשִׁיבַת נָפֶשׁ",fr:"La Torah de l'Éternel est parfaite, elle restaure l'âme",ref:"Psaumes 19:8"},
+  {heb:"וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ",fr:"Tu aimeras ton prochain comme toi-même",ref:"Lévitique 19:18"},
+  {heb:"בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ",fr:"Au commencement, D-ieu créa les cieux et la terre",ref:"Genèse 1:1"},
+  {heb:"שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ יְהוָה אֶחָד",fr:"Écoute Israël, l'Éternel est notre D-ieu, l'Éternel est Un",ref:"Deutéronome 6:4"},
+  {heb:"קְדֹשִׁים תִּהְיוּ כִּי קָדוֹשׁ אֲנִי יְהוָה אֱלֹהֵיכֶם",fr:"Soyez saints, car Je suis saint, l'Éternel votre D-ieu",ref:"Lévitique 19:2"},
+  {heb:"לֵב טָהוֹר בְּרָא לִי אֱלֹהִים",fr:"Crée en moi un cœur pur, ô D-ieu",ref:"Psaumes 51:12"},
+  {heb:"עֵץ חַיִּים הִיא לַמַּחֲזִיקִים בָּהּ",fr:"Elle est un arbre de vie pour ceux qui s'y attachent",ref:"Proverbes 3:18"},
+  {heb:"הַצְנֵעַ לֶכֶת עִם אֱלֹהֶיךָ",fr:"Marcher humblement avec ton D-ieu",ref:"Michée 6:8"},
+  {heb:"חֲזַק וֶאֱמָץ אַל תִּירָא",fr:"Sois fort et courageux, ne crains pas",ref:"Josué 1:9"},
+  {heb:"אוֹר זָרֻעַ לַצַּדִּיק",fr:"La lumière est semée pour le juste",ref:"Psaumes 97:11"}
+];
+
+function getVerset(hd){
+  if(!hd||!VERSETS||!VERSETS.length) return VERSETS[0];
+  var idx=((hd.d||1)+(hd.m||1)*3)%VERSETS.length;
+  return VERSETS[idx]||VERSETS[0];
+}
+
+function showTab(t){
+  currentTab=t;
+  ['heb','fr','sum','com'].forEach(function(x){
+    document.getElementById('tab-'+x).className='tab-panel'+(x===t?' active':'');
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    el.className='tab'+(['heb','fr','sum','com'][i]===t?' active':'');
+  });
+}
+
 function buildHome(){
   var CID=currentCID;
   var cur=getP(CID)||P[0];
