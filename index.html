@@ -28,10 +28,14 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .warrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.8);font-size:20px}
 
 /* PARACHIOT SECTION — grande carte colorée */
-.psection{background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 60%,#c97c1a 100%);border-radius:6px;padding:20px 16px;margin-bottom:28px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.psection-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.psection-title{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.8)}
-.psection-arrow{color:rgba(255,255,255,0.8);font-size:18px}
+.psection{background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 60%,#c97c1a 100%);border-radius:6px;margin-bottom:28px}
+.psection-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.psection-header:active{opacity:.85}
+.psection-title{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.9);font-weight:bold}
+.psection-arrow{color:rgba(255,255,255,0.8);font-size:18px;transition:transform .3s}
+.psection-arrow.open{transform:rotate(180deg)}
+.psection-body{padding:0 16px 16px;display:none}
+.psection-body.open{display:block}
 .pbook{margin-bottom:16px}
 .pbook:last-child{margin-bottom:0}
 .pbook-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:8px;display:flex;align-items:center;gap:8px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.15)}
@@ -416,9 +420,24 @@ function loadHebcalAll(lat,lng,cb){
       hebcalData=d;
       (d.items||[]).forEach(function(it){
         if(it.category==='parashat'){
-          currentParashaName=it.title.replace('Parashat ','').replace('Shabbat ','');
+          // Normaliser le nom : retirer "Parashat ", accents, tirets
+          var raw=it.title.replace(/^Parashat\s+/,'').replace(/^Shabbat\s+/,'').trim();
+          currentParashaName=raw;
           currentParashaHeb=it.hebrew||'';
-          var mapped=PARASHA_MAP[currentParashaName];
+          // Chercher dans la map avec plusieurs variantes
+          var mapped=PARASHA_MAP[raw];
+          if(!mapped){
+            // Essayer sans tirets
+            mapped=PARASHA_MAP[raw.replace(/-/g,' ')];
+          }
+          if(!mapped){
+            // Chercher par correspondance partielle
+            for(var k in PARASHA_MAP){
+              if(raw.toLowerCase().indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(raw.toLowerCase())>=0){
+                mapped=PARASHA_MAP[k]; break;
+              }
+            }
+          }
           if(mapped) currentCID=mapped;
         }
         if(it.category==='candles') candleTime=fmtHebcalTime(it.date);
@@ -766,7 +785,7 @@ function buildHome(){
   // Paracha banner — dégradé bleu/orange comme le prototype
   var parashaDisplay=currentParashaName||cur.name;
   var parashaHebDisplay=currentParashaHeb||cur.heb;
-  h+='<div class="wbanner" onclick="openP('+CID+')" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
+  h+='<div class="wbanner" onclick="openCurParacha()" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
     +'<div class="wlabel" style="color:rgba(255,255,255,0.7)">📖 PARACHA DE LA SEMAINE · שַׁבָּת</div>'
     +'<div class="wname">'+parashaHebDisplay+'</div>'
     +'<div style="font-family:Frank Ruhl Libre,serif;font-size:20px;color:#f5f0e8;margin-bottom:4px">'+parashaDisplay+'</div>'
@@ -782,9 +801,14 @@ function buildHome(){
   // Verset du jour
   h+='<div class="verset-card"><div class="verset-label">Verset du jour</div><div class="verset-heb">'+v.heb+'</div><div class="verset-fr">« '+v.fr+' » — '+v.ref+'</div></div>';
 
-  // SECTION PARACHIOT — grande carte bleue-orange avec sous-sections par livre
+  // SECTION PARACHIOT — carte bleue-orange fermable
+  var psOpen=localStorage.getItem('ps_open')!=='0';
   h+='<div class="psection">'
-    +'<div class="psection-header"><div class="psection-title">📚 Les 54 Parachiot · התּוֹרָה</div><div class="psection-arrow">▼</div></div>';
+    +'<div class="psection-header" onclick="togglePS()">'
+    +'<div class="psection-title">📚 Les 54 Parachiot · התּוֹרָה</div>'
+    +'<div class="psection-arrow'+(psOpen?' open':'')+'">▼</div>'
+    +'</div>'
+    +'<div class="psection-body'+(psOpen?' open':'')+'">';
 
   BOOKS.forEach(function(bk){
     var list=P.filter(function(x){return x.book===bk;});
@@ -801,9 +825,19 @@ function buildHome(){
     h+='</div></div>';
   });
 
-  h+='</div>'; // fin psection
+  h+='</div></div>'; // fin psection-body + psection
 
   document.getElementById('view-home').innerHTML=h;
+}
+
+function togglePS(){
+  var body=document.querySelector('.psection-body');
+  var arrow=document.querySelector('.psection-arrow');
+  if(!body)return;
+  var isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  arrow.classList.toggle('open',!isOpen);
+  try{localStorage.setItem('ps_open',isOpen?'0':'1');}catch(e){}
 }
 
 function goHome(){
@@ -846,43 +880,53 @@ function openHayomYom(){
   document.getElementById('btn-back').style.display='block';
   window.scrollTo(0,0);
   var t=new Date();
-  // Utiliser la date Hebcal (tient compte du coucher du soleil)
-  var dateFrDisplay=hebDateFr||hebDateStr||'...';
-  var key=hebDateStr||dateFrDisplay; // clé de cache = date hébraïque du jour
+  var dateFrDisplay=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
+  var key='HY_'+todayISO();
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
   if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
   document.getElementById('hy-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
 
-  // Essayer l'API Hebcal pour le Hayom Yom
-  var hebcalHYurl='https://www.hebcal.com/hebcal?cfg=json&v=1&start='+todayISO()+'&end='+todayISO()+'&HY=on&s=off';
-  fetch(hebcalHYurl)
+  // API Hebcal — paramètre HY=on pour Hayom Yom
+  fetch('https://www.hebcal.com/hebcal?cfg=json&v=1&start='+todayISO()+'&end='+todayISO()+'&HY=on&s=off&maj=off&min=off&c=off&ss=off')
     .then(function(r){return r.json();})
     .then(function(d){
-      var hyItem=(d.items||[]).find(function(it){return it.category==='hayomyom';});
-      if(hyItem&&(hyItem.memo||hyItem.title)){
-        var data={heb:hyItem.hebrew||'',fr:hyItem.memo||hyItem.title||'',commentaire:'<p>'+(hyItem.memo||hyItem.title)+'</p>',source:'Hayom Yom, '+dateFrDisplay};
-        HY_CACHE[key]=data;renderHayomYom(data);return;
+      var it=(d.items||[]).find(function(x){return x.category==='hayomyom';});
+      if(it&&(it.memo||it.title)){
+        var texte=it.memo||it.title||'';
+        var data={
+          heb:it.hebrew||'',
+          fr:texte,
+          commentaire:'<p>'+texte+'</p>',
+          source:'<a href="'+(it.link||'https://www.chabad.org/dailystudy/hayomyom_cdo/jewish/Hayom-Yom.htm')+'" target="_blank" style="color:#c97c1a">Hayom Yom · '+dateFrDisplay+' · Chabad.org ↗</a>'
+        };
+        HY_CACHE[key]=data; renderHayomYom(data);
+      } else {
+        // Lien direct Chabad si Hebcal n'a pas le contenu
+        document.getElementById('hy-content').innerHTML=
+          '<div class="loading-txt" style="text-align:center;padding:30px">'
+          +'<div style="font-size:40px;margin-bottom:16px">☀️</div>'
+          +'<div style="font-size:16px;color:#1a1208;margin-bottom:20px">Hayom Yom · '+dateFrDisplay+'</div>'
+          +'<a href="https://www.chabad.org/dailystudy/hayomyom_cdo/jewish/Hayom-Yom.htm" target="_blank" '
+          +'style="display:inline-block;background:#c97c1a;color:#fff;padding:12px 24px;text-decoration:none;font-size:15px;letter-spacing:1px">Lire sur Chabad.org ↗</a>'
+          +'<div style="margin-top:16px;font-size:12px;color:#9a8860">Le Hayom Yom n\'est pas disponible hors ligne.</div>'
+          +'</div>';
       }
-      loadHayomYomViaClaude(dateFrDisplay,key);
     })
-    .catch(function(){loadHayomYomViaClaude(dateFrDisplay,key);});
-}
-
-function loadHayomYomViaClaude(dateFr,key){
-  var prompt='Donne-moi l\'enseignement exact du Hayom Yom (Kehot Publication Society, Rabbi de Loubavitch) pour le '
-    +dateFr+'. '
-    +'Format JSON: {"heb":"texte hébreu original","fr":"traduction française complète","commentaire":"<p>explication hassidique 2 paragraphes</p>","source":"Hayom Yom, '+dateFr+'"}';
-  callClaude(prompt,function(err,data){
-    if(err||!data){document.getElementById('hy-content').innerHTML='<div class="loading-txt">Connexion internet requise pour le Hayom Yom.</div>';return;}
-    HY_CACHE[key]=data;renderHayomYom(data);
-  });
+    .catch(function(){
+      document.getElementById('hy-content').innerHTML=
+        '<div class="loading-txt" style="text-align:center;padding:30px">'
+        +'<a href="https://www.chabad.org/dailystudy/hayomyom_cdo/jewish/Hayom-Yom.htm" target="_blank" '
+        +'style="display:inline-block;background:#c97c1a;color:#fff;padding:12px 24px;text-decoration:none;font-size:15px">Hayom Yom sur Chabad.org ↗</a>'
+        +'</div>';
+    });
 }
 
 function renderHayomYom(d){
-  var h='<div class="hyd-heb">'+d.heb+'</div>'
-      +'<div class="hyd-fr"><strong style="color:#c97c1a">'+d.fr+'</strong></div>'
-      +'<div class="hyd-fr" style="margin-top:14px">'+d.commentaire+'</div>'
-      +'<div class="hyd-source">'+d.source+'</div>';
+  var h='';
+  if(d.heb) h+='<div class="hyd-heb">'+d.heb+'</div>';
+  h+='<div class="hyd-fr" style="font-size:17px;line-height:1.9;color:#1a1208;padding:16px;background:#fdf9f2;border-left:4px solid #c97c1a;margin-bottom:16px">'+d.fr+'</div>';
+  if(d.commentaire&&d.commentaire!=='<p>'+d.fr+'</p>') h+='<div class="hyd-fr">'+d.commentaire+'</div>';
+  h+='<div class="hyd-source">'+d.source+'</div>';
   document.getElementById('hy-content').innerHTML=h;
 }
 
@@ -892,46 +936,53 @@ function openSefer(){
   document.getElementById('btn-back').style.display='block';
   window.scrollTo(0,0);
   var t=new Date();
-  var hd=g2h(t.getDate(),t.getMonth(),t.getFullYear());
   var dayNum=getDayOfSeferCycle(t);
-  var key=String(dayNum);
-  var dateHeb=hebDateFr||hebDateStr||'...';
+  var key='SF_'+todayISO();
+  var dateHeb=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
   document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
   if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
   document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
 
-  // Essayer Chabad via API Hebcal daily study
-  var chabadUrl='https://www.hebcal.com/hebcal?cfg=json&v=1&s=off&start='+todayISO()+'&end='+todayISO()+'&dafyomi=off&F=off&D=on';
-  fetch(chabadUrl)
+  // API Hebcal — paramètre dsm=on pour Sefer HaMitsvot (Maimonides)
+  fetch('https://www.hebcal.com/hebcal?cfg=json&v=1&start='+todayISO()+'&end='+todayISO()+'&dsm=on&s=off&maj=off&min=off&c=off&ss=off')
     .then(function(r){return r.json();})
     .then(function(d){
-      var mItems=(d.items||[]).filter(function(it){return it.category==='sefer-hamitzvot';});
-      if(mItems.length){
-        // Hebcal a des données Sefer HaMitsvot
-        var parsed={pos:null,neg:null};
-        mItems.forEach(function(it){
-          var isPos=it.title&&it.title.indexOf('Positive')>=0;
-          var block={num:it.title||'',titre:it.title||'',heb:it.hebrew||'',texte:'<p>'+( it.memo||it.description||'')+'</p>',source:'Rambam, Sefer HaMitsvot'};
-          if(isPos)parsed.pos=block; else parsed.neg=block;
-        });
-        if(parsed.pos||parsed.neg){SF_CACHE[key]=parsed;renderSefer(parsed);return;}
+      var items=d.items||[];
+      if(!items.length){
+        renderSeferFallback(dayNum,dateHeb); return;
       }
-      // Fallback: Claude API
-      loadSeferViaClaude(dayNum,t,hd,key);
+      var parsed={pos:null,neg:null,items:[]};
+      items.forEach(function(it){
+        if(it.category!=='sefer-hamitzvot'&&it.category!=='smitzvot') return;
+        var titre=it.title||'';
+        var memo=it.memo||it.desc||'';
+        var heb=it.hebrew||'';
+        // Détecter positif/négatif
+        var isPos=titre.toLowerCase().indexOf('positive')>=0||titre.indexOf('Aseh')>=0;
+        var isNeg=titre.toLowerCase().indexOf('negative')>=0||titre.indexOf('Lo ')>=0;
+        var block={num:dayNum,titre:titre,heb:heb,texte:memo?'<p>'+memo+'</p>':'',source:'Rambam, Sefer HaMitsvot',link:it.link||''};
+        if(isNeg) parsed.neg=block;
+        else if(isPos) parsed.pos=block;
+        else parsed.items.push(block);
+      });
+      // Si pas de distinction pos/neg, mettre le premier en pos
+      if(!parsed.pos&&!parsed.neg&&parsed.items.length){parsed.pos=parsed.items[0];if(parsed.items[1])parsed.neg=parsed.items[1];}
+      if(parsed.pos||parsed.neg){SF_CACHE[key]=parsed;renderSefer(parsed);}
+      else{renderSeferFallback(dayNum,dateHeb);}
     })
-    .catch(function(){loadSeferViaClaude(dayNum,t,hd,key);});
+    .catch(function(){renderSeferFallback(dayNum,dateHeb);});
 }
 
-function loadSeferViaClaude(dayNum,t,hd,key){
-  var prompt='Selon le cycle quotidien officiel du Sefer HaMitsvot du Rambam (Chabad), '
-    +'le jour '+dayNum+' du cycle ('+t.getDate()+'/'+(t.getMonth()+1)+'/'+t.getFullYear()+' = '+hd.d+' '+hmName(hd.m,hd.y,false)+' '+hd.y+'), '
-    +'indique précisément quelle(s) mitsva(ot) est(sont) étudiée(s). '
-    +'Rappel cycle vérifié : jour 212 = mitsva positive 212. '
-    +'Format JSON: {"pos":{"num":"N°","titre":"nom fr","heb":"nom hébreu","texte":"<p>explication 2 §</p>","source":"Rambam SeHaMitsvot Aseh N"},"neg":{"num":"N° ou null","titre":"nom fr","heb":"hébreu","texte":"<p>explication</p>","source":"ref"}}';
-  callClaude(prompt,function(err,data){
-    if(err||!data){document.getElementById('sf-content').innerHTML='<div class="loading-txt">Connexion internet requise.</div>';return;}
-    SF_CACHE[key]=data;renderSefer(data);
-  });
+function renderSeferFallback(dayNum,dateHeb){
+  document.getElementById('sf-content').innerHTML=
+    '<div class="loading-txt" style="text-align:center;padding:30px">'
+    +'<div style="font-size:40px;margin-bottom:16px">📋</div>'
+    +'<div style="font-size:16px;color:#1a1208;margin-bottom:8px">Sefer HaMitsvot · '+dateHeb+'</div>'
+    +'<div style="font-size:14px;color:#6a5e40;margin-bottom:20px">Jour '+dayNum+' du cycle annuel · Rambam</div>'
+    +'<a href="https://www.chabad.org/dailystudy/seferhamitzvos_cdo/jewish/Sefer-HaMitzvos.htm" target="_blank" '
+    +'style="display:inline-block;background:#6a3fa0;color:#fff;padding:12px 24px;text-decoration:none;font-size:15px;letter-spacing:1px">Lire sur Chabad.org ↗</a>'
+    +'<div style="margin-top:16px;font-size:12px;color:#9a8860">Le contenu détaillé n\'est pas disponible hors ligne.</div>'
+    +'</div>';
 }
 
 function renderSefer(d){
@@ -939,23 +990,24 @@ function renderSefer(d){
   if(d.pos){
     h+='<div class="mitsva-block">'
       +'<div class="mitsva-type pos">✅ Commandement positif (מצות עשה)</div>'
-      +'<div class="mitsva-num">Mitsva n° '+d.pos.num+'</div>'
+      +(d.pos.num?'<div class="mitsva-num">Mitsva n° '+d.pos.num+'</div>':'')
       +'<div class="mitsva-title">'+d.pos.titre+'</div>'
-      +'<div class="mitsva-heb">'+d.pos.heb+'</div>'
-      +'<div class="mitsva-text">'+d.pos.texte+'</div>'
-      +'<div class="hyd-source">'+d.pos.source+'</div>'
+      +(d.pos.heb?'<div class="mitsva-heb">'+d.pos.heb+'</div>':'')
+      +(d.pos.texte?'<div class="mitsva-text">'+d.pos.texte+'</div>':'')
+      +'<div class="hyd-source">'+(d.pos.link?'<a href="'+d.pos.link+'" target="_blank" style="color:#6a3fa0">'+d.pos.source+' ↗</a>':d.pos.source)+'</div>'
       +'</div>';
   }
   if(d.neg){
     h+='<div class="mitsva-block">'
       +'<div class="mitsva-type neg">🚫 Commandement négatif (מצות לא תעשה)</div>'
-      +'<div class="mitsva-num">Mitsva n° '+d.neg.num+'</div>'
+      +(d.neg.num?'<div class="mitsva-num">Mitsva n° '+d.neg.num+'</div>':'')
       +'<div class="mitsva-title">'+d.neg.titre+'</div>'
-      +'<div class="mitsva-heb">'+d.neg.heb+'</div>'
-      +'<div class="mitsva-text">'+d.neg.texte+'</div>'
-      +'<div class="hyd-source">'+d.neg.source+'</div>'
+      +(d.neg.heb?'<div class="mitsva-heb">'+d.neg.heb+'</div>':'')
+      +(d.neg.texte?'<div class="mitsva-text">'+d.neg.texte+'</div>':'')
+      +'<div class="hyd-source">'+(d.neg.link?'<a href="'+d.neg.link+'" target="_blank" style="color:#6a3fa0">'+d.neg.source+' ↗</a>':d.neg.source)+'</div>'
       +'</div>';
   }
+  if(!h) h='<div class="loading-txt">Données non disponibles.</div>';
   document.getElementById('sf-content').innerHTML=h;
 }
 
