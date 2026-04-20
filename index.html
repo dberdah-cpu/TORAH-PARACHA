@@ -250,7 +250,7 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
   </div>
   <div class="tabs">
     <div class="tab active" onclick="showTab('heb')">Hébreu</div>
-    <div class="tab" onclick="showTab('fr')">Français</div>
+    <div class="tab" onclick="showTab('fr')">Traduction</div>
     <div class="tab" onclick="showTab('sum')">Résumé</div>
     <div class="tab" onclick="showTab('com')">Commentaire</div>
   </div>
@@ -260,7 +260,7 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
   </div>
   <div id="tab-fr" class="tab-panel">
     <div id="d-verses-fr" class="sumblock"></div>
-    <div class="sefaria-credit">Traduction française · Sefaria Open Library</div>
+    <div class="sefaria-credit">Traduction anglaise · Sefaria Open Library</div>
   </div>
   <div id="tab-sum" class="tab-panel"><div class="sumblock" id="d-summary"></div></div>
   <div id="tab-com" class="tab-panel"><div class="comblock" id="d-commentary"></div></div>
@@ -342,17 +342,20 @@ var PARASHA_MAP = {
   'Toldot':6,'Vayetzei':7,'Vayishlach':8,'Vayeshev':9,'Miketz':10,
   'Vayigash':11,'Vayechi':12,'Shemot':13,'Vaera':14,'Bo':15,
   'Beshalach':16,'Yitro':17,'Mishpatim':18,'Terumah':19,'Tetzaveh':20,
-  'Ki Tisa':21,'Vayakhel':22,'Pekudei':23,'Vayikra':24,'Tzav':25,
-  'Shemini':26,'Tazria':27,'Metzora':27,'Tazria-Metzora':27,
+  'Ki Tisa':21,'Vayakhel':22,'Pekudei':23,'Vayakhel-Pekudei':22,
+  'Vayikra':24,'Tzav':25,'Shemini':26,
+  'Tazria':27,'Metzora':27,'Tazria-Metzora':27,
   'Achrei Mot':29,'Kedoshim':29,'Achrei Mot-Kedoshim':29,
-  'Emor':31,'Behar':32,'Bechukotai':32,'Behar-Bechukotai':32,
+  'Acharei Mot':29,'Acharei Mot-Kedoshim':29,
+  'Emor':31,
+  'Behar':32,'Bechukotai':32,'Behar-Bechukotai':32,
   'Bamidbar':34,'Nasso':35,"Beha'alotcha":36,'Shelach':37,
   'Korach':38,'Chukat':39,'Balak':39,'Chukat-Balak':39,
   'Pinchas':41,'Matot':42,'Masei':42,'Matot-Masei':42,
   'Devarim':44,"Va'etchanan":45,'Eikev':46,"Re'eh":47,
   'Shoftim':48,'Ki Teitzei':49,'Ki Tavo':50,'Nitzavim':51,
-  'Vayeilech':51,'Nitzavim-Vayeilech':51,'Ha\'azinu':53,
-  'Vezot Haberakhah':54
+  'Vayeilech':51,'Nitzavim-Vayeilech':51,"Ha'azinu":53,'Haazinu':53,
+  'Vezot Haberakhah':54,'Vezot HaBerakha':54
 };
 
 // Traductions françaises des fêtes Hebcal
@@ -595,7 +598,7 @@ function hebDIY(y){return hebElapsed(y+1)-hebElapsed(y);}
 function hebDIM(m,y){switch(m){case 1:case 3:case 5:case 7:case 11:return 30;case 13:return 29;case 6:return hebLeap(y)?30:29;case 8:return(hebDIY(y)%10)===5?30:29;case 9:return(hebDIY(y)%10)===3?29:30;default:return 29;}}
 function gregToJD(d,m,y){m=m+1;return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d-1524.5-(y>1582||(y===1582&&m>10)||(y===1582&&m===10&&d>=15)?Math.floor(y/100)-Math.floor(y/400)-2:0);}
 // Note: retourne un .5 intentionnel — jdToHeb le gère avec floor(jd)+0.5
-function jdToHeb(jd){jd=Math.floor(jd)+0.5;var yr=Math.floor((jd-347997)/365.25)+1;while(hebElapsed(yr+1)<=jd-347997)yr++;while(hebElapsed(yr)>jd-347997)yr--;var st=hebElapsed(yr)+347997;var mo=1;var nm=hebMonthsInYear(yr);while(mo<nm&&st+hebDIM(mo,yr)<=jd){st+=hebDIM(mo,yr);mo++;}return{d:jd-st+1,m:mo,y:yr};}
+function jdToHeb(jd){jd=Math.floor(jd)+0.5;var yr=Math.floor((jd-347997)/365.25)+1;while(hebElapsed(yr+1)<=jd-347997)yr++;while(hebElapsed(yr)>jd-347997)yr--;var st=hebElapsed(yr)+347997;var mo=1;var nm=hebMonthsInYear(yr);while(mo<nm&&st+hebDIM(mo,yr)<=jd){st+=hebDIM(mo,yr);mo++;}return{d:Math.floor(jd-st+1),m:mo,y:yr};}
 function g2h(d,m,y){return jdToHeb(gregToJD(d,m,y));}
 function hmName(m,y,heb){var lp=hebLeap(y);if(heb)return lp?HMLH[m-1]:HMH[m-1];return lp?HML[m-1]:HM[m-1];}
 function hDay(d){return HNUM[d]||String(d);}
@@ -750,7 +753,7 @@ function buildHome(){
   var h=getHomeBanners();
 
   // Date bar — date hébraïque 100% depuis Hebcal (coucher du soleil correct)
-  var dateHebHeb=hebDateHeb||fmtHeb(ht);
+  var dateHebHeb=hebDateHeb||'...';
   var dateHebFrDisplay=hebDateFr||fmtHebFr(ht); // "3 Iyar 5786"
   h+='<div class="datebar" onclick="openCal()">'
     +'<div class="datebar-icon">📅</div>'
@@ -763,7 +766,7 @@ function buildHome(){
   // Paracha banner — dégradé bleu/orange comme le prototype
   var parashaDisplay=currentParashaName||cur.name;
   var parashaHebDisplay=currentParashaHeb||cur.heb;
-  h+='<div class="wbanner" onclick="openP('+cur.id+')" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
+  h+='<div class="wbanner" onclick="openP('+CID+')" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
     +'<div class="wlabel" style="color:rgba(255,255,255,0.7)">📖 PARACHA DE LA SEMAINE · שַׁבָּת</div>'
     +'<div class="wname">'+parashaHebDisplay+'</div>'
     +'<div style="font-family:Frank Ruhl Libre,serif;font-size:20px;color:#f5f0e8;margin-bottom:4px">'+parashaDisplay+'</div>'
@@ -833,22 +836,8 @@ function getDayOfSeferCycle(gregDate){
 }
 
 function callClaude(prompt, cb){
-  fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':'ignored','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-20250514', max_tokens:1200,
-      system:'Tu es un érudit hassidique. Réponds UNIQUEMENT en JSON valide sans backticks ni markdown.',
-      messages:[{role:'user',content:prompt}]
-    })
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    var raw=(d.content||[]).find(function(b){return b.type==='text';});
-    var txt=raw?raw.text:'{}';
-    cb(null, JSON.parse(txt.replace(/```json|```/g,'').trim()));
-  })
-  .catch(function(e){cb(e,null);});
+  // API Claude non disponible depuis GitHub Pages
+  cb(new Error('unavailable'), null);
 }
 
 function openHayomYom(){
@@ -858,7 +847,7 @@ function openHayomYom(){
   window.scrollTo(0,0);
   var t=new Date();
   // Utiliser la date Hebcal (tient compte du coucher du soleil)
-  var dateFrDisplay=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
+  var dateFrDisplay=hebDateFr||hebDateStr||'...';
   var key=hebDateStr||dateFrDisplay; // clé de cache = date hébraïque du jour
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
   if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
@@ -906,7 +895,7 @@ function openSefer(){
   var hd=g2h(t.getDate(),t.getMonth(),t.getFullYear());
   var dayNum=getDayOfSeferCycle(t);
   var key=String(dayNum);
-  var dateHeb=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
+  var dateHeb=hebDateFr||hebDateStr||'...';
   document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
   if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
   document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
