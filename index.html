@@ -1161,23 +1161,18 @@ function openHayomYom(){
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
   if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
   document.getElementById('hy-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-  fetch('https://www.hebcal.com/hebcal?cfg=json&v=1&start='+todayISO()+'&end='+todayISO()+'&HY=on&s=off&maj=off&min=off&c=off&ss=off')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var it=(d.items||[]).find(function(x){return x.category==='hayomyom';});
-      if(it&&(it.memo||it.title)){
-        var data={heb:it.hebrew||'',fr:it.memo||it.title,src:'Hayom Yom · '+dateFrDisplay};
-        HY_CACHE[key]=data;renderHayomYom(data);return;
-      }
-      var pre=getHayomYomData(hd);
-      if(pre){HY_CACHE[key]=pre;renderHayomYom(pre);return;}
-      renderHayomYomLink(dateFrDisplay);
-    })
-    .catch(function(){
-      var pre=getHayomYomData(hd);
-      if(pre){HY_CACHE[key]=pre;renderHayomYom(pre);}
-      else renderHayomYomLink(dateFrDisplay);
+
+  // 1. hassidout.org via proxy CORS
+  var hassidoutUrl=getHassidoutURL(hd);
+  fetchHayomYom(hassidoutUrl,hd,key,function(data){
+    if(data){HY_CACHE[key]=data;renderHayomYom(data);return;}
+    // 2. Fallback fr.chabad.org via proxy
+    var chabadUrl='https://fr.chabad.org/dailystudy/hayomyom.asp?tdate='+pad2(t.getMonth()+1)+'/'+pad2(t.getDate())+'/'+t.getFullYear();
+    fetchHayomYom(chabadUrl,hd,key,function(data2){
+      if(data2){HY_CACHE[key]=data2;renderHayomYom(data2);return;}
+      renderHayomYomLink(dateFrDisplay,hassidoutUrl);
     });
+  });
 }
 
 function renderHayomYom(d){
@@ -1205,38 +1200,19 @@ function openSefer(){
   var dayNum=getDayOfSeferCycle(t);
   var key='SF_'+todayISO();
   var dateHeb=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
-  document.getElementById('sf-date').textContent=dateHeb+' · Mitsva du jour n° '+dayNum;
+  document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
   if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
   document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-  fetch('https://www.hebcal.com/hebcal?cfg=json&v=1&start='+todayISO()+'&end='+todayISO()+'&dsm=on&s=off&maj=off&min=off&c=off&ss=off')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var items=(d.items||[]).filter(function(x){return x.category==='sefer-hamitzvot';});
-      if(items.length){
-        var parsed=parseSeferItems(items,dayNum);
-        if(parsed.pos||parsed.neg){SF_CACHE[key]=parsed;renderSefer(parsed);return;}
-      }
-      var pre=getSeferData(dayNum);
-      if(pre){SF_CACHE[key]=pre;renderSefer(pre);return;}
-      renderSeferLink(dayNum,dateHeb);
-    })
-    .catch(function(){
-      var pre=getSeferData(dayNum);
-      if(pre){SF_CACHE[key]=pre;renderSefer(pre);}
-      else renderSeferLink(dayNum,dateHeb);
-    });
+
+  // Calendrier officiel Chabad
+  var codes=getSeferCodesForDay(dayNum);
+  if(codes&&codes!=='intro'&&codes!=='principles'){
+    var result=buildSeferFromCodes(codes,dayNum);
+    if(result){SF_CACHE[key]=result;renderSefer(result);return;}
+  }
+  renderSeferLink(dayNum,dateHeb);
 }
 
-function parseSeferItems(items,dayNum){
-  var parsed={pos:null,neg:null};
-  items.forEach(function(it){
-    var t=it.title||'';
-    var isNeg=t.toLowerCase().indexOf('negative')>=0||t.indexOf('Neg')>=0||t.indexOf('Lo ')>=0;
-    var block={num:dayNum,titre:t,heb:it.hebrew||'',texte:it.memo?'<p>'+it.memo+'</p>':'',source:'Rambam, Sefer HaMitsvot',link:it.link||''};
-    if(isNeg&&!parsed.neg)parsed.neg=block; else if(!parsed.pos)parsed.pos=block;
-  });
-  return parsed;
-}
 
 function renderSefer(d){
   var h='';
