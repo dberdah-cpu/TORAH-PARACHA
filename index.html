@@ -850,29 +850,10 @@ function goHome(){
 }
 
 // ── CACHE HAYOM YOM & SEFER ─────────────────────────────────────────────────
-var HY_CACHE={};  // key = heb date string
-var SF_CACHE={};  // key = day-of-year number
+var HY_CACHE={};
+var SF_CACHE={};
 
-// Sefer HaMitsvot de Rambam — cycle de 365 jours
-// Le cycle 5786 commence le 20 septembre 2025
-// Référence vérifiée : 19 avril 2026 = mitsva positive n°212
-var SEFER_CYCLE_START = new Date(2025, 8, 20); // 20 sept 2025 (mois 8 = septembre, 0-based)
-
-function getDayOfSeferCycle(gregDate){
-  var msPerDay = 86400000;
-  var startMs = new Date(SEFER_CYCLE_START.getFullYear(), SEFER_CYCLE_START.getMonth(), SEFER_CYCLE_START.getDate()).getTime();
-  var todayMs = new Date(gregDate.getFullYear(), gregDate.getMonth(), gregDate.getDate()).getTime();
-  var day = Math.floor((todayMs - startMs) / msPerDay) + 1;
-  // Cycle de 365 jours — boucler si besoin
-  day = ((day - 1) % 365) + 1;
-  if(day <= 0) day += 365;
-  return day;
-}
-
-function callClaude(prompt, cb){
-  // API Claude non disponible depuis GitHub Pages
-  cb(new Error('unavailable'), null);
-}
+function callClaude(prompt,cb){cb(new Error('unavailable'),null);}
 
 
 // ── HAYOM YOM — hassidout.org (français) ──────────────────────────────────────
@@ -999,6 +980,7 @@ function getSeferCodesForDay(dayNum){
   return null;
 }
 
+
 function openHayomYom(){
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-hayom').style.display='block';
@@ -1011,101 +993,26 @@ function openHayomYom(){
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
   if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
   document.getElementById('hy-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-
-  // 1. hassidout.org — contenu en français
-  var hassidoutUrl=getHassidoutURL(hd);
-  fetchHayomYom(hassidoutUrl,hd,key,function(data){
-    if(data){HY_CACHE[key]=data;renderHayomYom(data);return;}
-    // 2. Fallback : fr.chabad.org
-    var chabadUrl='https://fr.chabad.org/dailystudy/hayomyom.asp?tdate='+pad2(t.getMonth()+1)+'/'+pad2(t.getDate())+'/'+t.getFullYear();
-    fetchHayomYom(chabadUrl,hd,key,function(data2){
-      if(data2){HY_CACHE[key]=data2;renderHayomYom(data2);return;}
-      // 3. Lien direct
-      renderHayomYomLink(dateFrDisplay,hassidoutUrl);
-    });
-  });
-}
-
-// Contenu Hayom Yom pré-chargé — source: hassidout.org / fr.chabad.org
-// Format: HY_CONTENT["mois_jour"] = {heb, fr, src}
-var HY_CONTENT={};
-(function(){var c=HY_CONTENT;
-// IYAR (mois 8) — source hassidout.org
-c["8_1"]={heb:"מִי שֶׁרוּחַ הַבְּרִיּוֹת נוֹחָה הֵימֶנּוּ, רוּחַ הַמָּקוֹם נוֹחָה הֵימֶנּוּ",fr:"Celui dont l'esprit est agréé par ses semblables, l'esprit du Lieu (D.ieu) est agréé par lui.",src:"Hayom Yom, 1 Iyar · Avot 3:10"};
-c["8_2"]={heb:"כְּשֶׁאַתָּה רוֹצֶה שֶׁחֲבֵרְךָ יֵלֵךְ בְּדֶרֶךְ הַיְשָׁרָה, צְרִיכִים לְהַרְבּוֹת בְּאַהֲבָה",fr:"Quand tu veux que ton prochain marche dans la bonne voie, il faut multiplier l'amour.",src:"Hayom Yom, 2 Iyar"};
-c["8_3"]={heb:"הָאֱמֶת צָרִיכָה לְהַאִיר בְּחַיֵּי הָאָדָם",fr:"La vérité doit illuminer la vie de l'homme. Une parole vraie pénètre au plus profond du cœur.",src:"Hayom Yom, 3 Iyar"};
-c["8_4"]={heb:"עֲבוֹדַת הַלֵּב זוֹ הַתְּפִלָּה",fr:"Le service du cœur — c'est la prière. Prier c'est s'annuler devant D.ieu et recevoir Sa lumière.",src:"Hayom Yom, 4 Iyar · Taanit 2a"};
-c["8_5"]={heb:"נְשָׁמָה יוֹרֶדֶת לָעוֹלָם הַזֶּה וְחָיָה שִׁבְעִים שָׁנָה כְּדֵי לַעֲשׂוֹת לְיִשְׂרָאֵל טוֹבָה",fr:"Une âme peut descendre dans ce monde et y vivre soixante-dix ans pour accorder une seule faveur à un Juif — surtout spirituelle.",src:"Hayom Yom, 5 Iyar · L'Admour Hazaken reçut du Baal Chem Tov"};
-c["8_6"]={heb:"מִי שֶׁאֵינוֹ יוֹדֵעַ לִשְׁאֹל — פְּתַח לוֹ",fr:"Celui qui ne sait pas demander — ouvre-lui la porte toi-même. L'amour pédagogique devance la question.",src:"Hayom Yom, 6 Iyar · Haggadah de Pessa'h"};
-c["8_7"]={heb:"לַ\"ג בָּעֹמֶר — הִלּוּלָא דְּרַשְׁבִּ\"י",fr:"Lag BaOmer — l'hilloula de Rabbi Chimon bar Yochaï. Son âme sainte illumine le monde entier de la lumière de la Torah cachée.",src:"Hayom Yom, 7 Iyar"};
-c["8_8"]={heb:"חָסִיד הוֹלֵךְ, חָסִיד אוֹכֵל, חָסִיד יָשֵׁן",fr:"Un 'Hassid qui marche, un 'Hassid qui mange, un 'Hassid qui dort. L'émissaire du Rabbi fait corps avec celui qui l'a envoyé.",src:"Hayom Yom, 8 Iyar"};
-c["8_9"]={heb:"כְּשֶׁהָאָדָם יוֹדֵעַ מָה הוּא צָרִיךְ, אֲזַי הוּא יוֹדֵעַ גַּם מַה חֲבֵרוֹ צָרִיךְ",fr:"Quand l'homme sait vraiment ce dont il a besoin, il sait aussi ce dont son prochain a besoin.",src:"Hayom Yom, 9 Iyar"};
-c["8_10"]={heb:"גְּדוֹלָה הַלְּמִידַת הַתּוֹרָה שֶׁמּוֹצִיאָה מִן הַגַּסּוּת",fr:"Grande est l'étude de la Torah car elle extrait l'homme de sa grossièreté et affine son âme.",src:"Hayom Yom, 10 Iyar"};
-c["8_11"]={heb:"הַנְּשָׁמָה תָּמִיד מְבַקֶּשֶׁת אֶת שָׁרְשָׁהּ",fr:"L'âme cherche toujours sa racine. Au fond d'elle-même, elle aspire constamment à retourner à sa Source divine.",src:"Hayom Yom, 11 Iyar"};
-c["8_12"]={heb:"חַיּוּת הַתּוֹרָה הִיא בְּלִמּוּדָהּ בְּכָל עֵת",fr:"La vitalité de la Torah est dans son étude en tout temps. Chaque moment d'étude est une rencontre avec la sagesse divine éternelle.",src:"Hayom Yom, 12 Iyar"};
-c["8_13"]={heb:"כָּל יִשְׂרָאֵל יֵשׁ לוֹ חֵלֶק לָעוֹלָם הַבָּא",fr:"Tout Juif a une part dans le monde à venir. Chaque âme juive est précieuse et irremplaçable.",src:"Hayom Yom, 13 Iyar · Sanhédrin 10:1"};
-c["8_14"]={heb:"אֲפִלּוּ כְּשֶׁנּוֹפְלִים — לֹא לְהִתְיָאֵשׁ",fr:"Même quand on tombe — ne pas désespérer. Chaque chute peut devenir le tremplin d'une élévation plus haute.",src:"Hayom Yom, 14 Iyar"};
-c["8_15"]={heb:"פֶּסַח שֵׁנִי — תָּמִיד יֵשׁ אֶפְשָׁרוּת לְתַקֵּן",fr:"Pessa'h Cheni enseigne qu'il y a toujours une possibilité de réparer. Aucune occasion n'est définitivement perdue.",src:"Hayom Yom, 15 Iyar — Pessa'h Cheni"};
-c["8_16"]={heb:"הַבֵּן שׁוֹאֵל, הָאָב עוֹנֶה, הַתּוֹרָה מְחַבֶּרֶת",fr:"Le fils questionne, le père répond, la Torah les unit. La transmission de génération en génération est le cœur d'Israël.",src:"Hayom Yom, 16 Iyar"};
-c["8_17"]={heb:"שָׂמֵחַ בְּחֶלְקוֹ — זֶהוּ עֹשֶׁר אֲמִתִּי",fr:"Heureux de sa part — c'est la vraie richesse. Celui qui est satisfait de ce que D.ieu lui donne est vraiment riche.",src:"Hayom Yom, 17 Iyar · Avot 4:1"};
-c["8_18"]={heb:"יוֹד-חֵי אִיָּר — יוֹם הוּלֶּדֶת אַדְמוּ\"ר הַצֶּמַח צֶדֶק",fr:"18 Iyar — anniversaire de l'Admour Tsemakh Tsedek, troisième Rabbi de Loubavitch. Sa lumière continue d'illuminer les âmes d'Israël.",src:"Hayom Yom, 18 Iyar"};
-c["8_19"]={heb:"הָאַהֲבָה מְכַסָּה עַל כָּל הַפְּשָׁעִים",fr:"L'amour couvre toutes les fautes. L'amour véritable voit le bien en chacun et transforme le regard porté sur autrui.",src:"Hayom Yom, 19 Iyar · Proverbes 10:12"};
-c["8_20"]={heb:"הַמַּחְשָׁבָה הִיא הַדֶּרֶךְ לַלֵּב",fr:"La pensée est le chemin vers le cœur. La méditation hassidique sur la grandeur divine transforme l'intellect en amour vivant.",src:"Hayom Yom, 20 Iyar"};
-c["8_21"]={heb:"כָּל מִצְוָה שֶׁאָדָם עוֹשֶׂה מַמְשִׁיכָה אוֹר אֵין סוֹף",fr:"D.ieu donne à chacun la possibilité de mettre en pratique Sa Volonté. Chaque mitsva attire la lumière infinie d'En-Haut dans ce monde.",src:"Hayom Yom, 21 Iyar"};
-c["8_22"]={heb:"יִשְׂרָאֵל גּוֹי אֶחָד בָּאָרֶץ",fr:"Israël — un peuple unique sur la terre. Son unicité vient de sa Torah et de sa mission de révéler la lumière divine dans le monde.",src:"Hayom Yom, 22 Iyar · Samuel II 7:23"};
-c["8_23"]={heb:"הַצַּדִּיק גּוֹזֵר וְהַקָּדוֹשׁ בָּרוּךְ הוּא מְקַיֵּם",fr:"Le juste décrète et D.ieu accomplit. La prière sincère du tzaddik a le pouvoir d'influencer les décrets célestes.",src:"Hayom Yom, 23 Iyar · Taanit 23a"};
-c["8_24"]={heb:"כָּל הַנְּשָׁמוֹת הֵן בְּנוֹת ה'",fr:"Toutes les âmes sont filles de D.ieu. Chaque être humain porte en lui l'empreinte divine qui lui confère une dignité absolue.",src:"Hayom Yom, 24 Iyar"};
-c["8_25"]={heb:"הִסְתַּכֵּל בִּשְׁלֹשָׁה דְּבָרִים וְאֵין אַתָּה בָּא לִידֵי עֲבֵרָה",fr:"Considère trois choses et tu ne viendras pas à fauter : un œil qui voit, une oreille qui entend, et toutes tes actions sont inscrites.",src:"Hayom Yom, 25 Iyar · Avot 2:1"};
-c["8_26"]={heb:"אֵין שִׂמְחָה כְּשִׂמְחַת הַמִּצְוָה",fr:"Il n'est pas de joie comme la joie de la mitsva. La joie dans le service divin est la source de toutes les bénédictions.",src:"Hayom Yom, 26 Iyar"};
-c["8_27"]={heb:"הַגּוּף צָרִיךְ לִהְיוֹת כְּלִי לַנְּשָׁמָה",fr:"Le corps doit être un instrument au service de l'âme. Prendre soin de sa santé physique est une mitsva — le corps est le Temple de l'âme.",src:"Hayom Yom, 27 Iyar"};
-c["8_28"]={heb:"בְּכָל מָקוֹם שֶׁאַתָּה מוֹצֵא גְּדֻלָּתוֹ שֶׁל הַקָּדוֹשׁ בָּרוּךְ הוּא שָׁם אַתָּה מוֹצֵא עַנְוָתָנוּתוֹ",fr:"Partout où tu trouves la grandeur de D.ieu, là tu trouves Son humilité. La grandeur et l'humilité divines sont inséparables.",src:"Hayom Yom, 28 Iyar · Megila 31a"};
-c["8_29"]={heb:"אַהֲבַת יִשְׂרָאֵל הִיא אַהֲבַת ה'",fr:"L'amour d'Israël est l'amour de D.ieu. Aimer chaque Juif inconditionnellement est la voie royale vers l'amour divin.",src:"Hayom Yom, 29 Iyar"};
-// SIVAN (mois 9)
-c["9_1"]={heb:"זְרוֹק חוּטְרָא לָאֲוִירָא אַעִיקְרֵיהּ קָאֵי",fr:"Jette un javelot dans les airs, il retombera sur sa pointe. Nos saints maîtres ont légué un héritage sans limite aux 'Hassidim, afin que chacun puisse dévoiler au profond de son cœur sa source première.",src:"Hayom Yom, 1 Sivan"};
-c["9_2"]={heb:"הַחֵלֶק הַנְּשָׁמָה שֶׁבַּגּוּף וְהָעַצְמוּת שֶׁלָּה שֶׁלְּמַעְלָה",fr:"La partie de l'âme qui se trouve dans le corps et son essence qui se trouve là-haut : l'illumination que la partie inférieure acquiert par son effort confère l'élévation à l'essence supérieure.",src:"Hayom Yom, 2 Sivan"};
-c["9_3"]={heb:"שְׁלֹשֶׁת יְמֵי הַגְבָּלָה — יְמֵי הֲכָנָה לְקַבָּלַת הַתּוֹרָה",fr:"Les trois jours de préparation au don de la Torah. Chaque année à Chavouot, la même lumière du Sinaï descend pour qui l'accueille avec préparation et pureté.",src:"Hayom Yom, 3 Sivan"};
-c["9_4"]={heb:"לֹא תִרְצַח — לֹא תִנְאַף — לֹא תִגְנֹב",fr:"Ne tue pas, ne commets pas d'adultère, ne vole pas. Les Dix Commandements contiennent l'essence de toute la Torah.",src:"Hayom Yom, 4 Sivan"};
-c["9_5"]={heb:"עֶרֶב שָׁבוּעוֹת — לֵיל הַשִּׁמּוּר",fr:"Veille de Chavouot — nuit de veille et d'étude. On reste éveillé pour étudier la Torah toute la nuit, réparant l'endormissement des Juifs au Sinaï.",src:"Hayom Yom, 5 Sivan — Erev Chavouot"};
-c["9_6"]={heb:"בְּחַג הַשָּׁבוּעוֹת כָּל אֶחָד וְאֶחָד מְקַבֵּל אֶת הַתּוֹרָה",fr:"À Chavouot — chacun reçoit à nouveau la Torah. Le don de la Torah est éternel : chaque Chavouot, la même lumière du Sinaï descend pour qui l'accueille.",src:"Hayom Yom, 6 Sivan — Chavouot"};
-// NISSAN (mois 7)
-c["7_1"]={heb:"חֹדֶשׁ נִיסָן — חֹדֶשׁ הָאָבִיב — חֹדֶשׁ הַגְּאֻלָּה",fr:"Le mois de Nissan — mois du printemps — mois de la délivrance. C'est le premier des mois, le mois où D.ieu a révélé Sa puissance devant toute l'humanité.",src:"Hayom Yom, 1 Nissan"};
-c["7_14"]={heb:"עֶרֶב פֶּסַח — הָעֵת לְהַכִּין לֵב לְחֵרוּת",fr:"Veille de Pessa'h — le moment de préparer son cœur à la liberté. La liberté intérieure précède la liberté extérieure.",src:"Hayom Yom, 14 Nissan — Erev Pessa'h"};
-c["7_15"]={heb:"לֵיל הַסֵּדֶר — מְסַפְּרִים בִּגְדֻלּוֹת ה'",fr:"La nuit du Séder — on raconte les grandes œuvres de D.ieu. Plus on développe le récit de la sortie d'Égypte, plus on est digne d'éloge.",src:"Hayom Yom, 15 Nissan — Pessa'h"};
-// TICHRI (mois 1)
-c["1_1"]={heb:"כָּל הָעֲבוֹדָה שֶׁבְּרֹאשׁ הַשָּׁנָה צָרִיךְ לִהְיוֹת בְּשִׂמְחָה",fr:"Tout le service de Roch Hachana doit être accompli dans la joie. La joie devant le Roi est la forme la plus haute de révérence.",src:"Hayom Yom, 1 Tichri"};
-c["1_10"]={heb:"יוֹם הַכִּפּוּרִים — כִּפּוּרִים כְּמוֹ פּוּרִים",fr:"Yom Kippour — 'comme Pourim'. Les deux jours révèlent la lumière au-delà du temps, l'essence divine qui transcende tout.",src:"Hayom Yom, 10 Tichri"};
-// KISLEV (mois 3)
-c["3_19"]={heb:"י\"ט כִּסְלֵו — חַג הַגְּאֻלָּה",fr:"19 Kislev — fête de la délivrance de l'Admour HaZaken de prison. C'est le Roch Hachana de la 'Hassidout, le jour où la Torah intérieure s'est répandue dans le monde.",src:"Hayom Yom, 19 Kislev"};
-// ADAR (mois 6)
-c["6_14"]={heb:"פּוּרִים — וְנַהֲפוֹךְ הוּא",fr:"Pourim — et tout fut renversé. La joie de Pourim est la plus profonde car elle vient de l'essence même de l'âme, au-delà de toute raison.",src:"Hayom Yom, 14 Adar — Pourim"};
-})();
-
-function fetchHayomYom(url,hd,key,cb){
-  // Contenu pré-chargé — pas de fetch externe nécessaire
   var preKey=hd.m+'_'+hd.d;
   var pre=HY_CONTENT[preKey];
-  if(pre){cb(pre);return;}
-  // Pas de contenu pré-chargé pour cette date — retourner null
-  cb(null);
+  if(pre){HY_CACHE[key]=pre;renderHayomYom(pre);return;}
+  // Fallback — lien vers les sources
+  var hassidoutUrl=getHassidoutURL(hd);
+  document.getElementById('hy-content').innerHTML=
+    '<div style="text-align:center;padding:30px 20px">'
+    +'<div style="font-size:16px;color:#1a1208;margin-bottom:6px;font-style:italic">Hayom Yom · '+dateFrDisplay+'</div>'
+    +'<div style="font-size:13px;color:#6a5e40;margin-bottom:20px">Contenu à venir pour cette date</div>'
+    +'<a href="'+hassidoutUrl+'" target="_blank" style="display:inline-block;background:#c97c1a;color:#fff;padding:11px 24px;text-decoration:none;font-size:14px;border-radius:4px;margin-bottom:10px">Lire sur hassidout.org ↗</a><br>'
+    +'<a href="https://fr.chabad.org/dailystudy/hayomyom.asp" target="_blank" style="color:#c97c1a;font-size:13px">ou sur fr.chabad.org ↗</a>'
+    +'</div>';
 }
 
 function renderHayomYom(d){
   var h='';
   if(d.heb) h+='<div class="hyd-heb">'+d.heb+'</div>';
   h+='<div style="font-size:17px;line-height:1.9;color:#1a1208;padding:16px 0;border-bottom:1px solid #d4c8a8;margin-bottom:16px;font-style:italic;font-family:Georgia,serif">'+d.fr+'</div>';
-  h+='<div class="hyd-source">'+d.src+'</div>';
+  h+='<div class="hyd-source">'+d.src+'<br><a href="https://hassidout.org" target="_blank" style="color:#c97c1a;font-size:12px">hassidout.org</a> · <a href="https://fr.chabad.org/dailystudy/hayomyom.asp" target="_blank" style="color:#c97c1a;font-size:12px">fr.chabad.org</a></div>';
   document.getElementById('hy-content').innerHTML=h;
-}
-
-function renderHayomYomLink(dateFr,url){
-  document.getElementById('hy-content').innerHTML=
-    '<div style="text-align:center;padding:30px 20px">'
-    +'<div style="font-size:15px;color:#1a1208;margin-bottom:20px">Hayom Yom · '+dateFr+'</div>'
-    +'<a href="'+(url||'https://hassidout.org')+'" target="_blank" '
-    +'style="display:inline-block;background:#c97c1a;color:#fff;padding:12px 28px;text-decoration:none;font-size:15px;border-radius:4px;margin-bottom:10px">Lire sur hassidout.org ↗</a><br>'
-    +'<a href="https://fr.chabad.org/dailystudy/hayomyom.asp" target="_blank" '
-    +'style="display:inline-block;color:#c97c1a;font-size:13px">ou sur fr.chabad.org ↗</a>'
-    +'</div>';
 }
 
 function openSefer(){
@@ -1120,15 +1027,18 @@ function openSefer(){
   document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
   if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
   document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-
-  // Construire depuis le calendrier officiel
   var codes=getSeferCodesForDay(dayNum);
   if(codes&&codes!=='intro'&&codes!=='principles'){
     var result=buildSeferFromCodes(codes,dayNum);
-    if(result){SF_CACHE[key]=result;renderSefer(result);return;}
+    SF_CACHE[key]=result; renderSefer(result); return;
   }
-  // Fallback lien Chabad
-  renderSeferLink(dayNum,dateHeb);
+  // Intro / principles / hors plage
+  document.getElementById('sf-content').innerHTML=
+    '<div style="text-align:center;padding:30px 20px">'
+    +'<div style="font-size:15px;color:#1a1208;margin-bottom:8px">Sefer HaMitsvot · '+dateHeb+'</div>'
+    +'<div style="font-size:13px;color:#6a5e40;margin-bottom:20px">Jour '+dayNum+' du cycle · Rambam</div>'
+    +'<a href="https://fr.chabad.org/dailystudy/seferhamitzvos.asp" target="_blank" style="display:inline-block;background:#6a3fa0;color:#fff;padding:12px 28px;text-decoration:none;font-size:15px;border-radius:4px">Lire sur fr.chabad.org ↗</a>'
+    +'</div>';
 }
 
 function buildSeferFromCodes(codesStr,dayNum){
@@ -1136,20 +1046,23 @@ function buildSeferFromCodes(codesStr,dayNum){
   var positives=[],negatives=[];
   codes.forEach(function(c){
     var m=MITSVOT_DB[c];
-    if(m){if(m.p)positives.push({code:c,data:m});else negatives.push({code:c,data:m});}
-    else {
-      // Code inconnu — créer entrée minimale
+    if(m){
+      if(m.p) positives.push({code:c,data:m});
+      else negatives.push({code:c,data:m});
+    } else {
       var isPos=c.charAt(0)==='P';
-      var entry={code:c,data:{p:isPos,t:'Mitsva '+c,h:'',tx:'<p>Mitsva '+c+' du Sefer HaMitsvot selon le Rambam.</p>',s:'Rambam, Sefer HaMitsvot, '+(isPos?'Aseh':'Lo Taaseh')+' · Voir fr.chabad.org'}};
-      if(isPos)positives.push(entry);else negatives.push(entry);
+      var entry={p:isPos,t:'Mitsva '+c,h:'',tx:'<p>Voir le détail sur <a href="https://fr.chabad.org/dailystudy/seferhamitzvos.asp" target="_blank" style="color:#6a3fa0">fr.chabad.org ↗</a></p>',s:'Rambam, Sefer HaMitsvot, '+(isPos?'Aseh':'Lo Taaseh')};
+      if(isPos) positives.push({code:c,data:entry});
+      else negatives.push({code:c,data:entry});
     }
   });
   return {positives:positives,negatives:negatives,dayNum:dayNum,codes:codesStr};
 }
 
 function renderSefer(d){
-  var h='<div style="font-size:12px;color:#9a8860;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #d4c8a8">Mitsvot étudiées aujourd\'hui : <strong>'+d.codes+'</strong> (Jour '+d.dayNum+' · Calendrier officiel Chabad 5786)</div>';
-  function renderBlock(item,isPos){
+  var h='<div style="font-size:12px;color:#9a8860;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #d4c8a8">'
+    +'Mitsvot du jour : <strong>'+d.codes+'</strong> · Jour '+d.dayNum+' · Calendrier officiel Chabad 5786</div>';
+  function blk(item,isPos){
     var m=item.data;
     return '<div class="mitsva-block">'
       +'<div class="mitsva-type '+(isPos?'pos':'neg')+'">'+(isPos?'✅ Commandement positif · מצות עשה':'🚫 Commandement négatif · מצות לא תעשה')+'</div>'
@@ -1160,143 +1073,15 @@ function renderSefer(d){
       +'<div class="hyd-source">'+m.s+'</div>'
       +'</div>';
   }
-  d.positives.forEach(function(it){h+=renderBlock(it,true);});
-  d.negatives.forEach(function(it){h+=renderBlock(it,false);});
+  d.positives.forEach(function(it){h+=blk(it,true);});
+  d.negatives.forEach(function(it){h+=blk(it,false);});
   h+='<div class="hyd-source" style="margin-top:16px;padding-top:12px;border-top:1px solid #d4c8a8">'
     +'Source : <a href="https://fr.chabad.org/dailystudy/seferhamitzvos.asp" target="_blank" style="color:#6a3fa0">Sefer HaMitsvot · fr.chabad.org ↗</a>'
-    +' · Calendrier établi par le Rabbi de Loubavitch, Sichos in English</div>';
+    +' · Calendrier établi par le Rabbi de Loubavitch</div>';
   document.getElementById('sf-content').innerHTML=h;
 }
 
-function renderSeferLink(dayNum,dateHeb){
-  document.getElementById('sf-content').innerHTML=
-    '<div style="text-align:center;padding:30px 20px">'
-    +'<div style="font-size:15px;color:#1a1208;margin-bottom:8px">Sefer HaMitsvot · '+dateHeb+'</div>'
-    +'<div style="font-size:13px;color:#6a5e40;margin-bottom:20px">Jour '+dayNum+' du cycle</div>'
-    +'<a href="https://fr.chabad.org/dailystudy/seferhamitzvos.asp" target="_blank" '
-    +'style="display:inline-block;background:#6a3fa0;color:#fff;padding:12px 28px;text-decoration:none;font-size:15px;border-radius:4px">Lire sur fr.chabad.org ↗</a></div>';
-}
 
-function openHayomYom(){
-  document.getElementById('view-home').style.display='none';
-  document.getElementById('view-hayom').style.display='block';
-  document.getElementById('btn-back').style.display='block';
-  window.scrollTo(0,0);
-  var t=new Date();
-  var hd=g2h(t.getDate(),t.getMonth(),t.getFullYear());
-  var dateFrDisplay=hebDateFr||fmtHebFr(hd);
-  var key='HY_'+todayISO();
-  document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
-  if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
-  document.getElementById('hy-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-
-  // 1. hassidout.org via proxy CORS
-  var hassidoutUrl=getHassidoutURL(hd);
-  fetchHayomYom(hassidoutUrl,hd,key,function(data){
-    if(data){HY_CACHE[key]=data;renderHayomYom(data);return;}
-    // 2. Fallback fr.chabad.org via proxy
-    var chabadUrl='https://fr.chabad.org/dailystudy/hayomyom.asp?tdate='+pad2(t.getMonth()+1)+'/'+pad2(t.getDate())+'/'+t.getFullYear();
-    fetchHayomYom(chabadUrl,hd,key,function(data2){
-      if(data2){HY_CACHE[key]=data2;renderHayomYom(data2);return;}
-      renderHayomYomLink(dateFrDisplay,hassidoutUrl);
-    });
-  });
-}
-
-function renderHayomYom(d){
-  var h='';
-  if(d.heb)h+='<div class="hyd-heb">'+d.heb+'</div>';
-  h+='<div style="font-size:17px;line-height:1.9;color:#1a1208;padding:16px 0 16px;border-bottom:1px solid #d4c8a8;margin-bottom:16px;font-style:italic;font-family:Georgia,serif">'+d.fr+'</div>';
-  h+='<div class="hyd-source">'+d.src+'</div>';
-  document.getElementById('hy-content').innerHTML=h;
-}
-
-function openSefer(){
-  document.getElementById('view-home').style.display='none';
-  document.getElementById('view-sefer').style.display='block';
-  document.getElementById('btn-back').style.display='block';
-  window.scrollTo(0,0);
-  var t=new Date();
-  var dayNum=getDayOfSeferCycle(t);
-  var key='SF_'+todayISO();
-  var dateHeb=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
-  document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
-  if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
-  document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-
-  // Calendrier officiel Chabad
-  var codes=getSeferCodesForDay(dayNum);
-  if(codes&&codes!=='intro'&&codes!=='principles'){
-    var result=buildSeferFromCodes(codes,dayNum);
-    if(result){SF_CACHE[key]=result;renderSefer(result);return;}
-  }
-  renderSeferLink(dayNum,dateHeb);
-}
-
-
-function renderSefer(d){
-  var h='';
-  function blk(b,cls,icon,lab){
-    return '<div class="mitsva-block">'
-      +'<div class="mitsva-type '+cls+'">'+icon+' '+lab+'</div>'
-      +'<div class="mitsva-num">Mitsva n° '+b.num+'</div>'
-      +'<div class="mitsva-title">'+b.titre+'</div>'
-      +(b.heb?'<div class="mitsva-heb">'+b.heb+'</div>':'')
-      +(b.texte?'<div class="mitsva-text">'+b.texte+'</div>':'')
-      +'<div class="hyd-source">'+(b.link?'<a href="'+b.link+'" target="_blank" style="color:#6a3fa0">'+b.source+' ↗</a>':b.source)+'</div>'
-      +'</div>';
-  }
-  if(d.pos)h+=blk(d.pos,'pos','✅','Commandement positif · מצות עשה');
-  if(d.neg)h+=blk(d.neg,'neg','🚫','Commandement négatif · מצות לא תעשה');
-  if(!h)h='<div class="loading-txt">Données non disponibles.</div>';
-  document.getElementById('sf-content').innerHTML=h;
-}
-
-function renderSeferLink(dayNum,dateHeb){
-  document.getElementById('sf-content').innerHTML=
-    '<div style="text-align:center;padding:30px 20px">'
-    +'<div style="font-size:15px;color:#1a1208;margin-bottom:8px">Sefer HaMitsvot · '+dateHeb+'</div>'
-    +'<div style="font-size:13px;color:#6a5e40;margin-bottom:20px">Jour '+dayNum+' du cycle</div>'
-    +'<a href="https://www.chabad.org/dailystudy/seferhamitzvos_cdo/jewish/Sefer-HaMitzvos.htm" target="_blank" '
-    +'style="display:inline-block;background:#6a3fa0;color:#fff;padding:12px 28px;text-decoration:none;font-size:15px;border-radius:4px">Lire sur Chabad.org ↗</a></div>';
-}
-
-
-// VERSET DU JOUR — sélection selon le jour hébreu
-var VERSETS=[
-  {heb:"שִׁוִּיתִי יְהוָה לְנֶגְדִּי תָמִיד",fr:"J'ai placé l'Éternel constamment devant moi",ref:"Psaumes 16:8"},
-  {heb:"בְּכָל דְּרָכֶיךָ דָעֵהוּ וְהוּא יְיַשֵּׁר אֹרְחֹתֶיךָ",fr:"Reconnais-Le dans toutes tes voies, et Il rendra droits tes sentiers",ref:"Proverbes 3:6"},
-  {heb:"אֱהַב אֶת יְהוָה אֱלֹהֶיךָ בְּכָל לְבָבְךָ",fr:"Tu aimeras l'Éternel ton D-ieu de tout ton cœur",ref:"Deutéronome 6:5"},
-  {heb:"תּוֹרַת יְהוָה תְּמִימָה מְשִׁיבַת נָפֶשׁ",fr:"La Torah de l'Éternel est parfaite, elle restaure l'âme",ref:"Psaumes 19:8"},
-  {heb:"וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ",fr:"Tu aimeras ton prochain comme toi-même",ref:"Lévitique 19:18"},
-  {heb:"בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ",fr:"Au commencement, D-ieu créa les cieux et la terre",ref:"Genèse 1:1"},
-  {heb:"שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ יְהוָה אֶחָד",fr:"Écoute Israël, l'Éternel est notre D-ieu, l'Éternel est Un",ref:"Deutéronome 6:4"},
-  {heb:"קְדֹשִׁים תִּהְיוּ כִּי קָדוֹשׁ אֲנִי יְהוָה אֱלֹהֵיכֶם",fr:"Soyez saints, car Je suis saint, l'Éternel votre D-ieu",ref:"Lévitique 19:2"},
-  {heb:"לֵב טָהוֹר בְּרָא לִי אֱלֹהִים",fr:"Crée en moi un cœur pur, ô D-ieu",ref:"Psaumes 51:12"},
-  {heb:"עֵץ חַיִּים הִיא לַמַּחֲזִיקִים בָּהּ",fr:"Elle est un arbre de vie pour ceux qui s'y attachent",ref:"Proverbes 3:18"},
-  {heb:"הַצְנֵעַ לֶכֶת עִם אֱלֹהֶיךָ",fr:"Marcher humblement avec ton D-ieu",ref:"Michée 6:8"},
-  {heb:"חֲזַק וֶאֱמָץ אַל תִּירָא",fr:"Sois fort et courageux, ne crains pas",ref:"Josué 1:9"},
-  {heb:"אוֹר זָרֻעַ לַצַּדִּיק",fr:"La lumière est semée pour le juste",ref:"Psaumes 97:11"}
-];
-
-function getVerset(hd){
-  if(!hd||!VERSETS||!VERSETS.length) return VERSETS[0];
-  var idx=((hd.d||1) + (hd.m||1)*3) % VERSETS.length;
-  return VERSETS[idx]||VERSETS[0];
-}
-
-function showTab(t){
-  currentTab=t;
-  ['heb','fr','sum','com'].forEach(function(x){
-    document.getElementById('tab-'+x).className='tab-panel'+(x===t?' active':'');
-  });
-  document.querySelectorAll('.tab').forEach(function(el,i){
-    el.className='tab'+(['heb','fr','sum','com'][i]===t?' active':'');
-  });
-}
-
-var HNS=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","יג","יד","טו","טז","יז","יח","יט","כ","כא","כב","כג","כד","כה","כו","כז","כח","כט","ל","לא","לב","לג","לד","לה","לו","לז","לח","לט","מ","מא","מב","מג","מד","מה","מו","מז","מח","מט","נ","נא","נב","נג","נד","נה","נו","נז","נח","נט","ס"];
-function toHN(n){return(n>0&&n<HNS.length)?HNS[n]:String(n);}
 
 function openP(id){
   var p=getP(id);
