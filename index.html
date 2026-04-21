@@ -260,6 +260,12 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
   </div>
   <div class="hyd-date" id="hy-date"></div>
   <div id="hy-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
+  <div id="hy-iframe-container" style="display:none">
+    <iframe id="hy-iframe" style="width:100%;border:none;min-height:500px;background:#fdf9f2" scrolling="yes"></iframe>
+    <div style="margin-top:12px;text-align:center">
+      <a id="hy-loubavitch-link" href="#" target="_blank" style="color:#c97c1a;font-size:13px">Ouvrir sur loubavitch.fr ↗</a>
+    </div>
+  </div>
 </div>
 
 <!-- SEFER HAMITSVOT -->
@@ -269,7 +275,13 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
     <div><div class="hyd-title">Sefer HaMitsvot</div><div class="hyd-subtitle">Mitsva du jour · Rambam</div></div>
   </div>
   <div class="hyd-date" id="sf-date"></div>
-  <div id="sf-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
+  <div id="sf-content"></div>
+  <div id="sf-iframe-container" style="display:none">
+    <iframe id="sf-iframe" style="width:100%;border:none;min-height:500px;background:#fdf9f2" scrolling="yes"></iframe>
+    <div style="margin-top:12px;text-align:center">
+      <a id="sf-loubavitch-link" href="#" target="_blank" style="color:#6a3fa0;font-size:13px">Ouvrir sur loubavitch.fr ↗</a>
+    </div>
+  </div>
 </div>
 <div id="view-detail">
   <div class="dhdr">
@@ -432,9 +444,12 @@ function loadHebcalAll(lat,lng,cb){
   var shabUrl='https://www.hebcal.com/shabbat?cfg=json&geo=pos&latitude='+lat+'&longitude='+lng+'&M=on&b=18&lg=fr&leyning=off&dt='+iso;
   // 2) Hebrew date converter — avec latitude/longitude pour tenir compte du coucher du soleil
   var hdUrl='https://www.hebcal.com/converter?cfg=json&gy='+t.getFullYear()+'&gm='+(t.getMonth()+1)+'&gd='+t.getDate()+'&g2h=1&strict=1&geo=pos&latitude='+lat+'&longitude='+lng;
-  // 3) Holidays this month
-  var mr=monthRange();
-  var holUrl='https://www.hebcal.com/hebcal?cfg=json&v=1&maj=on&min=on&mf=on&ss=on&s=off&c=off&start='+mr.start+'&end='+mr.end;
+  // 3) Holidays — 6 prochains mois pour le panneau "Prochaines fêtes"
+  var t2=new Date();
+  var startDate=t2.getFullYear()+'-'+pad2(t2.getMonth()+1)+'-01';
+  var endT=new Date(t2.getFullYear(),t2.getMonth()+6,0);
+  var endDate=endT.getFullYear()+'-'+pad2(endT.getMonth()+1)+'-'+pad2(endT.getDate());
+  var holUrl='https://www.hebcal.com/hebcal?cfg=json&v=1&maj=on&min=on&mf=on&ss=on&s=off&c=off&start='+startDate+'&end='+endDate;
 
   var done=0; var total=3;
   function check(){done++;if(done===total)cb();}
@@ -1182,53 +1197,31 @@ function openHayomYom(){
   var dateFrDisplay=hebDateFr||fmtHebFr(hd);
   var key='HY_'+todayISO();
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
-  if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
-  document.getElementById('hy-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
 
-  // 1. Contenu pré-chargé
-  var preKey=hd.m+'_'+hd.d;
-  var pre=HY_CONTENT[preKey];
-  if(pre){HY_CACHE[key]=pre;renderHayomYom(pre);return;}
-
-  // 2. Fetch loubavitch.fr via proxy CORS
+  // Calculer l'URL loubavitch.fr pour aujourd'hui
   var lid=getLoubavitchID();
   var loubUrl=getLoubavitchURL(lid);
-  var proxy='https://corsproxy.io/?'+encodeURIComponent(loubUrl);
-  fetch(proxy)
-    .then(function(r){return r.text();})
-    .then(function(html){
-      // Parser le contenu
-      var parser=new DOMParser();
-      var doc=parser.parseFromString(html,'text/html');
-      // Le contenu principal est dans .article-content ou après le h3
-      var content='';
-      // Chercher tous les textes après "Hayom yom" dans la page
-      var allText=[];
-      doc.querySelectorAll('p,h3,h4,li').forEach(function(el){
-        var txt=el.textContent.trim();
-        if(txt.length>10 && !txt.includes('Beth Loubavitch') && !txt.includes('Horaires') && !txt.includes('© Beth'))
-          allText.push(txt);
-      });
-      // Trouver le contenu du Hayom Yom (après la date)
-      var started=false;
-      var lines=[];
-      allText.forEach(function(txt){
-        if(/\d Iyar|\d Sivan|\d Tichri|\d Kislev|\d Adar|\d Nissan|\d Av|\d Eloul|\d Tamouz|\d Chevat|\d Tevet/.test(txt)) started=true;
-        if(started && txt.length>5 && !txt.includes('Occurrence') && !txt.includes('Newsletter') && !txt.includes('Etudes quotidiennes')){
-          lines.push(txt);
-        }
-      });
-      if(lines.length>0){
-        var texte=lines.join('\n\n');
-        var data={heb:'',fr:texte,src:'Hayom Yom · '+dateFrDisplay};
-        HY_CACHE[key]=data;renderHayomYom(data);
-      } else {
-        renderHayomYomFallback(dateFrDisplay,loubUrl);
-      }
-    })
-    .catch(function(){
-      renderHayomYomFallback(dateFrDisplay,getLoubavitchURL(lid));
-    });
+  document.getElementById('hy-loubavitch-link').href=loubUrl;
+
+  // 1. Contenu pré-chargé — afficher immédiatement
+  var preKey=hd.m+'_'+hd.d;
+  var pre=HY_CONTENT[preKey];
+  if(pre&&!HY_CACHE[key]){
+    HY_CACHE[key]=pre;
+  }
+
+  if(HY_CACHE[key]){
+    // Afficher le contenu pré-chargé ET l'iframe en dessous
+    document.getElementById('hy-content').style.display='block';
+    document.getElementById('hy-iframe-container').style.display='none';
+    renderHayomYom(HY_CACHE[key]);
+  } else {
+    // Pas de contenu pré-chargé — utiliser l'iframe loubavitch.fr directement
+    document.getElementById('hy-content').style.display='none';
+    document.getElementById('hy-iframe-container').style.display='block';
+    var iframe=document.getElementById('hy-iframe');
+    iframe.src=loubUrl;
+  }
 }
 
 function renderHayomYom(d){
@@ -1252,6 +1245,21 @@ function renderHayomYomFallback(dateFr,url){
     +'</div>';
 }
 
+// loubavitch.fr Sefer HaMitsvot — ID de référence
+// 251523 = 4 Iyar 5786 = 21 avril 2026
+var LOUBAVITCH_SEFER_REF_ID = 251523;
+var LOUBAVITCH_SEFER_REF_DATE = new Date(2026, 3, 21); // 21 avril 2026
+
+function getSeferLoubavitchID(){
+  var today=new Date(); today.setHours(0,0,0,0);
+  var ref=new Date(LOUBAVITCH_SEFER_REF_DATE); ref.setHours(0,0,0,0);
+  return LOUBAVITCH_SEFER_REF_ID + Math.round((today-ref)/86400000);
+}
+
+function getSeferLoubavitchURL(id){
+  return 'https://www.loubavitch.fr/etude/etudes-quotidiennes/sefer-hamitsvot/'+id+'/sefer-hamitsvot?pop=0';
+}
+
 function openSefer(){
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-sefer').style.display='block';
@@ -1259,23 +1267,25 @@ function openSefer(){
   window.scrollTo(0,0);
   var t=new Date();
   var dayNum=getDayOfSeferCycle(t);
-  var key='SF_'+todayISO();
   var dateHeb=hebDateFr||fmtHebFr(parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear()));
-  document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
-  if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
-  document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+  var sfId=getSeferLoubavitchID();
+  var sfUrl=getSeferLoubavitchURL(sfId);
+  document.getElementById('sf-date').textContent=dateHeb+' · Cours '+dayNum+' du cycle · Rambam';
+  document.getElementById('sf-loubavitch-link').href=sfUrl;
+
+  // Contenu pré-chargé disponible ?
   var codes=getSeferCodesForDay(dayNum);
   if(codes&&codes!=='intro'&&codes!=='principles'){
     var result=buildSeferFromCodes(codes,dayNum);
-    SF_CACHE[key]=result; renderSefer(result); return;
+    document.getElementById('sf-content').style.display='block';
+    document.getElementById('sf-iframe-container').style.display='none';
+    renderSefer(result);
+  } else {
+    // Utiliser l'iframe loubavitch.fr directement
+    document.getElementById('sf-content').style.display='none';
+    document.getElementById('sf-iframe-container').style.display='block';
+    document.getElementById('sf-iframe').src=sfUrl;
   }
-  // Intro / principles / hors plage
-  document.getElementById('sf-content').innerHTML=
-    '<div style="text-align:center;padding:30px 20px">'
-    +'<div style="font-size:15px;color:#1a1208;margin-bottom:8px">Sefer HaMitsvot · '+dateHeb+'</div>'
-    +'<div style="font-size:13px;color:#6a5e40;margin-bottom:20px">Jour '+dayNum+' du cycle · Rambam</div>'
-    +'<a href="https://fr.chabad.org/dailystudy/seferhamitzvos.asp" target="_blank" style="display:inline-block;background:#6a3fa0;color:#fff;padding:12px 28px;text-decoration:none;font-size:15px;border-radius:4px">Lire sur fr.chabad.org ↗</a>'
-    +'</div>';
 }
 
 function buildSeferFromCodes(codesStr,dayNum){
@@ -1313,7 +1323,7 @@ function renderSefer(d){
   d.positives.forEach(function(it){h+=blk(it,true);});
   d.negatives.forEach(function(it){h+=blk(it,false);});
   h+='<div class="hyd-source" style="margin-top:16px;padding-top:12px;border-top:1px solid #d4c8a8">'
-    +'Source : <a href="https://fr.chabad.org/dailystudy/seferhamitzvos.asp" target="_blank" style="color:#6a3fa0">Sefer HaMitsvot · fr.chabad.org ↗</a>'
+    +'Source : <a href="'+getSeferLoubavitchURL(getSeferLoubavitchID())+'" target="_blank" style="color:#6a3fa0">Sefer HaMitsvot · loubavitch.fr ↗</a>'
     +' · Calendrier établi par le Rabbi de Loubavitch</div>';
   document.getElementById('sf-content').innerHTML=h;
 }
