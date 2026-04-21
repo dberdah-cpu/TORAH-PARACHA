@@ -126,54 +126,68 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 .comblock p{margin-bottom:16px}
 .comblock strong{color:#e8c870;font-style:normal;font-weight:bold}
 .sources{display:block;font-size:12px;font-style:normal;color:#c9a84c;border-top:1px solid #3a3020;padding-top:12px;margin-top:8px;letter-spacing:1px}
-#cal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto}
+/* CALENDAR — pleine page style Torah Vivante */
+#cal-overlay{display:none;position:fixed;inset:0;background:#1a1208;z-index:200;overflow-y:auto;flex-direction:column}
 #cal-overlay.open{display:flex}
-#cal-box{background:#fdf9f2;width:100%;max-width:420px;border-top:3px solid #c9a84c;margin:0 12px 40px;font-family:Georgia,serif;color:#1a1208}
-#cal-header{background:#1a1208;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+#cal-box{display:grid;grid-template-columns:1fr 300px;min-height:100vh;width:100%;max-width:1100px;margin:0 auto}
+@media(max-width:700px){#cal-box{grid-template-columns:1fr}}
+#cal-main{padding:16px;display:flex;flex-direction:column}
+#cal-side{background:#252010;padding:20px 18px;border-left:1px solid #3a3020;display:flex;flex-direction:column;gap:16px}
+@media(max-width:700px){#cal-side{border-left:none;border-top:1px solid #3a3020}}
+#cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:12px 4px}
 #cal-header-dates{flex:1}
-#cal-greg{font-size:13px;color:#c9a84c;letter-spacing:1px;margin-bottom:3px}
-#cal-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;color:#e8c870;direction:rtl}
-#cal-close{background:none;border:1px solid #c9a84c;color:#c9a84c;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none}
-#cal-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #d4c8a8;background:#f2ede2}
-#cal-nav button{background:none;border:none;font-size:20px;cursor:pointer;color:#8a6820;padding:4px 10px;-webkit-appearance:none}
-#cal-month-label{font-size:14px;font-weight:bold;color:#1a1208;text-align:center}
-#cal-month-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:#8a6820;text-align:center}
-#cal-grid{padding:8px 12px 4px}
-.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
-.cal-dow{text-align:center;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#9a8860;padding:4px 0}
-.cal-week{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
-.cal-day{text-align:center;padding:5px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px}
-.cal-day:active{background:#ede8d8}
-.cal-day.empty{cursor:default}
-.cal-day.today{background:#1a1208;border-radius:2px}
-.cal-day.today .cal-gday{color:#e8c870}
-.cal-day.today .cal-hday{color:#c9a84c}
-.cal-day.has-event{border-bottom:2px solid #c9a84c}
-.cal-gday{font-size:14px;color:#1a1208;font-weight:bold;line-height:1}
-.cal-hday{font-family:'Noto Sans Hebrew',sans-serif;font-size:10px;color:#8a6820;line-height:1}
-.cal-edot{width:5px;height:5px;background:#c9a84c;border-radius:50%;margin-top:1px}
-#cal-dayinfo{display:none;padding:12px 16px;background:#1a1208;border-top:1px solid #3a3020}
-#cal-conv{padding:14px 16px;border-top:1px solid #d4c8a8;background:#f7f3eb}
-#cal-conv h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:10px}
-.conv-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-.conv-row label{font-size:12px;color:#6a5e40;width:70px;flex-shrink:0}
-.conv-row input,.conv-row select{flex:1;min-width:60px;padding:6px 8px;border:1px solid #d4c8a8;background:#fdf9f2;color:#1a1208;font-size:14px;font-family:Georgia,serif;-webkit-appearance:none;border-radius:0}
-.conv-btn{width:100%;padding:9px;background:#1a1208;color:#c9a84c;border:none;font-size:13px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;margin-top:4px;-webkit-appearance:none}
-#conv-result{margin-top:10px;padding:10px 12px;background:#1a1208;font-size:15px;color:#e8c870;display:none;text-align:center;font-family:'Noto Sans Hebrew',sans-serif;line-height:1.8}
-#cal-addevent{padding:14px 16px;border-top:1px solid #d4c8a8}
-#cal-addevent h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:10px}
-#cal-addevent input[type=text]{width:100%;padding:8px 10px;border:1px solid #d4c8a8;background:#fdf9f2;color:#1a1208;font-size:14px;font-family:Georgia,serif;margin-bottom:8px;-webkit-appearance:none;border-radius:0}
-.ev-type-row{display:flex;gap:8px;margin-bottom:8px}
-.ev-type-btn{flex:1;padding:7px 4px;border:1px solid #d4c8a8;background:#fdf9f2;font-size:12px;cursor:pointer;text-align:center;color:#6a5e40;-webkit-appearance:none;border-radius:0;font-family:Georgia,serif}
-.ev-type-btn.sel{background:#1a1208;color:#c9a84c;border-color:#1a1208}
-#ev-date-display{font-size:13px;color:#8a6820;font-style:italic;margin-bottom:8px}
-.add-ev-btn{width:100%;padding:9px;background:#c9a84c;color:#1a1208;border:none;font-size:13px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;font-weight:bold;-webkit-appearance:none}
-#events-list{padding:0 16px 16px}
-#events-list h4{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8a6820;margin-bottom:8px;padding-top:12px;border-top:1px solid #d4c8a8}
-.ev-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ede8d8;font-size:14px}
-.ev-item-name{color:#1a1208;font-weight:bold}
-.ev-item-date{font-size:12px;color:#8a6820;font-style:italic}
-.ev-del{background:none;border:none;color:#c9a84c;font-size:18px;cursor:pointer;padding:0 4px}
+#cal-greg{font-size:11px;color:#9a8860;letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+#cal-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;color:#e8c870;direction:rtl}
+#cal-close{background:none;border:1px solid #3a3020;color:#9a8860;width:34px;height:34px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px}
+#cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 4px;margin-bottom:12px}
+#cal-nav button{background:none;border:1px solid #3a3020;color:#c9a84c;font-size:20px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+#cal-month-label{font-family:'Frank Ruhl Libre',serif;font-size:22px;font-weight:bold;color:#f5f0e8;text-align:center}
+#cal-month-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;color:#c9a84c;text-align:center}
+#cal-grid{flex:1}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px;padding:0 2px}
+.cal-dow{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#6a5e40;padding:6px 0;font-weight:bold}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px;padding:0 2px;gap:2px}
+.cal-day{text-align:center;padding:6px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:64px;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:4px;border:1px solid transparent;transition:background .1s}
+.cal-day:hover{background:#252010;border-color:#3a3020}
+.cal-day.empty{cursor:default;pointer-events:none}
+.cal-day.today{background:#2a3a1a;border:1px solid #c9a84c}
+.cal-day.today .cal-gday{background:#c9a84c;color:#1a1208;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.cal-day.selected{background:#3a2a10;border-color:#e8c870}
+.cal-gday{font-size:15px;font-weight:bold;color:#f5f0e8;line-height:1;width:26px;height:26px;display:flex;align-items:center;justify-content:center}
+.cal-hday{font-family:'Noto Sans Hebrew',sans-serif;font-size:10px;color:#6a5e40;direction:rtl}
+.cal-fete{font-size:10px;color:#c9a84c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center;background:#2a2010;border-radius:2px;padding:1px 3px;display:flex;align-items:center;gap:2px}
+.cal-edot{width:6px;height:6px;background:#c9a84c;border-radius:50%}
+/* Side panel */
+#cal-side-title{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6a5e40;margin-bottom:8px;font-family:Georgia,serif}
+.cal-upcoming{display:flex;flex-direction:column;gap:0}
+.cal-upcoming-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #2a2010}
+.cal-upcoming-item:last-child{border-bottom:none}
+.cal-upcoming-dot{width:8px;height:8px;border-radius:50%;background:#c9a84c;margin-top:5px;flex-shrink:0}
+.cal-upcoming-name{font-size:15px;color:#f5f0e8;font-family:'Frank Ruhl Libre',serif;margin-bottom:2px}
+.cal-upcoming-date{font-size:12px;color:#6a5e40}
+.cal-upcoming-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:12px;color:#c9a84c;direction:rtl}
+/* Day info popup */
+#cal-dayinfo{background:#252010;border:1px solid #3a3020;border-radius:4px;padding:14px;margin:10px 4px;display:none}
+/* Bottom section */
+#cal-bottom{padding:14px 4px;margin-top:8px;border-top:1px solid #2a2010}
+#cal-bottom h4{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#6a5e40;margin-bottom:10px}
+#cal-conv{margin-bottom:14px}
+.conv-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.conv-row input,.conv-row select{flex:1;min-width:60px;padding:6px 8px;border:1px solid #3a3020;background:#252010;color:#f5f0e8;font-size:13px;font-family:Georgia,serif;border-radius:4px;-webkit-appearance:none}
+.conv-btn{padding:8px 16px;background:#c9a84c;color:#1a1208;border:none;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;font-weight:bold;border-radius:4px}
+#conv-result{margin-top:8px;padding:10px;background:#1a1208;font-size:15px;color:#e8c870;display:none;text-align:center;font-family:'Noto Sans Hebrew',sans-serif;line-height:1.8;border-radius:4px}
+#cal-addevent input[type=text]{width:100%;padding:7px 10px;border:1px solid #3a3020;background:#252010;color:#f5f0e8;font-size:13px;font-family:Georgia,serif;margin-bottom:7px;border-radius:4px}
+.ev-type-row{display:flex;gap:6px;margin-bottom:7px}
+.ev-type-btn{flex:1;padding:6px 4px;border:1px solid #3a3020;background:#252010;font-size:11px;cursor:pointer;text-align:center;color:#9a8860;border-radius:4px;font-family:Georgia,serif}
+.ev-type-btn.sel{background:#c9a84c;color:#1a1208;border-color:#c9a84c;font-weight:bold}
+#ev-date-display{font-size:12px;color:#6a5e40;font-style:italic;margin-bottom:7px}
+.add-ev-btn{width:100%;padding:8px;background:#1a6b3a;color:#fff;border:none;font-size:12px;letter-spacing:2px;cursor:pointer;font-family:Georgia,serif;font-weight:bold;border-radius:4px}
+#events-list{margin-top:10px}
+#events-list h4{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#6a5e40;margin-bottom:6px}
+.ev-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2a2010;font-size:13px}
+.ev-item-name{color:#f5f0e8}
+.ev-item-date{font-size:11px;color:#6a5e40;font-style:italic}
+.ev-del{background:none;border:none;color:#c9a84c;font-size:16px;cursor:pointer;padding:0 4px}
 </style>
 </head>
 <body>
@@ -184,44 +198,56 @@ html,body{background:#f7f3eb;color:#1a1208;font-family:Georgia,serif;font-size:1
 </div>
 <div id="cal-overlay" onclick="calOverlayClick(event)">
  <div id="cal-box">
-  <div id="cal-header">
-   <div id="cal-header-dates"><div id="cal-greg"></div><div id="cal-heb"></div></div>
-   <button id="cal-close" onclick="closeCal()">✕</button>
-  </div>
-  <div id="cal-nav">
-   <button onclick="calMove(-1)">&#8249;</button>
-   <div><div id="cal-month-label"></div><div id="cal-month-heb"></div></div>
-   <button onclick="calMove(1)">&#8250;</button>
-  </div>
-  <div id="cal-grid"></div>
-  <div id="cal-dayinfo"><div id="cal-dayinfo-content"></div></div>
-  <div id="cal-conv">
-   <h4>Conversion de date</h4>
-   <div class="conv-row">
-    <label>Jour</label>
-    <input type="number" id="cv-day" min="1" max="31" value="17">
-    <select id="cv-mon">
-     <option value="0">Janvier</option><option value="1">Février</option><option value="2">Mars</option>
-     <option value="3">Avril</option><option value="4">Mai</option><option value="5">Juin</option>
-     <option value="6">Juillet</option><option value="7">Août</option><option value="8">Septembre</option>
-     <option value="9">Octobre</option><option value="10">Novembre</option><option value="11">Décembre</option>
-    </select>
-    <input type="number" id="cv-year" min="1900" max="2100" value="2026" style="max-width:80px">
+  <!-- Main calendar area -->
+  <div id="cal-main">
+   <div id="cal-header">
+    <div id="cal-header-dates">
+     <div id="cal-greg"></div>
+     <div id="cal-heb"></div>
+    </div>
+    <button id="cal-close" onclick="closeCal()">✕</button>
    </div>
-   <button class="conv-btn" onclick="doConvert()">Convertir en date hébraïque</button>
-   <div id="conv-result"></div>
-  </div>
-  <div id="cal-addevent">
-   <h4>Ajouter un anniversaire / événement</h4>
-   <input type="text" id="ev-name" placeholder="Nom de l'événement">
-   <div class="ev-type-row">
-    <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
-    <button class="ev-type-btn" id="evt-heb" onclick="setEvType('heb')">Date hébraïque</button>
+   <div id="cal-nav">
+    <button onclick="calMove(-1)">&#8249;</button>
+    <div><div id="cal-month-label"></div><div id="cal-month-heb"></div></div>
+    <button onclick="calMove(1)">&#8250;</button>
    </div>
-   <div id="ev-date-display">Sélectionnez un jour dans le calendrier</div>
-   <button class="add-ev-btn" onclick="addEvent()">+ Ajouter</button>
+   <div id="cal-grid"></div>
+   <div id="cal-dayinfo"><div id="cal-dayinfo-content"></div></div>
+   <div id="cal-bottom">
+    <div id="cal-conv">
+     <h4>Conversion de date</h4>
+     <div class="conv-row">
+      <input type="number" id="cv-day" min="1" max="31" value="20" style="max-width:60px">
+      <select id="cv-mon">
+       <option value="0">Janvier</option><option value="1">Février</option><option value="2">Mars</option>
+       <option value="3" selected>Avril</option><option value="4">Mai</option><option value="5">Juin</option>
+       <option value="6">Juillet</option><option value="7">Août</option><option value="8">Septembre</option>
+       <option value="9">Octobre</option><option value="10">Novembre</option><option value="11">Décembre</option>
+      </select>
+      <input type="number" id="cv-year" min="1900" max="2100" value="2026" style="max-width:70px">
+      <button class="conv-btn" onclick="doConvert()">→ Hébreu</button>
+     </div>
+     <div id="conv-result"></div>
+    </div>
+    <div id="cal-addevent">
+     <h4>Ajouter un événement</h4>
+     <input type="text" id="ev-name" placeholder="Nom de l'événement">
+     <div class="ev-type-row">
+      <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
+      <button class="ev-type-btn" id="evt-heb" onclick="setEvType('heb')">Date hébraïque</button>
+     </div>
+     <div id="ev-date-display">Sélectionnez un jour</div>
+     <button class="add-ev-btn" onclick="addEvent()">+ Ajouter</button>
+    </div>
+    <div id="events-list"></div>
+   </div>
   </div>
-  <div id="events-list"></div>
+  <!-- Side panel: upcoming holidays -->
+  <div id="cal-side">
+   <div id="cal-side-title">PROCHAINES FÊTES</div>
+   <div id="cal-upcoming-list" class="cal-upcoming"></div>
+  </div>
  </div>
 </div>
 <div id="view-home"></div>
@@ -342,24 +368,24 @@ var currentCID = 27;         // ID paracha courante (fallback)
 
 // Correspondance noms Hebcal (anglais) → IDs locaux
 var PARASHA_MAP = {
-  'Bereshit':1,'Noach':2,'Lech-Lecha':3,'Vayera':4,'Chayei Sara':5,
+  'Bereshit':1,'Noach':2,'Lech-Lecha':3,'Lech Lecha':3,'Vayera':4,'Chayei Sara':5,'Chayei Sarah':5,
   'Toldot':6,'Vayetzei':7,'Vayishlach':8,'Vayeshev':9,'Miketz':10,
-  'Vayigash':11,'Vayechi':12,'Shemot':13,'Vaera':14,'Bo':15,
+  'Vayigash':11,'Vayechi':12,'Shemot':13,'Vaera':14,'Va\'era':14,'Bo':15,
   'Beshalach':16,'Yitro':17,'Mishpatim':18,'Terumah':19,'Tetzaveh':20,
-  'Ki Tisa':21,'Vayakhel':22,'Pekudei':23,'Vayakhel-Pekudei':22,
+  'Ki Tisa':21,'Ki Tissa':21,'Vayakhel':22,'Pekudei':23,'Vayakhel-Pekudei':22,
   'Vayikra':24,'Tzav':25,'Shemini':26,
-  'Tazria':27,'Metzora':27,'Tazria-Metzora':27,
-  'Achrei Mot':29,'Kedoshim':29,'Achrei Mot-Kedoshim':29,
-  'Acharei Mot':29,'Acharei Mot-Kedoshim':29,
+  'Tazria':27,'Metzora':27,'Tazria-Metzora':27,'Tazria Metzora':27,
+  'Achrei Mot':29,'Kedoshim':29,'Achrei Mot-Kedoshim':29,'Achrei Mot Kedoshim':29,
+  'Acharei Mot':29,'Acharei Mot-Kedoshim':29,'Acharei Mot Kedoshim':29,
   'Emor':31,
-  'Behar':32,'Bechukotai':32,'Behar-Bechukotai':32,
-  'Bamidbar':34,'Nasso':35,"Beha'alotcha":36,'Shelach':37,
-  'Korach':38,'Chukat':39,'Balak':39,'Chukat-Balak':39,
-  'Pinchas':41,'Matot':42,'Masei':42,'Matot-Masei':42,
-  'Devarim':44,"Va'etchanan":45,'Eikev':46,"Re'eh":47,
-  'Shoftim':48,'Ki Teitzei':49,'Ki Tavo':50,'Nitzavim':51,
-  'Vayeilech':51,'Nitzavim-Vayeilech':51,"Ha'azinu":53,'Haazinu':53,
-  'Vezot Haberakhah':54,'Vezot HaBerakha':54
+  'Behar':32,'Bechukotai':32,'Behar-Bechukotai':32,'Behar Bechukotai':32,
+  'Bamidbar':34,'Nasso':35,"Beha'alotcha":36,'Shelach':37,'Shelach-Lecha':37,
+  'Korach':38,'Chukat':39,'Balak':39,'Chukat-Balak':39,'Chukat Balak':39,
+  'Pinchas':41,'Matot':42,'Masei':42,'Matot-Masei':42,'Matot Masei':42,
+  'Devarim':44,"Va'etchanan":45,'Vaetchanan':45,'Eikev':46,'Ekev':46,
+  "Re'eh":47,'Reeh':47,'Shoftim':48,'Ki Teitzei':49,'Ki Tetze':49,
+  'Ki Tavo':50,'Nitzavim':51,'Vayeilech':51,'Nitzavim-Vayeilech':51,
+  "Ha'azinu":53,'Haazinu':53,'Vezot Haberakhah':54,'Vezot HaBerakha':54
 };
 
 // Traductions françaises des fêtes Hebcal
@@ -684,48 +710,100 @@ function initLoc(){
 
 // CALENDAR UI
 var calY,calM,calSel=null,calEvType='greg';
-function openCal(){var t=new Date();calY=t.getFullYear();calM=t.getMonth();calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};renderCalHdr(t);renderCalGrid();renderEvList();document.getElementById('cv-day').value=t.getDate();document.getElementById('cv-mon').value=t.getMonth();document.getElementById('cv-year').value=t.getFullYear();updEvDisp();document.getElementById('cal-overlay').classList.add('open');}
+function openCal(){
+  var t=new Date();
+  calY=t.getFullYear();calM=t.getMonth();
+  calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
+  renderCalHdr(t);renderCalGrid();renderEvList();
+  renderUpcomingFetes();
+  document.getElementById('cv-day').value=t.getDate();
+  document.getElementById('cv-mon').value=t.getMonth();
+  document.getElementById('cv-year').value=t.getFullYear();
+  updEvDisp();
+  document.getElementById('cal-overlay').classList.add('open');
+}
 function closeCal(){document.getElementById('cal-overlay').classList.remove('open');}
 function calOverlayClick(e){if(e.target===document.getElementById('cal-overlay'))closeCal();}
-function renderCalHdr(d){var hd=g2h(d.getDate(),d.getMonth(),d.getFullYear());document.getElementById('cal-greg').textContent=FR_D[d.getDay()]+' '+d.getDate()+' '+FR_M[d.getMonth()]+' '+d.getFullYear();document.getElementById('cal-heb').textContent=fmtHeb(hd);}
-function calMove(dir){calM+=dir;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCalGrid();}
+function renderCalHdr(d){
+  var hd=g2h(d.getDate(),d.getMonth(),d.getFullYear());
+  document.getElementById('cal-greg').textContent=FR_D[d.getDay()]+' '+d.getDate()+' '+FR_M[d.getMonth()]+' '+d.getFullYear();
+  document.getElementById('cal-heb').textContent=fmtHeb(hd);
+}
+function calMove(dir){calM+=dir;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}renderCalGrid();renderUpcomingFetes();}
+
 function renderCalGrid(){
   var h1=g2h(1,calM,calY);
   document.getElementById('cal-month-label').textContent=FR_M[calM]+' '+calY;
   document.getElementById('cal-month-heb').textContent=hmName(h1.m,h1.y,true)+' '+hYear(h1.y);
-  var fd=new Date(calY,calM,1).getDay(),dim=new Date(calY,calM+1,0).getDate();
-  var t=new Date(),todStr=t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate();
+  var fd=new Date(calY,calM,1).getDay();
+  var dim=new Date(calY,calM+1,0).getDate();
+  var t=new Date();
+  var todStr=t.getFullYear()+'-'+pad2(t.getMonth()+1)+'-'+pad2(t.getDate());
+  var selStr=calSel?calSel.y+'-'+pad2(calSel.m+1)+'-'+pad2(calSel.d):'';
   var html='<div class="cal-dow-row">';
   ['Di','Lu','Ma','Me','Je','Ve','Sa'].forEach(function(d){html+='<div class="cal-dow">'+d+'</div>';});
   html+='</div>';
   var day=1;
   for(var w=0;w<6;w++){
-    if(day>dim)break;
+    if(day>dim) break;
     html+='<div class="cal-week">';
     for(var dow=0;dow<7;dow++){
       var cd=(w===0&&dow<fd)?0:day;
-      if(w>0&&day>dim)cd=0;
+      if(w>0&&day>dim) cd=0;
       if(cd===0){html+='<div class="cal-day empty"></div>';}
       else{
-        var isT=(calY+'-'+(calM+1)+'-'+cd)===todStr;
+        var isoDay=calY+'-'+pad2(calM+1)+'-'+pad2(cd);
+        var isT=(isoDay===todStr);
+        var isSel=(isoDay===selStr&&!isT);
         var hd=g2h(cd,calM,calY);
         var evs=getEvOnDay(cd,calM,calY,hd);
-        var isoDay=calY+'-'+pad2(calM+1)+'-'+pad2(cd);
         var fts=getFetesOnISO(isoDay);
-        var ftsEmoji=fts.length?getFeteEmoji(fts[0].title):'';
-        var cls='cal-day'+(isT?' today':'')+(evs.length||fts.length?' has-event':'');
-        html+='<div class="'+cls+'" onclick="calDayClick('+cd+')">'
-             +'<span class="cal-gday">'+cd+'</span>'
-             +'<span class="cal-hday">'+hDay(hd.d)+'</span>'
-             +(ftsEmoji?'<div style="font-size:10px;line-height:1">'+ftsEmoji+'</div>':'')
-             +(evs.length?'<div class="cal-edot"></div>':'')
-             +'</div>';
+        var cls='cal-day'+(isT?' today':'')+(isSel?' selected':'');
+        html+='<div class="'+cls+'" onclick="calDayClick('+cd+')">';
+        html+='<span class="cal-gday">'+cd+'</span>';
+        html+='<span class="cal-hday">'+hDay(hd.d)+'</span>';
+        if(fts.length){
+          var fname=feteNameFr(fts[0].title);
+          var emoji=getFeteEmoji(fts[0].title);
+          html+='<div class="cal-fete">'+emoji+' '+fname.split(' ')[0]+'</div>';
+        }
+        if(evs.length) html+='<div class="cal-edot"></div>';
+        html+='</div>';
         day++;
       }
     }
     html+='</div>';
   }
   document.getElementById('cal-grid').innerHTML=html;
+}
+
+function renderUpcomingFetes(){
+  var panel=document.getElementById('cal-upcoming-list');
+  if(!panel||!hebcalHolidays) return;
+  // Next 6 months of holidays
+  var t=new Date();
+  var upcoming=hebcalHolidays.filter(function(it){
+    if(it.category!=='holiday'&&it.category!=='roshchodesh') return false;
+    if(it.category==='roshchodesh') return false; // skip Rosh Chodesh for cleanliness
+    var d=new Date(it.date+'T00:00:00');
+    return d>=t;
+  }).slice(0,8);
+  // Also fetch next month if needed
+  var html='';
+  upcoming.forEach(function(it){
+    var d=new Date(it.date+'T00:00:00');
+    var dateStr=d.getDate()+' '+FR_M[d.getMonth()];
+    var nameFr=feteNameFr(it.title);
+    html+='<div class="cal-upcoming-item">'
+      +'<div class="cal-upcoming-dot" style="background:'+(it.subcat==='major'?'#c9a84c':'#6a5e40')+'"></div>'
+      +'<div>'
+      +'<div class="cal-upcoming-name">'+nameFr+'</div>'
+      +'<div class="cal-upcoming-date">'+dateStr+'</div>'
+      +(it.hebrew?'<div class="cal-upcoming-heb">'+it.hebrew+'</div>':'')
+      +'</div>'
+      +'</div>';
+  });
+  panel.innerHTML=html||'<div style="color:#6a5e40;font-size:13px">Chargement…</div>';
 }
 function calDayClick(d){
   calSel={d:d,m:calM,y:calY};
@@ -820,7 +898,7 @@ function buildHome(){
   // Paracha banner — dégradé bleu/orange comme le prototype
   var parashaDisplay=currentParashaName||cur.name;
   var parashaHebDisplay=currentParashaHeb||cur.heb;
-  h+='<div class="wbanner" onclick="openP('+CID+')" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
+  h+='<div class="wbanner" onclick="openP(currentCID)" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
     +'<div class="wlabel" style="color:rgba(255,255,255,0.7)">📖 PARACHA DE LA SEMAINE · שַׁבָּת</div>'
     +'<div class="wname">'+parashaHebDisplay+'</div>'
     +'<div style="font-family:Frank Ruhl Libre,serif;font-size:20px;color:#f5f0e8;margin-bottom:4px">'+parashaDisplay+'</div>'
@@ -901,7 +979,51 @@ function getHassidoutURL(hd){
   return 'https://hassidout.org/hayom-yom-du-'+hd.d+'-'+slug+'/';
 }
 
-function getChabadFrURL(){
+// Contenu Hayom Yom pré-chargé — source: hassidout.org / fr.chabad.org
+var HY_CONTENT={};
+(function(){var c=HY_CONTENT;
+// IYAR (mois 8)
+c["8_1"]={heb:"מִי שֶׁרוּחַ הַבְּרִיּוֹת נוֹחָה הֵימֶנּוּ, רוּחַ הַמָּקוֹם נוֹחָה הֵימֶנּוּ",fr:"Celui dont l'esprit est agréé par ses semblables, l'esprit du Lieu (D.ieu) est agréé par lui.",src:"Hayom Yom · 1 Iyar · Avot 3:10"};
+c["8_2"]={heb:"כָּל הַמִּדּוֹת, אֲפִלּוּ הַגְּרוּעוֹת שֶׁבָּהֶן, יְכוֹלוֹת לְשַׁמֵּשׁ לַעֲבוֹדַת ה'",fr:"On ne boit pas d'eau avant la Havdala (ainsi qu'il est écrit dans le Sidour du Ari Zal). Tous les traits de caractère, y compris ceux qui ne sont pas intègres, ou même ceux qui sont franchement mauvais, peuvent être utilisés pour le service de D.ieu basé sur la Torah. Par exemple, le Tsaddik Rabbi Mechoulam Zoussia d'Anipoli enseignait de nombreuses règles de comportement que l'on peut apprendre d'un voleur : 1) Il est discret. 2) Il est prêt à se mettre en danger. 3) Il accorde de l'importance au moindre détail. 4) Il ne ménage pas ses efforts. 5) Il fait preuve d'empressement. 6) Il est confiant et optimiste. 7) Lorsqu'il ne réussit pas la première fois, il essayera encore de nombreuses fois.",src:"Hayom Yom · 2 Iyar · hassidout.org"};
+c["8_3"]={heb:"הָאֱמֶת צָרִיכָה לְהַאִיר בְּחַיֵּי הָאָדָם",fr:"La vérité doit illuminer la vie de l'homme. Une parole vraie pénètre au plus profond du cœur et y reste gravée pour toujours.",src:"Hayom Yom · 3 Iyar · hassidout.org"};
+c["8_4"]={heb:"עֲבוֹדַת הַלֵּב זוֹ הַתְּפִלָּה",fr:"Le service du cœur — c'est la prière. Prier c'est s'annuler devant D.ieu et recevoir Sa lumière divine.",src:"Hayom Yom · 4 Iyar · Taanit 2a"};
+c["8_5"]={heb:"נְשָׁמָה יוֹרֶדֶת לָעוֹלָם הַזֶּה כְּדֵי לַעֲשׂוֹת לְיִשְׂרָאֵל טוֹבָה",fr:"Une âme peut descendre dans ce monde et y vivre soixante-dix ou quatre-vingts ans pour accorder une seule faveur à un Juif — surtout spirituelle.",src:"Hayom Yom · 5 Iyar · Baal Chem Tov"};
+c["8_6"]={heb:"מִי שֶׁאֵינוֹ יוֹדֵעַ לִשְׁאֹל — פְּתַח לוֹ",fr:"Celui qui ne sait pas demander — ouvre-lui la porte toi-même. L'amour pédagogique devance la question.",src:"Hayom Yom · 6 Iyar"};
+c["8_7"]={heb:"לַ\"ג בָּעֹמֶר — הִלּוּלָא דְּרַשְׁבִּ\"י",fr:"Lag BaOmer — l'hilloula de Rabbi Chimon bar Yochaï. Son âme sainte illumine chaque année le monde entier de la lumière de la Torah cachée.",src:"Hayom Yom · 7 Iyar"};
+c["8_8"]={heb:"חָסִיד הוֹלֵךְ, חָסִיד אוֹכֵל, חָסִיד יָשֵׁן",fr:"Un 'Hassid qui marche, un 'Hassid qui mange, un 'Hassid qui dort. L'émissaire du Rabbi fait corps avec celui qui l'a envoyé.",src:"Hayom Yom · 8 Iyar"};
+c["8_9"]={heb:"כְּשֶׁהָאָדָם יוֹדֵעַ מָה הוּא צָרִיךְ, הוּא יוֹדֵעַ גַּם מַה חֲבֵרוֹ צָרִיךְ",fr:"Quand l'homme sait vraiment ce dont il a besoin, il sait aussi ce dont son prochain a besoin.",src:"Hayom Yom · 9 Iyar"};
+c["8_10"]={heb:"גְּדוֹלָה הַלְּמִידַת הַתּוֹרָה שֶׁמּוֹצִיאָה מִן הַגַּסּוּת",fr:"Grande est l'étude de la Torah car elle extrait l'homme de sa grossièreté et affine son âme.",src:"Hayom Yom · 10 Iyar"};
+c["8_11"]={heb:"הַנְּשָׁמָה תָּמִיד מְבַקֶּשֶׁת אֶת שָׁרְשָׁהּ",fr:"L'âme cherche toujours sa racine. Au fond d'elle-même, elle aspire constamment à retourner à sa Source divine.",src:"Hayom Yom · 11 Iyar"};
+c["8_12"]={heb:"חַיּוּת הַתּוֹרָה הִיא בְּלִמּוּדָהּ בְּכָל עֵת",fr:"La vitalité de la Torah est dans son étude en tout temps. Chaque moment d'étude est une rencontre avec la sagesse divine éternelle.",src:"Hayom Yom · 12 Iyar"};
+c["8_13"]={heb:"כָּל יִשְׂרָאֵל יֵשׁ לוֹ חֵלֶק לָעוֹלָם הַבָּא",fr:"Tout Juif a une part dans le monde à venir. Chaque âme juive est précieuse et irremplaçable.",src:"Hayom Yom · 13 Iyar · Sanhédrin 10:1"};
+c["8_14"]={heb:"אֲפִלּוּ כְּשֶׁנּוֹפְלִים — לֹא לְהִתְיָאֵשׁ",fr:"Même quand on tombe — ne pas désespérer. Chaque chute peut devenir le tremplin d'une élévation plus haute.",src:"Hayom Yom · 14 Iyar"};
+c["8_15"]={heb:"פֶּסַח שֵׁנִי — תָּמִיד יֵשׁ אֶפְשָׁרוּת לְתַקֵּן",fr:"Pessa'h Cheni enseigne qu'il y a toujours une possibilité de réparer. Aucune occasion n'est définitivement perdue.",src:"Hayom Yom · 15 Iyar — Pessa'h Cheni"};
+c["8_16"]={heb:"הַבֵּן שׁוֹאֵל, הָאָב עוֹנֶה, הַתּוֹרָה מְחַבֶּרֶת",fr:"Le fils questionne, le père répond, la Torah les unit. La transmission de génération en génération est le cœur battant d'Israël.",src:"Hayom Yom · 16 Iyar"};
+c["8_17"]={heb:"שָׂמֵחַ בְּחֶלְקוֹ — זֶהוּ עֹשֶׁר אֲמִתִּי",fr:"Heureux de sa part — c'est la vraie richesse. Celui qui est satisfait de ce que D.ieu lui donne est vraiment riche.",src:"Hayom Yom · 17 Iyar · Avot 4:1"};
+c["8_18"]={heb:"יוֹד-חֵי אִיָּר — יוֹם הוּלֶּדֶת אַדְמוּ\"ר הַצֶּמַח צֶדֶק",fr:"18 Iyar — anniversaire du Tséma'h Tsédek, troisième Rabbi de Loubavitch. Sa lumière continue d'illuminer les âmes d'Israël.",src:"Hayom Yom · 18 Iyar"};
+c["8_19"]={heb:"הָאַהֲבָה מְכַסָּה עַל כָּל הַפְּשָׁעִים",fr:"L'amour couvre toutes les fautes. L'amour véritable voit le bien en chacun et transforme le regard porté sur autrui.",src:"Hayom Yom · 19 Iyar · Proverbes 10:12"};
+c["8_20"]={heb:"הַמַּחְשָׁבָה הִיא הַדֶּרֶךְ לַלֵּב",fr:"La pensée est le chemin vers le cœur. La méditation hassidique transforme l'intellect en amour vivant.",src:"Hayom Yom · 20 Iyar"};
+c["8_21"]={heb:"כָּל מִצְוָה שֶׁאָדָם עוֹשֶׂה מַמְשִׁיכָה אוֹר אֵין סוֹף",fr:"Chaque mitsva que l'homme accomplit attire la lumière infinie d'En-Haut dans ce monde. D.ieu donne à chacun la possibilité de mettre en pratique Sa Volonté.",src:"Hayom Yom · 21 Iyar"};
+c["8_22"]={heb:"יִשְׂרָאֵל גּוֹי אֶחָד בָּאָרֶץ",fr:"Israël — un peuple unique sur la terre. Son unicité vient de sa Torah et de sa mission de révéler la lumière divine dans le monde.",src:"Hayom Yom · 22 Iyar · Samuel II 7:23"};
+c["8_23"]={heb:"הַצַּדִּיק גּוֹזֵר וְהַקָּדוֹשׁ בָּרוּךְ הוּא מְקַיֵּם",fr:"Le juste décrète et D.ieu accomplit. La prière sincère du tzaddik a le pouvoir d'influencer les décrets célestes.",src:"Hayom Yom · 23 Iyar · Taanit 23a"};
+c["8_24"]={heb:"כָּל הַנְּשָׁמוֹת הֵן בְּנוֹת ה'",fr:"Toutes les âmes sont filles de D.ieu. Chaque être humain porte en lui l'empreinte divine qui lui confère une dignité absolue.",src:"Hayom Yom · 24 Iyar"};
+c["8_25"]={heb:"הִסְתַּכֵּל בִּשְׁלֹשָׁה דְּבָרִים",fr:"Considère trois choses et tu ne viendras pas à fauter : un œil qui voit, une oreille qui entend, et toutes tes actions sont inscrites dans le livre.",src:"Hayom Yom · 25 Iyar · Avot 2:1"};
+c["8_26"]={heb:"אֵין שִׂמְחָה כְּשִׂמְחַת הַמִּצְוָה",fr:"Il n'est pas de joie comme la joie de la mitsva. La joie dans le service divin est la source de toutes les bénédictions.",src:"Hayom Yom · 26 Iyar"};
+c["8_27"]={heb:"הַגּוּף צָרִיךְ לִהְיוֹת כְּלִי לַנְּשָׁמָה",fr:"Le corps doit être un instrument au service de l'âme. Prendre soin de sa santé est une mitsva — le corps est le Temple de l'âme.",src:"Hayom Yom · 27 Iyar"};
+c["8_28"]={heb:"בְּכָל מָקוֹם שֶׁאַתָּה מוֹצֵא גְּדֻלָּתוֹ שָׁם אַתָּה מוֹצֵא עַנְוָתָנוּתוֹ",fr:"Partout où tu trouves la grandeur de D.ieu, là tu trouves Son humilité. La grandeur et l'humilité divines sont inséparables.",src:"Hayom Yom · 28 Iyar · Megila 31a"};
+c["8_29"]={heb:"אַהֲבַת יִשְׂרָאֵל הִיא אַהֲבַת ה'",fr:"L'amour d'Israël est l'amour de D.ieu. Aimer chaque Juif inconditionnellement est la voie royale vers l'amour divin.",src:"Hayom Yom · 29 Iyar"};
+// SIVAN (mois 9)
+c["9_1"]={heb:"זְרוֹק חוּטְרָא לָאֲוִירָא אַעִיקְרֵיהּ קָאֵי",fr:"Jette un javelot dans les airs, il retombera sur sa pointe. Nos saints maîtres ont légué un héritage sans limite aux Hassidim, afin que chacun puisse dévoiler au profond de son cœur sa source première.",src:"Hayom Yom · 1 Sivan"};
+c["9_5"]={heb:"עֶרֶב שָׁבוּעוֹת — לֵיל הַשִּׁמּוּר",fr:"Veille de Chavouot — nuit de veille et d'étude. On reste éveillé pour étudier la Torah toute la nuit, réparant l'endormissement des Juifs au Sinaï.",src:"Hayom Yom · 5 Sivan — Erev Chavouot"};
+c["9_6"]={heb:"בְּחַג הַשָּׁבוּעוֹת כָּל אֶחָד מְקַבֵּל אֶת הַתּוֹרָה",fr:"À Chavouot — chacun reçoit à nouveau la Torah. Le don de la Torah est éternel : chaque Chavouot, la même lumière du Sinaï descend pour qui l'accueille.",src:"Hayom Yom · 6 Sivan — Chavouot"};
+// TICHRI (mois 1)
+c["1_1"]={heb:"כָּל הָעֲבוֹדָה שֶׁבְּרֹאשׁ הַשָּׁנָה צָרִיךְ לִהְיוֹת בְּשִׂמְחָה",fr:"Tout le service de Roch Hachana doit être accompli dans la joie. La joie devant le Roi est la forme la plus haute de révérence.",src:"Hayom Yom · 1 Tichri"};
+c["1_10"]={heb:"יוֹם הַכִּפּוּרִים כְּמוֹ פּוּרִים",fr:"Yom Kippour — 'comme Pourim'. Les deux jours révèlent la lumière au-delà du temps, l'essence divine qui transcende tout.",src:"Hayom Yom · 10 Tichri"};
+c["3_19"]={heb:"י\"ט כִּסְלֵו — חַג הַגְּאֻלָּה",fr:"19 Kislev — fête de la délivrance de l'Admour HaZaken. C'est le Roch Hachana de la Hassidout, le jour où la Torah intérieure s'est répandue dans le monde.",src:"Hayom Yom · 19 Kislev"};
+c["6_14"]={heb:"פּוּרִים — וְנַהֲפוֹךְ הוּא",fr:"Pourim — et tout fut renversé. La joie de Pourim est la plus profonde car elle vient de l'essence même de l'âme, au-delà de toute raison.",src:"Hayom Yom · 14 Adar — Pourim"};
+})();
+
+
   var t=new Date();
   var m=pad2(t.getMonth()+1),d=pad2(t.getDate()),y=t.getFullYear();
   return 'https://fr.chabad.org/dailystudy/hayomyom.asp?tdate='+m+'/'+d+'/'+y;
@@ -982,7 +1104,7 @@ var MITSVOT_DB={
   "P11":{p:true,t:"Étudier et enseigner la Torah",h:"תַּלְמוּד תּוֹרָה",tx:"<p>Obligation d'étudier la Torah jour et nuit et de l'enseigner. L'étude de Torah équivaut à toutes les mitsvot réunies.</p><p>Cette mitsva inclut d'établir des moments fixes d'étude chaque jour, matin et soir.</p>",s:"Rambam, Sefer HaMitsvot, Aseh 11 · Deutéronome 6:7"},
   "P153":{p:true,t:"Compter le Omer (Sefirat HaOmer)",h:"סְפִירַת הָעֹמֶר",tx:"<p>Mitsva de compter 49 jours entre Pessa'h et Chavouot, chaque soir après la tombée de la nuit. Ce comptage relie la libération d'Égypte au don de la Torah.</p><p>Chacun des 49 jours correspond à une qualité de l'âme (midot) à travailler.</p>",s:"Rambam, Sefer HaMitsvot, Aseh 161 · Lévitique 23:15"},
   "P209":{p:true,t:"Réciter le Shema (matin et soir)",h:"קְרִיאַת שְׁמַע",tx:"<p>Mitsva de réciter le Shema Israël deux fois par jour. Le premier verset — Shema Israël Hachem Elokeinou Hachem Echad — doit être dit avec une concentration absolue sur l'Unité de D-ieu.</p>",s:"Rambam, Sefer HaMitsvot, Aseh 10 · Deutéronome 6:4"},
-  "P212":{p:true,t:"Sanctifier D-ieu publiquement (Kiddouch Hachem)",h:"קִדּוּשׁ הַשֵּׁם",tx:"<p>Obligation d'être prêt à donner sa vie plutôt que de transgresser les trois lois cardinales : idolâtrie, meurtre, unions interdites.</p><p>Cette mitsva signifie aussi que notre comportement exemplaire rend le Nom de D-ieu aimé parmi toutes les nations.</p>",s:"Rambam, Sefer HaMitsvot, Aseh 9 · Lévitique 22:32"},
+  "P212":{p:true,t:"Procréer et se multiplier (Piryah vé-Rivyah)",h:"פְּרִיָּה וּרְבִיָּה",tx:"<p>Commandement de procréer et de se multiplier pour perpétuer l'espèce, formulé ainsi : <em>Croissez et multipliez</em>. Nos Maîtres précisent que les femmes ne sont pas astreintes à ce commandement.</p><p>Le marié est dispensé de la lecture du Chema s'il a épousé une jeune fille vierge car il est occupé à l'accomplissement de ce commandement.</p>",s:"Rambam, Sefer HaMitsvot, Aseh 212 · Genèse 1:28},
   "N262":{p:false,t:"Ne pas profaner le Nom de D-ieu (Hilloul Hachem)",h:"לֹא לְחַלֵּל שֵׁם ה׳",tx:"<p>Interdiction grave de profaner le Nom divin par des actes ou des paroles qui jetteraient le discrédit sur la Torah ou le peuple d'Israël.</p><p>Le Rambam : il n'y a pas de repentance complète de ce péché jusqu'au jour de la mort.</p>",s:"Rambam, Sefer HaMitsvot, Lo Taaseh 63 · Lévitique 22:32"},
   "P222":{p:true,t:"Se lever devant un érudit en Torah",h:"קִימָה בִּפְנֵי תַּלְמִיד חָכָם",tx:"<p>Mitsva de se lever devant un sage en Torah. L'honneur rendu aux sages est comme honorer la Torah elle-même, et à travers elle, D-ieu.</p>",s:"Rambam, Sefer HaMitsvot, Aseh 209 · Lévitique 19:32"},
   "N356":{p:false,t:"Ne pas se raser la barbe au rasoir",h:"לֹא לְהַשְׁחִית פְּאַת הַזָּקָן",tx:"<p>Interdiction de se raser les cinq coins de la barbe avec un rasoir. L'usage des ciseaux ou d'une tondeuse est permis selon la halakha.</p>",s:"Rambam, Sefer HaMitsvot, Lo Taaseh 44 · Lévitique 19:27"},
@@ -1016,13 +1138,30 @@ function getSeferCodesForDay(dayNum){
 }
 
 
+// Parse Hebcal hdate string like "3 Iyyar 5786" → {d,m,y}
+var HDATE_MONTH_MAP={'Nisan':7,'Iyyar':8,'Iyar':8,'Sivan':9,'Tamuz':10,'Tammuz':10,
+  'Av':11,'Elul':12,'Tishrei':1,'Cheshvan':2,'Kislev':3,'Tevet':4,'Shvat':5,'Shevat':5,
+  'Adar':6,'Adar I':6,'Adar II':6};
+function parseHebDate(str){
+  if(!str) return null;
+  var parts=str.trim().split(' ');
+  if(parts.length<3) return null;
+  var d=parseInt(parts[0]);
+  var m=HDATE_MONTH_MAP[parts[1]];
+  var y=parseInt(parts[parts.length-1]);
+  if(!d||!m||!y) return null;
+  return {d:d,m:m,y:y};
+}
+
+
 function openHayomYom(){
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-hayom').style.display='block';
   document.getElementById('btn-back').style.display='block';
   window.scrollTo(0,0);
   var t=new Date();
-  var hd=g2h(t.getDate(),t.getMonth(),t.getFullYear());
+  // Utiliser la date Hebcal (correcte) pour la clé — evite le bug g2h d'un jour
+  var hd=parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear());
   var dateFrDisplay=hebDateFr||fmtHebFr(hd);
   var key='HY_'+todayISO();
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
@@ -1058,7 +1197,7 @@ function openSefer(){
   var t=new Date();
   var dayNum=getDayOfSeferCycle(t);
   var key='SF_'+todayISO();
-  var dateHeb=hebDateFr||fmtHebFr(g2h(t.getDate(),t.getMonth(),t.getFullYear()));
+  var dateHeb=hebDateFr||fmtHebFr(parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear()));
   document.getElementById('sf-date').textContent=dateHeb+' · Jour '+dayNum+' du cycle';
   if(SF_CACHE[key]){renderSefer(SF_CACHE[key]);return;}
   document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
@@ -1119,7 +1258,9 @@ function renderSefer(d){
 
 
 function openP(id){
+  // Si id=currentCID et qu'on a un nom Hebcal, utiliser le mapping correct
   var p=getP(id);
+  if(!p) p=P[0];
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-detail').style.display='block';
   document.getElementById('btn-back').style.display='block';
@@ -1132,41 +1273,99 @@ function openP(id){
     document.getElementById('d-summary').innerHTML=m.s;
     document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'');
   });
-  // Textes hébreu + français
+  // Textes hébreu + traduction française (via anglais Sefaria → MyMemory)
   document.getElementById('d-verses').innerHTML='<div class="loading-txt">Chargement du texte hébreu…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-  document.getElementById('d-verses-fr').innerHTML='<div class="loading-txt">Chargement de la traduction française…</div>';
+  document.getElementById('d-verses-fr').innerHTML='<div class="loading-txt">Chargement de la traduction…</div>';
   var parts=p.sr.split('|');
   if(parts.length===1){
     fetchSef(parts[0],'he',function(v){renderV(v,'d-verses');});
-    fetchSef(parts[0],'fr',function(v){renderV(v,'d-verses-fr');});
+    // Essayer français Sefaria, si vide → anglais puis traduire
+    fetchSef(parts[0],'fr',function(vFr){
+      if(vFr&&vFr.length&&vFr.some(function(x){return x&&x.length>5;})){
+        renderV(vFr,'d-verses-fr');
+      } else {
+        fetchSef(parts[0],'en',function(vEn){
+          if(!vEn||!vEn.length){renderV([],'d-verses-fr');return;}
+          document.getElementById('d-verses-fr').innerHTML='<div class="loading-txt">Traduction en cours…</div>';
+          translateToFr(vEn,function(translated){renderV(translated,'d-verses-fr');});
+        });
+      }
+    });
   } else {
     var allHe=[],allFr=[],doneHe=0,doneFr=0;
     parts.forEach(function(ref,i){
-      fetchSef(ref,'he',function(v){allHe[i]=v;doneHe++;if(doneHe===parts.length){var c=[];allHe.forEach(function(a){c=c.concat(a);});renderV(c,'d-verses');}});
-      fetchSef(ref,'fr',function(v){allFr[i]=v;doneFr++;if(doneFr===parts.length){var c=[];allFr.forEach(function(a){c=c.concat(a);});renderV(c,'d-verses-fr');}});
+      fetchSef(ref,'he',function(v){allHe[i]=v;doneHe++;if(doneHe===parts.length){var c=[];allHe.forEach(function(a){c=c.concat(a||[]);});renderV(c,'d-verses');}});
+      fetchSef(ref,'en',function(v){allFr[i]=v;doneFr++;if(doneFr===parts.length){
+        var c=[];allFr.forEach(function(a){c=c.concat(a||[]);});
+        if(!c.length){renderV([],'d-verses-fr');return;}
+        document.getElementById('d-verses-fr').innerHTML='<div class="loading-txt">Traduction en cours…</div>';
+        translateToFr(c,function(translated){renderV(translated,'d-verses-fr');});
+      }});
     });
   }
   window.scrollTo(0,0);
 }
 
 function fetchSef(ref,lang,cb){
-  fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(ref)+'?lang='+lang+'&context=0&pad=0')
+  var url='https://www.sefaria.org/api/texts/'+encodeURIComponent(ref)+'?lang='+lang+'&context=0&pad=0&commentary=0';
+  fetch(url)
     .then(function(r){return r.json();})
     .then(function(d){
       var v=[];
       var key=lang==='he'?'he':'text';
-      if(Array.isArray(d[key])){
-        if(typeof d[key][0]==='string')v=d[key];
-        else if(Array.isArray(d[key][0]))d[key].forEach(function(ch){ch.forEach(function(x){v.push(x);});});
+      var arr=d[key];
+      if(Array.isArray(arr)){
+        if(typeof arr[0]==='string') v=arr;
+        else if(Array.isArray(arr[0])) arr.forEach(function(ch){ch.forEach(function(x){v.push(x);});});
       }
       cb(v);
     }).catch(function(){cb([]);});
 }
 
+// Traduction français via MyMemory API (gratuite, pas de clé)
+function translateToFr(verses,cb){
+  if(!verses||!verses.length){cb([]);return;}
+  // Regrouper en blocs de max 500 chars pour l'API
+  var results=new Array(verses.length);
+  var pending=0;
+  var MAX_CHARS=450;
+
+  function translateBatch(indices,text,done){
+    if(!text.trim()){done();return;}
+    fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.substring(0,MAX_CHARS))+'&langpair=en|fr')
+      .then(function(r){return r.json();})
+      .then(function(d){
+        var tr=d.responseData&&d.responseData.translatedText||text;
+        // Redistribuer les lignes traduits
+        var parts=tr.split('|||');
+        indices.forEach(function(idx,i){results[idx]=parts[i]||tr;});
+        done();
+      }).catch(function(){indices.forEach(function(idx){results[idx]=verses[idx];});done();});
+  }
+
+  // Envoyer par blocs de 5 versets séparés par |||
+  var batchSize=5;
+  var batches=[];
+  for(var i=0;i<verses.length;i+=batchSize){
+    batches.push(verses.slice(i,i+batchSize).map(function(v,j){return{idx:i+j,v:v};}));
+  }
+  var done=0;
+  batches.forEach(function(batch){
+    var clean=batch.map(function(b){return(b.v||'').replace(/<[^>]+>/g,'').substring(0,80);});
+    var text=clean.join(' ||| ');
+    var indices=batch.map(function(b){return b.idx;});
+    translateBatch(indices,text,function(){
+      done++;
+      if(done===batches.length) cb(results);
+    });
+  });
+  if(!batches.length) cb([]);
+}
+
 function renderV(verses,elId){
   var el=document.getElementById(elId);
   if(!verses||!verses.length){
-    el.innerHTML='<div class="loading-txt">Texte non disponible. Consultez les onglets Résumé et Commentaire.</div>';
+    el.innerHTML='<div class="loading-txt">Traduction française non disponible sur Sefaria pour cette paracha.<br><small style="color:#9a8860">Consultez les onglets Résumé et Commentaire.</small></div>';
     return;
   }
   var isFr=elId==='d-verses-fr';
