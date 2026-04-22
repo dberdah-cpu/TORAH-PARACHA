@@ -980,6 +980,90 @@ function goHome(){
 // ── CACHE HAYOM YOM & SEFER ─────────────────────────────────────────────────
 var HY_CACHE={};
 var SF_CACHE={};
+// ── HAYOM YOM JSON — chargé depuis hayom_yom.json ────────────────────────────
+var HY_JSON = null; // Chargé une fois depuis GitHub Pages
+var HY_JSON_LOADING = false;
+var HY_JSON_CALLBACKS = [];
+
+// Mapping mois hébreu numérique → nom JSON
+var HEB_MONTH_TO_JSON = {
+  1:'Tichri', 2:'Hechvan', 3:'Kislev', 4:'Tevet', 5:'Chevat',
+  6:'Adar', 7:'Nissan', 8:'Iyar', 9:'Sivan', 10:'Tamouz', 11:'Av', 12:'Eloul'
+};
+
+function loadHYJSON(cb){
+  if(HY_JSON){cb(HY_JSON);return;}
+  HY_JSON_CALLBACKS.push(cb);
+  if(HY_JSON_LOADING) return;
+  HY_JSON_LOADING=true;
+  fetch('hayom_yom.json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      HY_JSON=d;
+      HY_JSON_CALLBACKS.forEach(function(fn){fn(d);});
+      HY_JSON_CALLBACKS=[];
+    })
+    .catch(function(){
+      HY_JSON={};
+      HY_JSON_CALLBACKS.forEach(function(fn){fn({});});
+      HY_JSON_CALLBACKS=[];
+    });
+}
+
+function getHYFromJSON(hd){
+  if(!HY_JSON) return null;
+  var monthName=HEB_MONTH_TO_JSON[hd.m];
+  if(!monthName||!HY_JSON[monthName]) return null;
+  return HY_JSON[monthName][String(hd.d)]||null;
+}
+
+// ── SEFER HAMITSVOT JSON ──────────────────────────────────────────────────────
+var SF_JSON = null;
+var SF_JSON_LOADING = false;
+var SF_JSON_CALLBACKS = [];
+
+// Base: ID 251446 = cours 1, ID 251523 = cours 78 = 21 avril 2026
+var SEFER_JSON_BASE_ID = 251446;
+var SEFER_JSON_REF_ID  = 251523;
+var SEFER_JSON_REF_DATE = new Date(2026, 3, 21); // 21 avril 2026
+
+function getSeferCoursNumber(){
+  var today=new Date(); today.setHours(0,0,0,0);
+  var ref=new Date(SEFER_JSON_REF_DATE); ref.setHours(0,0,0,0);
+  var diffDays=Math.round((today-ref)/86400000);
+  var cours=78+diffDays;
+  // Cycle de 339
+  cours=((cours-1)%339)+1;
+  if(cours<1) cours+=339;
+  return cours;
+}
+
+function loadSFJSON(cb){
+  if(SF_JSON){cb(SF_JSON);return;}
+  SF_JSON_CALLBACKS.push(cb);
+  if(SF_JSON_LOADING) return;
+  SF_JSON_LOADING=true;
+  fetch('sefer_hamitsvot.json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      SF_JSON=d;
+      SF_JSON_CALLBACKS.forEach(function(fn){fn(d);});
+      SF_JSON_CALLBACKS=[];
+    })
+    .catch(function(){
+      SF_JSON={};
+      SF_JSON_CALLBACKS.forEach(function(fn){fn({});});
+      SF_JSON_CALLBACKS=[];
+    });
+}
+
+function getSFFromJSON(coursNum){
+  if(!SF_JSON) return null;
+  return SF_JSON[String(coursNum)]||null;
+}
+
+
+
 
 function callClaude(prompt,cb){cb(new Error('unavailable'),null);}
 
@@ -1197,39 +1281,99 @@ function openHayomYom(){
   var dateFrDisplay=hebDateFr||fmtHebFr(hd);
   var key='HY_'+todayISO();
   document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
+  document.getElementById('hy-content').style.display='block';
+  document.getElementById('hy-iframe-container').style.display='none';
 
-  // Calculer l'URL loubavitch.fr pour aujourd'hui
   var lid=getLoubavitchID();
   var loubUrl=getLoubavitchURL(lid);
   document.getElementById('hy-loubavitch-link').href=loubUrl;
 
-  // 1. Contenu pré-chargé — afficher immédiatement
-  var preKey=hd.m+'_'+hd.d;
-  var pre=HY_CONTENT[preKey];
-  if(pre&&!HY_CACHE[key]){
-    HY_CACHE[key]=pre;
+  // 1. Cache mémoire
+  if(HY_CACHE[key]){renderHayomYom(HY_CACHE[key]);return;}
+
+  document.getElementById('hy-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+
+  // 2. JSON local (hayom_yom.json sur GitHub Pages) — priorité absolue
+  loadHYJSON(function(json){
+    var txt=getHYFromJSON(hd);
+    if(txt){
+      var data={fr:txt,src:'Hayom Yom · '+dateFrDisplay,url:loubUrl};
+      HY_CACHE[key]=data;renderHayomYom(data);return;
+    }
+    // 3. Fetch loubavitch.fr via corsproxy
+    var proxy='https://corsproxy.io/?url='+encodeURIComponent(loubUrl);
+    fetch(proxy)
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+      .then(function(html){
+        var data=parseLoubavitchHayomYom(html,dateFrDisplay,loubUrl);
+        if(data){HY_CACHE[key]=data;renderHayomYom(data);}
+        else renderHayomYomFallback(dateFrDisplay,loubUrl);
+      })
+      .catch(function(){renderHayomYomFallback(dateFrDisplay,loubUrl);});
+  });
+}
+
+function parseLoubavitchHayomYom(html,dateFrDisplay,url){
+  var parser=new DOMParser();
+  var doc=parser.parseFromString(html,'text/html');
+
+  // Extraire tous les paragraphes de la zone de contenu
+  // Sur loubavitch.fr la structure est : h3 (titre) → p (Houmach, Tanya, texte)
+  var content='';
+  var inContent=false;
+  var nodes=doc.querySelectorAll('h3,h4,p,li,strong');
+  var lines=[];
+
+  // Stratégie : tout ce qui suit le titre "Hayom yom" et avant le footer
+  doc.querySelectorAll('p').forEach(function(p){
+    var txt=p.textContent.trim();
+    if(!txt||txt.length<3) return;
+    // Ignorer navigation, footer, menus
+    if(txt.includes('Beth Loubavitch')||txt.includes('Horaires')||
+       txt.includes('Occurrence')||txt.includes('Retour en haut')||
+       txt.includes('01 45 26')||txt.includes('Website design')||
+       txt.includes('Téléphone')||txt.includes('Livres du')) return;
+    lines.push(txt);
+  });
+
+  // Trouver la date hébraïque dans le contenu pour localiser le début
+  var startIdx=0;
+  for(var i=0;i<lines.length;i++){
+    if(/\d+ Iy[ay]r|\d+ Sivan|\d+ Nisan|\d+ Tichri|\d+ Av|\d+ Eloul|\d+ Kislev|\d+ Tevet|\d+ Chevat|\d+ Adar|\d+ Tamouz/.test(lines[i])||
+       /Iyar 5786|Sivan 5786|Tichri 5786/.test(lines[i])){
+      startIdx=i+1; break;
+    }
   }
 
-  if(HY_CACHE[key]){
-    // Afficher le contenu pré-chargé ET l'iframe en dessous
-    document.getElementById('hy-content').style.display='block';
-    document.getElementById('hy-iframe-container').style.display='none';
-    renderHayomYom(HY_CACHE[key]);
-  } else {
-    // Pas de contenu pré-chargé — utiliser l'iframe loubavitch.fr directement
-    document.getElementById('hy-content').style.display='none';
-    document.getElementById('hy-iframe-container').style.display='block';
-    var iframe=document.getElementById('hy-iframe');
-    iframe.src=loubUrl;
-  }
+  var relevant=lines.slice(startIdx).filter(function(l){
+    return l.length>3 && !l.includes('Notons que bon nombre') &&
+           !l.includes('Etudes quotidiennes') && !l.includes('Newsletter');
+  });
+
+  if(!relevant.length) return null;
+
+  // Formater le contenu
+  content=relevant.join('\n\n');
+
+  return {
+    heb:'',
+    fr:content,
+    src:'Hayom Yom · '+dateFrDisplay,
+    url:url
+  };
 }
 
 function renderHayomYom(d){
   var h='';
   if(d.heb) h+='<div class="hyd-heb">'+d.heb+'</div>';
-  h+='<div style="font-size:16px;line-height:2;color:#1a1208;padding:16px;background:#fdf9f2;border-left:4px solid #c97c1a;margin-bottom:16px;white-space:pre-line;font-family:Georgia,serif">'+d.fr+'</div>';
+  // Formater le texte avec mise en valeur des étiquettes Houmach/Tanya
+  var txt=d.fr||'';
+  txt=txt.replace(/^(Houmach\s*:)/gm,'<strong style="color:#8a6820">$1</strong>');
+  txt=txt.replace(/^(Tanya\s*:)/gm,'<strong style="color:#8a6820">$1</strong>');
+  txt=txt.replace(/^(\d+ [A-Za-zÀ-ÿ]+ .{0,20}jour de l.Omer)/gm,'<em style="color:#8a6820">$1</em>');
+  h+='<div style="font-size:15px;line-height:1.9;color:#1a1208;padding:16px;background:#fdf9f2;border-left:4px solid #c97c1a;margin-bottom:16px;white-space:pre-line;font-family:Georgia,serif">'+txt+'</div>';
   h+='<div class="hyd-source">'+d.src
-    +' · <a href="'+getLoubavitchURL(getLoubavitchID())+'" target="_blank" style="color:#c97c1a;font-size:12px">loubavitch.fr ↗</a>'
+    +' · <a href="'+(d.url||getLoubavitchURL(getLoubavitchID()))+'" target="_blank" style="color:#c97c1a;font-size:12px">loubavitch.fr ↗</a>'
     +' · <a href="https://fr.chabad.org/dailystudy/hayomyom.asp" target="_blank" style="color:#c97c1a;font-size:12px">fr.chabad.org ↗</a>'
     +'</div>';
   document.getElementById('hy-content').innerHTML=h;
@@ -1266,26 +1410,90 @@ function openSefer(){
   document.getElementById('btn-back').style.display='block';
   window.scrollTo(0,0);
   var t=new Date();
-  var dayNum=getDayOfSeferCycle(t);
   var dateHeb=hebDateFr||fmtHebFr(parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear()));
+  var coursNum=getSeferCoursNumber();
   var sfId=getSeferLoubavitchID();
   var sfUrl=getSeferLoubavitchURL(sfId);
-  document.getElementById('sf-date').textContent=dateHeb+' · Cours '+dayNum+' du cycle · Rambam';
+  var key='SF_'+todayISO();
+  document.getElementById('sf-date').textContent=dateHeb+' · Cours N° '+coursNum+' · Rambam';
   document.getElementById('sf-loubavitch-link').href=sfUrl;
+  document.getElementById('sf-content').style.display='block';
+  document.getElementById('sf-iframe-container').style.display='none';
 
-  // Contenu pré-chargé disponible ?
-  var codes=getSeferCodesForDay(dayNum);
-  if(codes&&codes!=='intro'&&codes!=='principles'){
-    var result=buildSeferFromCodes(codes,dayNum);
-    document.getElementById('sf-content').style.display='block';
-    document.getElementById('sf-iframe-container').style.display='none';
-    renderSefer(result);
-  } else {
-    // Utiliser l'iframe loubavitch.fr directement
-    document.getElementById('sf-content').style.display='none';
-    document.getElementById('sf-iframe-container').style.display='block';
-    document.getElementById('sf-iframe').src=sfUrl;
+  // 1. Cache mémoire
+  if(SF_CACHE[key]){renderSeferLoubavitch(SF_CACHE[key]);return;}
+
+  document.getElementById('sf-content').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+
+  // 2. JSON local (sefer_hamitsvot.json) — priorité absolue
+  loadSFJSON(function(json){
+    var txt=getSFFromJSON(coursNum);
+    if(txt){
+      var data={texte:txt,dateHeb:dateHeb,url:sfUrl,cours:coursNum};
+      SF_CACHE[key]=data;renderSeferLoubavitch(data);return;
+    }
+    // 3. Fetch loubavitch.fr via corsproxy
+    var proxy='https://corsproxy.io/?url='+encodeURIComponent(sfUrl);
+    fetch(proxy)
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+      .then(function(html){
+        var data=parseLoubavitchSefer(html,dateHeb,sfUrl);
+        if(data){SF_CACHE[key]=data;renderSeferLoubavitch(data);}
+        else renderSeferFallback(sfUrl,dateHeb);
+      })
+      .catch(function(){renderSeferFallback(sfUrl,dateHeb);});
+  });
+}
+
+function parseLoubavitchSefer(html,dateHeb,url){
+  var parser=new DOMParser();
+  var doc=parser.parseFromString(html,'text/html');
+  var lines=[];
+  doc.querySelectorAll('p,h3,h4').forEach(function(el){
+    var txt=el.textContent.trim();
+    if(!txt||txt.length<3) return;
+    if(txt.includes('Beth Loubavitch')||txt.includes('Horaires')||
+       txt.includes('Occurrence')||txt.includes('Retour en haut')||
+       txt.includes('01 45 26')||txt.includes('Website design')||
+       txt.includes('Livres du Rambam')||txt.includes('Commandez')) return;
+    lines.push(txt);
+  });
+  // Trouver le début du contenu (après la date)
+  var startIdx=0;
+  for(var i=0;i<lines.length;i++){
+    if(/\d+ Iy[ay]r|\d+ Sivan|\d+ Nisan|\d+ Tichri|\d+ Av|\d+ Eloul|\d+ Kislev/.test(lines[i])||
+       /5786|5787/.test(lines[i])){
+      startIdx=i+1; break;
+    }
   }
+  var relevant=lines.slice(startIdx).filter(function(l){
+    return l.length>3 && !l.includes('Notons que bon nombre') &&
+           !l.includes('Etudes quotidiennes') && !l.includes('Newsletter');
+  });
+  if(!relevant.length) return null;
+  return {texte:relevant.join('\n\n'), dateHeb:dateHeb, url:url};
+}
+
+function renderSeferLoubavitch(d){
+  var h='<div style="font-size:15px;line-height:1.9;color:#1a1208;padding:16px;background:#fdf9f2;border-left:4px solid #6a3fa0;margin-bottom:16px;white-space:pre-line;font-family:Georgia,serif">';
+  var txt=d.texte||'';
+  // Mettre en valeur les numéros de cours et mitsvot
+  txt=txt.replace(/(Cours N° \d+)/g,'<strong style="color:#6a3fa0">$1</strong>');
+  txt=txt.replace(/(Mitsva (positive|négative) N° \d+)/g,'<strong style="color:#6a3fa0">$1</strong>');
+  h+=txt+'</div>';
+  h+='<div class="hyd-source">Source : '
+    +'<a href="'+d.url+'" target="_blank" style="color:#6a3fa0;font-size:12px">loubavitch.fr ↗</a>'
+    +' · Rambam, Sefer HaMitsvot · Calendrier du Rabbi de Loubavitch'
+    +'</div>';
+  document.getElementById('sf-content').innerHTML=h;
+}
+
+function renderSeferFallback(url,dateHeb){
+  document.getElementById('sf-content').innerHTML=
+    '<div style="text-align:center;padding:30px 20px">'
+    +'<div style="font-size:15px;color:#1a1208;margin-bottom:8px">Sefer HaMitsvot · '+dateHeb+'</div>'
+    +'<a href="'+url+'" target="_blank" style="display:inline-block;background:#6a3fa0;color:#fff;padding:12px 28px;text-decoration:none;font-size:15px;border-radius:4px;margin-bottom:10px">Lire sur loubavitch.fr ↗</a>'
+    +'</div>';
 }
 
 function buildSeferFromCodes(codesStr,dayNum){
