@@ -399,6 +399,34 @@ var PARASHA_MAP = {
   'Ki Tavo':50,'Nitzavim':51,'Vayeilech':51,'Nitzavim-Vayeilech':51,
   "Ha'azinu":53,'Haazinu':53,'Vezot Haberakhah':54,'Vezot HaBerakha':54
 };
+// Mapping Hebcal (anglais) → nom français pour l'affichage dans le bandeau
+var PARASHA_FR = {
+  'Bereshit':'Beréchit','Noach':'Noach','Lech-Lecha':'Lekh Lekha','Lech Lecha':'Lekh Lekha',
+  'Vayera':'Vayéra','Chayei Sara':'Chayei Sarah','Chayei Sarah':'Chayei Sarah',
+  'Toldot':'Toldot','Vayetzei':'Vayétsé','Vayishlach':'Vayichlah','Vayeshev':'Vayéchev',
+  'Miketz':'Mikets','Vayigash':'Vayigach','Vayechi':"Vayé'hi",
+  'Shemot':'Chemot',"Va'era":"Va'era",'Bo':'Bo','Beshalach':'Bechalah',
+  'Yitro':'Yitro','Mishpatim':'Michpatim','Terumah':'Terouma','Tetzaveh':'Tetsavé',
+  'Ki Tisa':'Ki Tissa','Ki Tissa':'Ki Tissa',
+  'Vayakhel':'Vayakhel','Pekudei':'Pekoudei','Vayakhel-Pekudei':'Vayakhel-Pekoudei',
+  'Vayikra':'Vayikra','Tzav':'Tsav','Shemini':'Chemini',
+  'Tazria':'Tazria','Metzora':'Metsora','Tazria-Metzora':'Tazria-Metsora',
+  'Achrei Mot':'Acharei Mot','Kedoshim':'Kedochim',
+  'Achrei Mot-Kedoshim':'Acharei Mot-Kedochim',
+  'Acharei Mot':'Acharei Mot','Acharei Mot-Kedoshim':'Acharei Mot-Kedochim',
+  'Emor':'Emor','Behar':'Behar','Bechukotai':'Behoukotaï','Behar-Bechukotai':'Behar-Behoukotaï',
+  'Bamidbar':'Bamidbar','Nasso':'Nasso',
+  "Beha'alotcha":'Behaalotekha','Shelach':'Chelah','Korach':'Koraḥ',
+  'Chukat':'Houkat','Balak':'Balak','Chukat-Balak':'Houkat-Balak','Pinchas':'Pinhas',
+  'Matot':'Matot','Masei':'Masseï','Matot-Masei':'Matot-Masseï',
+  'Devarim':'Devarim',"Va'etchanan":'Vaethanan','Vaetchanan':'Vaethanan',
+  'Eikev':'Eikev','Ekev':'Eikev',"Re'eh":'Réé','Reeh':'Réé',
+  'Shoftim':'Choftim','Ki Teitzei':'Ki Tetsé','Ki Tetze':'Ki Tetsé',
+  'Ki Tavo':'Ki Tavo','Nitzavim':'Nitsavim','Vayeilech':'Vayélekh',
+  'Nitzavim-Vayeilech':'Nitsavim-Vayélekh',"Ha'azinu":'Haazinou','Haazinu':'Haazinou',
+  'Vezot Haberakhah':'Vezot Haberakha','Vezot HaBerakha':'Vezot Haberakha'
+};
+
 
 // Traductions françaises des fêtes Hebcal
 var FETE_FR = {
@@ -590,9 +618,8 @@ m(25,"<p><strong>Le feu perpétuel sur l'autel</strong> — L'holocauste brûle 
 
 m(26,"<p><strong>L'inauguration du Tabernacle</strong> — Aaron et ses fils sont consacrés pendant sept jours. Le huitième jour, Aaron offre les premiers sacrifices officiels. La gloire divine apparaît et un feu divin consume les offrandes — signe d'agrément divin.</p><p><strong>La mort de Nadav et Avihou</strong> — Les deux fils aînés d'Aaron offrent un « feu étranger » et meurent aussitôt. Aaron accepte le décret divin en silence. Moïse interdit à Aaron de pleurer publiquement.</p><p><strong>Les lois de la cacherout</strong> — D-ieu enseigne les animaux permis (ruminants à sabots fendus, poissons avec nageoires et écailles) et interdits. Les insectes, reptiles et animaux rampants sont tous interdits.","<p><strong>Le huitième jour — transcender la nature</strong> — Le Sfat Emet : les sept jours de consécration représentent le cycle naturel. Le huitième jour le transcende — c'est le moment où la Présence divine descend spontanément. Le service humain parfait ouvre la porte au divin.</p><p><strong>Nadav et Avihou — une mort par excès d'amour</strong> — Le Zohar : ils moururent d'un excès d'amour divin — leur âme fut attirée vers le haut et ne put revenir. Le Baal Shem Tov : même une mort sainte laisse un vide. Le service divin doit rester ancré dans ce monde.</p><p><strong>La cacherout et la sensibilité de l'âme</strong> — L'Admour HaZaken : ce que l'homme mange influence son âme. La cacherout n'est pas hygiénique mais spirituelle — elle modèle la sensibilité de l'âme à travers le corps qu'elle habite.","Sfat Emet Shemini · Zohar · Admour HaZaken, Tanya ch.7");
 
-m(27,"<p><strong>Tazria — Naissance et pureté</strong> — Après l'accouchement : 7 jours d'impureté puis 33 jours de purification pour un garçon ; 14 jours puis 66 jours pour une fille. Au terme, un agneau et un pigeon au Temple — ou deux pigeons si on est dans le besoin. La Torah adapte ses exigences aux capacités de chacun.</p><p><strong>Tazria — Le tsaraat de la peau</strong> — Affliction spirituelle se manifestant sous trois formes sur la peau. Seul le cohen l'examine et prononce le verdict. En cas de doute, isolement de 7 jours puis réexamen. La personne impure déchire ses vêtements et vit seule hors du camp.</p><p><strong>Metzora — Purification et réintégration</strong> — Rituel des deux oiseaux, cèdre, fil écarlate, hysope. L'oiseau libéré sur les champs — image de l'âme purifiée retrouvant sa liberté. La paracha se clôt sur les flux d'impureté et l'immersion au mikvé.","<p><strong>La parole qui crée ou détruit</strong> — Le Talmud (Erkhin 16a) : la cause principale du tsaraat est la lachon hara, la médisance. Le Baal Shem Tov : chaque parole crée des mondes ou en détruit — « La vie et la mort sont au pouvoir de la langue » (Proverbes 18:21).</p><p><strong>L'isolement comme espace sacré</strong> — L'Admour HaZaken (Tanya, Iggeret HaTéchouva ch.1) : l'isolement n'est pas une honte — c'est une retraite spirituelle. Seul avec lui-même, sans les distractions du monde, l'homme peut entendre la voix divine et opérer un retour sincère.</p><p><strong>Le huitième jour — transcender la nature</strong> — Le Sfat Emet (Tazria 5643) : les sept jours représentent le cycle naturel. Le huitième jour — la brit mila — transcende la nature, l'alliance éternelle. Le tsaraat survient quand l'homme reste prisonnier du cycle naturel sans aspirer au-delà.","Talmud Erkhin 16a · Tanya Iggeret HaTéchouva ch.1 · Sfat Emet Tazria 5643 · Proverbes 18:21");
-
-m(29,"<p><strong>Acharei Mot — Le service de Yom Kippour</strong> — Description détaillée du service du Cohen Gadol : deux boucs (un pour D-ieu, un pour Azazel), bain rituel, habits blancs, encens dans le Saint des Saints. C'est le seul jour où le Grand Prêtre entre dans le lieu le plus sacré.</p><p><strong>Kedoshim — Soyez saints</strong> — Le grand code éthique d'Israël : honorer ses parents, observer le Chabbat, ne pas voler ni mentir, ne pas haïr son frère dans son cœur. Le commandement central : « Tu aimeras ton prochain comme toi-même. »</p><p><strong>Les lois de pureté familiale et sociale</strong> — Interdictions des unions illicites, des relations idolâtres, des pratiques cananéennes. Interdiction du sang. Les animaux sauvages chassés.","<p><strong>Le Saint des Saints et l'intimité divine</strong> — Le Cohen Gadol entre seul, sans aucun témoin humain. Le Baal Shem Tov : le rapport le plus intime avec D-ieu est personnel et silencieux. La vraie prière de Yom Kippour se fait dans le secret absolu du cœur.</p><p><strong>Ve'ahavta lere'akha kamokha</strong> — Le Baal Shem Tov fit de ce commandement le fondement de tout son enseignement. L'amour du prochain est la porte vers l'amour de D-ieu — on ne peut aimer D-ieu qu'à travers l'amour sincère de Ses créatures.</p><p><strong>Kedochim tihyu — un mouvement perpétuel</strong> — L'Admour HaZaken : la sainteté n'est pas un état acquis mais un mouvement perpétuel. « Soyez saints » est au présent continu — une aspiration constante, jamais définitivement accomplie.","Baal Shem Tov · Admour HaZaken, Tanya ch.32 · Sfat Emet Kedoshim");
+m(27,"<p><strong>Tazria — La naissance et la pureté rituelle</strong> — Après un accouchement, la Torah prescrit une période de pureté différenciée : sept jours d'impureté puis trente-trois jours de purification pour un garçon ; deux fois plus pour une fille. Au terme de ces jours, la mère apporte une offrande au Temple. La Torah adapte avec compassion ses exigences aux capacités de chacun — celui dans le besoin peut offrir deux pigeons au lieu d'un agneau.</p><p><strong>Tazria — Le tsaraat : affliction de l'âme visible sur la peau</strong> — La Torah décrit en détail cette affliction mystérieuse qui touche la peau, les vêtements et les maisons. Seul le cohen est habilité à examiner et prononcer. La personne déclarée impure déchire ses vêtements, laisse pousser ses cheveux, couvre sa lèvre supérieure et crie « Impur ! Impur ! » Elle vit isolée hors du camp. Si le tsaraat couvre tout le corps, la personne est paradoxalement déclarée pure.</p><p><strong>Metzora — La purification et la réintégration</strong> — Rituel élaboré de purification : deux oiseaux vivants, eau vive, cèdre, hysope, fil écarlate. L'oiseau libéré sur les champs symbolise l'âme purifiée retrouvant sa liberté. Après immersion et rasage complet, la personne est réintégrée progressivement dans la communauté. La paracha se clôt sur les flux d'impureté (zav et nida) qui nécessitent également immersion et purification.</p>","<p><strong>La parole qui crée et détruit — lachon hara</strong> — Le Talmud (Erkhin 16a) établit que la cause principale du tsaraat est la lachon hara, la médisance. Le Baal Shem Tov commente : « La vie et la mort sont au pouvoir de la langue » (Proverbes 18:21). Chaque parole crée des mondes ou en détruit. La langue est l'instrument le plus puissant que D-ieu ait donné à l'homme — et donc le plus dangereux.</p><p><strong>L'isolement comme espace de transformation intérieure</strong> — Le Rabbi de Loubavitch (Likoutei Si'hot vol.3) enseigne que l'isolement du metsora n'est pas une punition humiliante mais un cadeau spirituel. Éloigné du bruit social, seul avec lui-même, l'homme peut enfin entendre la voix de son âme. Les prophètes et les sages se retiraient volontairement dans la solitude pour atteindre les niveaux les plus élevés de prophétie. La téchouva véritable commence dans ce silence.</p><p><strong>Le huitième jour — transcender le naturel</strong> — Le Sfat Emet (Tazria 5643) enseigne : les sept jours représentent le cycle naturel complet. Le huitième jour — le jour de la circoncision, le jour de la purification — transcende la nature. C'est le secret de l'alliance éternelle : Israël n'est pas prisonnier des cycles naturels mais appelé à les dépasser.</p><p><strong>Si le tsaraat couvre tout le corps — la pureté totale paradoxale</strong> — L'Admour HaZaken commente ce passage énigmatique : quand la souillure est complète et reconnue dans toute son étendue, elle se transforme en pureté. C'est l'image de la téchouva profonde — quand l'homme voit lucidement toute sa faute sans se dissimuler rien à lui-même, il est déjà sur le chemin du retour.","Talmud Erkhin 16a · Rabbi de Loubavitch, Likoutei Si'hot vol.3 · Admour HaZaken · Sfat Emet Tazria 5643 · Proverbes 18:21");
+m(29,"<p><strong>Acharei Mot — Le service de Yom Kippour</strong> — La paracha débute par la mort des deux fils d'Aaron, Nadav et Avihou, puis prescrit la façon dont le Cohen Gadol doit pénétrer dans le Saint des Saints — uniquement le jour de Kippour. Il revêt des habits de lin blanc, immaculés, et apporte de l'encens dont la fumée voile la Présence divine. Deux boucs sont tirés au sort : l'un est offert à D-ieu, l'autre envoyé vers Azazel dans le désert, portant symboliquement les fautes d'Israël. L'aspersion du sang purifie le sanctuaire, l'autel, et toute la communauté d'Israël.</p><p><strong>Les lois du sang et de la chasse</strong> — Il est interdit de consommer le sang d'un animal — « car la vie de toute chair, c'est son sang. » L'animal chassé doit être recouvert de terre après l'égorgement. Ces lois fondent le respect de toute vie.</p><p><strong>Kedoshim — Le grand code éthique d'Israël</strong> — La paracha Kedoshim est le cœur du Lévitique. Ses cinquante-et-une mitsvot couvrent tous les domaines de la vie humaine : honorer ses parents, observer le Chabbat, laisser les coins du champ aux pauvres (pea), ne pas voler, ne pas mentir, ne pas exploiter, ne pas haïr son frère dans son cœur. Le sommet de la paracha : « Tu aimeras ton prochain comme toi-même — Je suis l'Éternel. »</p><p><strong>La sainteté dans le quotidien</strong> — Les lois de Kedoshim couvrent les affaires financières, les relations humaines, l'honnêteté dans le commerce (poids et mesures exacts), le respect du vieillard, l'égalité de traitement pour l'étranger. La sainteté n'est pas réservée aux cohanim — elle est la vocation de chaque Juif.</p>","<p><strong>Le Saint des Saints — la rencontre la plus intime</strong> — Le Cohen Gadol entre seul le Yom Kippour, sans témoins humains. Le Rabbi de Loubavitch (Likoutei Si'hot vol.7) commente : le fait qu'aucun homme ne soit présent enseigne que la rencontre la plus vraie avec D-ieu se fait dans le secret absolu. Chaque prière sincère est une « entrée dans le Saint des Saints » personnelle. D-ieu attend derrière le voile, non pour juger, mais pour accueillir.</p><p><strong>Après la mort des fils d'Aaron — agir malgré la douleur</strong> — La paracha commence « après la mort » de Nadav et Avihou. Le Rabbi de Loubavitch enseigne : Aaron continue son service immédiatement après la tragédie. C'est la leçon ultime de la résilience spirituelle — les actes sacrés ne s'arrêtent pas face à la douleur personnelle. Au contraire, ils en deviennent plus profonds.</p><p><strong>Ve'ahavta lere'akha kamokha — Rabi Akiva et le Rabbi de Loubavitch</strong> — Rabbi Akiva proclame : « Aimez votre prochain comme vous-même — c'est le grand principe de la Torah. » Le Baal Shem Tov en fit le fondement de son enseignement. Le Rabbi de Loubavitch (Si'ha du 19 Kislev 5752) ajoute : cet amour du prochain doit être sans conditions, sans calcul, sans distinction. Il enseigne à voir en chaque Juif la parcelle divine unique — le seul exemplaire de cette âme dans l'univers entier.</p><p><strong>Kedochim Tih'you — Vous serez saints</strong> — Le Sfat Emet explique que le pluriel « soyez saints » indique que la sainteté se construit dans la communauté, non dans la solitude. L'Admour HaZaken (Tanya ch.32) ajoute : l'amour du prochain est possible quand on réalise que nous partageons tous la même racine divine — une seule âme fragmentée dans de nombreux corps.</p>","Rabbi de Loubavitch, Likoutei Si'hot vol.7 · Si'ha 19 Kislev 5752 · Baal Shem Tov · Admour HaZaken, Tanya ch.32 · Sfat Emet Kedoshim · Rabbi Akiva, Sifra sur Lévitique 19:18");
 
 m(31,"<p><strong>La sainteté des cohanim</strong> — Les prêtres sont soumis à des règles de pureté strictes : interdiction de se souiller au contact des morts (sauf parents proches), interdiction d'épouser certaines femmes, obligation de sainteté particulière pour le Cohen Gadol.</p><p><strong>Le calendrier des fêtes</strong> — Calendrier sacré complet : Chabbat, Pessa'h, Chavouot, Roch Hachana, Yom Kippour, Souccot, Chemini Atseret. Les lois du compte du omer entre Pessa'h et Chavouot.</p><p><strong>Le pain de proposition et le blasphémateur</strong> — Les lois du lechem hapanim (pain de proposition). Un épisode de blasphème. Lois du talion. Ces lois encadrent les responsabilités civiles et les droits fondamentaux.","<p><strong>Le cohen peut se souiller pour ses parents</strong> — Même la sainteté la plus élevée a ses limites humaines. Le Baal Shem Tov : D-ieu veut des êtres humains saints — pas des anges. Le deuil est une mitsva, non une imperfection.</p><p><strong>Le calendrier — tabernacle du temps</strong> — L'Admour HaZaken : le calendrier juif est le « Tabernacle du temps ». Chaque fête est un portail temporel — la même énergie cosmique revient chaque année. Nous ne commémorons pas des événements passés, nous les vivons à nouveau.</p><p><strong>Le omer et l'élévation quotidienne</strong> — Le Sfat Emet : les 49 jours du omer correspondent aux 49 portes de la sagesse. Chaque jour est une invitation à travailler sur une qualité de l'âme, pour être prêt à recevoir à nouveau la Torah à Chavouot.","Baal Shem Tov · Admour HaZaken, Likoutei Torah Emor · Sfat Emet");
 
@@ -899,9 +926,9 @@ function buildHome(){
 
   var h=getHomeBanners();
 
-  // Date bar — date hébraïque 100% depuis Hebcal (coucher du soleil correct)
+  // Date bar
   var dateHebHeb=hebDateHeb||'...';
-  var dateHebFrDisplay=hebDateFr||fmtHebFr(ht); // "3 Iyar 5786"
+  var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
   h+='<div class="datebar" onclick="openCal()">'
     +'<div class="datebar-icon">📅</div>'
     +'<div class="datebar-text">'
@@ -910,14 +937,16 @@ function buildHome(){
     +'<div class="dtap">Ouvrir le calendrier →</div>'
     +'</div></div>';
 
-  // Paracha banner — dégradé bleu/orange comme le prototype
-  var parashaDisplay=currentParashaName||cur.name;
+  // Paracha banner — utilise currentCID ET currentParashaName (tous deux de Hebcal)
+  var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
   var parashaHebDisplay=currentParashaHeb||cur.heb;
-  h+='<div class="wbanner" onclick="openP(currentCID)" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
+  // cur pour le livre/ref est recalculé depuis currentCID (pas CID local)
+  var curForBanner=getP(currentCID)||cur;
+  h+='<div class="wbanner" id="paracha-banner" onclick="openP(currentCID)" style="background:linear-gradient(135deg,#1a3a6b 0%,#2d5aa0 55%,#c97c1a 100%);border-left:none;border-radius:6px">'
     +'<div class="wlabel" style="color:rgba(255,255,255,0.7)">📖 PARACHA DE LA SEMAINE · שַׁבָּת</div>'
     +'<div class="wname">'+parashaHebDisplay+'</div>'
     +'<div style="font-family:Frank Ruhl Libre,serif;font-size:20px;color:#f5f0e8;margin-bottom:4px">'+parashaDisplay+'</div>'
-    +'<div class="wmeta">'+cur.book+'</div>'
+    +'<div class="wmeta">'+curForBanner.book+'</div>'
     +'<div class="warrow" style="color:rgba(255,255,255,0.8)">→</div></div>';
 
   // Quick access cards
@@ -1606,41 +1635,46 @@ function fetchSef(ref,lang,cb){
 // Traduction français via MyMemory API (gratuite, pas de clé)
 function translateToFr(verses,cb){
   if(!verses||!verses.length){cb([]);return;}
-  // Regrouper en blocs de max 500 chars pour l'API
-  var results=new Array(verses.length);
-  var pending=0;
-  var MAX_CHARS=450;
+  var results=[];
+  // Traduire verset par verset avec MyMemory (500 chars max par requête)
+  // On envoie les versets en parallèle par groupes de 3 pour ne pas surcharger
+  var clean=verses.map(function(v){return(v||'').replace(/<[^>]+>/g,'').trim();});
+  var pending=clean.length;
+  if(pending===0){cb([]);return;}
+  results=new Array(clean.length);
 
-  function translateBatch(indices,text,done){
-    if(!text.trim()){done();return;}
-    fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.substring(0,MAX_CHARS))+'&langpair=en|fr')
-      .then(function(r){return r.json();})
-      .then(function(d){
-        var tr=d.responseData&&d.responseData.translatedText||text;
-        // Redistribuer les lignes traduits
-        var parts=tr.split('|||');
-        indices.forEach(function(idx,i){results[idx]=parts[i]||tr;});
-        done();
-      }).catch(function(){indices.forEach(function(idx){results[idx]=verses[idx];});done();});
-  }
+  var BATCH=3; // 3 requêtes en parallèle
+  var idx=0;
 
-  // Envoyer par blocs de 5 versets séparés par |||
-  var batchSize=5;
-  var batches=[];
-  for(var i=0;i<verses.length;i+=batchSize){
-    batches.push(verses.slice(i,i+batchSize).map(function(v,j){return{idx:i+j,v:v};}));
+  function nextBatch(){
+    if(idx>=clean.length) return;
+    var batchStart=idx;
+    var batchEnd=Math.min(idx+BATCH,clean.length);
+    idx=batchEnd;
+    var done=0;
+    for(var i=batchStart;i<batchEnd;i++){
+      (function(i){
+        var txt=clean[i].substring(0,490);
+        if(!txt){results[i]='';done++;if(done===batchEnd-batchStart){pending-=(batchEnd-batchStart);if(pending<=0)cb(results);else nextBatch();}return;}
+        fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(txt)+'&langpair=en|fr')
+          .then(function(r){return r.json();})
+          .then(function(d){
+            results[i]=d.responseData&&d.responseData.translatedText&&d.responseData.translatedText!==txt
+              ?d.responseData.translatedText:clean[i];
+          })
+          .catch(function(){results[i]=clean[i];})
+          .finally(function(){
+            done++;
+            if(done===batchEnd-batchStart){
+              pending-=(batchEnd-batchStart);
+              if(pending<=0) cb(results);
+              else setTimeout(nextBatch,300);
+            }
+          });
+      })(i);
+    }
   }
-  var done=0;
-  batches.forEach(function(batch){
-    var clean=batch.map(function(b){return(b.v||'').replace(/<[^>]+>/g,'').substring(0,80);});
-    var text=clean.join(' ||| ');
-    var indices=batch.map(function(b){return b.idx;});
-    translateBatch(indices,text,function(){
-      done++;
-      if(done===batches.length) cb(results);
-    });
-  });
-  if(!batches.length) cb([]);
+  nextBatch();
 }
 
 function renderV(verses,elId){
