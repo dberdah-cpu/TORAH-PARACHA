@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Torah · Paracha</title>
+<!-- v202604241425 -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -496,7 +500,11 @@ var PARASHA_MAP = {
   'Aharei Mot':29,'Aharei Mot-Kedoshim':29,
   'Acharei-Kedoshim':29,'Achrei-Kedoshim':29,
   'Acharei Mot-Kedoshim':29,'Achrei Mot-Kedoshim':29,
-  'Kedoshim':29,
+  'Ahare Mot-Kedochim':29,'Aharé Mot-Kedochim':29,
+  'Ahare Mot':29,'Aharé Mot':29,
+  'Ahare-Kedochim':29,'Aharé-Kedochim':29,
+  'Ahare Mot Kedochim':29,'Aharé Mot Kedochim':29,
+  'Kedoshim':29,'Kedochim':29,
   'Emor':31,
   'Behar':32,'Bechukotai':32,'Behar-Bechukotai':32,'Behar Bechukotai':32,
   'Bamidbar':34,'Nasso':35,"Beha'alotcha":36,'Shelach':37,'Shelach-Lecha':37,
@@ -574,6 +582,22 @@ function fmtHebcalTime(isoStr){
 
 
 // Résolution robuste du nom de paracha Hebcal → ID
+function normalizeParashaName(s){
+  // Enlever diacritiques Unicode (NFD) + combining characters
+  try{ s=s.normalize('NFD'); }catch(e){}
+  s=s.replace(/[̀-̧̨̲̱ͯ]/g,'');
+  // Variantes orthographiques courantes
+  s=s.replace(/Ahare/gi,'Acharei')
+     .replace(/Achare/gi,'Acharei')
+     .replace(/Achrei/gi,'Acharei')
+     .replace(/Aharei/gi,'Acharei')
+     .replace(/Kedochim/gi,'Kedoshim')
+     .replace(/Shemini/gi,'Shemini')
+     .replace(/Tsav/gi,'Tzav')
+     .replace(/Chemin/gi,'Shemini');
+  return s.trim();
+}
+
 function resolveParasha(raw){
   if(!raw) return null;
   // 1. Match direct
@@ -582,24 +606,27 @@ function resolveParasha(raw){
   m=PARASHA_MAP[raw.replace(/-/g,' ')]; if(m) return m;
   // 3. Avec tirets
   m=PARASHA_MAP[raw.replace(/\s+/g,'-')]; if(m) return m;
-  // 4. Normaliser orthographe
-  var n=raw.replace(/-/g,' ')
-           .replace(/\bAchrei\b/gi,'Acharei')
-           .replace(/\bAchare\b/gi,'Acharei')
-           .replace(/\bAharei\b/gi,'Acharei')
-           .replace(/\bKedochim\b/gi,'Kedoshim')
-           .replace(/\bChemin\b/gi,'Shemini')
-           .trim();
+  // 4. Normaliser diacritiques + variantes
+  var n=normalizeParashaName(raw);
   m=PARASHA_MAP[n]; if(m) return m;
+  m=PARASHA_MAP[n.replace(/-/g,' ')]; if(m) return m;
   m=PARASHA_MAP[n.replace(/\s+/g,'-')]; if(m) return m;
-  // 5. Match partiel — chaque mot du raw dans la clé
-  var rawLow=raw.toLowerCase().replace(/-/g,' ');
+  // 5. Normaliser ET enlever tirets
+  var n2=normalizeParashaName(raw.replace(/-/g,' '));
+  m=PARASHA_MAP[n2]; if(m) return m;
+  // 6. Match partiel insensible à la casse
+  var rawLow=normalizeParashaName(raw).toLowerCase().replace(/[-\s]+/g,' ');
   for(var k in PARASHA_MAP){
-    var kLow=k.toLowerCase().replace(/-/g,' ');
+    var kLow=normalizeParashaName(k).toLowerCase().replace(/[-\s]+/g,' ');
     if(rawLow===kLow) return PARASHA_MAP[k];
-    // Le premier mot match
-    var r0=rawLow.split(' ')[0], k0=kLow.split(' ')[0];
-    if(r0.length>3 && r0===k0) return PARASHA_MAP[k];
+  }
+  // 7. Premier mot seulement
+  var r0=rawLow.split(' ')[0];
+  if(r0.length>3){
+    for(var k in PARASHA_MAP){
+      var k0=normalizeParashaName(k).toLowerCase().split(/[-\s]/)[0];
+      if(r0===k0) return PARASHA_MAP[k];
+    }
   }
   return null;
 }
@@ -649,7 +676,15 @@ function loadHebcalAll(lat,lng,cb){
       (d.items||[]).forEach(function(it){
         console.log('[Hebcal item] category='+it.category+' title='+it.title);
         if(it.category==='parashat'||it.category==='parasha'){
-          var raw=it.title.replace(/^Parashat\s+/i,'').replace(/^Shabbat\s+/i,'').trim();
+          // Normaliser le titre Hebcal: enlever préfixes, caractères spéciaux
+          var raw=it.title
+            .replace(/^Parashat\s+/i,'')
+            .replace(/^Parachah\s+/i,'')
+            .replace(/^Parasha\s+/i,'')
+            .replace(/^Shabbat\s+/i,'')
+            .replace(/\u0332/g,'')   // enlever combining underline (h̲ → h)
+            .replace(/h\u0331/g,'h') // h avec macron bas
+            .trim();
           currentParashaName=raw;
           currentParashaHeb=it.hebrew||'';
           var mapped=resolveParasha(raw);
@@ -1014,7 +1049,7 @@ function renderUpcomingFetes(){renderCalFetes();}
 
 function calDayClick(d){
   calSel={d:d,m:calM,y:calY};
-  renderCalHdr(new Date(calY,calM,d));
+  updateCalDateBar(new Date(calY,calM,d));
   updEvDisp();
   var hd=g2h(d,calM,calY);
   var isoDay=calY+'-'+pad2(calM+1)+'-'+pad2(d);
@@ -1924,60 +1959,35 @@ function fetchSef(ref,lang,cb){
 // Traduction français via MyMemory API (gratuite, pas de clé)
 function translateToFr(verses,cb){
   if(!verses||!verses.length){cb([]);return;}
-  // Nettoyer les versets
   var clean=verses.map(function(v){return(v||'').replace(/<[^>]+>/g,'').trim();});
-  // Regrouper en blocs de 20 versets max pour Claude
-  var CHUNK=20;
-  var chunks=[];
-  for(var i=0;i<clean.length;i+=CHUNK){
-    chunks.push({start:i,verses:clean.slice(i,i+CHUNK)});
+  var results=new Array(clean.length).fill('');
+  var done=0;
+
+  function finish(i,txt){
+    results[i]=txt||clean[i];
+    done++;
+    if(done===clean.length) cb(results);
   }
-  var results=new Array(clean.length);
-  var doneChunks=0;
 
-  chunks.forEach(function(chunk){
-    var numbered=chunk.verses.map(function(v,i){return (chunk.start+i+1)+'. '+v;}).join('\n');
-    var prompt='Traduis ce texte biblique hébreu (donné en anglais) en français courant et fidèle. '
-      +'Réponds UNIQUEMENT avec les traductions numérotées dans le même format, sans explication:\n\n'+numbered;
-
-    fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:2000,
-        messages:[{role:'user',content:prompt}]
-      })
-    })
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var txt=(d.content&&d.content[0]&&d.content[0].text)||'';
-      var lines=txt.split('\n').filter(function(l){return l.trim();});
-      lines.forEach(function(line){
-        var m=line.match(/^(\d+)\.\s*(.+)/);
-        if(m){
-          var idx=parseInt(m[1])-1;
-          if(idx>=0&&idx<clean.length) results[idx]=m[2].trim();
-        }
-      });
-      // Fallback: si un verset n'a pas été traduit, garder l'anglais
-      chunk.verses.forEach(function(v,i){
-        if(!results[chunk.start+i]) results[chunk.start+i]=v;
-      });
-      doneChunks++;
-      if(doneChunks===chunks.length) cb(results);
-    })
-    .catch(function(){
-      // Si Claude échoue, utiliser MyMemory
-      chunk.verses.forEach(function(v,i){
-        results[chunk.start+i]=v; // fallback anglais
-      });
-      doneChunks++;
-      if(doneChunks===chunks.length) cb(results);
-    });
+  // MyMemory API — gratuit, sans CORS, 500 chars max par requête
+  // Espacer les requêtes pour éviter le rate limit (1000 req/jour gratuit)
+  clean.forEach(function(txt,i){
+    if(!txt||txt.length<3){finish(i,txt);return;}
+    setTimeout(function(){
+      var q=encodeURIComponent(txt.substring(0,490));
+      fetch('https://api.mymemory.translated.net/get?q='+q+'&langpair=en|fr')
+        .then(function(r){return r.json();})
+        .then(function(d){
+          var tr=(d.responseData&&d.responseData.translatedText)||'';
+          var ok=tr&&tr.length>2&&tr.toLowerCase().trim()!==txt.toLowerCase().trim()
+                 &&!tr.toLowerCase().includes('mymemory warning');
+          finish(i, ok ? tr : txt);
+        })
+        .catch(function(){finish(i,txt);});
+    }, i*250); // 250ms entre chaque requête
   });
-  if(!chunks.length) cb([]);
 }
+
 
 function renderV(verses,elId){
   var el=document.getElementById(elId);
