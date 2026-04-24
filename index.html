@@ -232,14 +232,23 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
 
 /* ── HEADER HOME amélioré ── */
 #view-home .story-bar{padding:12px 16px 4px}
-.home-hero{background:linear-gradient(160deg,#0a1628 0%,#1a3a6b 50%,#c97c1a 100%);padding:52px 20px 24px;margin-bottom:0;position:relative;overflow:hidden}
-.home-hero::before{content:'תּוֹרָה';position:absolute;right:-10px;top:10px;font-family:'Noto Sans Hebrew',sans-serif;font-size:120px;color:rgba(255,255,255,0.04);font-weight:700;line-height:1;pointer-events:none}
-.home-hero-greeting{font-size:13px;color:rgba(255,255,255,0.6);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-.home-hero-date-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:26px;font-weight:700;color:#E8C870;direction:rtl;text-align:right;line-height:1.2;margin-bottom:4px}
-.home-hero-date-greg{font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:16px}
-.home-hero-bottom{display:flex;align-items:center;justify-content:space-between}
-.home-hero-sefirat{font-size:13px;color:rgba(255,255,255,0.8);font-style:italic}
-.home-hero-cal-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:6px}
+.home-hero{background:linear-gradient(160deg,#0a1628 0%,#1a3a6b 60%,#2a5a9a 100%);position:relative;overflow:hidden}
+.home-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(201,168,76,0.08);pointer-events:none}
+/* Story bar dans le hero */
+.home-hero .story-bar{padding:52px 12px 8px;background:transparent}
+.home-hero .story-label{color:rgba(255,255,255,0.8)}
+/* Corps du hero */
+.home-hero-body{padding:4px 20px 20px}
+.home-hero-dayname{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.home-hero-greg{font-size:36px;font-weight:800;color:#fff;line-height:1.05;margin-bottom:4px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif}
+.home-hero-heb-fr{font-size:16px;color:#E8C870;font-weight:500;margin-bottom:14px}
+/* Chabbat dans le hero */
+.home-hero-shabbat{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px;border:1px solid rgba(201,168,76,0.2)}
+.hhs-icon{font-size:16px;flex-shrink:0}
+.hhs-text{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.4;font-weight:400}
+/* Bouton ajouter événement dans day sheet */
+.cds-add-btn{width:100%;margin-top:16px;padding:14px;background:#007AFF;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cds-add-btn:active{opacity:.8}
 
 /* ══════════════════════════════════════════════════
    CALENDRIER — style Apple Calendar, fond blanc
@@ -969,28 +978,7 @@ function getHomeBanners(){
     var heb=it.hebrew||'';
     html+='<div class="fete-banner"><div class="fn">'+emoji+' '+nameFr+'</div>'+(heb?'<div class="fh">'+heb+'</div>':'')+'</div>';
   });
-  if(candleTime||havdalaTime){
-    var candleDate=null,havdalaDate=null,city=uCity;
-    if(hebcalData&&hebcalData.items){
-      hebcalData.items.forEach(function(it){
-        if(it.category==='candles'&&it.date)candleDate=new Date(it.date);
-        if(it.category==='havdalah'&&it.date)havdalaDate=new Date(it.date);
-      });
-    }
-    if(hebcalData&&hebcalData.location)city=hebcalData.location.city||uCity;
-    var friStr=candleDate?candleDate.getDate()+' '+FR_M[candleDate.getMonth()]:'vendredi';
-    var satStr=havdalaDate?havdalaDate.getDate()+' '+FR_M[havdalaDate.getMonth()]:'samedi';
-    html+='<div class="card-shabbat">'
-      +'<div class="card-shabbat-top">'
-      +'<div class="card-shabbat-label">🕯 Chabbat Chalom</div>'
-      +'<div class="card-shabbat-dates">'+friStr+' → '+satStr+'</div>'
-      +'<div class="card-shabbat-city">📍 '+city+'</div>'
-      +'</div>'
-      +'<div class="card-shabbat-times">'
-      +(candleTime?'<div class="card-shabbat-time"><div class="sht-label">Allumage</div><div class="sht-day">vendredi</div><div class="sht-value">'+candleTime+'</div></div>':'')
-      +(havdalaTime?'<div class="card-shabbat-time"><div class="sht-label">Havdala</div><div class="sht-day">samedi</div><div class="sht-value">'+havdalaTime+'</div></div>':'')
-      +'</div></div>';
-  }
+  // Chabbat maintenant intégré dans le hero
   return html;
 }
 
@@ -1169,10 +1157,17 @@ function showDaySheet(d,hd,fts,evs){
   } else {
     html+='<div class="cds-empty">Aucun événement ce jour</div>';
   }
+  // Bouton ajouter événement
+  html+='<button class="cds-add-btn" onclick="closeDaySheet();scrollToAddEvent()">+ Ajouter un événement</button>';
   sheet.innerHTML=html;
   sheet.classList.add('open');
   var backdrop=document.getElementById('cal-sheet-backdrop');
   if(backdrop) backdrop.classList.add('visible');
+}
+
+function scrollToAddEvent(){
+  var el=document.getElementById('cal-addevent');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
@@ -1310,16 +1305,36 @@ function buildHome(){
   var dateHebHeb=hebDateHeb||'...';
   var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
   var dayName=FR_D[t.getDay()];
-  // ── HERO en haut ──
-  h+='<div class="home-hero">'
-    +'<div class="home-hero-greeting">'+dayName.toUpperCase()+' · תּוֹרָה וְחַיִּים</div>'
-    +'<div class="home-hero-date-heb">'+dateHebHeb+'</div>'
-    +'<div class="home-hero-date-greg">'+dateHebFrDisplay+' · '+gd+' '+FR_M[gm]+' '+gy+'</div>'
-    +'<div class="home-hero-bottom">'
-    +'<div class="home-hero-sefirat" id="hero-sefirat"></div>'
-    +'<button class="home-hero-cal-btn" onclick="openCal()">📅 Calendrier</button>'
-    +'</div></div>';
+
+  // ── HERO : stories + date + chabbat ──
+  h+='<div class="home-hero">';
+  // Stories en haut du hero
   h+='<div class="story-bar" id="story-bar"></div>';
+  // Date principale
+  h+='<div class="home-hero-body">'
+    +'<div class="home-hero-dayname">'+dayName+'</div>'
+    +'<div class="home-hero-greg">'+gd+' '+FR_M[gm]+' '+gy+'</div>'
+    +'<div class="home-hero-heb-fr">'+dateHebFrDisplay+'</div>';
+  // Chabbat intégré si disponible
+  if(candleTime||havdalaTime){
+    var candleDate=null,havdalaDate=null;
+    if(hebcalData&&hebcalData.items){
+      hebcalData.items.forEach(function(it){
+        if(it.category==='candles'&&it.date)candleDate=new Date(it.date);
+        if(it.category==='havdalah'&&it.date)havdalaDate=new Date(it.date);
+      });
+    }
+    var friStr2=candleDate?candleDate.getDate()+' '+FR_M[candleDate.getMonth()]:'';
+    var satStr2=havdalaDate?havdalaDate.getDate()+' '+FR_M[havdalaDate.getMonth()]:'';
+    h+='<div class="home-hero-shabbat">'
+      +'<span class="hhs-icon">🕯</span>'
+      +'<span class="hhs-text">Chabbat'+(friStr2?' '+friStr2:'')+(satStr2?'–'+satStr2:'')
+      +(candleTime?' · Allumage '+candleTime:'')
+      +(havdalaTime?' · Havdala '+havdalaTime:'')
+      +'</span>'
+      +'</div>';
+  }
+  h+='</div></div>';
   h+='<div class="feed">';
 
   // Paracha banner — utilise currentCID ET currentParashaName (tous deux de Hebcal)
