@@ -213,6 +213,34 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
 .cf-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:12px;color:#C9A84C;direction:rtl;margin-top:2px}
 .cf-date{font-size:13px;color:#8E8E93;font-weight:500;white-space:nowrap;flex-shrink:0}
 .cf-loading{padding:20px;text-align:center;color:#8E8E93;font-size:14px}
+
+/* ── DAY SHEET (popup jour sélectionné) ── */
+#cal-day-sheet{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#fff;border-radius:24px 24px 0 0;padding:12px 20px 40px;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);box-shadow:0 -4px 24px rgba(0,0,0,0.12);max-height:70vh;overflow-y:auto}
+#cal-day-sheet.open{transform:translateY(0)}
+.cds-handle{width:36px;height:4px;background:#D1D1D6;border-radius:2px;margin:0 auto 16px}
+.cds-date{font-size:17px;font-weight:700;color:#1C1C1E;margin-bottom:2px}
+.cds-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;color:#C9A84C;direction:rtl;text-align:right;margin-bottom:16px}
+.cds-section-title{font-size:12px;font-weight:600;color:#8E8E93;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.cds-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid #F2F2F7}
+.cds-item:last-child{border-bottom:none}
+.cds-item-emoji{font-size:24px;width:42px;height:42px;background:#F9F3E8;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cds-item-name{font-size:16px;font-weight:600;color:#1C1C1E}
+.cds-item-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:#C9A84C;direction:rtl;margin-top:2px}
+.cds-empty{text-align:center;padding:20px;color:#8E8E93;font-size:15px}
+#cal-sheet-backdrop{position:fixed;inset:0;z-index:399;background:rgba(0,0,0,0.3);display:none}
+#cal-sheet-backdrop.visible{display:block}
+
+/* ── HEADER HOME amélioré ── */
+#view-home .story-bar{padding:12px 16px 4px}
+.home-hero{background:linear-gradient(160deg,#0a1628 0%,#1a3a6b 50%,#c97c1a 100%);padding:52px 20px 24px;margin-bottom:0;position:relative;overflow:hidden}
+.home-hero::before{content:'תּוֹרָה';position:absolute;right:-10px;top:10px;font-family:'Noto Sans Hebrew',sans-serif;font-size:120px;color:rgba(255,255,255,0.04);font-weight:700;line-height:1;pointer-events:none}
+.home-hero-greeting{font-size:13px;color:rgba(255,255,255,0.6);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.home-hero-date-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:26px;font-weight:700;color:#E8C870;direction:rtl;text-align:right;line-height:1.2;margin-bottom:4px}
+.home-hero-date-greg{font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:16px}
+.home-hero-bottom{display:flex;align-items:center;justify-content:space-between}
+.home-hero-sefirat{font-size:13px;color:rgba(255,255,255,0.8);font-style:italic}
+.home-hero-cal-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:6px}
+
 /* ══════════════════════════════════════════════════
    CALENDRIER — style Apple Calendar, fond blanc
    ══════════════════════════════════════════════════ */
@@ -335,11 +363,6 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
  </div>
  <!-- Grille -->
  <div id="cal-body"></div>
- <!-- Prochaines fêtes -->
- <div id="cal-fetes-panel">
-  <div class="cfp-title">Prochaines fêtes</div>
-  <div id="cal-fetes-list"></div>
- </div>
  <!-- Utilitaires -->
  <div id="cal-utils">
   <div class="cu-section">
@@ -369,7 +392,11 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
    <div id="events-list"></div>
   </div>
  </div>
-</div>
+ <!-- Prochaines fêtes -->
+ <div id="cal-fetes-panel">
+  <div class="cfp-title">Prochaines fêtes</div>
+  <div id="cal-fetes-list"></div>
+ </div>
 <div id="view-home"></div>
 
 <!-- HAYOM YOM -->
@@ -948,7 +975,16 @@ function getHomeBanners(){
     if(hebcalData&&hebcalData.location)city=hebcalData.location.city||uCity;
     var friStr=candleDate?candleDate.getDate()+' '+FR_M[candleDate.getMonth()]:'vendredi';
     var satStr=havdalaDate?havdalaDate.getDate()+' '+FR_M[havdalaDate.getMonth()]:'samedi';
-    html+='<div class="shabbat-banner"><div class="shabbat-icon">🕯</div><div class="shabbat-info"><div class="shabbat-title">Chabbat · '+friStr+' – '+satStr+' · '+city+'</div><div class="shabbat-times">'+(candleTime?'Allumage <span>vendredi</span> '+candleTime:'')+(candleTime&&havdalaTime?' &nbsp;|&nbsp; ':'')+(havdalaTime?'Havdala <span>samedi</span> '+havdalaTime:'')+'</div></div></div>';
+    html+='<div class="card-shabbat">'
+      +'<div class="card-shabbat-top">'
+      +'<div class="card-shabbat-label">🕯 Chabbat Chalom</div>'
+      +'<div class="card-shabbat-dates">'+friStr+' → '+satStr+'</div>'
+      +'<div class="card-shabbat-city">📍 '+city+'</div>'
+      +'</div>'
+      +'<div class="card-shabbat-times">'
+      +(candleTime?'<div class="card-shabbat-time"><div class="sht-label">Allumage</div><div class="sht-day">vendredi</div><div class="sht-value">'+candleTime+'</div></div>':'')
+      +(havdalaTime?'<div class="card-shabbat-time"><div class="sht-label">Havdala</div><div class="sht-day">samedi</div><div class="sht-value">'+havdalaTime+'</div></div>':'')
+      +'</div></div>';
   }
   return html;
 }
@@ -987,6 +1023,13 @@ function openCal(){
 
 function closeCal(){
   document.getElementById('cal-overlay').classList.remove('open');
+  closeDaySheet();
+}
+function closeDaySheet(){
+  var sheet=document.getElementById('cal-day-sheet');
+  var backdrop=document.getElementById('cal-sheet-backdrop');
+  if(sheet) sheet.classList.remove('open');
+  if(backdrop) backdrop.classList.remove('visible');
 }
 
 function calMove(dir){
@@ -1086,24 +1129,45 @@ function calDayClick(d){
   calSel={d:d,m:calM,y:calY};
   updateCalDateBar(new Date(calY,calM,d));
   updEvDisp();
+  renderCalGrid(); // re-render pour mettre à jour la sélection
   var hd=g2h(d,calM,calY);
   var isoDay=calY+'-'+pad2(calM+1)+'-'+pad2(d);
   var fts=getFetesOnISO(isoDay);
   var evs=getEvOnDay(d,calM,calY,hd);
-  var el=document.getElementById('cal-dayinfo');
-  var ct=document.getElementById('cal-dayinfo-content');
+  showDaySheet(d,hd,fts,evs);
+}
+
+function showDaySheet(d,hd,fts,evs){
+  var sheet=document.getElementById('cal-day-sheet');
+  if(!sheet) return;
+  var dateStr=FR_D[new Date(calY,calM,d).getDay()]+' '+d+' '+FR_M[calM]+' '+calY;
+  var hebStr=fmtHebFr(hd);
+  var html='<div class="cds-handle"></div>'
+    +'<div class="cds-date">'+dateStr+'</div>'
+    +'<div class="cds-heb">'+hebStr+'</div>';
   if(fts.length||evs.length){
-    var html='';
+    html+='<div class="cds-section-title">Événements</div>';
     fts.forEach(function(f){
-      var nameFr=feteNameFr(f.title);
-      var emoji=getFeteEmoji(f.title);
-      var heb=f.hebrew||'';
-      html+='<div style="margin-bottom:8px"><div style="font-size:15px;color:#e8c870;font-family:Frank Ruhl Libre,serif;font-weight:bold">'+emoji+' '+nameFr+'</div>'+(heb?'<div style="font-family:Noto Sans Hebrew,sans-serif;font-size:13px;color:#c9a84c;direction:rtl">'+heb+'</div>':'')+'</div>';
+      html+='<div class="cds-item">'
+        +'<div class="cds-item-emoji">'+getFeteEmoji(f.title)+'</div>'
+        +'<div class="cds-item-body">'
+        +'<div class="cds-item-name">'+feteNameFr(f.title)+'</div>'
+        +(f.hebrew?'<div class="cds-item-heb">'+f.hebrew+'</div>':'')
+        +'</div></div>';
     });
-    evs.forEach(function(ev){html+='<div style="font-size:14px;color:#e8c870">🎂 '+ev.name+'</div>';});
-    ct.innerHTML=html;el.style.display='block';
-  } else {el.style.display='none';}
-  document.getElementById('cal-addevent').scrollIntoView({behavior:'smooth'});
+    evs.forEach(function(ev){
+      html+='<div class="cds-item">'
+        +'<div class="cds-item-emoji">🎂</div>'
+        +'<div class="cds-item-body"><div class="cds-item-name">'+ev.name+'</div></div>'
+        +'</div>';
+    });
+  } else {
+    html+='<div class="cds-empty">Aucun événement ce jour</div>';
+  }
+  sheet.innerHTML=html;
+  sheet.classList.add('open');
+  var backdrop=document.getElementById('cal-sheet-backdrop');
+  if(backdrop) backdrop.classList.add('visible');
 }
 function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
@@ -1240,17 +1304,18 @@ function buildHome(){
 
   var dateHebHeb=hebDateHeb||'...';
   var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
-  // Story bar + date card
+  var dayName=FR_D[t.getDay()];
+  // ── HERO en haut ──
+  h+='<div class="home-hero">'
+    +'<div class="home-hero-greeting">'+dayName.toUpperCase()+' · תּוֹרָה וְחַיִּים</div>'
+    +'<div class="home-hero-date-heb">'+dateHebHeb+'</div>'
+    +'<div class="home-hero-date-greg">'+dateHebFrDisplay+' · '+gd+' '+FR_M[gm]+' '+gy+'</div>'
+    +'<div class="home-hero-bottom">'
+    +'<div class="home-hero-sefirat" id="hero-sefirat"></div>'
+    +'<button class="home-hero-cal-btn" onclick="openCal()">📅 Calendrier</button>'
+    +'</div></div>';
   h+='<div class="story-bar" id="story-bar"></div>';
   h+='<div class="feed">';
-  h+='<div class="card-date" onclick="openCal()">'
-    +'<div class="card-date-icon">📅</div>'
-    +'<div class="card-date-body">'
-    +'<div class="card-date-heb">'+dateHebHeb+'</div>'
-    +'<div class="card-date-greg">'+dateHebFrDisplay+' · '+FR_D[t.getDay()]+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
-    +'</div>'
-    +'<div class="card-date-arrow">›</div>'
-    +'</div>';
 
   // Paracha banner — utilise currentCID ET currentParashaName (tous deux de Hebcal)
   var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
@@ -1319,12 +1384,12 @@ function buildHome(){
 }
 
 function togglePS(){
-  var body=document.querySelector('.psection-body');
-  var arrow=document.querySelector('.psection-arrow');
+  var body=document.querySelector('.pl-body');
+  var arrow=document.querySelector('.pl-arrow');
   if(!body)return;
   var isOpen=body.classList.contains('open');
   body.classList.toggle('open',!isOpen);
-  arrow.classList.toggle('open',!isOpen);
+  if(arrow) arrow.classList.toggle('open',!isOpen);
   try{localStorage.setItem('ps_open',isOpen?'0':'1');}catch(e){}
 }
 
