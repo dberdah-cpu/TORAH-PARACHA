@@ -164,8 +164,21 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
 .bilingual-verse:last-child{border-bottom:none}
 .bv-num{font-size:11px;font-weight:700;color:#C9A84C;letter-spacing:1px}
 .bv-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;line-height:1.85;direction:rtl;text-align:right;color:#1C1C1E;font-weight:400}
-.bv-fr{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;font-size:14px;line-height:1.65;color:#3C3C43;padding:8px 14px;background:#F9F9FB;border-radius:10px;border-left:3px solid #C9A84C}
-.bv-fr.loading{color:#8E8E93;font-style:italic}
+.bv-en{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;font-size:14px;line-height:1.65;color:#3C3C43;padding:8px 14px;background:#F9F9FB;border-radius:10px}
+.bv-fr{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;font-size:14px;line-height:1.65;color:#1C5A1C;padding:8px 14px;background:#F0F8F0;border-radius:10px;border-left:3px solid #34C759;display:none}
+.bv-fr.visible{display:block}
+.bv-fr.loading{color:#8E8E93;font-style:italic;display:block}
+/* Bouton traduire — barre fixe en bas */
+#translate-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,0.08);padding:12px 20px 24px;display:none;align-items:center;justify-content:space-between;gap:12px}
+#translate-bar.visible{display:flex}
+#translate-bar-left{display:flex;flex-direction:column}
+#translate-bar-info{font-size:12px;color:#8E8E93;margin-bottom:2px}
+#translate-bar-lang{font-size:14px;font-weight:600;color:#1C1C1E}
+#translate-btn{display:flex;align-items:center;gap:8px;background:#007AFF;color:#fff;border:none;padding:12px 20px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+#translate-btn:active{opacity:.8}
+#translate-btn.done{background:#34C759}
+#translate-btn svg{flex-shrink:0}
+#translate-lang-sel{background:#F2F2F7;border:none;color:#1C1C1E;font-size:14px;font-weight:500;padding:8px 12px;border-radius:10px;-webkit-appearance:none;cursor:pointer}
 .sefaria-credit{text-align:center;font-size:11px;color:#8E8E93;padding:16px 0 4px;letter-spacing:0.5px}
 
 .sumblock{font-size:16px;line-height:1.9;color:#1C1C1E}
@@ -360,6 +373,28 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
 <div id="view-home"></div>
 
 <!-- HAYOM YOM -->
+<!-- Barre de traduction fixe en bas -->
+<div id="translate-bar">
+  <div id="translate-bar-left">
+    <div id="translate-bar-info">Texte en anglais · Choisir la langue</div>
+    <select id="translate-lang-sel" onchange="setTranslateLang(this.value)">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="es">🇪🇸 Espagnol</option>
+      <option value="de">🇩🇪 Allemand</option>
+      <option value="he">🇮🇱 Hébreu</option>
+      <option value="it">🇮🇹 Italien</option>
+      <option value="pt">🇵🇹 Portugais</option>
+    </select>
+  </div>
+  <button id="translate-btn" onclick="doTranslatePage()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0">
+      <path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/>
+      <path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/>
+    </svg>
+    Traduire
+  </button>
+</div>
+
 <div id="view-hayom">
   <div class="hyd-header">
     <div class="hyd-icon">☀️</div>
@@ -1299,6 +1334,8 @@ function goHome(){
   document.getElementById('view-hayom').style.display='none';
   document.getElementById('view-sefer').style.display='none';
   document.getElementById('btn-back').style.display='none';
+  var bar=document.getElementById('translate-bar');
+  if(bar) bar.classList.remove('visible');
   window.scrollTo(0,0);
 }
 
@@ -1865,6 +1902,23 @@ function renderSefer(d){
 // ── VUE BILINGUE hébreu + français verset par verset ─────────────────────────
 var bilingualVerses=[]; // cache des versets pour mise à jour progressive
 
+// Stockage des versets EN pour traduction à la demande
+var enVersesCache=[];
+var currentTranslateLang='fr';
+var translateDone=false;
+
+function setTranslateLang(lang){
+  currentTranslateLang=lang;
+  translateDone=false;
+  // Reset traductions déjà faites
+  document.querySelectorAll('.bv-fr').forEach(function(el){
+    el.classList.remove('visible');
+    el.textContent='';
+  });
+  var btn=document.getElementById('translate-btn');
+  if(btn){btn.className='translate-btn';btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg> Traduire';}
+}
+
 function renderBilingualHebrew(heVerses){
   bilingualVerses=[];
   var html='';
@@ -1873,25 +1927,105 @@ function renderBilingualHebrew(heVerses){
     if(!clean) return;
     bilingualVerses.push({n:i+1,he:clean,fr:''});
     html+='<div class="bilingual-verse" id="bv-'+(i+1)+'">'
-         +'<div class="bv-num">'+toHN(i+1)+'</div>'
-         +'<div class="bv-heb">'+clean+'</div>'
-         +'<div class="bv-fr loading" id="bv-fr-'+(i+1)+'">Traduction en cours…</div>'
-         +'</div>';
+      +'<div class="bv-num">'+toHN(i+1)+'</div>'
+      +'<div class="bv-heb">'+clean+'</div>'
+      +'<div class="bv-en" id="bv-en-'+(i+1)+'"></div>'
+      +'<div class="bv-fr" id="bv-fr-'+(i+1)+'"></div>'
+      +'</div>';
   });
   var el=document.getElementById('d-bilingual');
   if(el) el.innerHTML=html||'<div class="loading-txt">Texte non disponible</div>';
 }
 
+function renderBilingualEn(enVerses){
+  enVersesCache=enVerses;
+  translateDone=false;
+  enVerses.forEach(function(en,i){
+    var el=document.getElementById('bv-en-'+(i+1));
+    if(el) el.textContent=(en||'').replace(/<[^>]+>/g,'').trim();
+  });
+  // Montrer la barre de traduction
+  var bar=document.getElementById('translate-bar');
+  if(bar) bar.classList.add('visible');
+}
+
 function renderBilingualFr(frVerses){
   frVerses.forEach(function(fr,i){
-    var n=i+1;
-    var el=document.getElementById('bv-fr-'+n);
-    if(el){
-      var txt=(fr||'').trim();
-      el.textContent=txt||'';
-      el.className='bv-fr'+(txt?'':' loading');
+    var el=document.getElementById('bv-fr-'+(i+1));
+    if(el&&fr){
+      el.textContent=fr.trim();
+      el.classList.add('visible');
     }
   });
+}
+
+function doTranslatePage(){
+  if(!enVersesCache.length) return;
+  var btn=document.getElementById('translate-btn');
+  if(btn){btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg> Traduction…';btn.disabled=true;}
+  // Afficher loading sur tous les versets
+  enVersesCache.forEach(function(v,i){
+    var el=document.getElementById('bv-fr-'+(i+1));
+    if(el){el.textContent='…';el.className='bv-fr loading';}
+  });
+  var lang=currentTranslateLang||'fr';
+  translateVerses(enVersesCache,lang,function(results){
+    results.forEach(function(fr,i){
+      var el=document.getElementById('bv-fr-'+(i+1));
+      if(el){
+        el.textContent=(fr||enVersesCache[i]||'').trim();
+        el.className='bv-fr visible';
+      }
+    });
+    translateDone=true;
+    if(btn){btn.innerHTML='✓ Traduit en '+lang.toUpperCase();btn.className='translate-btn done';btn.disabled=false;}
+  });
+}
+
+function translateVerses(verses,lang,cb){
+  var clean=verses.map(function(v){return(v||'').replace(/<[^>]+>/g,'').trim();});
+  var results=new Array(clean.length).fill('');
+  var done=0;
+  function finish(i,txt){results[i]=txt;done++;if(done===clean.length)cb(results);}
+
+  // Google Translate API gratuite (pas de clé, via endpoint non officiel)
+  // Regrouper en 1 seul appel par bloc de 5 versets pour réduire les requêtes
+  var BATCH=5;
+  var pending=0;
+  for(var start=0;start<clean.length;start+=BATCH){
+    (function(s){
+      var batch=clean.slice(s,s+BATCH);
+      var combined=batch.join('\n|||SPLIT|||\n');
+      setTimeout(function(){
+        var url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl='+lang+'&dt=t&q='+encodeURIComponent(combined);
+        fetch(url)
+          .then(function(r){return r.json();})
+          .then(function(d){
+            // Parser la réponse Google
+            var translated='';
+            if(d&&d[0]){d[0].forEach(function(part){if(part&&part[0])translated+=part[0];});}
+            var parts=translated.split('|||SPLIT|||');
+            batch.forEach(function(v,j){
+              finish(s+j,(parts[j]||'').trim()||v);
+            });
+          })
+          .catch(function(){
+            // Fallback MyMemory verset par verset
+            batch.forEach(function(v,j){
+              var q=encodeURIComponent(v.substring(0,490));
+              fetch('https://api.mymemory.translated.net/get?q='+q+'&langpair=en|'+lang)
+                .then(function(r2){return r2.json();})
+                .then(function(d2){
+                  var tr=(d2.responseData&&d2.responseData.translatedText)||v;
+                  finish(s+j,tr);
+                })
+                .catch(function(){finish(s+j,v);});
+            });
+          });
+      }, Math.floor(s/BATCH)*600); // 600ms entre chaque batch
+    })(start);
+  }
+  if(!clean.length) cb([]);
 }
 
 function openP(id){
@@ -1929,11 +2063,7 @@ function openP(id){
       allEn[i]=v||[];doneEn++;
       if(doneEn===parts.length){
         var enAll=[];allEn.forEach(function(a){enAll=enAll.concat(a);});
-        if(enAll.length){
-          translateToFr(enAll,function(frAll){
-            renderBilingualFr(frAll);
-          });
-        }
+        if(enAll.length) renderBilingualEn(enAll);
       }
     });
   });
