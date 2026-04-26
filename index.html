@@ -8,377 +8,579 @@
 <meta http-equiv="Expires" content="0">
 <title>Torah · Paracha</title>
 <!-- v202604241425 -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>/* ═══════════════════════════════════════════════════════
+   KEDOSHIM — Design System
+   Torah · Paracha · Inspiration
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Variables ── */
+:root{
+  --purple:#4F46E5;
+  --purple-2:#7C3AED;
+  --pink:#EC4899;
+  --orange:#F59E0B;
+  --green:#10BB81;
+  --white:#F8FAFC;
+  --dark:#0F172A;
+  --gray-1:#F1F5F9;
+  --gray-2:#E2E8F0;
+  --gray-3:#94A3B8;
+  --gray-4:#475569;
+  --text:#1E293B;
+  --grad-main:linear-gradient(135deg,var(--purple),var(--purple-2));
+  --grad-warm:linear-gradient(135deg,var(--purple-2),var(--pink));
+  --grad-hero:linear-gradient(160deg,#0F172A 0%,#1E1B4B 50%,#312E81 100%);
+  --radius:16px;
+  --radius-sm:10px;
+  --radius-lg:24px;
+  --shadow:0 2px 12px rgba(79,70,229,0.12);
+  --shadow-lg:0 8px 32px rgba(79,70,229,0.18);
+  --nav-h:72px;
+}
+
+/* ── Reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;font-size:16px;min-height:100vh;overscroll-behavior:none}
+body{
+  background:var(--gray-1);
+  color:var(--text);
+  font-family:'Poppins',sans-serif;
+  font-size:16px;
+  min-height:100vh;
+  overscroll-behavior:none;
+  padding-bottom:var(--nav-h);
+}
 
-/* ── HEADER ── */
-#hdr{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.08);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between}
-#hdr-title{font-size:13px;font-weight:600;letter-spacing:0.5px;color:#1C1C1E}
-#hdr-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;color:#C9A84C;font-weight:600}
-#btn-back{display:none;background:none;border:none;color:#007AFF;padding:6px 0;font-size:15px;font-weight:500;cursor:pointer;-webkit-appearance:none;letter-spacing:0}
+/* ── Header ── */
+#hdr{
+  position:sticky;top:0;z-index:200;
+  background:rgba(248,250,252,0.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--gray-2);
+  height:52px;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+#hdr-title{font-size:13px;font-weight:700;letter-spacing:0.5px;color:var(--dark);font-family:'Poppins',sans-serif}
+#hdr-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;color:var(--purple);font-weight:700}
+#btn-back{display:none;background:none;border:none;color:var(--purple);font-size:15px;font-weight:600;cursor:pointer;align-items:center;gap:4px;padding:6px 0}
 
-/* ── VIEWS ── */
-#view-home{padding:0 0 80px;max-width:600px;margin:0 auto}
-#view-detail,#view-hayom,#view-sefer{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
+/* ── Bottom Nav ── */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--gray-2);
+  height:var(--nav-h);
+  display:flex;align-items:flex-start;padding-top:10px;
+  box-shadow:0 -4px 20px rgba(15,23,42,0.06);
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  padding:2px 0;
+}
+.nav-item:active{opacity:.7}
+.nav-icon{
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;transition:background .15s;
+}
+.nav-item.active .nav-icon{background:rgba(79,70,229,0.12)}
+.nav-icon svg{width:20px;height:20px;stroke:var(--gray-3);stroke-width:1.8;fill:none;transition:stroke .15s}
+.nav-item.active .nav-icon svg{stroke:var(--purple)}
+.nav-label{font-size:10px;font-weight:500;color:var(--gray-3);transition:color .15s;font-family:'Poppins',sans-serif}
+.nav-item.active .nav-label{color:var(--purple);font-weight:700}
 
-/* ── STORY BAR — dates chabbat style Instagram stories ── */
-.story-bar{display:flex;gap:10px;overflow-x:auto;padding:16px 16px 8px;scrollbar-width:none}
+/* ── Views ── */
+#view-home{max-width:600px;margin:0 auto;padding-bottom:16px}
+#view-detail,#view-hayom,#view-sefer{display:none;max-width:600px;margin:0 auto;padding-bottom:40px}
+
+/* ── HOME HERO ── */
+.home-hero{
+  background:var(--grad-hero);
+  position:relative;overflow:hidden;
+}
+.home-hero::after{
+  content:'';position:absolute;
+  bottom:-60px;right:-60px;width:220px;height:220px;
+  border-radius:50%;background:rgba(79,70,229,0.15);pointer-events:none;
+}
+.home-hero::before{
+  content:'';position:absolute;
+  top:-40px;left:-40px;width:160px;height:160px;
+  border-radius:50%;background:rgba(124,58,237,0.1);pointer-events:none;
+}
+.home-hero .story-bar{padding:52px 16px 8px;background:transparent;position:relative;z-index:1}
+.home-hero-body{padding:4px 20px 24px;position:relative;z-index:1}
+.home-hero-dayname{font-size:11px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.home-hero-greg{font-size:34px;font-weight:700;color:#fff;line-height:1.05;margin-bottom:4px;font-family:'Poppins',sans-serif}
+.home-hero-heb-fr{font-size:15px;color:rgba(248,250,252,0.7);font-weight:500;margin-bottom:16px}
+.home-hero-shabbat{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--radius-sm);padding:10px 14px;
+  backdrop-filter:blur(8px);
+}
+.hhs-icon{font-size:16px;flex-shrink:0}
+.hhs-text{font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;font-weight:400}
+
+/* ── Story Bar ── */
+.story-bar{display:flex;gap:12px;overflow-x:auto;padding:16px 16px 8px;scrollbar-width:none}
 .story-bar::-webkit-scrollbar{display:none}
-.story-item{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.story-ring{width:58px;height:58px;border-radius:50%;padding:2.5px;background:linear-gradient(45deg,#F9CE34,#EE2A7B,#6228D7);position:relative}
-.story-ring.shabbat{background:linear-gradient(45deg,#C9A84C,#E8C870,#C9A84C)}
-.story-ring.fete{background:linear-gradient(45deg,#1a3a6b,#4a7fd4,#c97c1a)}
-.story-inner{width:100%;height:100%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px}
-.story-label{font-size:10px;color:#3C3C43;font-weight:500;max-width:62px;text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.story-item{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.story-ring{width:56px;height:56px;border-radius:50%;padding:2.5px;background:var(--grad-main);position:relative}
+.story-ring.shabbat{background:linear-gradient(45deg,var(--orange),#FCD34D)}
+.story-ring.fete{background:linear-gradient(45deg,var(--purple),var(--pink))}
+.story-inner{width:100%;height:100%;border-radius:50%;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:22px}
+.home-hero .story-inner{background:rgba(15,23,42,0.85)}
+.story-label{font-size:10px;color:rgba(255,255,255,0.75);font-weight:600;max-width:64px;text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Poppins',sans-serif}
 
-/* ── FEED CARDS ── */
-.feed{padding:8px 16px;display:flex;flex-direction:column;gap:12px}
+/* ── Feed ── */
+.feed{padding:16px;display:flex;flex-direction:column;gap:14px}
 
-.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.card:active{transform:scale(0.98);transition:transform .1s}
+/* ── Card base ── */
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card:active{transform:scale(0.99);transition:transform .1s}
 
-/* Carte date hébraïque */
-.card-date{background:#fff;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);cursor:pointer}
-.card-date-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#1C1C1E,#3A3A3C);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.card-date-body{flex:1}
-.card-date-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;font-weight:600;color:#1C1C1E;direction:rtl;text-align:right;line-height:1.3}
-.card-date-greg{font-size:13px;color:#6E6E73;margin-top:2px;font-weight:400}
-.card-date-arrow{color:#C7C7CC;font-size:18px;font-weight:300}
-
-/* Carte Shabbat */
-.card-shabbat{border-radius:18px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);background:#fff;cursor:pointer}
-.card-shabbat-top{background:linear-gradient(135deg,#1C1C1E 0%,#2C2C2E 100%);padding:18px 18px 14px;position:relative}
-.card-shabbat-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-bottom:6px}
-.card-shabbat-dates{font-size:16px;font-weight:600;color:#fff}
-.card-shabbat-city{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px}
-.card-shabbat-times{display:flex;padding:12px 18px;gap:0;background:#fff}
-.card-shabbat-time{flex:1;text-align:center;padding:6px 0}
-.card-shabbat-time:first-child{border-right:1px solid #F2F2F7}
-.sht-label{font-size:11px;color:#8E8E93;font-weight:500;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px}
-.sht-day{font-size:12px;color:#8E8E93;margin-bottom:1px}
-.sht-value{font-size:22px;font-weight:700;color:#1C1C1E}
-
-/* Carte Paracha — hero card */
-.card-paracha{border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.12);cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent}
+/* ── Paracha Card ── */
+.card-paracha{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .card-paracha:active{opacity:.92;transform:scale(0.99)}
-.card-paracha-bg{background:linear-gradient(160deg,#0F2B6B 0%,#1a4498 40%,#B8690A 100%);padding:22px 20px 20px;position:relative;overflow:hidden}
-.card-paracha-bg::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.04)}
-.card-paracha-bg::after{content:'';position:absolute;bottom:-30px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(201,168,76,0.08)}
-.cp-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:8px}
-.cp-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:28px;font-weight:700;color:#fff;direction:rtl;line-height:1.3;margin-bottom:4px}
-.cp-name{font-size:22px;font-weight:700;color:rgba(255,255,255,0.95);margin-bottom:4px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif}
-.cp-book{font-size:13px;color:rgba(255,255,255,0.55);font-style:italic}
-.cp-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:600}
+.card-paracha-bg{
+  background:linear-gradient(160deg,#0F172A 0%,#312E81 50%,#7C3AED 100%);
+  padding:22px 20px 20px;position:relative;overflow:hidden;
+}
+.card-paracha-bg::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(124,58,237,0.2)}
+.card-paracha-bg::after{content:'';position:absolute;bottom:-30px;left:-20px;width:100px;height:100px;border-radius:50%;background:rgba(79,70,229,0.15)}
+.cp-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px}
+.cp-hook{font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;font-style:italic}
+.cp-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:26px;font-weight:700;color:#fff;direction:rtl;line-height:1.3;margin-bottom:4px;position:relative;z-index:1}
+.cp-name{font-size:20px;font-weight:700;color:rgba(255,255,255,0.95);margin-bottom:4px;font-family:'Poppins',sans-serif;position:relative;z-index:1}
+.cp-book{font-size:12px;color:rgba(255,255,255,0.45);font-style:italic;position:relative;z-index:1}
+.cp-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700}
+.cp-brief{padding:16px 18px;background:#fff;border-top:1px solid var(--gray-2)}
+.cp-brief-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-3);margin-bottom:6px}
+.cp-brief-text{font-size:14px;color:var(--gray-4);line-height:1.6}
+.cp-brief-link{font-size:13px;color:var(--purple);font-weight:600;margin-top:8px;display:inline-block;cursor:pointer}
 
-/* Deux cartes côte à côte : Hayom Yom + Sefer */
-.card-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card-study{border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08);-webkit-tap-highlight-color:transparent;position:relative}
-.card-study:active{transform:scale(0.97)}
+/* ── Duo Cards ── */
+.card-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card-study{border-radius:var(--radius);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);-webkit-tap-highlight-color:transparent}
+.card-study:active{transform:scale(0.97);transition:transform .1s}
 .card-study-inner{padding:18px 16px 16px}
 .cs-icon{font-size:28px;margin-bottom:10px;display:block}
-.cs-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.2}
-.cs-sub{font-size:12px;color:rgba(255,255,255,0.75);line-height:1.4}
-.card-study.hayom{background:linear-gradient(145deg,#D4720A,#F0901A)}
-.card-study.sefer{background:linear-gradient(145deg,#5B2D8E,#7B4FBE)}
+.cs-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.2;font-family:'Poppins',sans-serif}
+.cs-sub{font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;font-style:italic}
+.card-study.hayom{background:linear-gradient(145deg,#F59E0B,#FBBF24)}
+.card-study.sefer{background:linear-gradient(145deg,var(--purple),var(--purple-2))}
+.card-study.hayom .cs-title{color:var(--dark)}
+.card-study.hayom .cs-sub{color:rgba(15,23,42,0.65)}
 
-/* Carte verset */
-.card-verset{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.card-verset-top{background:linear-gradient(135deg,#F9F3E8,#FDF8EF);padding:16px 18px 12px;border-bottom:1px solid #F2F2F7}
-.cv-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px}
-.cv-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;direction:rtl;text-align:right;line-height:1.8;color:#1C1C1E;font-weight:500}
+/* ── Verset Card ── */
+.card-verset{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-verset-top{background:linear-gradient(135deg,#FFF7ED,#FFFBF0);padding:16px 18px 12px;border-bottom:1px solid var(--gray-2)}
+.cv-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.cv-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;direction:rtl;text-align:right;line-height:1.9;color:var(--dark);font-weight:500}
 .card-verset-bot{padding:12px 18px}
-.cv-fr{font-size:14px;color:#3C3C43;font-style:italic;line-height:1.6}
-.cv-ref{font-size:12px;color:#8E8E93;margin-top:6px;font-weight:500}
+.cv-fr{font-size:14px;color:var(--gray-4);font-style:italic;line-height:1.7}
+.cv-ref{font-size:12px;color:var(--gray-3);margin-top:6px;font-weight:600}
 
-/* Carte liste parashot */
-.card-paralist{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.pl-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.pl-header:active{background:#F9F9F9}
-.pl-title{font-size:15px;font-weight:600;color:#1C1C1E}
-.pl-count{font-size:13px;color:#8E8E93}
-.pl-arrow{color:#C7C7CC;font-size:18px;transition:transform .25s}
+/* ── Fêtes Card ── */
+.card-fetes{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.cf-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px}
+.cf-title{font-size:14px;font-weight:700;color:var(--dark)}
+.cf-see-all{font-size:13px;color:var(--purple);font-weight:600;cursor:pointer}
+.cf-list{padding:0 18px 16px;display:flex;flex-direction:column}
+.cf-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--gray-2);cursor:pointer}
+.cf-item:last-child{border-bottom:none}
+.cf-dot-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--gray-1)}
+.cf-dot-wrap.major{background:linear-gradient(135deg,#FFF7ED,#FEF3C7)}
+.cf-body{flex:1;min-width:0}
+.cf-name{font-size:14px;font-weight:600;color:var(--dark);line-height:1.2}
+.cf-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:11px;color:var(--orange);direction:rtl;margin-top:2px}
+.cf-date{font-size:13px;color:var(--gray-3);font-weight:600;white-space:nowrap;flex-shrink:0}
+.cf-loading{padding:20px;text-align:center;color:var(--gray-3);font-size:14px}
+
+/* ── Parashiot list ── */
+.card-paralist{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.pl-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pl-header:active{background:var(--gray-1)}
+.pl-title{font-size:15px;font-weight:700;color:var(--dark)}
+.pl-count{font-size:12px;color:var(--gray-3);font-weight:500}
+.pl-arrow{color:var(--gray-3);font-size:16px;transition:transform .25s}
 .pl-arrow.open{transform:rotate(90deg)}
-.pl-body{display:none;padding:0 18px 16px;border-top:1px solid #F2F2F7}
+.pl-body{display:none;padding:0 18px 16px;border-top:1px solid var(--gray-2)}
 .pl-body.open{display:block}
-.pbook-name{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#8E8E93;padding:12px 0 6px;display:flex;align-items:center;gap:8px}
-.pbook-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;letter-spacing:0;color:#C9A84C}
-.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#F2F2F7;border-radius:10px;overflow:hidden;margin-bottom:4px}
+.pbook-name{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-3);padding:12px 0 6px;display:flex;align-items:center;gap:8px}
+.pbook-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;letter-spacing:0;color:var(--purple)}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--gray-2);border-radius:10px;overflow:hidden;margin-bottom:4px}
 .pcard{background:#fff;padding:10px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.pcard:active{background:#F9F9F9}
-.pcard.cur{background:#F0F8FF}
-.pcard.cur .pname{color:#007AFF}
-.pnum{font-size:9px;color:#C7C7CC;font-weight:600;letter-spacing:1px;margin-bottom:2px}
-.pname{font-size:13px;font-weight:600;color:#1C1C1E;line-height:1.2}
-.pheb{font-family:'Noto Sans Hebrew',sans-serif;font-size:11px;color:#8E8E93;direction:rtl;margin-top:2px}
-.pcard.cur .pheb{color:#007AFF}
+.pcard:active{background:var(--gray-1)}
+.pcard.cur{background:#EEF2FF}
+.pcard.cur .pname{color:var(--purple)}
+.pnum{font-size:9px;color:var(--gray-3);font-weight:700;letter-spacing:1px;margin-bottom:2px}
+.pname{font-size:13px;font-weight:600;color:var(--text);line-height:1.2}
+.pheb{font-family:'Noto Sans Hebrew',sans-serif;font-size:11px;color:var(--gray-3);direction:rtl;margin-top:2px}
+.pcard.cur .pheb{color:var(--purple)}
 
-/* Bannières fêtes */
-.fete-banner{background:linear-gradient(135deg,#1a3a6b,#2d5aa0);padding:14px 18px;border-radius:18px;margin-bottom:0;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+/* ── Fête Banners ── */
+.fete-banner{background:linear-gradient(135deg,var(--purple),var(--purple-2));padding:14px 18px;border-radius:var(--radius);box-shadow:var(--shadow)}
 .fete-banner .fn{font-size:16px;font-weight:700;color:#fff}
-.fete-banner .fh{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;direction:rtl;color:#C9A84C;margin-top:3px}
-.bday-banner{background:#C9A84C;padding:12px 18px;border-radius:18px;font-weight:700;color:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.fete-banner .fh{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;direction:rtl;color:rgba(255,255,255,0.7);margin-top:3px}
+.bday-banner{background:var(--orange);padding:12px 18px;border-radius:var(--radius);font-weight:700;color:var(--dark);box-shadow:var(--shadow)}
 
-/* ── HAYOM YOM / SEFER — pages détail ── */
-.detail-hero{padding:56px 20px 24px;background:linear-gradient(160deg,#D4720A,#F0901A);position:relative}
-.detail-hero.sefer{background:linear-gradient(160deg,#5B2D8E,#7B4FBE)}
-.detail-hero-icon{font-size:36px;margin-bottom:10px}
-.detail-hero-title{font-size:28px;font-weight:700;color:#fff}
-.detail-hero-sub{font-size:14px;color:rgba(255,255,255,0.75);margin-top:4px}
-.detail-hero-date{font-size:12px;color:rgba(255,255,255,0.6);margin-top:8px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
-.detail-body{padding:20px 20px 40px}
-.hyd-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;color:#1C1C1E;direction:rtl;text-align:right;line-height:2.0;background:#F9F3E8;padding:16px 18px;margin-bottom:16px;border-radius:14px;border-right:4px solid #C9A84C}
-.hyd-fr-block{background:#fff;border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;line-height:1.9;color:#1C1C1E;white-space:pre-line;margin-bottom:16px}
-.hyd-source{font-size:12px;color:#8E8E93;padding-top:12px;border-top:1px solid #F2F2F7;line-height:1.6}
-.hyd-source a{color:#007AFF;text-decoration:none}
-.mitsva-card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:12px}
-.mitsva-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px}
-.mitsva-badge.pos{background:#E8F5E9;color:#2E7D32}
-.mitsva-badge.neg{background:#FFEBEE;color:#C62828}
-.mitsva-num{font-size:12px;color:#8E8E93;font-weight:600;margin-bottom:6px;letter-spacing:0.5px}
-.mitsva-title{font-size:18px;font-weight:700;color:#1C1C1E;margin-bottom:8px;line-height:1.3}
-.mitsva-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;direction:rtl;text-align:right;color:#5a3800;background:#F9F3E8;padding:10px 14px;border-radius:10px;margin-bottom:10px;line-height:1.8}
-.mitsva-text{font-size:15px;color:#3C3C43;line-height:1.85}
-.mitsva-text p{margin-bottom:10px}
+/* ── DETAIL PAGES ── */
 
-/* ── PARACHA DÉTAIL ── */
+/* Paracha Detail */
 #view-detail{display:none}
-.detail-para-hero{padding:56px 20px 20px;background:linear-gradient(160deg,#0F2B6B,#1a4498 50%,#B8690A);position:relative;overflow:hidden}
-.detail-para-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.04)}
-.dph-book{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px}
-.dph-name{font-size:30px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:4px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif}
-.dph-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:22px;font-weight:700;color:#E8C870;direction:rtl;margin-bottom:6px}
-.dph-ref{font-size:13px;color:rgba(255,255,255,0.5)}
+.detail-para-hero{
+  padding:56px 20px 22px;
+  background:linear-gradient(160deg,#0F172A 0%,#1E1B4B 45%,#7C3AED 100%);
+  position:relative;overflow:hidden;
+}
+.detail-para-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(79,70,229,0.15)}
+.dph-book{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px}
+.dph-name{font-size:28px;font-weight:700;color:#fff;line-height:1.1;margin-bottom:4px;font-family:'Poppins',sans-serif}
+.dph-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;font-weight:700;color:#A5B4FC;direction:rtl;margin-bottom:6px}
+.dph-ref{font-size:12px;color:rgba(255,255,255,0.4)}
+.dph-hook{font-size:12px;color:rgba(255,255,255,0.45);margin-top:10px;font-style:italic}
 
-/* Onglets style iOS segment control */
-.seg-ctrl{display:flex;background:#F2F2F7;border-radius:10px;padding:2px;margin:16px 20px 20px;gap:2px}
-.seg-btn{flex:1;padding:8px 4px;border-radius:8px;border:none;background:transparent;font-size:12px;font-weight:600;color:#8E8E93;cursor:pointer;-webkit-appearance:none;transition:all .2s;letter-spacing:0.3px}
-.seg-btn.active{background:#fff;color:#1C1C1E;box-shadow:0 1px 3px rgba(0,0,0,0.12)}
+/* Hayom Yom + Sefer heroes */
+.detail-hero{
+  padding:56px 20px 24px;
+  background:linear-gradient(160deg,#78350F,#D97706,#F59E0B);
+  position:relative;overflow:hidden;
+}
+.detail-hero.sefer{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--purple-2))}
+.detail-hero-icon{font-size:36px;margin-bottom:10px;display:block}
+.detail-hero-title{font-size:26px;font-weight:700;color:#fff;font-family:'Poppins',sans-serif}
+.detail-hero-sub{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px;font-style:italic}
+.detail-hero-date{font-size:11px;color:rgba(255,255,255,0.55);margin-top:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.detail-body{padding:20px 20px 40px}
+
+/* Segment control */
+.seg-ctrl{
+  display:flex;background:var(--gray-2);
+  border-radius:12px;padding:3px;
+  margin:16px 20px 20px;gap:2px;
+}
+.seg-btn{
+  flex:1;padding:9px 4px;border-radius:10px;
+  border:none;background:transparent;
+  font-size:12px;font-weight:700;color:var(--gray-3);
+  cursor:pointer;-webkit-appearance:none;
+  transition:all .2s;letter-spacing:0.3px;
+  font-family:'Poppins',sans-serif;
+}
+.seg-btn.active{background:#fff;color:var(--purple);box-shadow:0 1px 4px rgba(79,70,229,0.15)}
 .tab-panel{display:none;padding:0 20px 40px}
 .tab-panel.active{display:block}
 
-/* Vue bilingue */
-.bilingual-verse{padding:16px 0;border-bottom:1px solid #F2F2F7;display:flex;flex-direction:column;gap:8px}
+/* Hayom Yom content */
+.hyd-heb{
+  font-family:'Noto Sans Hebrew',sans-serif;font-size:20px;
+  color:var(--dark);direction:rtl;text-align:right;line-height:2;
+  background:linear-gradient(135deg,#FFF7ED,#FFFBF0);
+  padding:16px 18px;margin-bottom:16px;
+  border-radius:var(--radius);border-right:4px solid var(--orange);
+}
+.hyd-fr-block{
+  background:#fff;border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);
+  font-size:15px;line-height:1.9;color:var(--text);
+  white-space:pre-line;margin-bottom:16px;
+}
+.hyd-source{font-size:12px;color:var(--gray-3);padding-top:12px;border-top:1px solid var(--gray-2);line-height:1.6}
+.hyd-source a{color:var(--purple);text-decoration:none;font-weight:500}
+
+/* Sefer content */
+.mitsva-card{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:12px}
+.mitsva-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;font-family:'Poppins',sans-serif}
+.mitsva-badge.pos{background:#DCFCE7;color:#15803D}
+.mitsva-badge.neg{background:#FEE2E2;color:#B91C1C}
+.mitsva-num{font-size:11px;color:var(--gray-3);font-weight:700;margin-bottom:6px;letter-spacing:1px}
+.mitsva-title{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:8px;line-height:1.3;font-family:'Poppins',sans-serif}
+.mitsva-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;direction:rtl;text-align:right;color:#4C1D95;background:#F5F3FF;padding:10px 14px;border-radius:10px;margin-bottom:10px;line-height:1.8}
+.mitsva-text{font-size:15px;color:var(--gray-4);line-height:1.85}
+.mitsva-text p{margin-bottom:10px}
+
+/* Bilingual text */
+.bilingual-verse{padding:16px 0;border-bottom:1px solid var(--gray-2);display:flex;flex-direction:column;gap:8px}
 .bilingual-verse:last-child{border-bottom:none}
-.bv-num{font-size:11px;font-weight:700;color:#C9A84C;letter-spacing:1px}
-.bv-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;line-height:1.85;direction:rtl;text-align:right;color:#1C1C1E;font-weight:400}
-.bv-en{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;font-size:14px;line-height:1.65;color:#3C3C43;padding:8px 14px;background:#F9F9FB;border-radius:10px}
-.bv-fr{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;font-size:14px;line-height:1.65;color:#1C5A1C;padding:8px 14px;background:#F0F8F0;border-radius:10px;border-left:3px solid #34C759;display:none}
+.bv-num{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:1px}
+.bv-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:19px;line-height:1.85;direction:rtl;text-align:right;color:var(--dark)}
+.bv-en{font-size:14px;line-height:1.65;color:var(--gray-4);background:var(--gray-1);border-radius:10px;padding:8px 14px}
+.bv-fr{font-size:14px;line-height:1.65;color:#14532D;background:#F0FDF4;border-radius:10px;border-left:3px solid var(--green);padding:8px 14px;display:none}
 .bv-fr.visible{display:block}
-.bv-fr.loading{color:#8E8E93;font-style:italic;display:block}
-/* Bouton traduire — barre fixe en bas */
-#translate-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(0,0,0,0.08);padding:12px 20px 24px;display:none;align-items:center;justify-content:space-between;gap:12px}
+.bv-fr.loading{color:var(--gray-3);font-style:italic;display:block}
+.sefaria-credit{text-align:center;font-size:11px;color:var(--gray-3);padding:16px 0 4px}
+
+/* Summary / Commentary */
+.sumblock{font-size:15px;line-height:1.9;color:var(--text)}
+.sumblock p{margin-bottom:14px}
+.sumblock strong{color:var(--purple);font-weight:700}
+.comblock{font-size:14px;line-height:1.85;color:var(--text)}
+.comblock p{margin-bottom:14px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.comblock strong{color:var(--purple);font-weight:700}
+.sources{display:block;font-size:11px;color:var(--gray-3);margin-top:12px;font-style:italic}
+
+/* ── Idée clé ── */
+.idee-cle{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;margin:14px 0;border-left:4px solid var(--purple)}
+.idee-cle-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:8px;display:flex;align-items:center;gap:4px;font-family:'Poppins',sans-serif}
+.idee-cle-text{font-size:14px;line-height:1.8;color:var(--text)}
+
+/* ── Translate bar ── */
+#translate-bar{
+  position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:150;
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--gray-2);
+  padding:12px 20px 14px;display:none;
+  align-items:center;justify-content:space-between;gap:12px;
+}
 #translate-bar.visible{display:flex}
 #translate-bar-left{display:flex;flex-direction:column}
-#translate-bar-info{font-size:12px;color:#8E8E93;margin-bottom:2px}
-#translate-bar-lang{font-size:14px;font-weight:600;color:#1C1C1E}
-#translate-btn{display:flex;align-items:center;gap:8px;background:#007AFF;color:#fff;border:none;padding:12px 20px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
-#translate-btn:active{opacity:.8}
-#translate-btn.done{background:#34C759}
-#translate-btn svg{flex-shrink:0}
-#translate-lang-sel{background:#F2F2F7;border:none;color:#1C1C1E;font-size:14px;font-weight:500;padding:8px 12px;border-radius:10px;-webkit-appearance:none;cursor:pointer}
-.sefaria-credit{text-align:center;font-size:11px;color:#8E8E93;padding:16px 0 4px;letter-spacing:0.5px}
+#translate-bar-info{font-size:11px;color:var(--gray-3);margin-bottom:3px;font-weight:500}
+#translate-lang-sel{background:var(--gray-1);border:1px solid var(--gray-2);color:var(--dark);font-size:13px;font-weight:600;padding:7px 12px;border-radius:10px;-webkit-appearance:none;cursor:pointer;font-family:'Poppins',sans-serif}
+#translate-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--grad-main);color:#fff;border:none;
+  padding:11px 20px;border-radius:12px;
+  font-size:14px;font-weight:700;cursor:pointer;
+  white-space:nowrap;font-family:'Poppins',sans-serif;
+}
+#translate-btn:active{opacity:.85}
+#translate-btn.done{background:linear-gradient(135deg,var(--green),#059669)}
 
-.sumblock{font-size:16px;line-height:1.9;color:#1C1C1E}
-.sumblock p{margin-bottom:14px}
-.sumblock strong{color:#5a3800;font-weight:700}
-.comblock{font-size:15px;line-height:1.85;color:#1C1C1E}
-.comblock p{margin-bottom:14px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-.comblock strong{color:#007AFF;font-weight:600}
+/* ── Shabbat Panel ── */
+#shabbat-panel{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:#fff;border-radius:24px 24px 0 0;
+  padding:12px 20px 40px;
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 -4px 40px rgba(15,23,42,0.15);
+  max-height:88vh;overflow-y:auto;
+}
+#shabbat-panel.open{transform:translateY(0)}
+#shabbat-backdrop{position:fixed;inset:0;z-index:499;background:rgba(15,23,42,0.4);display:none}
+#shabbat-backdrop.visible{display:block}
+.sp-handle{width:36px;height:4px;background:var(--gray-2);border-radius:2px;margin:0 auto 16px}
+.sp-hero{background:linear-gradient(160deg,#0F172A,#1E1B4B,#7C3AED);padding:20px;border-radius:var(--radius);margin-bottom:20px}
+.sp-label{font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:8px}
+.sp-paracha-name{font-size:24px;font-weight:700;color:#fff;font-family:'Poppins',sans-serif;line-height:1.1;margin-bottom:4px}
+.sp-paracha-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;color:#A5B4FC;direction:rtl;text-align:right}
+.sp-times-row{display:flex;gap:0;margin-top:16px;background:rgba(255,255,255,0.07);border-radius:12px;overflow:hidden}
+.sp-time-block{flex:1;padding:12px 16px;text-align:center}
+.sp-time-block:first-child{border-right:1px solid rgba(255,255,255,0.08)}
+.sp-time-label{font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.sp-time-day{font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:3px}
+.sp-time-val{font-size:22px;font-weight:700;color:#fff;font-family:'Poppins',sans-serif}
+.sp-body{padding:0}
+.sp-section{margin-bottom:20px}
+.sp-section-title{font-size:10px;font-weight:700;color:var(--gray-3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.sp-resume{font-size:14px;line-height:1.8;color:var(--text);background:var(--gray-1);border-radius:var(--radius);padding:14px 16px}
+.sp-phrase{font-size:16px;line-height:1.7;color:var(--dark);font-style:italic;border-left:3px solid var(--purple);padding-left:14px;margin-bottom:10px}
+.sp-conseil{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px;border:1px solid rgba(79,70,229,0.12)}
+.sp-conseil-text{font-size:14px;line-height:1.8;color:var(--text)}
+.sp-conseil-src{font-size:11px;color:var(--gray-3);margin-top:8px;font-weight:600}
+.sp-ai-badge{display:inline-flex;align-items:center;gap:4px;background:var(--gray-1);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--gray-4);font-weight:700;margin-bottom:10px;letter-spacing:0.5px;font-family:'Poppins',sans-serif}
+.sp-loading{text-align:center;padding:24px;color:var(--gray-3)}
+.sp-dots{display:inline-flex;gap:5px;margin-top:10px}
+.sp-dots span{width:6px;height:6px;background:var(--purple);border-radius:50%;animation:blink 1.2s ease-in-out infinite}
+.sp-dots span:nth-child(2){animation-delay:.2s}
+.sp-dots span:nth-child(3){animation-delay:.4s}
+.sp-open-btn{display:block;width:100%;margin-top:12px;padding:14px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif}
 
-/* Loading */
-.loading-txt{text-align:center;padding:48px 20px;color:#8E8E93;font-size:15px}
+/* ── Day Sheet ── */
+#cal-day-sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:400;
+  background:#fff;border-radius:24px 24px 0 0;
+  padding:12px 20px 40px;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 -4px 24px rgba(15,23,42,0.12);
+  max-height:70vh;overflow-y:auto;
+}
+#cal-day-sheet.open{transform:translateY(0)}
+.cds-handle{width:36px;height:4px;background:var(--gray-2);border-radius:2px;margin:0 auto 16px}
+.cds-date{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:2px;font-family:'Poppins',sans-serif}
+.cds-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;color:var(--purple);direction:rtl;text-align:right;margin-bottom:16px}
+.cds-section-title{font-size:10px;font-weight:700;color:var(--gray-3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.cds-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--gray-2)}
+.cds-item:last-child{border-bottom:none}
+.cds-item-emoji{font-size:22px;width:42px;height:42px;background:var(--gray-1);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cds-item-name{font-size:15px;font-weight:700;color:var(--dark);font-family:'Poppins',sans-serif}
+.cds-item-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:var(--purple);direction:rtl;margin-top:2px}
+.cds-empty{text-align:center;padding:20px;color:var(--gray-3);font-size:14px}
+#cal-sheet-backdrop{position:fixed;inset:0;z-index:399;background:rgba(15,23,42,0.35);display:none}
+#cal-sheet-backdrop.visible{display:block}
+.cds-add-btn{width:100%;margin-top:16px;padding:14px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif}
+
+/* ── CALENDRIER ── */
+#cal-overlay{display:none;position:fixed;inset:0;z-index:300;overflow-y:auto;background:var(--gray-1)}
+#cal-overlay.open{display:block}
+#cal-sticky-hdr{
+  position:sticky;top:0;z-index:10;
+  background:rgba(241,245,249,0.94);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding:14px 20px 0;border-bottom:1px solid var(--gray-2);
+}
+#cal-hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+#cal-hdr-left{display:flex;flex-direction:column}
+#cal-month-label{font-size:22px;font-weight:700;color:var(--dark);font-family:'Poppins',sans-serif;line-height:1.1}
+#cal-month-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:var(--purple);margin-top:1px}
+#cal-hdr-right{display:flex;align-items:center;gap:10px}
+#cal-close{background:var(--gray-2);border:none;color:var(--dark);width:32px;height:32px;font-size:14px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.cal-nav-btn{background:none;border:none;color:var(--purple);font-size:22px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;-webkit-tap-highlight-color:transparent}
+.cal-nav-btn:active{background:var(--gray-2)}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);padding:6px 20px 4px}
+.cal-dow{text-align:center;font-size:10px;font-weight:700;color:var(--gray-3);padding:4px 0;letter-spacing:0.5px;font-family:'Poppins',sans-serif}
+#cal-body{padding:0 12px 20px}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px}
+.cal-day{display:flex;flex-direction:column;align-items:center;padding:4px 2px 6px;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:64px;position:relative;gap:2px}
+.cal-day:active .cal-gday-wrap{background:var(--gray-2)}
+.cal-day.empty{pointer-events:none}
+.cal-gday-wrap{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .1s}
+.cal-gday{font-size:15px;font-weight:600;color:var(--dark);font-family:'Poppins',sans-serif}
+.cal-day.today .cal-gday-wrap{background:var(--grad-main)}
+.cal-day.today .cal-gday{color:#fff;font-weight:700}
+.cal-day.selected .cal-gday-wrap{background:var(--gray-2)}
+.cal-day.shabbat .cal-gday{color:var(--purple)}
+.cal-hday{font-family:'Noto Sans Hebrew',sans-serif;font-size:10px;color:var(--gray-3);direction:rtl;line-height:1}
+.cal-dots{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;max-width:34px}
+.cal-dot{width:5px;height:5px;border-radius:50%}
+.cal-dot.fete{background:var(--orange)}
+.cal-dot.event{background:var(--green)}
+.cal-week-sep{height:1px;background:var(--gray-2);margin:0 12px}
+#cal-date-bar{background:#fff;border-radius:var(--radius);margin:8px 12px 0;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+#cal-date-bar-greg{font-size:14px;font-weight:600;color:var(--dark);font-family:'Poppins',sans-serif}
+#cal-date-bar-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:15px;color:var(--purple);direction:rtl}
+#cal-fetes-panel{background:#fff;border-radius:var(--radius);margin:12px 12px 0;overflow:hidden;box-shadow:var(--shadow)}
+.cfp-title{font-size:10px;font-weight:700;color:var(--gray-3);letter-spacing:2px;text-transform:uppercase;padding:16px 18px 10px}
+.cfp-item{display:flex;align-items:center;gap:14px;padding:10px 18px;border-top:1px solid var(--gray-2)}
+.cfp-emoji{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:linear-gradient(135deg,#FFF7ED,#FEF3C7)}
+.cfp-body{flex:1}
+.cfp-name{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:1px;font-family:'Poppins',sans-serif}
+.cfp-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:11px;color:var(--orange);direction:rtl}
+.cfp-date{font-size:13px;color:var(--gray-3);text-align:right;flex-shrink:0}
+.cfp-date-day{font-size:20px;font-weight:700;color:var(--dark);line-height:1;font-family:'Poppins',sans-serif}
+.cfp-date-mon{font-size:10px;color:var(--gray-3);text-transform:uppercase;letter-spacing:0.5px}
+#cal-utils{background:#fff;border-radius:var(--radius);margin:12px 12px 0;overflow:hidden;box-shadow:var(--shadow)}
+.cu-section{padding:16px 18px;border-bottom:1px solid var(--gray-2)}
+.cu-section:last-child{border-bottom:none}
+.cu-title{font-size:10px;font-weight:700;color:var(--gray-3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;font-family:'Poppins',sans-serif}
+.conv-row{display:flex;gap:8px;align-items:center}
+.conv-row input,.conv-row select{flex:1;padding:10px 12px;border:1.5px solid var(--gray-2);background:var(--gray-1);color:var(--dark);font-size:14px;border-radius:var(--radius-sm);-webkit-appearance:none;font-family:'Poppins',sans-serif}
+.conv-btn{padding:10px 16px;background:var(--grad-main);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);white-space:nowrap;font-family:'Poppins',sans-serif}
+#conv-result{margin-top:10px;padding:12px 16px;background:#EEF2FF;font-size:15px;color:var(--purple);display:none;text-align:center;font-family:'Noto Sans Hebrew',sans-serif;line-height:1.8;border-radius:var(--radius-sm)}
+#cal-addevent input[type=text]{width:100%;padding:10px 14px;border:1.5px solid var(--gray-2);background:var(--gray-1);color:var(--dark);font-size:14px;margin-bottom:10px;border-radius:var(--radius-sm);font-family:'Poppins',sans-serif}
+.ev-type-row{display:flex;gap:6px;margin-bottom:10px}
+.ev-type-btn{flex:1;padding:9px;border:1.5px solid var(--gray-2);background:var(--gray-1);font-size:12px;cursor:pointer;text-align:center;color:var(--gray-4);border-radius:var(--radius-sm);font-weight:700;font-family:'Poppins',sans-serif}
+.ev-type-btn.sel{background:var(--purple);color:#fff;border-color:var(--purple)}
+#ev-date-display{font-size:12px;color:var(--gray-3);margin-bottom:10px;font-style:italic}
+.add-ev-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--green),#059669);color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);font-family:'Poppins',sans-serif}
+#events-list{margin-top:0}
+.ev-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--gray-2);font-size:14px}
+.ev-item-name{color:var(--dark);font-weight:600}
+.ev-item-date{font-size:11px;color:var(--gray-3)}
+.ev-del{background:none;border:none;color:#EF4444;font-size:16px;cursor:pointer;padding:0 4px}
+
+/* ── Loading ── */
+.loading-txt{text-align:center;padding:48px 20px;color:var(--gray-3);font-size:15px}
 .dots{display:inline-flex;gap:6px;margin-top:12px}
-.dots span{width:7px;height:7px;background:#C9A84C;border-radius:50%;animation:blink 1.2s ease-in-out infinite}
+.dots span{width:7px;height:7px;background:var(--purple);border-radius:50%;animation:blink 1.2s ease-in-out infinite}
 .dots span:nth-child(2){animation-delay:.2s}
 .dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.75)}40%{opacity:1;transform:scale(1)}}
-
-/* ── PROCHAINES FÊTES card ── */
-.card-fetes{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.cf-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px}
-.cf-title{font-size:15px;font-weight:700;color:#1C1C1E}
-.cf-see-all{font-size:13px;color:#007AFF;font-weight:500;cursor:pointer}
-.cf-list{padding:0 18px 16px;display:flex;flex-direction:column;gap:0}
-.cf-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #F2F2F7;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cf-item:last-child{border-bottom:none}
-.cf-item:active{opacity:.7}
-.cf-dot-wrap{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.cf-dot-wrap.major{background:linear-gradient(135deg,#FFF3E0,#FFE0B2)}
-.cf-dot-wrap.minor{background:#F5F5F7}
-.cf-body{flex:1;min-width:0}
-.cf-name{font-size:15px;font-weight:600;color:#1C1C1E;line-height:1.2}
-.cf-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:12px;color:#C9A84C;direction:rtl;margin-top:2px}
-.cf-date{font-size:13px;color:#8E8E93;font-weight:500;white-space:nowrap;flex-shrink:0}
-.cf-loading{padding:20px;text-align:center;color:#8E8E93;font-size:14px}
-
-/* ── DAY SHEET (popup jour sélectionné) ── */
-#cal-day-sheet{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#fff;border-radius:24px 24px 0 0;padding:12px 20px 40px;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);box-shadow:0 -4px 24px rgba(0,0,0,0.12);max-height:70vh;overflow-y:auto}
-#cal-day-sheet.open{transform:translateY(0)}
-.cds-handle{width:36px;height:4px;background:#D1D1D6;border-radius:2px;margin:0 auto 16px}
-.cds-date{font-size:17px;font-weight:700;color:#1C1C1E;margin-bottom:2px}
-.cds-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:14px;color:#C9A84C;direction:rtl;text-align:right;margin-bottom:16px}
-.cds-section-title{font-size:12px;font-weight:600;color:#8E8E93;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
-.cds-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid #F2F2F7}
-.cds-item:last-child{border-bottom:none}
-.cds-item-emoji{font-size:24px;width:42px;height:42px;background:#F9F3E8;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cds-item-name{font-size:16px;font-weight:600;color:#1C1C1E}
-.cds-item-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:#C9A84C;direction:rtl;margin-top:2px}
-.cds-empty{text-align:center;padding:20px;color:#8E8E93;font-size:15px}
-#cal-sheet-backdrop{position:fixed;inset:0;z-index:399;background:rgba(0,0,0,0.3);display:none}
-#cal-sheet-backdrop.visible{display:block}
-
-/* ── HEADER HOME amélioré ── */
-#view-home .story-bar{padding:12px 16px 4px}
-.home-hero{background:linear-gradient(160deg,#0a1628 0%,#1a3a6b 60%,#2a5a9a 100%);position:relative;overflow:hidden}
-.home-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(201,168,76,0.08);pointer-events:none}
-/* Story bar dans le hero */
-.home-hero .story-bar{padding:52px 12px 8px;background:transparent}
-.home-hero .story-label{color:rgba(255,255,255,0.8)}
-/* Corps du hero */
-.home-hero-body{padding:4px 20px 20px}
-.home-hero-dayname{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.home-hero-greg{font-size:36px;font-weight:800;color:#fff;line-height:1.05;margin-bottom:4px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif}
-.home-hero-heb-fr{font-size:16px;color:#E8C870;font-weight:500;margin-bottom:14px}
-/* Chabbat dans le hero */
-.home-hero-shabbat{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px;border:1px solid rgba(201,168,76,0.2)}
-.hhs-icon{font-size:16px;flex-shrink:0}
-.hhs-text{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.4;font-weight:400}
-/* Bouton ajouter événement dans day sheet */
-.cds-add-btn{width:100%;margin-top:16px;padding:14px;background:#007AFF;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cds-add-btn:active{opacity:.8}
-
-
-/* ── SHABBAT PANEL (bottom sheet) ── */
-#shabbat-panel{position:fixed;bottom:0;left:0;right:0;z-index:500;background:#fff;border-radius:24px 24px 0 0;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);box-shadow:0 -4px 32px rgba(0,0,0,0.15);max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#shabbat-panel.open{transform:translateY(0)}
-#shabbat-backdrop{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,0.35);display:none}
-#shabbat-backdrop.visible{display:block}
-.sp-handle{width:36px;height:4px;background:#D1D1D6;border-radius:2px;margin:12px auto 0}
-.sp-hero{background:linear-gradient(160deg,#1C1C1E,#2C2C2E);padding:20px 20px 24px}
-.sp-label{font-size:11px;font-weight:700;letter-spacing:2px;color:#C9A84C;text-transform:uppercase;margin-bottom:8px}
-.sp-paracha-name{font-size:26px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:4px}
-.sp-paracha-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;color:#C9A84C;direction:rtl;text-align:right}
-.sp-times-row{display:flex;gap:0;margin-top:18px;background:rgba(255,255,255,0.06);border-radius:14px;overflow:hidden}
-.sp-time-block{flex:1;padding:12px 16px;text-align:center}
-.sp-time-block:first-child{border-right:1px solid rgba(255,255,255,0.08)}
-.sp-time-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-.sp-time-day{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px}
-.sp-time-val{font-size:22px;font-weight:700;color:#fff}
-.sp-body{padding:20px}
-.sp-section{margin-bottom:20px}
-.sp-section-title{font-size:12px;font-weight:700;color:#8E8E93;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
-.sp-resume{font-size:15px;line-height:1.8;color:#1C1C1E;background:#F9F9FB;border-radius:14px;padding:14px 16px}
-.sp-resume strong{color:#C9A84C;font-weight:700}
-.sp-phrase{font-size:17px;line-height:1.7;color:#1C1C1E;font-style:italic;border-left:3px solid #C9A84C;padding-left:14px;margin-bottom:6px}
-.sp-conseil{background:linear-gradient(135deg,#F9F3E8,#FDF8EF);border-radius:14px;padding:16px;border:1px solid rgba(201,168,76,0.2)}
-.sp-conseil-text{font-size:15px;line-height:1.8;color:#1C1C1E}
-.sp-conseil-src{font-size:12px;color:#8E8E93;margin-top:8px;font-weight:500}
-.sp-ai-badge{display:inline-flex;align-items:center;gap:4px;background:#F2F2F7;border-radius:20px;padding:4px 10px;font-size:11px;color:#8E8E93;font-weight:600;margin-bottom:12px}
-.sp-loading{text-align:center;padding:32px 20px;color:#8E8E93}
-.sp-dots{display:inline-flex;gap:5px;margin-top:10px}
-.sp-dots span{width:6px;height:6px;background:#C9A84C;border-radius:50%;animation:blink 1.2s ease-in-out infinite}
-.sp-dots span:nth-child(2){animation-delay:.2s}
-.sp-dots span:nth-child(3){animation-delay:.4s}
-.sp-open-btn{display:block;width:100%;margin-top:8px;padding:14px;background:#1C1C1E;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
-
-/* ══════════════════════════════════════════════════
-   CALENDRIER — style Apple Calendar, fond blanc
-   ══════════════════════════════════════════════════ */
-#cal-overlay{display:none;position:fixed;inset:0;z-index:300;overflow-y:auto;background:#F2F2F7}
-#cal-overlay.open{display:block}
-
-/* Header sticky du calendrier */
-#cal-sticky-hdr{position:sticky;top:0;z-index:10;background:rgba(242,242,247,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:14px 20px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
-#cal-hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-#cal-hdr-left{display:flex;flex-direction:column}
-#cal-month-label{font-size:22px;font-weight:700;color:#1C1C1E;line-height:1.1}
-#cal-month-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:13px;color:#C9A84C;margin-top:1px}
-#cal-hdr-right{display:flex;align-items:center;gap:10px}
-#cal-close{background:#E5E5EA;border:none;color:#1C1C1E;width:32px;height:32px;font-size:15px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600}
-.cal-nav-btn{background:none;border:none;color:#007AFF;font-size:22px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;-webkit-tap-highlight-color:transparent}
-.cal-nav-btn:active{background:#E5E5EA}
-
-/* Jours de la semaine */
-.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);padding:6px 20px 4px}
-.cal-dow{text-align:center;font-size:11px;font-weight:600;color:#8E8E93;padding:4px 0;letter-spacing:0.3px}
-
-/* Grille des jours */
-#cal-body{padding:0 12px 120px}
-.cal-week{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:0}
-.cal-day{display:flex;flex-direction:column;align-items:center;padding:4px 2px 6px;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:64px;position:relative;gap:2px}
-.cal-day:active .cal-gday-wrap{background:#E5E5EA}
-.cal-day.empty{pointer-events:none}
-
-/* Numéro grégorien */
-.cal-gday-wrap{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background .1s}
-.cal-gday{font-size:16px;font-weight:500;color:#1C1C1E}
-.cal-day.today .cal-gday-wrap{background:#C9A84C}
-.cal-day.today .cal-gday{color:#fff;font-weight:700}
-.cal-day.selected .cal-gday-wrap{background:#E5E5EA}
-.cal-day.shabbat .cal-gday{color:#C9A84C}
-
-/* Date hébraïque */
-.cal-hday{font-family:'Noto Sans Hebrew',sans-serif;font-size:10px;color:#8E8E93;direction:rtl;line-height:1}
-
-/* Indicateurs fêtes */
-.cal-dots{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;max-width:34px}
-.cal-dot{width:5px;height:5px;border-radius:50%}
-.cal-dot.fete{background:#C9A84C}
-.cal-dot.event{background:#34C759}
-.cal-dot.shabbat-dot{background:#AF52DE}
-
-/* Séparateurs semaine */
-.cal-week-sep{height:1px;background:#F2F2F7;margin:0 12px}
-
-/* ── PANNEAU PROCHAINES FÊTES (en bas du calendrier) ── */
-#cal-fetes-panel{background:#fff;border-radius:20px;margin:12px 12px 0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.cfp-title{font-size:13px;font-weight:600;color:#8E8E93;letter-spacing:0.5px;text-transform:uppercase;padding:16px 18px 10px}
-.cfp-item{display:flex;align-items:center;gap:14px;padding:10px 18px;border-top:1px solid #F2F2F7}
-.cfp-emoji{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:#F9F3E8}
-.cfp-body{flex:1}
-.cfp-name{font-size:15px;font-weight:600;color:#1C1C1E;margin-bottom:1px}
-.cfp-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:11px;color:#C9A84C;direction:rtl}
-.cfp-date{font-size:13px;color:#8E8E93;text-align:right;flex-shrink:0}
-.cfp-date-day{font-size:22px;font-weight:700;color:#1C1C1E;line-height:1}
-.cfp-date-mon{font-size:11px;color:#8E8E93;text-transform:uppercase;letter-spacing:0.5px}
-
-/* ── PANNEAU UTILITAIRES (conversion + événements) ── */
-#cal-utils{background:#fff;border-radius:20px;margin:12px 12px 0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.cu-section{padding:16px 18px;border-bottom:1px solid #F2F2F7}
-.cu-section:last-child{border-bottom:none}
-.cu-title{font-size:13px;font-weight:600;color:#8E8E93;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px}
-.conv-row{display:flex;gap:8px;align-items:center}
-.conv-row input,.conv-row select{flex:1;padding:10px 12px;border:1px solid #E5E5EA;background:#F9F9F9;color:#1C1C1E;font-size:14px;border-radius:12px;-webkit-appearance:none;font-family:inherit}
-.conv-btn{padding:10px 16px;background:#C9A84C;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;border-radius:12px;white-space:nowrap}
-#conv-result{margin-top:10px;padding:12px 16px;background:#F9F3E8;font-size:16px;color:#1C1C1E;display:none;text-align:center;font-family:'Noto Sans Hebrew',sans-serif;line-height:1.8;border-radius:12px}
-#cal-addevent input[type=text]{width:100%;padding:10px 14px;border:1px solid #E5E5EA;background:#F9F9F9;color:#1C1C1E;font-size:14px;margin-bottom:10px;border-radius:12px;font-family:inherit}
-.ev-type-row{display:flex;gap:6px;margin-bottom:10px}
-.ev-type-btn{flex:1;padding:9px;border:1px solid #E5E5EA;background:#F9F9F9;font-size:12px;cursor:pointer;text-align:center;color:#8E8E93;border-radius:12px;font-weight:600}
-.ev-type-btn.sel{background:#C9A84C;color:#fff;border-color:#C9A84C}
-#ev-date-display{font-size:12px;color:#8E8E93;margin-bottom:10px;font-style:italic}
-.add-ev-btn{width:100%;padding:11px;background:#34C759;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer;border-radius:12px}
-#events-list{margin-top:0}
-.ev-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #F2F2F7;font-size:14px}
-.ev-item-name{color:#1C1C1E;font-weight:500}
-.ev-item-date{font-size:12px;color:#8E8E93}
-.ev-del{background:none;border:none;color:#FF3B30;font-size:16px;cursor:pointer;padding:0 4px}
-
-/* ── date header info bar ── */
-#cal-date-bar{background:#fff;border-radius:16px;margin:8px 12px 0;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-#cal-date-bar-greg{font-size:14px;font-weight:500;color:#1C1C1E}
-#cal-date-bar-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:15px;color:#C9A84C;direction:rtl}
 </style>
 </head>
 <body>
 <div id="hdr">
-  <div id="hdr-title">Torah · Paracha</div>
-  <div id="hdr-heb">תּוֹרָה</div>
-  <button id="btn-back" onclick="goHome()">‹ Retour</button>
+  <button id="btn-back" onclick="goHome()" style="display:none;background:none;border:none;color:var(--purple);font-size:15px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;align-items:center;gap:4px">‹ Retour</button>
+  <div id="hdr-title" style="font-family:Poppins,sans-serif;font-weight:800;font-size:15px;letter-spacing:-0.3px">K<span style="color:var(--purple)">e</span>doshim</div>
+  <div style="display:flex;gap:12px;align-items:center">
+    <div id="hdr-heb" style="font-family:Noto Sans Hebrew,sans-serif;font-size:16px;color:var(--purple)">תּוֹרָה</div>
+  </div>
 </div>
 
+
+<!-- Profile View -->
+<div id="view-profile" style="display:none;max-width:600px;margin:0 auto;padding:0 0 80px">
+
+  <!-- Hero -->
+  <div id="profile-hero" style="background:var(--grad-main);padding:56px 20px 32px;text-align:center;position:relative;overflow:hidden">
+    <div id="profile-avatar" style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.15);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px">👤</div>
+    <div id="profile-name" style="font-size:22px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:4px">Mon Profil</div>
+    <div id="profile-email-display" style="font-size:14px;color:rgba(255,255,255,0.6)">Connectez-vous pour personnaliser votre expérience</div>
+  </div>
+
+  <!-- Auth forms -->
+  <div style="padding:24px 20px;display:flex;flex-direction:column;gap:14px">
+
+    <!-- Message d'erreur/succès -->
+    <div id="auth-msg" style="display:none;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:Poppins,sans-serif"></div>
+
+    <!-- Form login/register (affiché si non connecté) -->
+    <div id="auth-form-block" style="background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
+      <!-- Toggle login/register -->
+      <div style="display:flex;background:var(--gray-1);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px;gap:3px">
+        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:13px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Se connecter</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">S'inscrire</button>
+      </div>
+
+      <!-- Champs communs -->
+      <input type="email" id="auth-email" placeholder="Adresse e-mail" autocomplete="email"
+        style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:10px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none">
+      <input type="password" id="auth-pwd" placeholder="Mot de passe" autocomplete="current-password"
+        style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:6px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none">
+
+      <!-- Champ prénom (register only) -->
+      <input type="text" id="auth-firstname" placeholder="Prénom (optionnel)" autocomplete="given-name"
+        style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none;display:none">
+
+      <!-- Lien mot de passe oublié -->
+      <div id="forgot-link" style="text-align:right;margin-bottom:16px;margin-top:-4px">
+        <span onclick="resetPassword()" style="font-size:13px;color:var(--purple);font-weight:600;cursor:pointer">Mot de passe oublié ?</span>
+      </div>
+
+      <!-- Bouton principal -->
+      <button id="auth-submit-btn" onclick="authSubmit()"
+        style="width:100%;padding:14px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;margin-bottom:16px">
+        Se connecter
+      </button>
+
+      <!-- Séparateur -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="flex:1;height:1px;background:var(--gray-2)"></div>
+        <span style="font-size:12px;color:var(--gray-3);font-weight:600">ou</span>
+        <div style="flex:1;height:1px;background:var(--gray-2)"></div>
+      </div>
+
+      <!-- Google -->
+      <button onclick="authGoogle()"
+        style="width:100%;padding:13px;background:#fff;color:var(--dark);border:1.5px solid var(--gray-2);border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;display:flex;align-items:center;justify-content:center;gap:10px">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continuer avec Google
+      </button>
+    </div>
+
+    <!-- Profil connecté (affiché si connecté) -->
+    <div id="profile-connected-block" style="display:none;background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
+      <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;font-family:Poppins,sans-serif">Mon compte</div>
+      <div id="profile-info" style="font-size:14px;color:var(--gray-4);margin-bottom:20px;line-height:1.6"></div>
+      <button onclick="authSignOut()"
+        style="width:100%;padding:13px;background:transparent;color:#EF4444;border:1.5px solid #FEE2E2;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif">
+        Se déconnecter
+      </button>
+    </div>
+
+    <!-- Config notice -->
+    <div id="supabase-notice" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
+      <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px;font-family:Poppins,sans-serif">⚙️ Configuration requise</div>
+      <div style="font-size:12px;color:var(--gray-4);line-height:1.7">Pour activer l'authentification, remplace <code style="background:var(--gray-2);padding:1px 6px;border-radius:4px;font-size:11px">SUPABASE_URL</code> et <code style="background:var(--gray-2);padding:1px 6px;border-radius:4px;font-size:11px">SUPABASE_ANON_KEY</code> dans le code avec tes vraies clés Supabase.</div>
+    </div>
+
+  </div>
+</div>
 <!-- Shabbat Panel -->
 <div id="shabbat-backdrop" onclick="closeShabbatPanel()"></div>
 <div id="shabbat-panel">
@@ -483,7 +685,7 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
 <div id="view-hayom">
   <div class="hyd-header">
     <div class="hyd-icon">☀️</div>
-    <div><div class="hyd-title">Hayom Yom</div><div class="hyd-subtitle">Enseignement du jour</div></div>
+    <div><div class="hyd-title">Hayom Yom</div><div class="hyd-subtitle">💡 Une idée pour améliorer ta journée</div></div>
   </div>
   <div class="hyd-date" id="hy-date"></div>
   <div id="hy-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
@@ -500,7 +702,7 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
   <div class="detail-hero sefer">
     <div class="detail-hero-icon">📋</div>
     <div class="detail-hero-title">Sefer HaMitsvot</div>
-    <div class="detail-hero-sub">Mitsva du jour · Rambam</div>
+    <div class="detail-hero-sub">📜 Une mitsva expliquée simplement</div>
     <div class="detail-hero-date" id="sf-date"></div>
   </div>
   <div class="detail-body">
@@ -519,6 +721,7 @@ body{background:#F5F5F7;color:#1C1C1E;font-family:-apple-system,BlinkMacSystemFo
     <div class="dph-name" id="d-name"></div>
     <div class="dph-heb" id="d-heb"></div>
     <div class="dph-ref" id="d-ref"></div>
+    <div class="dph-hook">📖 Comprendre en profondeur la Torah de la semaine</div>
   </div>
   <div class="seg-ctrl">
     <button class="seg-btn active" onclick="showTab('bilingual')">Texte</button>
@@ -753,8 +956,40 @@ function resolveParasha(raw){
 
 // ── LOAD ALL HEBCAL DATA ────────────────────────────────────────────────────
 function loadHebcalAll(lat,lng,cb){
-  var iso=todayISO();
-  var t=new Date();
+  var now=new Date();
+
+  // Après la Havdala (samedi soir), passer à la semaine suivante
+  // On détecte : c'est samedi ET havdalaTime est connu ET heure actuelle > Havdala
+  // Pour le premier chargement, on utilise une heuristique : samedi après 21h → semaine suivante
+  var apiDate=new Date(now);
+  var isSaturday=(now.getDay()===6);
+  if(isSaturday){
+    // Vérifier si on est après la Havdala approximative (coucher soleil + 42min)
+    // On utilise 20h comme seuil conservateur (avant géoloc)
+    var h=now.getHours();
+    var afterHavdala=false;
+    if(havdalaTime){
+      // Parser havdalaTime ex: "21h49" ou "9:49pm"
+      var hm=havdalaTime.match(/(\d+)[h:](\d+)/);
+      if(hm){
+        var hv=parseInt(hm[1]); var mv=parseInt(hm[2]);
+        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv<12) hv+=12;
+        afterHavdala=(h>hv)||(h===hv&&now.getMinutes()>=mv);
+      }
+    } else {
+      // Pas encore de données Hebcal — utiliser 20h30 comme seuil
+      afterHavdala=(h>=20&&now.getMinutes()>=30)||h>20;
+    }
+    if(afterHavdala){
+      // Dimanche → chercher la paracha de la prochaine semaine
+      apiDate=new Date(now);
+      apiDate.setDate(apiDate.getDate()+1);
+      console.log('[Torah] Samedi après Havdala → API date =', apiDate.toISOString().split('T')[0]);
+    }
+  }
+
+  var iso=apiDate.getFullYear()+'-'+pad2(apiDate.getMonth()+1)+'-'+pad2(apiDate.getDate());
+  var t=now;
   // 1) Shabbat API
   var shabUrl='https://www.hebcal.com/shabbat?cfg=json&geo=pos&latitude='+lat+'&longitude='+lng+'&M=on&b=18&lg=fr&leyning=off&dt='+iso;
   // 2) Hebrew date converter — avec latitude/longitude pour tenir compte du coucher du soleil
@@ -769,7 +1004,7 @@ function loadHebcalAll(lat,lng,cb){
   var done=0; var total=4; // +1 pour l'API sédrot
   function check(){done++;if(done===total)cb();}
 
-  // API Sédrot — plus fiable pour la paracha courante
+  // API Sédrot — fiable pour la paracha, utilise la bonne date (après Havdala = dimanche)
   var sedUrl='https://www.hebcal.com/sedrot/?cfg=json&dt='+iso+'&lg=en';
   fetch(sedUrl)
     .then(function(r){return r.json();})
@@ -1032,12 +1267,32 @@ function getFetesOnISO(isoDate){return getHolidaysForDate(isoDate);}
 // Géolocalisation + chargement Hebcal
 var uLat=48.85,uLng=2.35,uCity="Paris";
 function initLoc(){
-  loadHebcalAll(uLat,uLng,function(){buildHome();});
+  loadHebcalAll(uLat,uLng,function(){buildHome(); scheduleHavdalaReload();});
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(function(p){
       uLat=p.coords.latitude;uLng=p.coords.longitude;
-      loadHebcalAll(uLat,uLng,function(){buildHome();});
+      loadHebcalAll(uLat,uLng,function(){buildHome(); scheduleHavdalaReload();});
     },function(){});
+  }
+}
+
+// Programmer un rechargement automatique à l'heure de la Havdala (samedi soir)
+function scheduleHavdalaReload(){
+  var now=new Date();
+  if(now.getDay()!==6||!havdalaTime) return; // seulement le samedi
+  // Parser havdalaTime
+  var hm=havdalaTime.match(/(\d+)[h:](\d+)/);
+  if(!hm) return;
+  var hv=parseInt(hm[1]); var mv=parseInt(hm[2]);
+  if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv<12) hv+=12;
+  var havdalaMs=new Date(now.getFullYear(),now.getMonth(),now.getDate(),hv,mv,30).getTime();
+  var delay=havdalaMs-now.getTime();
+  if(delay>0&&delay<4*3600*1000){ // dans les 4 prochaines heures
+    console.log('[Torah] Rechargement paracha programmé dans '+(delay/60000).toFixed(0)+' min (Havdala)');
+    setTimeout(function(){
+      console.log('[Torah] Havdala — passage à la paracha suivante');
+      loadHebcalAll(uLat,uLng,function(){buildHome();});
+    },delay);
   }
 }
 
@@ -1372,7 +1627,7 @@ function renderShabbatPanel(){
   // Phrase clé + conseil du Rabbi — généré par IA
   html+='<div class="sp-section">'
     +'<div class="sp-section-title">✨ Lumière de la paracha</div>'
-    +'<div class="sp-ai-badge">⚡ Généré par IA</div>'
+    +'<div class="sp-ai-badge">⚡ Idée clé</div>'
     +'<div id="sp-ai-content"><div class="sp-loading">Génération en cours…<br><div class="sp-dots"><span></span><span></span><span></span></div></div></div>'
     +'</div>';
 
@@ -1532,6 +1787,7 @@ function buildHome(){
   h+='<div class="card-paracha" id="paracha-banner" onclick="openP(currentCID)">'
     +'<div class="card-paracha-bg">'
     +'<div class="cp-label">📖 Paracha de la semaine</div>'
+    +'<div class="cp-hook">Comprendre en profondeur la Torah de la semaine</div>'
     +'<div class="cp-heb">'+parashaHebDisplay+'</div>'
     +'<div class="cp-name">'+parashaDisplay+'</div>'
     +'<div class="cp-book">'+curForBanner.book+'</div>'
@@ -1540,8 +1796,8 @@ function buildHome(){
 
   // Quick access cards
   h+='<div class="card-duo">'
-    +'<div class="card-study hayom" onclick="openHayomYom()"><div class="card-study-inner"><span class="cs-icon">☀️</span><div class="cs-title">Hayom Yom</div><div class="cs-sub">Enseignement du jour</div></div></div>'
-    +'<div class="card-study sefer" onclick="openSefer()"><div class="card-study-inner"><span class="cs-icon">📋</span><div class="cs-title">Sefer HaMitsvot</div><div class="cs-sub">Mitsva du jour</div></div></div>'
+    +'<div class="card-study hayom" onclick="openHayomYom()"><div class="card-study-inner"><span class="cs-icon">☀️</span><div class="cs-title">Hayom Yom</div><div class="cs-sub">💡 Une idée pour améliorer ta journée</div></div></div>'
+    +'<div class="card-study sefer" onclick="openSefer()"><div class="card-study-inner"><span class="cs-icon">📋</span><div class="cs-title">Sefer HaMitsvot</div><div class="cs-sub">📜 Une mitsva expliquée simplement</div></div></div>'
     +'</div>';
 
   // Verset du jour
@@ -1604,9 +1860,14 @@ function goHome(){
   document.getElementById('view-detail').style.display='none';
   document.getElementById('view-hayom').style.display='none';
   document.getElementById('view-sefer').style.display='none';
+  var vp=document.getElementById('view-profile');
+  if(vp) vp.style.display='none';
   document.getElementById('btn-back').style.display='none';
   var bar=document.getElementById('translate-bar');
   if(bar) bar.classList.remove('visible');
+  // Remettre Accueil actif dans la nav
+  var navItems=document.querySelectorAll('.nav-item');
+  if(navItems.length) { navItems.forEach(function(n){n.classList.remove('active');}); navItems[0].classList.add('active'); }
   window.scrollTo(0,0);
 }
 
@@ -1907,7 +2168,7 @@ function getLoubavitchURL(id){
 function openHayomYom(){
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-hayom').style.display='block';
-  document.getElementById('btn-back').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
   window.scrollTo(0,0);
   var t=new Date();
   var hd=parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear());
@@ -1996,6 +2257,227 @@ function parseLoubavitchHayomYom(html,dateFrDisplay,url){
   };
 }
 
+// ── IDÉES CLÉS — Hayom Yom par jour (mois_jour) ──────────────────────────────
+var HY_IDEES={
+  '8_1':"Quand les gens apprécient quelqu'un, c'est souvent parce qu'il rayonne quelque chose d'authentique — une sincérité, une chaleur, un respect naturel pour les autres. Le Baal Chem Tov enseignait que D.ieu et les hommes partagent les mêmes critères d'admiration. <strong>Morale :</strong> Pour être en accord avec D.ieu, commence par être en accord avec ceux qui t'entourent. L'amour humain et l'amour divin ne font qu'un.",
+
+  '8_2':"Rabbi Zoussia d'Anipoli voyait dans le voleur un modèle inattendu : discret, persévérant, courageux, jamais découragé. Son message n'était pas moral — il était pédagogique. Même les mauvais traits cachent une énergie qui n'attend que d'être redirigée. <strong>Morale :</strong> Ne combats pas tes défauts, transforme-les. L'entêtement devient détermination, l'orgueil devient dignité, l'audace devient courage au service du bien.",
+
+  '8_3':"La vérité n'a pas besoin d'être criée pour s'imposer. Elle a une densité propre, une présence silencieuse qui pénètre là où les discours ne parviennent pas. C'est pourquoi une parole vraie, même dite doucement, reste gravée, quand mille paroles creuses s'effacent. <strong>Morale :</strong> Choisis tes mots pour leur vérité, pas pour leur effet. Une seule phrase honnête vaut mieux qu'un long discours séduisant.",
+
+  '8_4':"La prière — avodah shebalev, le travail du cœur — n'est pas réciter des mots mais se placer entièrement devant une réalité plus grande que soi. Pas une demande formulée, mais une présence offerte. <strong>Morale :</strong> Prie non pour obtenir mais pour te transformer. Celui qui prie vraiment ne repart jamais les mains vides — même si ce qu'il reçoit n'est pas ce qu'il avait demandé.",
+
+  '8_5':"Le Baal Chem Tov racontait qu'une âme peut descendre dans ce monde pour vivre soixante-dix ans dans le seul but d'aider un autre Juif — surtout spirituellement. Une seule rencontre, une seule parole juste au bon moment peut justifier une vie entière. <strong>Morale :</strong> Ne minimise jamais l'impact que tu peux avoir sur quelqu'un. Tu ne sais pas pourquoi vous vous êtes croisés. Peut-être que c'était exactement pour ça.",
+
+  '8_6':"La Haggadah parle de l'enfant qui ne sait pas demander — et dit : ouvre-lui la porte toi-même. La vraie pédagogie n'attend pas que l'élève soit prêt. Elle crée les conditions de l'éveil. <strong>Morale :</strong> Ne t'attends pas à être sollicité pour aider. Ceux qui en ont le plus besoin sont souvent ceux qui ne demandent rien. Va vers eux.",
+
+  '8_7':"Lag BaOmer célèbre l'hilloula de Rabbi Chimon bar Yochaï, l'auteur du Zohar. Il enseigna jusqu'au dernier souffle, refusant que la lumière de la Torah s'éteigne avec lui. Et elle ne s'est pas éteinte — elle brûle encore, transmise de génération en génération. <strong>Morale :</strong> Ce que tu transmets ne te survit pas seulement — ça te multiplie. Chaque enseignement partagé est une flamme qui en allume d'autres.",
+
+  '8_8':"L'émissaire — le chalia'h — fait corps avec celui qui l'envoie. Ses actes ne lui appartiennent plus seulement : ils deviennent les actes du principal. C'est pourquoi un Hassid, en agissant selon les voies du Rabbi, prolonge sa présence dans le monde. <strong>Morale :</strong> Quand tu agis avec intention et avec mandat — que ce soit pour une personne, une cause ou une valeur — tu n'agis plus seul. Tu es le vecteur de quelque chose de plus grand.",
+
+  '8_9':"Celui qui comprend vraiment ses propres besoins — pas ses désirs superficiels mais ses besoins profonds — développe naturellement une sensibilité pour ceux des autres. L'introspection honnête est la porte de l'empathie. <strong>Morale :</strong> Avant de juger les réactions des autres, interroge tes propres manques. Comprendre d'où tu viens t'aidera à comprendre d'où vient l'autre.",
+
+  '8_10':"La Torah ne combat pas la nature humaine — elle la raffine. Elle prend ce qui est brut, imparfait, et lui donne une forme, une direction, une dignité. C'est pour ça qu'elle est appelée Torat Hayim — la Torah de vie : elle travaille avec la vie telle qu'elle est. <strong>Morale :</strong> La croissance spirituelle n'est pas une guerre contre toi-même. C'est un affinement patient. Sois le sculpteur, pas le marteau.",
+
+  '8_11':"L'âme garde toujours en elle une nostalgie de sa source. Même submergée par le quotidien, elle cherche — dans une prière, une mélodie, un Chabbat — ce quelque chose qui la relie à ce qu'elle est vraiment. <strong>Morale :</strong> Quand tu ressens un vide inexplicable au milieu d'une vie remplie, ce n'est pas un dysfonctionnement. C'est ton âme qui te rappelle qu'elle aspire à plus. Écoute-la.",
+
+  '8_12':"Chaque moment d'étude de Torah crée un lien réel entre l'homme et D.ieu. Pas une métaphore — une réalité spirituelle. La Torah est la pensée divine mise à la portée humaine, et l'étudier c'est penser avec D.ieu. <strong>Morale :</strong> Réserve chaque jour un moment pour étudier, même court. Ce n'est pas une obligation à remplir — c'est un rendez-vous à honorer.",
+
+  '8_13':"Le Mishna enseigne : tout Juif a une part dans le monde à venir. Pas en fonction de ses mérites, de son niveau, de sa pratique — mais parce que son âme porte en elle une lumière que nul autre ne peut remplacer. <strong>Morale :</strong> Ta valeur n'est pas conditionnelle. Elle ne dépend pas de ce que tu fais ou ne fais pas. Elle est constitutive de qui tu es. C'est cela, la dignité absolue.",
+
+  '8_14':"Pessa'h Cheni — le second Pessa'h — existe pour ceux qui n'ont pas pu faire le premier. Un mois plus tard, une deuxième chance, sans condition. C'est la Torah qui dit : rien n'est définitivement perdu. <strong>Morale :</strong> La téchouva n'a pas de date limite. Le retour est toujours possible, toujours accueilli. Ce qui compte n'est pas le chemin parcouru, mais la direction dans laquelle tu marches.",
+
+  '8_15':"La Torah a été donnée à chaque âme d'une manière qui lui correspond. Ce que tu reçois dans un verset n'est pas exactement ce que reçoit ton voisin — parce que vous n'êtes pas les mêmes et que votre rapport à D.ieu est unique. <strong>Morale :</strong> Ne compare pas ton chemin spirituel à celui des autres. Ce qui compte, c'est que ce chemin soit vraiment le tien.",
+
+  '8_16':"La transmission entre générations n'est pas à sens unique. Parfois les enfants rappellent aux parents ce que ceux-ci avaient oublié. Le regard frais d'un enfant sur une mitsva peut réveiller en l'adulte une fraîcheur perdue. <strong>Morale :</strong> Reste ouvert à apprendre de ceux que tu enseignes. Les meilleurs maîtres sont ceux qui continuent à être des élèves.",
+
+  '8_17':"Ben Zoma enseigne : qui est riche ? Celui qui se satisfait de sa part. Ce n'est pas une invitation à la passivité — c'est une définition de la liberté. Celui qui court après ce qu'il n'a pas est toujours pauvre. Celui qui apprécie ce qu'il a est toujours riche. <strong>Morale :</strong> La gratitude n'est pas une émotion — c'est une discipline. Pratique-la chaque jour. Elle transforme ce que tu as en abondance.",
+
+  '8_18':"Lag BaOmer — 18 Iyar — est aussi l'anniversaire du Tséma'h Tsédek, troisième Rabbi de Loubavitch. Deux lumières qui se rejoignent : la joie de Rabbi Chimon et la sagesse du Tséma'h Tsédek. Le Hassidisme honore ses maîtres non par nostalgie, mais parce que leur lumière continue d'agir. <strong>Morale :</strong> Ceux qui ont vécu justement ne disparaissent pas vraiment. Leur influence persiste dans chaque acte inspiré par leur exemple.",
+
+  '8_19':"L'amour couvre les fautes — pas en les ignorant, mais en leur offrant un espace de transformation. Celui qui aime vraiment ne ferme pas les yeux sur les défauts de l'autre : il lui donne la sécurité nécessaire pour les surmonter. <strong>Morale :</strong> Aimer quelqu'un, c'est lui faire assez confiance pour être honnête avec lui, et lui offrir assez de chaleur pour qu'il veuille s'améliorer.",
+
+  '8_20':"La pensée hassidique enseigne que la méditation — la hitbonenut — n'est pas une fuite de la réalité mais une plongée en elle. En méditant sur la grandeur divine, l'intellect devient porte d'accès au cœur, et le cœur s'embrase d'un amour qui change tout. <strong>Morale :</strong> Prends le temps de réfléchir vraiment, en profondeur, à ce en quoi tu crois. La pensée sincère est le chemin le plus court vers la transformation intérieure.",
+
+  '8_21':"D.ieu donne à chaque personne la possibilité de mettre en pratique Sa Volonté — non par obligation froide, mais comme une invitation à être Son partenaire dans la création du monde. Chaque mitsva est une co-création. <strong>Morale :</strong> Ne vis pas les mitsvot comme une liste de règles à cocher. Vis-les comme des invitations à participer à quelque chose de grand. L'intention change tout.",
+
+  '8_22':"Israël est appelé goy echad ba'aretz — un peuple unique sur la terre. Son unicité n'est pas une supériorité mais une responsabilité : témoigner, par ses actes, de l'existence d'une réalité morale qui transcende l'intérêt personnel. <strong>Morale :</strong> L'appartenance à un peuple ou à une tradition n'est pas un privilège passif. C'est un mandat actif. La question n'est pas 'qui es-tu ?' mais 'qu'en fais-tu ?'",
+
+  '8_23':"Le Talmud dit que le tzaddik décrète et D.ieu accomplit. Ce n'est pas de la magie — c'est la conséquence naturelle d'une vie alignée avec la volonté divine. Celui dont le vouloir et le vouloir de D.ieu ne font qu'un voit ses prières exaucées. <strong>Morale :</strong> Le secret de la prière efficace n'est pas la formule — c'est l'alignement. Plus ta vie reflète tes valeurs, plus tes demandes portent un poids réel.",
+
+  '8_24':"Chaque être humain porte en lui une étincelle divine unique — la nechama, l'âme — qui fait de lui un monde entier à lui seul. Le Talmud dit : quiconque détruit une seule âme est comme s'il détruisait un monde entier. <strong>Morale :</strong> Traite chaque personne que tu rencontres comme un monde à part entière. Pas un rouage, pas un moyen — un univers avec sa propre dignité absolue.",
+
+  '8_25':"Les trois choses que cite l'Avot — l'œil qui voit, l'oreille qui entend, les actes inscrits — ne sont pas des menaces mais des rappels. Rappels que rien n'est neutre, que chaque moment compte, que la vie a un sens. <strong>Morale :</strong> Agis comme si chaque geste avait un poids éternel — parce qu'il en a un. Non par peur, mais par conscience de la dignité de chaque instant.",
+
+  '8_26':"La Torah dit que la joie dans la mitsva ouvre les portes de la bénédiction. Pas la mitsva accomplie à contrecœur, mais celle accomplie avec élan, avec vie, avec un sourire intérieur. La joie n'est pas un ornement de la mitsva — c'est sa dimension la plus haute. <strong>Morale :</strong> La façon dont tu fais les choses compte autant que les choses que tu fais. Une bonne action accomplie dans la joie rayonne plus loin qu'une bonne action accomplie dans l'obligation.",
+
+  '8_27':"La Torah nous demande de prendre soin de notre corps — non parce qu'il est une fin en soi, mais parce qu'il est le temple de l'âme. Un temple délabré ne peut pas accueillir pleinement la présence divine. <strong>Morale :</strong> Prends soin de ta santé comme d'un devoir spirituel. Sommeil, nourriture, mouvement — tout cela participe à ta capacité d'être pleinement présent dans ta vie et dans ta relation à D.ieu.",
+
+  '8_28':"Le Talmud enseigne que partout où vous trouvez la grandeur de D.ieu, vous y trouvez Son humilité. Ce n'est pas un paradoxe — c'est la définition de la vraie grandeur : elle n'a pas besoin de s'imposer. <strong>Morale :</strong> La vraie autorité n'écrase pas — elle élève. La vraie sagesse ne se défend pas — elle se montre. Celui qui a besoin de prouver sa grandeur ne l'a pas encore trouvée.",
+
+  '8_29':"L'Admour HaZaken enseignait que l'amour d'Israël et l'amour de D.ieu sont inséparables — non comme deux commandements parallèles, mais comme deux faces d'une même réalité. On ne peut pas vraiment aimer D.ieu sans aimer Ses enfants. <strong>Morale :</strong> La spiritualité qui se vit en vase clos est incomplète. Elle doit se traduire en bienveillance concrète envers les autres. C'est cela, la voie hassidique.",
+
+  '9_1':"Le maître jette un javelot dans les airs — mais c'est l'élève qui doit le saisir. L'héritage spirituel n'est pas automatique. Il exige un effort actif de réception, d'approfondissement, de personnalisation. <strong>Morale :</strong> Ce que tes maîtres t'ont transmis n'est pas un acquis — c'est une graine. C'est à toi de lui donner de l'eau, de la lumière, et de le laisser pousser dans le sol de ta propre vie.",
+
+  '9_5':"La nuit de Chavouot est consacrée à l'étude parce qu'à Sinaï, les Juifs se sont endormis et D.ieu a dû les réveiller pour leur donner la Torah. Chaque année, on répare cet endormissement en restant éveillé, en choisissant activement la Torah. <strong>Morale :</strong> La Torah ne se donne pas passivement — elle se reçoit. Et recevoir exige d'être présent, éveillé, intentionnel. Ne te laisse pas endormir par l'habitude.",
+
+  '9_6':"À Chavouot, la Torah est donnée à nouveau — personnellement, à chaque âme, comme si elle n'avait été créée que pour elle seule. Ce n'est pas un événement historique commémoré : c'est une réalité vivante qui se renouvelle chaque année. <strong>Morale :</strong> Ne lis pas la Torah comme un texte ancien. Lis-la comme une lettre qui t'est adressée aujourd'hui, maintenant, à toi précisément."
+};
+
+// Idées clés pour le Sefer HaMitsvot par numéro de cours
+var SF_IDEES={
+  '76':"La sanctification du Nom divin — Kiddouch Hachem — est l'une des mitsvot les plus exigeantes. Elle demande d'être prêt à défendre ce qui est juste même au péril de son confort, de sa réputation, parfois de sa vie. Mais dans son sens le plus quotidien, elle signifie simplement : agir d'une manière qui rende le judaïsme admirable aux yeux du monde. <strong>Morale :</strong> Chaque Juif est ambassadeur de son peuple et de sa Torah. La façon dont tu traites les gens, dont tu te comportes en affaires, dont tu tiens ta parole — tout cela est un Kiddouch Hachem ou son contraire.",
+
+  '77':"La mitsva de procréer est la première commandée dans la Torah. Elle exprime une vérité profonde : l'homme est appelé à être partenaire de D.ieu dans la création, à continuer l'œuvre commencée. Chaque vie nouvellement amenée au monde est un monde entier. <strong>Morale :</strong> La transmission — qu'elle soit biologique, pédagogique ou spirituelle — est au cœur de la mission humaine. Que transmets-tu, et comment ?",
+
+  '78':"Le Guet — l'acte de divorce — est encadré par la Torah avec précision pour protéger la dignité de chacun, surtout de la femme. Même dans la séparation, la Torah exige justice, clarté et respect. <strong>Morale :</strong> La façon dont on termine une relation dit beaucoup sur la qualité de ce qu'elle a été. Partir avec intégrité, c'est aussi une forme d'amour.",
+
+  '79':"Se lever devant un érudit en Torah n'est pas un geste de soumission — c'est une reconnaissance que certaines valeurs méritent un respect visible, incarné, physique. La Torah prend au sérieux les rituels extérieurs parce qu'ils façonnent l'intérieur. <strong>Morale :</strong> Honorer la sagesse et le savoir, c'est affirmer qu'il existe des choses plus importantes que l'ego. C'est le premier pas vers l'apprentissage véritable.",
+
+  '80':"L'interdiction de raser les coins de la barbe est liée à des pratiques idolâtres de l'Antiquité — mais elle porte un message intemporel : notre corps est porteur d'une identité, d'une histoire, d'une alliance. <strong>Morale :</strong> Ce que nous faisons de notre corps est une expression de nos valeurs. Chaque choix physique est aussi un choix spirituel.",
+
+  '81':"Le tatouage est interdit non pas parce que le corps est mauvais, mais parce qu'il est sacré. Il appartient à D.ieu — nous en sommes les gardiens temporaires. Le marquer de façon permanente exprime une forme d'appropriation qui ne nous appartient pas. <strong>Morale :</strong> Nous ne possédons pas nos corps — nous les habitons. Cette perspective change complètement la façon dont on en prend soin.",
+
+  '82':"Honorer ses parents est comparé à honorer D.ieu lui-même. La Torah voit dans les parents les premiers partenaires de D.ieu dans la création d'un être humain. Les respecter, c'est reconnaître d'où l'on vient. <strong>Morale :</strong> Même si la relation avec ses parents est complexe, l'honneur qu'on leur doit ne dépend pas de leur perfection. Il dépend de ce qu'ils représentent dans l'ordre de la création.",
+
+  '83':"La crainte des parents — mora — est distincte de l'honneur. Elle signifie ne pas les contredire en public, ne pas prendre leur place. C'est une forme de reconnaissance de l'ordre naturel qui nous a précédés. <strong>Morale :</strong> Le respect de l'autorité légitime n'est pas une faiblesse — c'est une sagesse. Celui qui ne sait pas révérer n'apprend pas vraiment.",
+
+  '1':"Croire en D.ieu est la première des mitsvot positives. Mais croire ne signifie pas simplement 'penser que D.ieu existe' — c'est vivre en conséquence, orienter chaque acte vers cette réalité. <strong>Morale :</strong> La foi authentique transforme le comportement. Si ta croyance ne change rien à ta façon de vivre, de parler, de traiter les autres — c'est peut-être une conviction intellectuelle, pas encore une foi vécue.",
+
+  '11':"L'étude de Torah n'est pas réservée aux savants. Elle est commandée à chacun, à son niveau. 'Et tu les enseigneras à tes fils' — à tes enfants biologiques et à tous ceux dont tu es responsable. <strong>Morale :</strong> Chaque jour sans étude est un jour sans rencontre avec D.ieu. Même cinq minutes de Torah étudiée avec intention créent un lien qui transcende le temps.",
+
+  '153':"Le compte du Omer relie Pessa'h à Chavouot — la libération physique à la libération spirituelle. Quarante-neuf jours, quarante-neuf niveaux de l'âme à travailler. <strong>Morale :</strong> La liberté ne s'arrête pas à la sortie d'Égypte. Elle commence là. La vraie libération est intérieure — et elle se travaille jour après jour, qualité par qualité.",
+
+  '209':"Le Chema n'est pas une simple prière — c'est une déclaration d'unité absolue. 'D.ieu est Un' signifie qu'il n'y a pas de domaine de la vie où Il est absent. <strong>Morale :</strong> Récite le Chema avec intention, deux fois par jour. Pas comme une habitude, mais comme un rappel : tout est un, tout est relié — ni toi non plus n'es séparé de D.ieu.",
+
+  '216':"Honorer ses parents est l'une des mitsvot entre l'homme et D.ieu et des mitsvot entre l'homme et son prochain — car les parents se trouvent à la frontière des deux. <strong>Morale :</strong> Honore tes parents pendant qu'ils sont là. Les gestes simples — un appel, une visite, une parole de gratitude — valent infiniment plus que les regrets qui viennent trop tard.",
+
+  '222':"Se lever devant un sage, c'est honorer non sa personne mais ce qu'il représente : des années de travail intérieur, de discipline, d'amour de la Torah. <strong>Morale :</strong> Dans une culture qui valorise la célébrité, honorer la sagesse est un acte de résistance. Chaque fois que tu respectes quelqu'un pour sa profondeur plutôt que sa notoriété, tu renforces les vraies valeurs.",
+
+  '223':"La crainte de D.ieu — Yir'at Hachem — n'est pas la peur d'une punition. C'est la conscience de se tenir en présence d'une réalité infinie qui vous dépasse totalement. <strong>Morale :</strong> Quand tu crains D.ieu, tu n'as plus peur des hommes. Elle te donne une colonne vertébrale morale que rien ne peut plier."
+};
+
+// ── IDÉES CLÉS — 54 Parashot (par id) ────────────────────────────────────────
+var PARASHA_IDEES={
+  1:"Berechit raconte comment D.ieu crée un monde ordonné à partir du chaos, puis confie à l'homme la responsabilité d'en prendre soin. Mais dès le début, la liberté humaine introduit la complexité — la désobéissance, la jalousie, la violence s'enchaînent. <strong>Morale :</strong> La création est un acte de confiance. D.ieu nous remet le monde en main propre. La question n'est pas 'pourquoi y a-t-il le mal ?' mais 'que vas-tu en faire ?'",
+
+  2:"Noé est juste 'dans sa génération' — formulation qui a fait couler beaucoup d'encre. Était-il vraiment grand, ou seulement relatif à son époque corrompue ? Le Midrach dit les deux. Mais la Torah retient surtout ceci : il a agi quand les autres n'agissaient pas. <strong>Morale :</strong> Ne te compare pas à ton environnement pour te juger. Demande-toi plutôt : si j'avais tous les moyens, tout le soutien, irais-je plus loin ? C'est là que se trouve ta vraie mesure.",
+
+  3:"Abraham reçoit l'ordre de quitter tout ce qui le définit — pays, famille, maison — pour aller vers un endroit inconnu. Il part. Sans contrat, sans garantie, sans carte. Juste une voix et une confiance. <strong>Morale :</strong> Les plus grandes transformations commencent toujours par un 'lech lecha' — un 'pars vers toi-même'. La vraie destination du voyage d'Abraham, c'était lui-même. Et la tienne aussi.",
+
+  4:"Trois visiteurs arrivent chez Abraham par une chaleur accablante. Il sort en courant les accueillir malgré sa convalescence. Sara rit en entendant qu'elle va enfanter à 90 ans. Et pourtant, Isaac naît. L'impossible se réalise quand on reste ouvert. <strong>Morale :</strong> L'hospitalité d'Abraham — courir vers l'autre, même épuisé — est le modèle de l'amour en actes. Et le rire de Sara rappelle que D.ieu a de l'humour : ce qu'Il promet arrive souvent quand on ne l'attend plus.",
+
+  5:"Sarah meurt, et Abraham doit négocier pour lui acheter une tombe. Puis il envoie son serviteur trouver une femme pour Isaac. Deux missions de transmission : enterrer le passé et préparer l'avenir. <strong>Morale :</strong> La mort d'un être aimé n'est pas une fin — c'est une responsabilité. Honorer sa mémoire, c'est continuer ce qu'il a commencé. La chaîne de la transmission ne s'arrête jamais.",
+
+  6:"Jacob et Esaü — deux jumeaux, deux destins opposés. Jacob reçoit la bénédiction de son père par ruse. La Torah ne l'excuse pas, mais elle ne le condamne pas non plus. Elle montre un homme qui désire intensément la bénédiction spirituelle. <strong>Morale :</strong> Vouloir la bénédiction divine avec autant d'intensité qu'Esaü voulait son plat de lentilles — c'est déjà être sur le bon chemin. L'ardeur du désir spirituel est une qualité en soi.",
+
+  7:"Jacob quitte sa famille et part vers l'inconnu. Seul, il s'endort et rêve d'une échelle entre la terre et le ciel. D.ieu lui parle et lui promet Sa protection. Jacob se réveille et dit : 'D.ieu était en ce lieu et je ne le savais pas.' <strong>Morale :</strong> La présence divine ne se trouve pas uniquement dans les lieux saints. Elle est là où tu es — même seul, même en fuite, même dans ta nuit la plus sombre. Ouvre les yeux.",
+
+  8:"Jacob lutte toute une nuit avec un être mystérieux. À l'aube, il est blessé mais victorieux. Il reçoit un nouveau nom : Israël — 'celui qui a lutté avec D.ieu et les hommes et a prévalu'. <strong>Morale :</strong> Le nom d'Israël est un nom de combat, pas de victoire facile. La foi juive n'est pas une soumission passive — c'est une lutte permanente pour comprendre, pour grandir, pour rester debout malgré les blessures.",
+
+  9:"Joseph est vendu par ses frères. Il descend en Égypte, connaît la prison, l'oubli, la trahison. Mais chaque étape descend vers quelque chose qui le prépare. <strong>Morale :</strong> Ce qui ressemble à une chute peut être une descente préparatoire. Les épreuves ne sont pas des punitions — elles sont parfois des formations déguisées. La question n'est pas 'pourquoi cela m'arrive ?' mais 'qu'est-ce que cela me construit ?'",
+
+  10:"Pharaon rêve. Joseph interprète. Deux années de prison s'effacent dans un instant. L'homme oublié devient vice-roi d'Égypte en un jour. <strong>Morale :</strong> Ne renonce jamais dans les derniers instants. Le passage de la prison au palais peut être instantané. Ce qui importe, c'est d'être prêt — c'est-à-dire d'avoir cultivé ses talents même dans l'obscurité.",
+
+  11:"Joseph se révèle à ses frères qui pleurent de honte. Il leur dit : 'Ce n'est pas vous qui m'avez envoyé ici, c'est D.ieu.' La réconciliation est totale, sans rancune. <strong>Morale :</strong> Le pardon véritable ne dit pas 'ce que tu as fait était bien' — il dit 'je comprends que même cela avait un sens'. C'est l'acte de foi le plus difficile et le plus libérateur qui soit.",
+
+  12:"Jacob et toute sa famille descendent en Égypte. La famille d'Israël s'unit dans l'exil. C'est là, paradoxalement, qu'elle va devenir un peuple. <strong>Morale :</strong> Les périodes d'exil et d'épreuve forgent l'identité collective plus profondément que les périodes de confort. Ce qui unit un peuple, ce n'est pas sa gloire — c'est sa traversée commune de la nuit.",
+
+  13:"Un nouveau Pharaon qui 'ne connaissait pas Joseph' réduit Israël en esclavage. La persécution s'intensifie. Mais plus elle s'intensifie, plus le peuple se multiplie. Et Moïse naît. <strong>Morale :</strong> La résistance de la vie face à l'oppression est l'un des mystères les plus profonds. L'oppression ne peut pas éteindre ce que D.ieu a allumé. Et chaque génération produit ses propres Moïse.",
+
+  14:"D.ieu se révèle à Moïse dans le buisson ardent. Moïse objecte : 'Qui suis-je pour aller vers Pharaon ?' D.ieu répond : 'Je serai avec toi.' Ce n'est pas une réponse à la question posée — c'est une réponse à la vraie question. <strong>Morale :</strong> La question 'qui suis-je ?' dans les moments de mission est une bonne question. Mais la réponse n'est pas dans ton CV. Elle est dans l'accompagnement que tu reçois quand tu avances.",
+
+  15:"Les plaies s'enchaînent. Pharaon durcit son cœur à plusieurs reprises. La Torah dit tantôt qu'il l'endurcit lui-même, tantôt que D.ieu l'endurcit. Les deux sont vrais. <strong>Morale :</strong> Chaque choix que l'on fait renforce une direction. À force de refuser de voir, on finit par ne plus pouvoir voir. L'endurcissement du cœur n'est pas une punition extérieure — c'est la conséquence logique de nos propres choix répétés.",
+
+  16:"Israël sort d'Égypte, traverse la mer, puis se retrouve dans le désert avec faim et soif. Ils murmurent. D.ieu envoie la manne. Chaque matin, une portion exacte — ni trop ni trop peu. <strong>Morale :</strong> La manne enseigne la confiance quotidienne. On ne peut pas en stocker pour demain. C'est une leçon que la société moderne oublie : vivre dans la journée, faire confiance au lendemain.",
+
+  17:"Israël reçoit la Torah au Sinaï. D.ieu parle à tout le peuple — une révélation nationale, pas individuelle. Les 613 mitsvot ne sont pas des lois arbitraires mais un mode de vie qui sanctifie chaque aspect de l'existence. <strong>Morale :</strong> La Torah n'est pas un Code pénal. C'est une invitation à vivre chaque moment avec conscience. La halakha — littéralement 'la marche' — est une façon de marcher dans le monde avec D.ieu.",
+
+  18:"Après le don de la Torah, viennent les lois civiles : dommages, esclaves, bœufs, biens volés. Le sacré et le profane se côtoient. <strong>Morale :</strong> La Torah ne sépare pas le religieux du quotidien. Les relations commerciales honnêtes, la protection du faible, la justice sans favoritisme — tout cela est Torah. La spiritualité qui ne se traduit pas en éthique pratique reste incomplète.",
+
+  19:"D.ieu demande à Israël de Lui construire un sanctuaire : 've'assou li mikdach vé-chakanti betocham' — 'faites-Moi un sanctuaire et Je résiderai parmi eux'. Parmi eux — pas en lui. <strong>Morale :</strong> Le Temple n'est pas la condition de la présence divine — c'est sa conséquence. D.ieu réside parmi les gens, dans leurs relations, dans leurs actes. Le lieu saint ne crée pas la sainteté — il la révèle.",
+
+  20:"Aaron et ses fils sont consacrés comme cohanim. Le Cohen Gadol porte sur sa poitrine les noms des douze tribus — chaque fois qu'il entre dans le sanctuaire, il porte tout Israël avec lui. <strong>Morale :</strong> Le leader véritable ne représente pas seulement ses partisans — il porte tous ceux qui lui sont confiés, y compris ceux qui ne l'ont pas choisi. La responsabilité du cœur précède toujours l'autorité.",
+
+  21:"Le veau d'or est l'une des grandes tragédies de la Torah. Le peuple qui vient d'entendre D.ieu parler au Sinaï fabrique une idole quarante jours plus tard. Moïse brise les Tables. <strong>Morale :</strong> La foi n'est pas un acquis permanent. Elle se travaille chaque jour. Les plus grandes chutes surviennent souvent juste après les plus grands sommets — quand on pense que l'on n'a plus à lutter.",
+
+  22:"Le Chabbat revient dans la paracha de la construction du Tabernacle. Même pour un projet aussi sacré, on s'arrête. Le Chabbat prime. <strong>Morale :</strong> S'arrêter est un acte de foi plus difficile qu'agir. Dire 'je peux m'arrêter parce que D.ieu continue quand je m'arrête' — c'est la confiance la plus profonde. Le Chabbat n'est pas une pause dans la vie — c'est son sommet.",
+
+  23:"Le Tabernacle est terminé. Les comptes sont rendus, chaque don est comptabilisé, chaque contribution est honorée. Puis la gloire divine remplit le lieu. <strong>Morale :</strong> Quand une communauté se construit avec l'apport de chacun — grand ou petit — et que les comptes sont transparents, D.ieu peut y résider. La confiance collective est la condition de la présence divine.",
+
+  24:"D.ieu appelle Moïse — 'Vayikra' — par son nom, avec tendresse. C'est le début du Lévitique, le livre des sacrifices et de la sainteté. Le nom du livre en hébreu signifie 'et Il appela'. <strong>Morale :</strong> Avant tout commandement, il y a un appel. D.ieu appelle par le nom — le tien, le mien. La mission commence par une relation, pas par une obligation. Entends-tu l'appel ?",
+
+  25:"Les sacrifices semblent loin de nous. Mais leur principe est universel : donner quelque chose de précieux pour marquer un moment de rencontre avec le divin. L'olah — l'holocauste — monte tout entier vers le ciel. Rien n'est gardé. <strong>Morale :</strong> Il y a des moments dans la vie où l'on donne sans retour. Sans calcul. Ces moments-là sont les plus saints. La générosité totale — sans attente — est la forme la plus haute de la relation à D.ieu.",
+
+  26:"Nadav et Avihou, les fils d'Aaron, meurent en apportant un 'feu étranger' devant D.ieu. Aaron se tait. Son silence face à la tragédie est lu comme la forme la plus haute de foi. <strong>Morale :</strong> Il y a des douleurs que les mots ne peuvent pas contenir. Le silence d'Aaron n'est pas un abandon — c'est une acceptation qui dépasse la compréhension. Parfois, la seule réponse digne à l'incompréhensible est le silence.",
+
+  27:"La pureté et l'impureté rituelles ne sont pas des jugements moraux. Elles parlent du rapport à la vie et à la mort, au corps et à l'âme. L'impureté n'est pas une honte — c'est un état qui appelle une transition. <strong>Morale :</strong> Il y a des moments dans la vie où l'on a besoin de se 'purifier' — de se recentrer, de faire le vide, de recommencer. Ce n'est pas de la faiblesse. C'est de la sagesse.",
+
+  29:"'Vous serez saints, car Je suis saint.' Cette injonction ouvre un code éthique qui couvre tout : l'honnêteté commerciale, le respect des parents, l'amour du prochain, la protection du faible, l'égalité devant la loi. La sainteté n'est pas réservée aux mystiques. <strong>Morale :</strong> La sainteté est accessible à tous, dans chaque acte ordinaire accompli avec conscience et amour. Le supermarché, le bureau, la table familiale — tout peut devenir un lieu saint.",
+
+  31:"Les cohanim sont appelés à une sainteté particulière — non pour eux-mêmes, mais pour servir le peuple. La pureté du prêtre n'est pas un privilège : c'est le prix de la responsabilité. <strong>Morale :</strong> Plus une responsabilité est grande, plus les exigences qui y sont attachées sont élevées. Ceux qui guident les autres doivent d'abord se guider eux-mêmes. Le leadership est d'abord une discipline intérieure.",
+
+  32:"La terre appartient à D.ieu. Tous les sept ans, elle se repose — la Chemita. Tous les cinquante ans, tout revient à son propriétaire d'origine — le Jubilé. Personne ne peut posséder la terre indéfiniment. <strong>Morale :</strong> Nous sommes des locataires, pas des propriétaires. De la terre, de nos richesses, de nos vies. Cette conscience change radicalement notre rapport aux biens matériels et à la justice sociale.",
+
+  34:"Dans le désert, D.ieu demande à dénombrer le peuple. Chaque personne est comptée — chacun compte. Ce n'est pas un recensement bureaucratique : c'est un acte d'amour divin. <strong>Morale :</strong> Être compté, c'est être reconnu dans son existence individuelle. La communauté n'est pas une masse — elle est la somme de personnes uniques, chacune irremplaçable aux yeux de D.ieu.",
+
+  35:"Aaron et ses fils reçoivent une bénédiction à transmettre au peuple : 'Que D.ieu te bénisse et te garde, qu'Il fasse rayonner Sa face sur toi...' Ces mots sont encore récités chaque Chabbat sur les enfants. <strong>Morale :</strong> Bénir quelqu'un, c'est lui dire : je te vois, je t'aime, je te souhaite ce qu'il y a de meilleur. La bénédiction parentale est l'un des actes les plus puissants et les plus sous-estimés de la vie juive.",
+
+  36:"Miriam critique Moïse et est frappée de lèpre. Aaron intercède, Moïse prie pour sa guérison. Le camp attend sept jours. <strong>Morale :</strong> La médisance blesse celui qui la dit autant que celui qui en est victime. Et la guérison d'une relation abîmée exige du temps, de l'humilité, et la prière de ceux qui aiment les deux parties.",
+
+  37:"Les espions reviennent et sèment la panique. Deux voix dissonantes — Calev et Josué — affirment que la terre est prenable. Le peuple ne les entend pas. Quarante ans de désert s'ensuivent. <strong>Morale :</strong> La peur collective est l'ennemi le plus dangereux d'un peuple. Elle déguise la lâcheté en sagesse. Cherche toujours les Calev et Josué de ta vie — ceux qui voient les difficultés mais ne capitulent pas devant elles.",
+
+  38:"Koraḥ conteste l'autorité de Moïse : 'Toute la communauté est sainte — pourquoi vous élevez-vous au-dessus d'elle ?' La question est juste. La motivation est mauvaise. <strong>Morale :</strong> Une bonne question posée avec de mauvaises intentions reste une attaque. La jalousie peut se déguiser en idéalisme. Interroge toujours tes motivations avant de contester l'autorité — même légitime.",
+
+  39:"Les lois de la vache rousse — chukkat — défient toute explication rationnelle. Elles purifient l'impur et impurifient le pur. Moïse lui-même ne comprenait pas. Dieu lui dit : c'est un 'hok' — une loi que tu n'as pas à comprendre. <strong>Morale :</strong> Il y a des dimensions de la réalité qui dépassent notre compréhension. La foi n'est pas l'absence de questionnement — c'est la capacité à continuer malgré l'absence de réponse. Et parfois, c'est la forme de sagesse la plus profonde.",
+
+  41:"Pinhas agit avec zèle face à une transgression publique. Il est récompensé par une alliance de paix. Paradoxe : l'acte violent est couronné par la paix. <strong>Morale :</strong> Il y a des moments dans la vie où l'inaction est une complicité. Agir avec courage et décision, même à contre-courant, peut être le chemin vers la paix — pas de la paix à tout prix, mais de la paix vraie.",
+
+  42:"Les tribus de Reuven et Gad demandent à rester à l'est du Jourdain. Moïse accepte à condition qu'ils combattent en première ligne pour leurs frères. La solidarité nationale prime sur les intérêts tribaux. <strong>Morale :</strong> Les avantages et les responsabilités sont liés. Ceux qui profitent de la communauté doivent aussi en porter le poids. Il n'y a pas de liberté sans solidarité.",
+
+  44:"'Ces sont les paroles que Moïse dit à tout Israël.' Le Deutéronome est le testament de Moïse. Il répète, explique, commente la Torah — non pour corriger, mais pour qu'elle soit comprise. <strong>Morale :</strong> L'enseignement ne suffit pas une fois. Il doit être répété, réexpliqué, réadapté à chaque génération. La pédagogie est un acte d'amour renouvelé.",
+
+  45:"'Écoute Israël, l'Éternel est notre D.ieu, l'Éternel est Un.' Cette phrase résume tout. Elle se dit deux fois par jour, à la mort, dans les moments de détresse et de joie extrême. <strong>Morale :</strong> L'Unité divine n'est pas une abstraction philosophique. C'est une invitation à voir l'unité derrière la diversité — dans le monde, dans les autres, en soi-même. Tout est un.",
+
+  46:"Moïse rappelle les bénédictions liées à l'obéissance et les difficultés liées à l'éloignement. Mais il ajoute : même si vous tombez, vous reviendrez. La téchouva est toujours possible. <strong>Morale :</strong> L'histoire n'est pas linéaire. Les chutes font partie du chemin. Ce qui compte, c'est la direction dans laquelle on se retourne après être tombé.",
+
+  47:"'Vois — je pose devant toi ce jour la vie et le bien, la mort et le mal.' La Torah présuppose le libre arbitre. D.ieu pose les options mais ne choisit pas à ta place. <strong>Morale :</strong> La liberté est la dignité fondamentale de l'être humain. Elle rend possible l'erreur — et donc la croissance. Un monde sans libre arbitre serait un monde de robots parfaits, sans amour, sans mérite, sans sens.",
+
+  48:"Moïse institue des juges pour chaque ville. 'Justice, justice tu poursuivras' — le mot est répété. Pas seulement être juste, mais poursuivre la justice, y aspirer activement. <strong>Morale :</strong> La justice n'est pas un état statique à atteindre. C'est une course permanente. Dans une société, dans une famille, en soi-même. Celui qui cesse de la poursuivre commence à s'en éloigner.",
+
+  49:"'Souviens-toi de ce qu'Amalek t'a fait sur le chemin, à ta sortie d'Égypte.' Amalek attaquait les faibles à l'arrière de la colonne. La Torah demande de ne jamais oublier. <strong>Morale :</strong> La mémoire collective n'est pas de la rancœur — c'est une vigilance éthique. Se souvenir du mal n'est pas pour entretenir la haine, mais pour ne jamais laisser les faibles sans protection.",
+
+  50:"Les prémices — bikkourim — sont apportés au Temple avec une confession de foi : 'Mon père était un Araméen errant...' L'histoire du peuple est récitée sur les fruits de la terre. <strong>Morale :</strong> La gratitude authentique n'oublie pas d'où elle vient. Quand tu remercies, inclus ton histoire. Les racines donnent au fruit toute sa saveur.",
+
+  51:"Moïse convoque tout Israël : 'Vous vous tenez tous aujourd'hui devant l'Éternel.' Tous — des chefs aux coupeurs de bois, aux porteurs d'eau. Personne n'est exclu de l'alliance. <strong>Morale :</strong> L'alliance divine n'est pas réservée à une élite. Elle inclut chacun dans sa fonction, dans sa station. Le porteur d'eau est aussi essentiel que le prince dans l'édifice du peuple.",
+
+  53:"Moïse chante son dernier poème — Ha'azinou. Le ciel et la terre sont appelés comme témoins. C'est une accusation, une espérance, un testament. <strong>Morale :</strong> Avant de mourir, ce qui importe est de transmettre sa vérité — non ses biens, non ses titres, mais sa vérité. Ce que tu laisses dans les cœurs compte plus que ce que tu laisses dans les mains.",
+
+  54:"Moïse bénit chaque tribu avant de mourir. Puis il monte sur la montagne et voit la Terre Promise qu'il n'entrera pas. Il meurt au sommet, dans la bouche de D.ieu. <strong>Morale :</strong> La grandeur de Moïse n'est pas dans ce qu'il a atteint — c'est dans ce qu'il a transmis. Mourir sans avoir tout accompli, mais avoir tout donné : c'est peut-être la mort la plus belle qui soit."
+};
+
+function getParashaIdeeCle(id){
+  return PARASHA_IDEES[id]||null;
+}
+
+function getHayomIdeeCle(hd){
+  var key=hd.m+'_'+hd.d;
+  return HY_IDEES[key]||null;
+}
+
+function getSeferIdeeCle(coursNum){
+  return SF_IDEES[String(coursNum)]||null;
+}
+
+function renderIdeeCle(text){
+  if(!text) return '';
+  return '<div class="idee-cle">'
+    +'<div class="idee-cle-badge">⚡ Idée clé</div>'
+    +'<div class="idee-cle-text">'+text+'</div>'
+    +'</div>';
+}
+
+
 function renderHayomYom(d){
   var h='';
   if(d.heb) h+='<div class="hyd-heb">'+d.heb+'</div>';
@@ -2004,6 +2486,10 @@ function renderHayomYom(d){
   txt=txt.replace(/^(Tanya\s*:)/gm,'<strong style="color:#C9A84C">$1</strong>');
   txt=txt.replace(/^(\d+ [A-Za-zÀ-ÿ]+ .{0,20}jour de l.Omer)/gm,'<em style="color:#8E8E93">$1</em>');
   h+='<div class="hyd-fr-block">'+txt+'</div>';
+  // Idée clé Hayom Yom
+  var _hd=parseHebDate(hebDateStr)||g2h(new Date().getDate(),new Date().getMonth(),new Date().getFullYear());
+  var _hy_idee=getHayomIdeeCle(_hd);
+  if(_hy_idee) h+=renderIdeeCle(_hy_idee);
   h+='<div class="hyd-source">'+d.src
     +' · <a href="'+(d.url||getLoubavitchURL(getLoubavitchID()))+'" target="_blank">loubavitch.fr ↗</a>'
     +' · <a href="https://fr.chabad.org/dailystudy/hayomyom.asp" target="_blank">fr.chabad.org ↗</a>'
@@ -2039,7 +2525,7 @@ function getSeferLoubavitchURL(id){
 function openSefer(){
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-sefer').style.display='block';
-  document.getElementById('btn-back').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
   window.scrollTo(0,0);
   var t=new Date();
   var dateHeb=hebDateFr||fmtHebFr(parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear()));
@@ -2113,6 +2599,9 @@ function renderSeferLoubavitch(d){
   txt=txt.replace(/(Cours N° \d+)/g,'<strong style="color:#6a3fa0">$1</strong>');
   txt=txt.replace(/(Mitsva (positive|négative) N° \d+)/g,'<strong style="color:#6a3fa0">$1</strong>');
   h+=txt+'</div>';
+  // Idée clé Sefer
+  var _sf_idee=getSeferIdeeCle(getSeferCoursNumber());
+  if(_sf_idee) h+=renderIdeeCle(_sf_idee);
   h+='<div class="hyd-source">Source : '
     +'<a href="'+d.url+'" target="_blank" style="color:#6a3fa0;font-size:12px">loubavitch.fr ↗</a>'
     +' · Rambam, Sefer HaMitsvot · Calendrier du Rabbi de Loubavitch'
@@ -2162,6 +2651,8 @@ function renderSefer(d){
   }
   d.positives.forEach(function(it){h+=blk(it,true);});
   d.negatives.forEach(function(it){h+=blk(it,false);});
+  var _sf_idee2=getSeferIdeeCle(d.dayNum);
+  if(_sf_idee2) h+=renderIdeeCle(_sf_idee2);
   h+='<div class="hyd-source" style="margin-top:16px;padding-top:12px;border-top:1px solid #d4c8a8">'
     +'Source : <a href="'+getSeferLoubavitchURL(getSeferLoubavitchID())+'" target="_blank" style="color:#6a3fa0">Sefer HaMitsvot · loubavitch.fr ↗</a>'
     +' · Calendrier établi par le Rabbi de Loubavitch</div>';
@@ -2305,14 +2796,16 @@ function openP(id){
   if(!p) p=P[0];
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-detail').style.display='block';
-  document.getElementById('btn-back').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
   showTab('heb');
   document.getElementById('d-book').textContent=p.book+' · '+p.bh;
   document.getElementById('d-name').textContent=p.name;
   document.getElementById('d-heb').textContent=p.heb;
   document.getElementById('d-ref').textContent=p.ref;
   loadMeta(id,function(m){
-    document.getElementById('d-summary').innerHTML=m.s;
+    var ideeParacha=getParashaIdeeCle(id);
+    var ideeBlock=ideeParacha?renderIdeeCle(ideeParacha):'';
+    document.getElementById('d-summary').innerHTML=m.s+ideeBlock;
     document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'');
   });
   // Vue bilingue : hébreu + traduction française verset par verset
@@ -2411,7 +2904,84 @@ function renderV(verses,elId){
   el.innerHTML=html;
 }
 
+
+function setActiveNav(el){
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  el.classList.add('active');
+}
+function showParachiotView(){
+  // Aller à l'accueil et ouvrir la liste des parashot
+  goHome();
+  setTimeout(function(){
+    var body=document.querySelector('.pl-body');
+    if(body&&!body.classList.contains('open')) togglePS();
+    var el=document.querySelector('.card-paralist');
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  },100);
+}
+function showProfileView(){
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-detail').style.display='none';
+  document.getElementById('view-hayom').style.display='none';
+  document.getElementById('view-sefer').style.display='none';
+  document.getElementById('view-profile').style.display='block';
+  document.getElementById('btn-back').style.display='none';
+  window.scrollTo(0,0);
+}
+function showComingSoon(){
+  alert('Authentification bientôt disponible ! La prochaine version intègrera Firebase Auth avec email et Google.');
+}
+
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
-buildHome(); // affichage immédiat avec données locales en attendant
-initLoc();   // charge Hebcal puis rebuild
-</script></body></html>
+try {
+  initSupabase();
+  buildHome();
+} catch(e) {
+  document.getElementById('view-home').innerHTML =
+    '<div style="padding:40px 20px;font-family:sans-serif">'
+    + '<div style="color:red;font-size:14px;font-weight:bold;margin-bottom:8px">Erreur JS :</div>'
+    + '<div style="color:#333;font-size:13px;word-break:break-all">' + e.message + '</div>'
+    + '<div style="color:#888;font-size:11px;margin-top:8px">' + (e.stack||'').split('\n')[1] + '</div>'
+    + '</div>';
+  console.error('buildHome error:', e);
+}
+try {
+  initLoc();
+} catch(e2) {
+  console.error('initLoc error:', e2);
+}
+</script>
+<!-- Bottom Navigation -->
+<nav id="bottom-nav">
+  <div class="nav-item active" onclick="goHome();setActiveNav(this)">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span class="nav-label">Accueil</span>
+  </div>
+  <div class="nav-item" onclick="showParachiotView();setActiveNav(this)">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </div>
+    <span class="nav-label">Parachiot</span>
+  </div>
+  <div class="nav-item" onclick="setActiveNav(this)">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <span class="nav-label">Explorer</span>
+  </div>
+  <div class="nav-item" onclick="setActiveNav(this)">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <span class="nav-label">Favoris</span>
+  </div>
+  <div class="nav-item" onclick="showProfileView();setActiveNav(this)">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <span class="nav-label">Profil</span>
+  </div>
+</nav>
+</body></html>
