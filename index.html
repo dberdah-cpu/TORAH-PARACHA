@@ -2934,7 +2934,6 @@ function showComingSoon(){
 
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
 try {
-  initSupabase();
   buildHome();
 } catch(e) {
   document.getElementById('view-home').innerHTML =
@@ -2947,6 +2946,7 @@ try {
 }
 try {
   initLoc();
+  initSupabase();
 } catch(e2) {
   console.error('initLoc error:', e2);
 }
