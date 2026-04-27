@@ -3416,6 +3416,155 @@ function toggleEns(id){
 }
 
 
+
+// ══════════════════════════════════════════════════════════════
+// SUPABASE AUTH
+// ══════════════════════════════════════════════════════════════
+var SUPABASE_URL='https://atsfgzabpwirfhnzpzei.supabase.co';
+var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMzg2ODMsImV4cCI6MjA5MjgxNDY4M30._KKN8S32AGpG90GgqZZ_8qNJ8PBU9H0aPFzhEtB_P78';
+var supabase=null;
+var currentUser=null;
+var authMode='login';
+
+function initSupabase(){
+  var script=document.createElement('script');
+  script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  script.onload=function(){
+    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    supabase.auth.onAuthStateChange(function(event,session){
+      currentUser=session?session.user:null;
+      updateProfileUI();
+      if(event==='SIGNED_IN'&&window.location.hash.includes('access_token')){
+        window.history.replaceState({},'',window.location.pathname);
+        showProfileView();
+      }
+    });
+    supabase.auth.getSession().then(function(r){
+      currentUser=r.data.session?r.data.session.user:null;
+      updateProfileUI();
+    });
+  };
+  document.head.appendChild(script);
+}
+
+function switchAuthTab(mode){
+  authMode=mode;
+  var bl=document.getElementById('tab-login');
+  var br=document.getElementById('tab-register');
+  var ff=document.getElementById('auth-firstname');
+  var sb=document.getElementById('auth-submit-btn');
+  var fl=document.getElementById('forgot-link');
+  var pw=document.getElementById('auth-pwd');
+  if(mode==='login'){
+    bl.style.background='#fff';bl.style.color='var(--purple)';bl.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)';
+    br.style.background='transparent';br.style.color='var(--gray-3)';br.style.boxShadow='none';
+    if(ff)ff.style.display='none';
+    if(sb)sb.textContent='Se connecter';
+    if(fl)fl.style.display='block';
+    if(pw)pw.placeholder='Mot de passe';
+  } else {
+    br.style.background='#fff';br.style.color='var(--purple)';br.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)';
+    bl.style.background='transparent';bl.style.color='var(--gray-3)';bl.style.boxShadow='none';
+    if(ff)ff.style.display='block';
+    if(sb)sb.textContent='Créer mon compte';
+    if(fl)fl.style.display='none';
+    if(pw)pw.placeholder='Mot de passe (6 min)';
+  }
+}
+
+function showAuthMsg(msg,isError){
+  var el=document.getElementById('auth-msg');
+  if(!el) return;
+  el.style.display=msg?'block':'none';
+  el.style.background=isError?'#FEE2E2':'#DCFCE7';
+  el.style.color=isError?'#B91C1C':'#15803D';
+  el.style.border='1px solid '+(isError?'#FECACA':'#BBF7D0');
+  el.textContent=msg;
+}
+
+function authSubmit(){
+  if(!supabase){showAuthMsg('Supabase en cours de chargement, réessaie.',true);return;}
+  var email=(document.getElementById('auth-email').value||'').trim();
+  var pwd=document.getElementById('auth-pwd').value||'';
+  var firstname=(document.getElementById('auth-firstname').value||'').trim();
+  var btn=document.getElementById('auth-submit-btn');
+  if(!email||!pwd){showAuthMsg('Remplis tous les champs.',true);return;}
+  if(pwd.length<6){showAuthMsg('Mot de passe : 6 caractères minimum.',true);return;}
+  if(btn){btn.disabled=true;btn.textContent='...';}
+  if(authMode==='register'){
+    supabase.auth.signUp({email:email,password:pwd,options:{data:{first_name:firstname}}})
+    .then(function(r){
+      if(btn){btn.disabled=false;btn.textContent='Créer mon compte';}
+      if(r.error)showAuthMsg('Erreur : '+r.error.message,true);
+      else showAuthMsg('✅ Compte créé ! Vérifie ton email.',false);
+    });
+  } else {
+    supabase.auth.signInWithPassword({email:email,password:pwd})
+    .then(function(r){
+      if(btn){btn.disabled=false;btn.textContent='Se connecter';}
+      if(r.error)showAuthMsg('Email ou mot de passe incorrect.',true);
+      else{showAuthMsg('✅ Connecté !',false);updateProfileUI();}
+    });
+  }
+}
+
+function authGoogle(){
+  if(!supabase){showAuthMsg('Supabase en cours de chargement.',true);return;}
+  supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});
+}
+
+function resetPassword(){
+  if(!supabase){showAuthMsg('Supabase non chargé.',true);return;}
+  var email=(document.getElementById('auth-email').value||'').trim();
+  if(!email){showAuthMsg('Entre ton email d\'abord.',true);return;}
+  supabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.href})
+  .then(function(r){
+    if(r.error)showAuthMsg('Erreur : '+r.error.message,true);
+    else showAuthMsg('✅ Email de réinitialisation envoyé !',false);
+  });
+}
+
+function authSignOut(){
+  if(!supabase) return;
+  supabase.auth.signOut().then(function(){
+    currentUser=null;
+    updateProfileUI();
+    showAuthMsg('',false);
+    var m=document.getElementById('auth-msg');
+    if(m)m.style.display='none';
+  });
+}
+
+function updateProfileUI(){
+  var fb=document.getElementById('auth-form-block');
+  var cb=document.getElementById('profile-connected-block');
+  var nm=document.getElementById('profile-name');
+  var em=document.getElementById('profile-email-display');
+  var av=document.getElementById('profile-avatar');
+  var inf=document.getElementById('profile-info');
+  var ntc=document.getElementById('supabase-notice');
+  if(!fb) return;
+  if(currentUser){
+    fb.style.display='none';
+    if(cb)cb.style.display='block';
+    var fname=(currentUser.user_metadata&&currentUser.user_metadata.first_name)||'';
+    var dn=fname||currentUser.email.split('@')[0];
+    if(nm)nm.textContent='Bonjour, '+dn+' 👋';
+    if(em)em.textContent=currentUser.email;
+    if(av){av.textContent=dn[0].toUpperCase();av.style.background='rgba(255,255,255,0.25)';av.style.fontSize='28px';av.style.fontFamily='Poppins,sans-serif';av.style.fontWeight='700';av.style.color='#fff';}
+    if(inf)inf.innerHTML='📧 '+currentUser.email+'<br>🕐 Membre depuis '+new Date(currentUser.created_at).toLocaleDateString('fr-FR');
+    if(ntc)ntc.style.display='none';
+  } else {
+    fb.style.display='block';
+    if(cb)cb.style.display='none';
+    if(nm)nm.textContent='Mon Profil';
+    if(em)em.textContent='Connectez-vous pour personnaliser votre expérience';
+    if(av){av.textContent='👤';av.style.fontSize='36px';}
+    if(ntc)ntc.style.display='none'; // Supabase configuré — cacher la notice
+  }
+}
+
+
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
 try {
   buildHome();
