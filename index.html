@@ -16,58 +16,79 @@
 
 
 
+
+/* ── HOME PROTOTYPE LAYOUT ── */
+#view-home{max-width:600px;margin:0 auto;padding:0 0 140px}
+
+/* Date card compact */
+.home-date-card{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid var(--gray-2)}
+.hdc-left{}
+.hdc-dayname{font-size:13px;font-weight:600;color:var(--gray-4);margin-bottom:2px}
+.hdc-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;font-weight:700;color:var(--dark);direction:rtl}
+.hdc-shabbat{display:flex;align-items:center;gap:8px;background:#FFF7ED;border-radius:10px;padding:8px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hdc-shabbat-times{font-size:11px;color:#92400E;font-weight:600;line-height:1.6}
+
+/* Paracha card — style prototype */
+.home-paracha-card{background:#fff;margin:0;box-shadow:none;border-bottom:1px solid var(--gray-2)}
+.hpc-label{font-size:12px;font-weight:600;color:var(--gray-3);letter-spacing:0.5px;padding:16px 20px 8px;font-family:'Poppins',sans-serif}
+.hpc-bg{background:linear-gradient(160deg,#0F172A 0%,#312E81 50%,#7C3AED 85%,#C97C1A 100%);padding:22px 20px 20px;margin:0 16px 0;border-radius:var(--radius);cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.hpc-bg::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(124,58,237,0.25)}
+.hpc-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:26px;font-weight:700;color:#fff;direction:rtl;line-height:1.3;margin-bottom:4px;position:relative;z-index:1}
+.hpc-name{font-size:19px;font-weight:700;color:rgba(255,255,255,0.95);margin-bottom:14px;font-family:'Poppins',sans-serif;position:relative;z-index:1}
+.hpc-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;position:relative;z-index:1;-webkit-tap-highlight-color:transparent}
+.hpc-brief{padding:14px 20px 16px}
+.hpc-brief-title{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;font-family:'Poppins',sans-serif}
+.hpc-brief-text{font-size:14px;color:var(--gray-4);line-height:1.6}
+.hpc-brief-link{font-size:13px;color:var(--purple);font-weight:600;margin-top:8px;cursor:pointer;display:inline-block}
+
+/* Quick access bar — fixe juste au-dessus de la nav */
+#quick-access-bar{
+  position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:200;
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--gray-2);
+  display:flex;padding:10px 8px 8px;
+  box-shadow:0 -2px 12px rgba(0,0,0,0.06);
+}
+.qa-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  padding:4px 2px;border-radius:10px;
+}
+.qa-item:active{background:var(--gray-1)}
+.qa-icon-wrap{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+.qa-item:nth-child(1) .qa-icon-wrap{background:#FFF7ED}
+.qa-item:nth-child(2) .qa-icon-wrap{background:#EEF2FF}
+.qa-item:nth-child(3) .qa-icon-wrap{background:#F0FDF4}
+.qa-item:nth-child(4) .qa-icon-wrap{background:#F5F3FF}
+.qa-item:nth-child(5) .qa-icon-wrap{background:#FFF7ED}
+.qa-label{font-size:9px;font-weight:600;color:var(--gray-4);font-family:'Poppins',sans-serif;text-align:center;line-height:1.2;white-space:nowrap}
+.qa-sublabel{font-size:8px;color:var(--gray-3);font-family:'Poppins',sans-serif;text-align:center;white-space:nowrap}
+
 /* ── SPLASH SCREEN ── */
 #splash{
   position:fixed;inset:0;z-index:9999;
-  background:#fff;
+  background:linear-gradient(160deg,#0a0a1a 0%,#12103a 50%,#1a0a2e 100%);
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   gap:0;
-  transition:opacity .5s ease, visibility .5s ease;
+  transition:opacity .5s ease,visibility .5s ease;
 }
 #splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
-.splash-logo{
-  width:160px;height:160px;
-  animation:splashPop .6s cubic-bezier(.34,1.56,.64,1) both;
-}
-.splash-title{
-  font-family:'Poppins',sans-serif;
-  font-size:36px;font-weight:800;
-  color:#0F172A;
-  letter-spacing:-1px;
-  margin-top:16px;
-  animation:splashFade .5s .3s both;
-}
-.splash-title span{
-  background:linear-gradient(90deg,#4F46E5,#EC4899,#F59E0B);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.splash-tagline{
-  font-family:'Poppins',sans-serif;
-  font-size:12px;font-weight:600;
-  color:#94A3B8;
-  letter-spacing:3px;text-transform:uppercase;
-  margin-top:4px;
-  animation:splashFade .5s .45s both;
-}
-.splash-bar{
-  width:48px;height:3px;border-radius:2px;
-  background:linear-gradient(90deg,#4F46E5,#EC4899,#F59E0B);
-  margin-top:32px;
-  animation:splashBar 1.2s .5s ease-in-out both;
-}
-@keyframes splashPop{
-  from{opacity:0;transform:scale(.7)}
-  to{opacity:1;transform:scale(1)}
-}
-@keyframes splashFade{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:translateY(0)}
-}
-@keyframes splashBar{
-  from{width:0;opacity:0}
-  to{width:80px;opacity:1}
+.splash-logo{width:100px;height:100px;animation:splashPop .6s cubic-bezier(.34,1.56,.64,1) both}
+.splash-brand{display:flex;align-items:center;gap:12px;margin-top:16px;animation:splashFade .5s .3s both}
+.splash-brand-name{font-family:'Poppins',sans-serif;font-size:38px;font-weight:800;color:#fff;letter-spacing:-1px}
+.splash-subtitle{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:4px;text-transform:uppercase;margin-top:6px;animation:splashFade .5s .4s both;text-align:center}
+.splash-tagline{font-family:'Poppins',sans-serif;font-size:20px;font-weight:600;color:#fff;margin-top:32px;text-align:center;line-height:1.4;animation:splashFade .5s .5s both;max-width:300px}
+.splash-tagline span{background:linear-gradient(90deg,#818CF8,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.splash-bar{width:0;height:3px;border-radius:2px;background:linear-gradient(90deg,#4F46E5,#EC4899,#F59E0B);margin-top:40px;animation:splashBar 1.2s .5s ease-in-out both}
+@keyframes splashPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+@keyframes splashFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes splashBar{from{width:0;opacity:0}to{width:80px;opacity:1}}
 }
 
 /* ── Variables ── */
@@ -93,6 +114,7 @@
   --shadow:0 2px 12px rgba(79,70,229,0.12);
   --shadow-lg:0 8px 32px rgba(79,70,229,0.18);
   --nav-h:72px;
+  --quick-h:72px;
 }
 
 /* ── Reset ── */
@@ -105,7 +127,7 @@ body{
   font-size:16px;
   min-height:100vh;
   overscroll-behavior:none;
-  padding-bottom:var(--nav-h);
+  padding-bottom:calc(var(--nav-h) + var(--quick-h));
 }
 
 /* ── Header ── */
@@ -580,38 +602,59 @@ body{
 <div id="splash">
   <svg class="splash-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="kg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" style="stop-color:#22D3EE"/>
         <stop offset="50%" style="stop-color:#EC4899"/>
         <stop offset="100%" style="stop-color:#F59E0B"/>
       </linearGradient>
-      <linearGradient id="kg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" style="stop-color:#8B5CF6"/>
         <stop offset="100%" style="stop-color:#F59E0B"/>
       </linearGradient>
     </defs>
-    <!-- K vertical bar -->
-    <rect x="30" y="20" width="32" height="160" rx="16" fill="url(#kg1)"/>
-    <!-- K upper diagonal -->
-    <path d="M62 100 L150 25 Q162 15 168 28 L90 108 Z" fill="url(#kg1)"/>
-    <!-- K lower diagonal (flame shape) -->
-    <path d="M62 100 L140 168 Q148 182 135 185 Q120 188 110 175 L75 128 Z" fill="url(#kg2)"/>
-    <!-- Book icon -->
+    <rect x="30" y="20" width="32" height="160" rx="16" fill="url(#sg1)"/>
+    <path d="M62 100 L150 25 Q162 15 168 28 L90 108 Z" fill="url(#sg1)"/>
+    <path d="M62 100 L140 168 Q148 182 135 185 Q120 188 110 175 L75 128 Z" fill="url(#sg2)"/>
     <path d="M82 108 Q100 95 118 108 L118 140 Q100 130 82 140 Z" fill="white" opacity="0.9"/>
     <line x1="100" y1="97" x2="100" y2="141" stroke="white" stroke-width="2.5" opacity="0.8"/>
-    <!-- Stars -->
     <path d="M158 38 L160 32 L162 38 L168 40 L162 42 L160 48 L158 42 L152 40 Z" fill="#F59E0B"/>
-    <path d="M148 55 L149.5 51 L151 55 L155 56.5 L151 58 L149.5 62 L148 58 L144 56.5 Z" fill="#4F46E5" opacity="0.8"/>
-    <circle cx="164" cy="58" r="3" fill="#7C3AED" opacity="0.7"/>
+    <path d="M148 55 L149.5 51 L151 55 L155 56.5 L151 58 L149.5 62 L148 58 L144 56.5 Z" fill="#818CF8" opacity="0.8"/>
   </svg>
-  <div class="splash-title">Kedo<span>shim</span></div>
-  <div class="splash-tagline">Nous sommes tous Kadosh</div>
+  <div class="splash-brand">
+    <div class="splash-brand-name">Kedoshim</div>
+  </div>
+  <div class="splash-subtitle">Nous sommes tous Kadosh</div>
+  <div class="splash-tagline">La Torah au quotidien,<br>pour une vie plus <span>inspirée</span>.</div>
   <div class="splash-bar"></div>
 </div>
 
 <div id="hdr">
   <button id="btn-back" onclick="goHome()" style="display:none;background:none;border:none;color:var(--purple);font-size:15px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;align-items:center;gap:4px">‹ Retour</button>
-  <div id="hdr-title" style="font-family:Poppins,sans-serif;font-weight:800;font-size:15px;letter-spacing:-0.3px">K<span style="color:var(--purple)">e</span>doshim</div>
+  <div id="hdr-logo" style="display:flex;align-items:center;gap:8px">
+    <svg width="28" height="28" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hg1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#22D3EE"/>
+          <stop offset="50%" style="stop-color:#EC4899"/>
+          <stop offset="100%" style="stop-color:#F59E0B"/>
+        </linearGradient>
+        <linearGradient id="hg2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#8B5CF6"/>
+          <stop offset="100%" style="stop-color:#F59E0B"/>
+        </linearGradient>
+      </defs>
+      <rect x="30" y="20" width="32" height="160" rx="16" fill="url(#hg1)"/>
+      <path d="M62 100 L150 25 Q162 15 168 28 L90 108 Z" fill="url(#hg1)"/>
+      <path d="M62 100 L140 168 Q148 182 135 185 Q120 188 110 175 L75 128 Z" fill="url(#hg2)"/>
+      <path d="M82 108 Q100 95 118 108 L118 140 Q100 130 82 140 Z" fill="white" opacity="0.9"/>
+      <line x1="100" y1="97" x2="100" y2="141" stroke="white" stroke-width="2.5" opacity="0.8"/>
+    </svg>
+    <span style="font-family:Poppins,sans-serif;font-size:18px;font-weight:800;color:var(--dark);letter-spacing:-0.5px">Kedoshim</span>
+  </div>
+  <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+  </button>
+</div>
   <div style="display:flex;gap:12px;align-items:center">
     <div id="hdr-heb" style="font-family:Noto Sans Hebrew,sans-serif;font-size:16px;color:var(--purple)">תּוֹרָה</div>
   </div>
@@ -2025,56 +2068,49 @@ function buildHome(){
   var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
   var dayName=FR_D[t.getDay()];
 
-  // ── HERO : stories + date + chabbat ──
-  h+='<div class="home-hero">';
-  // Stories en haut du hero
-  h+='<div class="story-bar" id="story-bar"></div>';
-  // Date principale
-  h+='<div class="home-hero-body">'
-    +'<div class="home-hero-dayname">'+dayName+'</div>'
-    +'<div class="home-hero-greg">'+gd+' '+FR_M[gm]+' '+gy+'</div>'
-    +'<div class="home-hero-heb-fr">'+dateHebFrDisplay+'</div>';
-  // Chabbat intégré si disponible
-  if(candleTime||havdalaTime){
-    var candleDate=null,havdalaDate=null;
-    if(hebcalData&&hebcalData.items){
-      hebcalData.items.forEach(function(it){
-        if(it.category==='candles'&&it.date)candleDate=new Date(it.date);
-        if(it.category==='havdalah'&&it.date)havdalaDate=new Date(it.date);
-      });
-    }
-    var friStr2=candleDate?candleDate.getDate()+' '+FR_M[candleDate.getMonth()]:'';
-    var satStr2=havdalaDate?havdalaDate.getDate()+' '+FR_M[havdalaDate.getMonth()]:'';
-    h+='<div class="home-hero-shabbat">'
-      +'<span class="hhs-icon">🕯</span>'
-      +'<span class="hhs-text">Chabbat'+(friStr2?' '+friStr2:'')+(satStr2?'–'+satStr2:'')
-      +(candleTime?' · Allumage '+candleTime:'')
-      +(havdalaTime?' · Havdala '+havdalaTime:'')
-      +'</span>'
-      +'</div>';
-  }
-  h+='</div></div>';
   h+='<div class="feed">';
 
-  // Paracha banner — utilise currentCID ET currentParashaName (tous deux de Hebcal)
+  // ── DATE + CHABBAT (compact) ──
+  h+='<div class="home-date-card">'
+    +'<div class="hdc-left">'
+    +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+'</div>'
+    +'<div class="hdc-heb">'+dateHebHeb+'</div>'
+    +'</div>';
+  if(candleTime||havdalaTime){
+    h+='<div class="hdc-shabbat" onclick="openShabbatPanel()">'
+      +'<span>🕯</span>'
+      +'<div class="hdc-shabbat-times">'
+      +(candleTime?'<div>Allumage '+candleTime+'</div>':'')
+      +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
+      +'</div>'
+      +'</div>';
+  }
+  h+='</div>';
+
+  // ── PARACHA — style prototype ──
   var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
   var parashaHebDisplay=currentParashaHeb||cur.heb;
-  // cur pour le livre/ref est recalculé depuis currentCID (pas CID local)
   var curForBanner=getP(currentCID)||cur;
-  h+='<div class="card-paracha" id="paracha-banner" onclick="openP(currentCID)">'
-    +'<div class="card-paracha-bg">'
-    +'<div class="cp-label">📖 Paracha de la semaine</div>'
-    +'<div class="cp-hook">Comprendre en profondeur la Torah de la semaine</div>'
-    +'<div class="cp-heb">'+parashaHebDisplay+'</div>'
-    +'<div class="cp-name">'+parashaDisplay+'</div>'
-    +'<div class="cp-book">'+curForBanner.book+'</div>'
-    +'<div class="cp-arrow">›</div>'
-    +'</div></div>';
-
-  // Quick access cards
-  h+='<div class="card-duo">'
-    +'<div class="card-study hayom" onclick="openHayomYom()"><div class="card-study-inner"><span class="cs-icon">☀️</span><div class="cs-title">Hayom Yom</div><div class="cs-sub">💡 Une idée pour améliorer ta journée</div></div></div>'
-    +'<div class="card-study sefer" onclick="openSefer()"><div class="card-study-inner"><span class="cs-icon">📋</span><div class="cs-title">Sefer HaMitsvot</div><div class="cs-sub">📜 Une mitsva expliquée simplement</div></div></div>'
+  // Résumé court pour "En bref"
+  var mc=MC[currentCID]||{};
+  var briefText='';
+  if(mc.s){
+    var tmp=mc.s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    var sents=tmp.match(/[^.!?]+[.!?]+/g)||[];
+    briefText=sents.slice(0,2).join(' ');
+  }
+  h+='<div class="home-paracha-card" id="paracha-banner">'
+    +'<div class="hpc-label">Paracha de la semaine</div>'
+    +'<div class="hpc-bg" onclick="openP(currentCID)">'
+    +'<div class="hpc-heb">'+parashaHebDisplay+'</div>'
+    +'<div class="hpc-name">'+parashaDisplay+'</div>'
+    +'<button class="hpc-btn">Lire la paracha →</button>'
+    +'</div>'
+    +(briefText?'<div class="hpc-brief">'
+      +'<div class="hpc-brief-title">En bref</div>'
+      +'<div class="hpc-brief-text">'+briefText+'</div>'
+      +'<div class="hpc-brief-link" onclick="openP(currentCID);showTab('sum')">Voir le résumé</div>'
+      +'</div>':'')
     +'</div>';
 
   // Verset du jour
@@ -2118,8 +2154,11 @@ function buildHome(){
 
   h+='</div>'; // end .feed
   document.getElementById('view-home').innerHTML=h;
-  buildStoryBar();
-  renderFetesCard();
+}
+
+function scrollToVerset(){
+  var el=document.querySelector(".card-verset");
+  if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
 function togglePS(){
@@ -3584,6 +3623,36 @@ try {
   console.error('initLoc error:', e2);
 }
 </script>
+
+<!-- Quick Access Bar (fixe au-dessus de la nav) -->
+<div id="quick-access-bar">
+  <div class="qa-item" onclick="openHayomYom()">
+    <div class="qa-icon-wrap">☀️</div>
+    <div class="qa-label">Hayom Yom</div>
+    <div class="qa-sublabel">Enseignement du jour</div>
+  </div>
+  <div class="qa-item" onclick="openSefer()">
+    <div class="qa-icon-wrap">📋</div>
+    <div class="qa-label">Sefer HaMitsvot</div>
+    <div class="qa-sublabel">Mitsva du jour</div>
+  </div>
+  <div class="qa-item" onclick="openShabbatPanel()">
+    <div class="qa-icon-wrap">🕯</div>
+    <div class="qa-label">Chabbat</div>
+    <div class="qa-sublabel">Horaires &amp; Paracha</div>
+  </div>
+  <div class="qa-item" onclick="scrollToVerset()">
+    <div class="qa-icon-wrap">💬</div>
+    <div class="qa-label">Verset du jour</div>
+    <div class="qa-sublabel">Un verset inspirant</div>
+  </div>
+  <div class="qa-item" onclick="openCal()">
+    <div class="qa-icon-wrap">📅</div>
+    <div class="qa-label">Calendrier</div>
+    <div class="qa-sublabel">Fêtes &amp; agenda</div>
+  </div>
+</div>
+
 <!-- Bottom Navigation -->
 <nav id="bottom-nav">
   <div class="nav-item active" onclick="goHome();setActiveNav(this)">
