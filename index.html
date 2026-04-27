@@ -16,75 +16,6 @@
 
 
 
-/* ── RECUEIL D'ENSEIGNEMENTS ── */
-#view-recueil{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
-.rec-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
-.rec-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none}
-.rec-hero-title{font-size:26px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
-.rec-hero-sub{font-size:13px;color:rgba(255,255,255,0.65);font-style:italic;margin-bottom:20px}
-.rec-search-wrap{position:relative}
-.rec-search{width:100%;padding:12px 16px 12px 42px;border:none;border-radius:12px;font-size:15px;font-family:'Poppins',sans-serif;background:rgba(255,255,255,0.95);color:var(--dark);outline:none;box-sizing:border-box}
-.rec-search::placeholder{color:var(--gray-3)}
-.rec-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-3);font-size:16px;pointer-events:none}
-
-.rec-themes{display:flex;gap:8px;overflow-x:auto;padding:16px 16px 8px;scrollbar-width:none}
-.rec-themes::-webkit-scrollbar{display:none}
-.rec-theme-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:700;color:var(--gray-4);cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all .15s}
-.rec-theme-btn:active{opacity:.7}
-.rec-theme-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-
-.rec-count{font-size:12px;color:var(--gray-3);padding:4px 16px 8px;font-weight:600}
-
-.rec-list{padding:0 16px;display:flex;flex-direction:column;gap:12px}
-.rec-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.rec-card:active{transform:scale(0.99);opacity:.95}
-.rec-card-header{display:flex;align-items:center;gap:12px;padding:16px 16px 12px}
-.rec-card-emoji{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:linear-gradient(135deg,#EEF2FF,#F5F3FF)}
-.rec-card-meta{flex:1;min-width:0}
-.rec-card-theme{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:3px;font-family:'Poppins',sans-serif}
-.rec-card-title{font-size:15px;font-weight:700;color:var(--dark);line-height:1.3;font-family:'Poppins',sans-serif}
-.rec-card-body{padding:0 16px 16px;font-size:14px;line-height:1.75;color:var(--gray-4);display:none}
-.rec-card-body.open{display:block}
-.rec-card-source{font-size:11px;color:var(--purple);font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid var(--gray-2)}
-.rec-card-rabbi{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px;font-style:italic;color:var(--dark);line-height:1.7}
-.rec-card-toggle{padding:8px 16px;text-align:center;font-size:12px;color:var(--purple);font-weight:700;border-top:1px solid var(--gray-2);background:none;border:none;border-top:1px solid var(--gray-2);width:100%;cursor:pointer;font-family:'Poppins',sans-serif}
-.rec-empty{text-align:center;padding:48px 20px;color:var(--gray-3);font-size:15px}
-
-
-/* ── RECUEIL D'ENSEIGNEMENTS ── */
-#view-recueil{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
-.recueil-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
-.recueil-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none}
-.recueil-hero-title{font-size:26px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
-.recueil-hero-sub{font-size:13px;color:rgba(255,255,255,0.65);font-style:italic;margin-bottom:16px}
-/* Barre de recherche */
-.recueil-search{position:relative}
-.recueil-search input{width:100%;padding:12px 16px 12px 42px;border-radius:12px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:15px;font-family:'Poppins',sans-serif;outline:none}
-.recueil-search input::placeholder{color:rgba(255,255,255,0.5)}
-.recueil-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.6);font-size:16px;pointer-events:none}
-/* Filtres thèmes */
-.recueil-themes{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 8px;scrollbar-width:none;background:#fff;border-bottom:1px solid var(--gray-2)}
-.recueil-themes::-webkit-scrollbar{display:none}
-.theme-chip{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:600;color:var(--gray-4);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:'Poppins',sans-serif;white-space:nowrap;transition:all .15s}
-.theme-chip.active{background:var(--purple);border-color:var(--purple);color:#fff}
-.theme-chip:active{opacity:.7}
-/* Liste enseignements */
-.recueil-list{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
-/* Carte enseignement */
-.ens-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ens-card:active{transform:scale(0.99)}
-.ens-card-header{padding:16px 18px 12px;border-bottom:1px solid var(--gray-2)}
-.ens-theme-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:8px;font-family:'Poppins',sans-serif}
-.ens-titre{font-size:16px;font-weight:700;color:var(--dark);line-height:1.3;font-family:'Poppins',sans-serif}
-.ens-card-body{padding:12px 18px 14px}
-.ens-texte{font-size:14px;line-height:1.8;color:var(--gray-4)}
-.ens-texte-truncated{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.ens-texte-full{display:block}
-.ens-source{font-size:11px;color:var(--gray-3);margin-top:10px;padding-top:8px;border-top:1px solid var(--gray-2);font-style:italic}
-.ens-expand-btn{font-size:12px;color:var(--purple);font-weight:600;margin-top:6px;cursor:pointer;display:inline-block}
-.ens-empty{text-align:center;padding:48px 20px;color:var(--gray-3);font-size:15px}
-.recueil-count{font-size:12px;color:var(--gray-3);font-weight:600;padding:8px 16px 0;text-align:right}
-
 /* ── SPLASH SCREEN ── */
 #splash{
   position:fixed;inset:0;z-index:9999;
@@ -452,46 +383,6 @@ body{
 
 /* ── Idée clé ── */
 
-/* ── RECUEIL ── */
-#view-recueil{display:none;max-width:600px;margin:0 auto;padding-bottom:80px}
-/* placeholder */.recueil-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
-.recueil-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none}
-.recueil-hero-title{font-size:28px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
-.recueil-hero-sub{font-size:13px;color:rgba(255,255,255,0.6);font-style:italic;margin-bottom:16px}
-/* Barre de recherche */
-.recueil-search-wrap{position:relative}
-.recueil-search{width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14px;font-size:15px;background:rgba(255,255,255,0.95);color:var(--dark);font-family:'Poppins',sans-serif;outline:none;box-sizing:border-box}
-.recueil-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-3);font-size:17px;pointer-events:none}
-/* Filtres thèmes */
-.recueil-filters{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 4px;scrollbar-width:none}
-.recueil-filters::-webkit-scrollbar{display:none}
-.recueil-filter-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:700;color:var(--gray-4);cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;-webkit-tap-highlight-color:transparent}
-.recueil-filter-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-/* Liste enseignements */
-.recueil-list{padding:8px 16px}
-.recueil-count{font-size:12px;color:var(--gray-3);font-weight:600;padding:8px 0 4px;letter-spacing:0.5px}
-.ens-card{background:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ens-card:active{transform:scale(0.99)}
-.ens-theme-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:var(--gray-1);border-radius:20px;font-size:10px;font-weight:700;color:var(--gray-4);margin-bottom:10px;letter-spacing:0.5px;font-family:'Poppins',sans-serif}
-.ens-titre{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px;font-family:'Poppins',sans-serif;line-height:1.3}
-.ens-apercu{font-size:14px;color:var(--gray-4);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.ens-source{font-size:11px;color:var(--gray-3);margin-top:10px;font-weight:500}
-/* Carte détail */
-#recueil-detail{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
-.ens-detail-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px}
-.ens-detail-theme{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px}
-.ens-detail-title{font-size:24px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;line-height:1.2}
-.ens-detail-body{padding:20px}
-.ens-detail-texte{font-size:16px;line-height:1.9;color:var(--text);background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
-.ens-detail-source{font-size:12px;color:var(--gray-3);padding:12px 16px;background:var(--gray-1);border-radius:var(--radius-sm)}
-
-.idee-cle{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;margin:14px 0;border-left:4px solid var(--purple)}
-.idee-cle-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:4px;font-family:'Poppins',sans-serif}
-.idee-cle-text{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:12px}
-.idee-cle-rabbi{background:rgba(79,70,229,0.06);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:14px;line-height:1.8;color:var(--text);font-style:italic}
-.idee-cle-rabbi-badge{display:block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;font-style:normal;font-family:'Poppins',sans-serif}
-.idee-cle-morale{font-size:14px;line-height:1.8;color:var(--text);margin-top:8px;padding-top:10px;border-top:1px solid rgba(79,70,229,0.15)}
-
 /* ── Translate bar ── */
 #translate-bar{
   position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:150;
@@ -654,6 +545,33 @@ body{
 .dots span:nth-child(2){animation-delay:.2s}
 .dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.75)}40%{opacity:1;transform:scale(1)}}
+
+/* ── RECUEIL D'ENSEIGNEMENTS ── */
+#view-recueil{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
+.recueil-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
+.recueil-hero-title{font-size:24px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
+.recueil-hero-sub{font-size:13px;color:rgba(255,255,255,0.65);font-style:italic;margin-bottom:16px}
+.recueil-search{position:relative}
+.recueil-search input{width:100%;padding:12px 16px 12px 42px;border-radius:12px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:15px;font-family:'Poppins',sans-serif;outline:none;-webkit-appearance:none}
+.recueil-search input::placeholder{color:rgba(255,255,255,0.5)}
+.recueil-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.recueil-themes{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 10px;scrollbar-width:none;background:#fff;border-bottom:1px solid var(--gray-2);-webkit-overflow-scrolling:touch}
+.recueil-themes::-webkit-scrollbar{display:none}
+.theme-chip{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:600;color:var(--gray-4);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:'Poppins',sans-serif;white-space:nowrap;transition:all .15s}
+.theme-chip.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.theme-chip:active{opacity:.7}
+.recueil-list{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.recueil-count{font-size:12px;color:var(--gray-3);font-weight:600;padding:8px 16px 0;text-align:right}
+.ens-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.ens-card-header{padding:14px 16px 10px;border-bottom:1px solid var(--gray-2)}
+.ens-theme-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;font-family:'Poppins',sans-serif}
+.ens-titre{font-size:15px;font-weight:700;color:var(--dark);line-height:1.3;font-family:'Poppins',sans-serif}
+.ens-card-body{padding:12px 16px 14px}
+.ens-texte{font-size:14px;line-height:1.8;color:var(--gray-4)}
+.ens-texte-truncated{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ens-source{font-size:11px;color:var(--gray-3);margin-top:8px;padding-top:8px;border-top:1px solid var(--gray-2);font-style:italic}
+.ens-expand-btn{font-size:12px;color:var(--purple);font-weight:600;margin-top:6px;cursor:pointer;display:inline-block;padding:2px 0}
+.ens-empty{text-align:center;padding:48px 20px;color:var(--gray-3);font-size:15px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -702,19 +620,7 @@ body{
 
 
 <!-- Recueil d'enseignements -->
-<div id="view-recueil">
-  <div class="rec-hero">
-    <div class="rec-hero-title">📚 Recueil</div>
-    <div class="rec-hero-sub">Enseignements du Rabbi de Loubavitch pour la vie quotidienne</div>
-    <div class="rec-search-wrap">
-      <span class="rec-search-icon">🔍</span>
-      <input type="text" class="rec-search" id="rec-search-input" placeholder="Rechercher un enseignement..." oninput="filterRecueil()">
-    </div>
-  </div>
-  <div class="rec-themes" id="rec-themes-bar"></div>
-  <div class="rec-count" id="rec-count"></div>
-  <div class="rec-list" id="rec-list"></div>
-</div>
+
 
 <!-- Profile View -->
 <div id="view-profile" style="display:none;max-width:600px;margin:0 auto;padding:0 0 80px">
@@ -796,18 +702,7 @@ body{
 </div>
 
 <!-- Recueil d'enseignements -->
-<div id="view-recueil">
-  <div class="recueil-hero">
-    <div class="recueil-hero-title">📚 Recueil</div>
-    <div class="recueil-hero-sub">Enseignements du Rabbi de Loubavitch</div>
-    <div class="recueil-search-wrap">
-      <span class="recueil-search-icon">🔍</span>
-      <input class="recueil-search" id="recueil-search" type="search" placeholder="Rechercher un enseignement…" oninput="filterRecueil()" autocomplete="off">
-    </div>
-  </div>
-  <div class="recueil-filters" id="recueil-filters"></div>
-  <div class="recueil-list" id="recueil-list"></div>
-</div>
+
 
 <!-- Détail enseignement -->
 <div id="recueil-detail">
@@ -823,23 +718,25 @@ body{
 
 
 <!-- VUE RECUEIL -->
+
+
+<!-- VUE RECUEIL -->
 <div id="view-recueil">
   <div class="recueil-hero">
     <div class="recueil-hero-title">📚 Recueil d'Enseignements</div>
     <div class="recueil-hero-sub">Sagesses du Rabbi de Loubavitch pour la vie au quotidien</div>
     <div class="recueil-search">
       <span class="recueil-search-icon">🔍</span>
-      <input type="text" id="recueil-search-input" placeholder="Rechercher un enseignement…" oninput="filterRecueil()" autocomplete="off">
+      <input type="text" id="recueil-search-input" placeholder="Rechercher…" oninput="filterRecueil()" autocomplete="off">
     </div>
   </div>
-  <div class="recueil-themes" id="recueil-themes-bar">
-    <div class="theme-chip active" data-theme="all" onclick="setRecueilTheme('all',this)">✨ Tous</div>
-  </div>
+  <div class="recueil-themes" id="recueil-themes-bar"></div>
   <div class="recueil-count" id="recueil-count"></div>
   <div class="recueil-list" id="recueil-list">
     <div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>
   </div>
 </div>
+
 <!-- Shabbat Panel -->
 <div id="shabbat-backdrop" onclick="closeShabbatPanel()"></div>
 <div id="shabbat-panel">
@@ -1850,20 +1747,7 @@ function showRecueilSearch(){
   },200);
 }
 
-function showRecueilView(){
-  // Cacher toutes les vues
-  ['view-home','view-detail','view-hayom','view-sefer','view-profile'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el) el.style.display='none';
-  });
-  document.getElementById('view-recueil').style.display='block';
-  document.getElementById('btn-back').style.display='none';
-  window.scrollTo(0,0);
-  loadRecueil(function(){
-    buildRecueilThemesBar();
-    renderRecueil();
-  });
-}
+
 
 function buildRecueilThemesBar(){
   var bar=document.getElementById('rec-themes-bar');
@@ -1875,18 +1759,9 @@ function buildRecueilThemesBar(){
   bar.innerHTML=html;
 }
 
-function setRecueilTheme(id, btn){
-  recueilTheme=id;
-  document.querySelectorAll('.rec-theme-btn').forEach(function(b){b.classList.remove('active');});
-  if(btn) btn.classList.add('active');
-  renderRecueil();
-}
 
-function filterRecueil(){
-  recueilQuery=document.getElementById('rec-search-input').value.toLowerCase().trim();
-  // Reset theme filter when searching
-  renderRecueil();
-}
+
+
 
 function getThemeEmoji(themeId){
   if(!recueilData) return '📖';
@@ -3274,19 +3149,7 @@ function showRecueil(){
   if(!enseignementsData) loadEnseignements();
 }
 
-function loadEnseignements(){
-  document.getElementById('recueil-list').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
-  fetch('enseignements.json')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      enseignementsData=d;
-      buildRecueilFilters(d.themes);
-      renderEnseignements();
-    })
-    .catch(function(){
-      document.getElementById('recueil-list').innerHTML='<div class="loading-txt" style="color:red">Erreur de chargement.</div>';
-    });
-}
+
 
 function buildRecueilFilters(themes){
   var h='<button class="recueil-filter-btn active" onclick="setEnsTheme(\'all\',this)">✨ Tous</button>';
@@ -3303,44 +3166,9 @@ function setEnsTheme(theme, btn){
   renderEnseignements();
 }
 
-function filterRecueil(){
-  ensSearch=document.getElementById('recueil-search').value.trim().toLowerCase();
-  renderEnseignements();
-}
 
-function renderEnseignements(){
-  if(!enseignementsData) return;
-  var list=enseignementsData.enseignements;
-  // Filtre thème
-  if(ensCurrentTheme!=='all') list=list.filter(function(e){return e.theme===ensCurrentTheme;});
-  // Filtre recherche
-  if(ensSearch){
-    list=list.filter(function(e){
-      return e.titre.toLowerCase().includes(ensSearch)
-        ||e.texte.toLowerCase().includes(ensSearch)
-        ||(e.mots_cles||[]).some(function(m){return m.toLowerCase().includes(ensSearch);});
-    });
-  }
-  // Thème labels
-  var themeMap={};
-  enseignementsData.themes.forEach(function(t){themeMap[t.id]={label:t.label,emoji:t.emoji};});
 
-  var h='<div class="recueil-count">'+list.length+' enseignement'+(list.length>1?'s':'')+' trouvé'+(list.length>1?'s':'')+'</div>';
-  list.forEach(function(e){
-    var th=themeMap[e.theme]||{label:e.theme,emoji:'📖'};
-    var apercu=e.texte.substring(0,150)+(e.texte.length>150?'…':'');
-    h+='<div class="ens-card" onclick="openEnseignement('+e.id+')">'
-      +'<div class="ens-theme-badge">'+th.emoji+' '+th.label+'</div>'
-      +'<div class="ens-titre">'+e.titre+'</div>'
-      +'<div class="ens-apercu">'+apercu+'</div>'
-      +'<div class="ens-source">'+e.source+'</div>'
-      +'</div>';
-  });
-  if(list.length===0){
-    h+='<div class="loading-txt">Aucun résultat pour <em>'+ensSearch+'</em></div>';
-  }
-  document.getElementById('recueil-list').innerHTML=h;
-}
+
 
 function openEnseignement(id){
   if(!enseignementsData) return;
@@ -3366,22 +3194,10 @@ function openEnseignement(id){
 // ══════════════════════════════════════════════════════════════
 // RECUEIL D'ENSEIGNEMENTS
 // ══════════════════════════════════════════════════════════════
-var enseignementsData = null;
 var currentTheme = 'all';
 var expandedCards = {};
 
-function showRecueilView(){
-  document.getElementById('view-home').style.display='none';
-  document.getElementById('view-detail').style.display='none';
-  document.getElementById('view-hayom').style.display='none';
-  document.getElementById('view-sefer').style.display='none';
-  var vp=document.getElementById('view-profile'); if(vp) vp.style.display='none';
-  document.getElementById('view-recueil').style.display='block';
-  document.getElementById('btn-back').style.display='none';
-  var bar=document.getElementById('translate-bar'); if(bar) bar.classList.remove('visible');
-  window.scrollTo(0,0);
-  if(!enseignementsData) loadEnseignements();
-}
+
 
 function loadEnseignements(){
   fetch('enseignements.json')
@@ -3475,6 +3291,127 @@ function toggleEns(id){
   } else {
     textEl.className='ens-texte ens-texte-truncated';
     btnEl.textContent='Lire la suite ↓';
+  }
+}
+
+
+
+// ══════════════════════════════════════════════════════════════
+// RECUEIL D'ENSEIGNEMENTS
+// ══════════════════════════════════════════════════════════════
+var currentTheme='all';
+var expandedCards={};
+
+function showRecueilView(){
+  ['view-home','view-detail','view-hayom','view-sefer','view-profile','view-recueil'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.style.display='none';
+  });
+  document.getElementById('view-recueil').style.display='block';
+  // Bouton retour
+  var bb=document.getElementById('btn-back');
+  if(bb){bb.style.display='flex';}
+  var bar=document.getElementById('translate-bar');
+  if(bar) bar.classList.remove('visible');
+  window.scrollTo(0,0);
+  if(!enseignementsData) loadEnseignements();
+}
+
+function loadEnseignements(){
+  fetch('enseignements.json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      enseignementsData=d;
+      buildThemesBar(d.themes);
+      renderEnseignements();
+    })
+    .catch(function(e){
+      console.error('Recueil load error:',e);
+      var el=document.getElementById('recueil-list');
+      if(el) el.innerHTML='<div class="ens-empty">⚠️ Fichier enseignements.json non trouvé.<br><small>Upload-le à la racine du repo GitHub.</small></div>';
+    });
+}
+
+function buildThemesBar(themes){
+  var bar=document.getElementById('recueil-themes-bar');
+  if(!bar) return;
+  var html='<div class="theme-chip active" onclick="setRecueilTheme(\'all\',this)">✨ Tous</div>';
+  themes.forEach(function(t){
+    html+='<div class="theme-chip" onclick="setRecueilTheme(\''+t.id+'\',this)">'+t.emoji+' '+t.label+'</div>';
+  });
+  bar.innerHTML=html;
+}
+
+function setRecueilTheme(theme,el){
+  currentTheme=theme;
+  document.querySelectorAll('.theme-chip').forEach(function(c){c.classList.remove('active');});
+  if(el) el.classList.add('active');
+  var inp=document.getElementById('recueil-search-input');
+  if(inp) inp.value='';
+  expandedCards={};
+  renderEnseignements();
+}
+
+function filterRecueil(){
+  expandedCards={};
+  renderEnseignements();
+}
+
+function renderEnseignements(){
+  if(!enseignementsData) return;
+  var inp=document.getElementById('recueil-search-input');
+  var query=inp?(inp.value||'').toLowerCase().trim():'';
+  var all=enseignementsData.enseignements;
+  var themeMap={};
+  enseignementsData.themes.forEach(function(t){themeMap[t.id]=t;});
+
+  var filtered=all.filter(function(e){
+    if(currentTheme!=='all'&&e.theme!==currentTheme) return false;
+    if(!query) return true;
+    var hay=(e.titre+' '+e.texte+' '+(e.mots_cles||[]).join(' ')).toLowerCase();
+    return hay.indexOf(query)>=0;
+  });
+
+  var countEl=document.getElementById('recueil-count');
+  if(countEl) countEl.textContent=filtered.length+' enseignement'+(filtered.length>1?'s':'');
+
+  var listEl=document.getElementById('recueil-list');
+  if(!listEl) return;
+
+  if(!filtered.length){
+    listEl.innerHTML='<div class="ens-empty">Aucun résultat pour "'+query+'"</div>';
+    return;
+  }
+
+  var html='';
+  filtered.forEach(function(e){
+    var t=themeMap[e.theme]||{emoji:'📖',label:e.theme};
+    var isExp=!!expandedCards[e.id];
+    html+='<div class="ens-card">'
+      +'<div class="ens-card-header">'
+      +'<div class="ens-theme-badge">'+t.emoji+' '+t.label+'</div>'
+      +'<div class="ens-titre">'+e.titre+'</div>'
+      +'</div>'
+      +'<div class="ens-card-body">'
+      +'<div class="ens-texte '+(isExp?'':'ens-texte-truncated')+'" id="et-'+e.id+'">'+e.texte+'</div>'
+      +'<div class="ens-expand-btn" onclick="toggleEns('+e.id+')" id="eb-'+e.id+'">'+(isExp?'Voir moins ↑':'Lire la suite ↓')+'</div>'
+      +'<div class="ens-source">— '+e.source+'</div>'
+      +'</div></div>';
+  });
+  listEl.innerHTML=html;
+}
+
+function toggleEns(id){
+  expandedCards[id]=!expandedCards[id];
+  var t=document.getElementById('et-'+id);
+  var b=document.getElementById('eb-'+id);
+  if(!t||!b) return;
+  if(expandedCards[id]){
+    t.className='ens-texte';
+    b.textContent='Voir moins ↑';
+  } else {
+    t.className='ens-texte ens-texte-truncated';
+    b.textContent='Lire la suite ↓';
   }
 }
 
