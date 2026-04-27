@@ -62,10 +62,10 @@
   font-size:18px;
 }
 .qa-item:nth-child(1) .qa-icon-wrap{background:#FFF7ED}
-.qa-item:nth-child(2) .qa-icon-wrap{background:#EEF2FF}
-.qa-item:nth-child(3) .qa-icon-wrap{background:#F0FDF4}
-.qa-item:nth-child(4) .qa-icon-wrap{background:#F5F3FF}
-.qa-item:nth-child(5) .qa-icon-wrap{background:#FFF7ED}
+.qa-item:nth-child(2) .qa-icon-wrap{background:#FFFBEB}
+.qa-item:nth-child(3) .qa-icon-wrap{background:#EEF2FF}
+.qa-item:nth-child(4) .qa-icon-wrap{background:#F0FDF4}
+.qa-item:nth-child(5) .qa-icon-wrap{background:#EFF6FF}
 .qa-label{font-size:9px;font-weight:600;color:var(--gray-4);font-family:'Poppins',sans-serif;text-align:center;line-height:1.2;white-space:nowrap}
 .qa-sublabel{font-size:8px;color:var(--gray-3);font-family:'Poppins',sans-serif;text-align:center;white-space:nowrap}
 
@@ -3626,6 +3626,11 @@ try {
 
 <!-- Quick Access Bar (fixe au-dessus de la nav) -->
 <div id="quick-access-bar">
+  <div class="qa-item" onclick="openShabbatPanel()">
+    <div class="qa-icon-wrap">🕯</div>
+    <div class="qa-label">Chabbat</div>
+    <div class="qa-sublabel">Horaires &amp; Paracha</div>
+  </div>
   <div class="qa-item" onclick="openHayomYom()">
     <div class="qa-icon-wrap">☀️</div>
     <div class="qa-label">Hayom Yom</div>
@@ -3636,15 +3641,10 @@ try {
     <div class="qa-label">Sefer HaMitsvot</div>
     <div class="qa-sublabel">Mitsva du jour</div>
   </div>
-  <div class="qa-item" onclick="openShabbatPanel()">
-    <div class="qa-icon-wrap">🕯</div>
-    <div class="qa-label">Chabbat</div>
-    <div class="qa-sublabel">Horaires &amp; Paracha</div>
-  </div>
-  <div class="qa-item" onclick="scrollToVerset()">
-    <div class="qa-icon-wrap">💬</div>
-    <div class="qa-label">Verset du jour</div>
-    <div class="qa-sublabel">Un verset inspirant</div>
+  <div class="qa-item" onclick="showRecueilView();setActiveNav(document.querySelectorAll('.nav-item')[2])">
+    <div class="qa-icon-wrap">📚</div>
+    <div class="qa-label">Recueil</div>
+    <div class="qa-sublabel">Enseignements</div>
   </div>
   <div class="qa-item" onclick="openCal()">
     <div class="qa-icon-wrap">📅</div>
