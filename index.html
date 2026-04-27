@@ -3602,13 +3602,19 @@ function updateProfileUI(){
 }
 
 
-// Cacher le splash quoi qu'il arrive
-setTimeout(hideSplash, 2200);
-window.addEventListener('error', function(){ hideSplash(); });
+// Cacher le splash — multiple sécurités
+setTimeout(hideSplash, 2000);
+setTimeout(function(){
+  var s=document.getElementById('splash');
+  if(s){s.style.display='none';s.style.opacity='0';}
+}, 3000); // force absolue à 3s
+window.addEventListener('error', function(){ 
+  setTimeout(hideSplash, 500);
+});
 
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
 try {
-  buildHome();
+  hideSplash(); buildHome();
 } catch(e) {
   document.getElementById('view-home').innerHTML =
     '<div style="padding:40px 20px;font-family:sans-serif">'
