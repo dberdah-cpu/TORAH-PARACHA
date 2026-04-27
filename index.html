@@ -722,7 +722,7 @@ body{
 </div>
 
 
-<!-- VUE RECUEIL -->
+
 
 
 <!-- VUE RECUEIL -->
@@ -3177,100 +3177,17 @@ var expandedCards = {};
 
 
 
-function loadEnseignements(){
-  fetch('enseignements.json')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      enseignementsData=d;
-      buildThemesBar(d.themes);
-      renderEnseignements();
-    })
-    .catch(function(){
-      document.getElementById('recueil-list').innerHTML=
-        '<div class="ens-empty">⚠️ Recueil non disponible.<br><small>Assure-toi que enseignements.json est bien uploadé sur GitHub.</small></div>';
-    });
-}
 
-function buildThemesBar(themes){
-  var bar=document.getElementById('recueil-themes-bar');
-  if(!bar) return;
-  var html='<div class="theme-chip active" data-theme="all" onclick="setRecueilTheme(\'all\',this)">✨ Tous</div>';
-  themes.forEach(function(t){
-    html+='<div class="theme-chip" data-theme="'+t.id+'" onclick="setRecueilTheme(\''+t.id+'\',this)">'+t.emoji+' '+t.label+'</div>';
-  });
-  bar.innerHTML=html;
-}
 
-function setRecueilTheme(theme, el){
-  currentTheme=theme;
-  document.querySelectorAll('.theme-chip').forEach(function(c){c.classList.remove('active');});
-  if(el) el.classList.add('active');
-  document.getElementById('recueil-search-input').value='';
-  renderEnseignements();
-}
 
-function filterRecueil(){
-  renderEnseignements();
-}
 
-function renderEnseignements(){
-  if(!enseignementsData) return;
-  var query=(document.getElementById('recueil-search-input').value||'').toLowerCase().trim();
-  var all=enseignementsData.enseignements;
-  var themes=enseignementsData.themes;
-  var themeMap={};
-  themes.forEach(function(t){themeMap[t.id]=t;});
 
-  // Filtrer
-  var filtered=all.filter(function(e){
-    var matchTheme=(currentTheme==='all'||e.theme===currentTheme);
-    if(!matchTheme) return false;
-    if(!query) return true;
-    var haystack=(e.titre+' '+e.texte+' '+(e.mots_cles||[]).join(' ')).toLowerCase();
-    return haystack.indexOf(query)>=0;
-  });
 
-  var countEl=document.getElementById('recueil-count');
-  if(countEl) countEl.textContent=filtered.length+' enseignement'+(filtered.length>1?'s':'');
 
-  if(!filtered.length){
-    document.getElementById('recueil-list').innerHTML='<div class="ens-empty">Aucun résultat pour "'+query+'"</div>';
-    return;
-  }
 
-  var html='';
-  filtered.forEach(function(e){
-    var t=themeMap[e.theme]||{emoji:'📖',label:e.theme};
-    var isExpanded=!!expandedCards[e.id];
-    html+='<div class="ens-card">'
-      +'<div class="ens-card-header">'
-      +'<div class="ens-theme-badge">'+t.emoji+' '+t.label+'</div>'
-      +'<div class="ens-titre">'+e.titre+'</div>'
-      +'</div>'
-      +'<div class="ens-card-body">'
-      +'<div class="ens-texte '+(isExpanded?'ens-texte-full':'ens-texte-truncated')+'" id="ens-text-'+e.id+'">'+e.texte+'</div>'
-      +'<div class="ens-expand-btn" onclick="toggleEns('+e.id+')" id="ens-btn-'+e.id+'">'
-      +(isExpanded?'Voir moins ↑':'Lire la suite ↓')+'</div>'
-      +'<div class="ens-source">— '+e.source+'</div>'
-      +'</div>'
-      +'</div>';
-  });
-  document.getElementById('recueil-list').innerHTML=html;
-}
 
-function toggleEns(id){
-  expandedCards[id]=!expandedCards[id];
-  var textEl=document.getElementById('ens-text-'+id);
-  var btnEl=document.getElementById('ens-btn-'+id);
-  if(!textEl||!btnEl) return;
-  if(expandedCards[id]){
-    textEl.className='ens-texte ens-texte-full';
-    btnEl.textContent='Voir moins ↑';
-  } else {
-    textEl.className='ens-texte ens-texte-truncated';
-    btnEl.textContent='Lire la suite ↓';
-  }
-}
+
+
 
 
 
