@@ -15,6 +15,76 @@
    ═══════════════════════════════════════════════════════ */
 
 
+
+/* ── RECUEIL D'ENSEIGNEMENTS ── */
+#view-recueil{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
+.rec-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
+.rec-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none}
+.rec-hero-title{font-size:26px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
+.rec-hero-sub{font-size:13px;color:rgba(255,255,255,0.65);font-style:italic;margin-bottom:20px}
+.rec-search-wrap{position:relative}
+.rec-search{width:100%;padding:12px 16px 12px 42px;border:none;border-radius:12px;font-size:15px;font-family:'Poppins',sans-serif;background:rgba(255,255,255,0.95);color:var(--dark);outline:none;box-sizing:border-box}
+.rec-search::placeholder{color:var(--gray-3)}
+.rec-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-3);font-size:16px;pointer-events:none}
+
+.rec-themes{display:flex;gap:8px;overflow-x:auto;padding:16px 16px 8px;scrollbar-width:none}
+.rec-themes::-webkit-scrollbar{display:none}
+.rec-theme-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:700;color:var(--gray-4);cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.rec-theme-btn:active{opacity:.7}
+.rec-theme-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+.rec-count{font-size:12px;color:var(--gray-3);padding:4px 16px 8px;font-weight:600}
+
+.rec-list{padding:0 16px;display:flex;flex-direction:column;gap:12px}
+.rec-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rec-card:active{transform:scale(0.99);opacity:.95}
+.rec-card-header{display:flex;align-items:center;gap:12px;padding:16px 16px 12px}
+.rec-card-emoji{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:linear-gradient(135deg,#EEF2FF,#F5F3FF)}
+.rec-card-meta{flex:1;min-width:0}
+.rec-card-theme{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:3px;font-family:'Poppins',sans-serif}
+.rec-card-title{font-size:15px;font-weight:700;color:var(--dark);line-height:1.3;font-family:'Poppins',sans-serif}
+.rec-card-body{padding:0 16px 16px;font-size:14px;line-height:1.75;color:var(--gray-4);display:none}
+.rec-card-body.open{display:block}
+.rec-card-source{font-size:11px;color:var(--purple);font-weight:600;margin-top:8px;padding-top:8px;border-top:1px solid var(--gray-2)}
+.rec-card-rabbi{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px;font-style:italic;color:var(--dark);line-height:1.7}
+.rec-card-toggle{padding:8px 16px;text-align:center;font-size:12px;color:var(--purple);font-weight:700;border-top:1px solid var(--gray-2);background:none;border:none;border-top:1px solid var(--gray-2);width:100%;cursor:pointer;font-family:'Poppins',sans-serif}
+.rec-empty{text-align:center;padding:48px 20px;color:var(--gray-3);font-size:15px}
+
+
+/* ── RECUEIL D'ENSEIGNEMENTS ── */
+#view-recueil{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
+.recueil-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
+.recueil-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none}
+.recueil-hero-title{font-size:26px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
+.recueil-hero-sub{font-size:13px;color:rgba(255,255,255,0.65);font-style:italic;margin-bottom:16px}
+/* Barre de recherche */
+.recueil-search{position:relative}
+.recueil-search input{width:100%;padding:12px 16px 12px 42px;border-radius:12px;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:15px;font-family:'Poppins',sans-serif;outline:none}
+.recueil-search input::placeholder{color:rgba(255,255,255,0.5)}
+.recueil-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.6);font-size:16px;pointer-events:none}
+/* Filtres thèmes */
+.recueil-themes{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 8px;scrollbar-width:none;background:#fff;border-bottom:1px solid var(--gray-2)}
+.recueil-themes::-webkit-scrollbar{display:none}
+.theme-chip{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:600;color:var(--gray-4);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:'Poppins',sans-serif;white-space:nowrap;transition:all .15s}
+.theme-chip.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.theme-chip:active{opacity:.7}
+/* Liste enseignements */
+.recueil-list{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+/* Carte enseignement */
+.ens-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ens-card:active{transform:scale(0.99)}
+.ens-card-header{padding:16px 18px 12px;border-bottom:1px solid var(--gray-2)}
+.ens-theme-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:8px;font-family:'Poppins',sans-serif}
+.ens-titre{font-size:16px;font-weight:700;color:var(--dark);line-height:1.3;font-family:'Poppins',sans-serif}
+.ens-card-body{padding:12px 18px 14px}
+.ens-texte{font-size:14px;line-height:1.8;color:var(--gray-4)}
+.ens-texte-truncated{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ens-texte-full{display:block}
+.ens-source{font-size:11px;color:var(--gray-3);margin-top:10px;padding-top:8px;border-top:1px solid var(--gray-2);font-style:italic}
+.ens-expand-btn{font-size:12px;color:var(--purple);font-weight:600;margin-top:6px;cursor:pointer;display:inline-block}
+.ens-empty{text-align:center;padding:48px 20px;color:var(--gray-3);font-size:15px}
+.recueil-count{font-size:12px;color:var(--gray-3);font-weight:600;padding:8px 16px 0;text-align:right}
+
 /* ── SPLASH SCREEN ── */
 #splash{
   position:fixed;inset:0;z-index:9999;
@@ -187,6 +257,7 @@ body{
 .story-ring{width:56px;height:56px;border-radius:50%;padding:2.5px;background:var(--grad-main);position:relative}
 .story-ring.shabbat{background:linear-gradient(45deg,var(--orange),#FCD34D)}
 .story-ring.fete{background:linear-gradient(45deg,var(--purple),var(--pink))}
+.story-ring.recueil{background:linear-gradient(45deg,var(--pink),var(--orange))}
 .story-inner{width:100%;height:100%;border-radius:50%;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:22px}
 .home-hero .story-inner{background:rgba(15,23,42,0.85)}
 .story-label{font-size:10px;color:rgba(255,255,255,0.75);font-weight:600;max-width:64px;text-align:center;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Poppins',sans-serif}
@@ -380,6 +451,40 @@ body{
 .sources{display:block;font-size:11px;color:var(--gray-3);margin-top:12px;font-style:italic}
 
 /* ── Idée clé ── */
+
+/* ── RECUEIL ── */
+#view-recueil{display:none;max-width:600px;margin:0 auto;padding-bottom:80px}
+/* placeholder */.recueil-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px;position:relative;overflow:hidden}
+.recueil-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.06);pointer-events:none}
+.recueil-hero-title{font-size:28px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
+.recueil-hero-sub{font-size:13px;color:rgba(255,255,255,0.6);font-style:italic;margin-bottom:16px}
+/* Barre de recherche */
+.recueil-search-wrap{position:relative}
+.recueil-search{width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14px;font-size:15px;background:rgba(255,255,255,0.95);color:var(--dark);font-family:'Poppins',sans-serif;outline:none;box-sizing:border-box}
+.recueil-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-3);font-size:17px;pointer-events:none}
+/* Filtres thèmes */
+.recueil-filters{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 4px;scrollbar-width:none}
+.recueil-filters::-webkit-scrollbar{display:none}
+.recueil-filter-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:700;color:var(--gray-4);cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.recueil-filter-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+/* Liste enseignements */
+.recueil-list{padding:8px 16px}
+.recueil-count{font-size:12px;color:var(--gray-3);font-weight:600;padding:8px 0 4px;letter-spacing:0.5px}
+.ens-card{background:#fff;border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ens-card:active{transform:scale(0.99)}
+.ens-theme-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:var(--gray-1);border-radius:20px;font-size:10px;font-weight:700;color:var(--gray-4);margin-bottom:10px;letter-spacing:0.5px;font-family:'Poppins',sans-serif}
+.ens-titre{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px;font-family:'Poppins',sans-serif;line-height:1.3}
+.ens-apercu{font-size:14px;color:var(--gray-4);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ens-source{font-size:11px;color:var(--gray-3);margin-top:10px;font-weight:500}
+/* Carte détail */
+#recueil-detail{display:none;max-width:600px;margin:0 auto;padding:0 0 80px}
+.ens-detail-hero{background:linear-gradient(160deg,#1E1B4B,var(--purple),var(--pink));padding:56px 20px 24px}
+.ens-detail-theme{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:8px}
+.ens-detail-title{font-size:24px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;line-height:1.2}
+.ens-detail-body{padding:20px}
+.ens-detail-texte{font-size:16px;line-height:1.9;color:var(--text);background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.ens-detail-source{font-size:12px;color:var(--gray-3);padding:12px 16px;background:var(--gray-1);border-radius:var(--radius-sm)}
+
 .idee-cle{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;margin:14px 0;border-left:4px solid var(--purple)}
 .idee-cle-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:4px;font-family:'Poppins',sans-serif}
 .idee-cle-text{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:12px}
@@ -595,6 +700,22 @@ body{
 </div>
 
 
+
+<!-- Recueil d'enseignements -->
+<div id="view-recueil">
+  <div class="rec-hero">
+    <div class="rec-hero-title">📚 Recueil</div>
+    <div class="rec-hero-sub">Enseignements du Rabbi de Loubavitch pour la vie quotidienne</div>
+    <div class="rec-search-wrap">
+      <span class="rec-search-icon">🔍</span>
+      <input type="text" class="rec-search" id="rec-search-input" placeholder="Rechercher un enseignement..." oninput="filterRecueil()">
+    </div>
+  </div>
+  <div class="rec-themes" id="rec-themes-bar"></div>
+  <div class="rec-count" id="rec-count"></div>
+  <div class="rec-list" id="rec-list"></div>
+</div>
+
 <!-- Profile View -->
 <div id="view-profile" style="display:none;max-width:600px;margin:0 auto;padding:0 0 80px">
 
@@ -671,6 +792,52 @@ body{
       <div style="font-size:12px;color:var(--gray-4);line-height:1.7">Pour activer l'authentification, remplace <code style="background:var(--gray-2);padding:1px 6px;border-radius:4px;font-size:11px">SUPABASE_URL</code> et <code style="background:var(--gray-2);padding:1px 6px;border-radius:4px;font-size:11px">SUPABASE_ANON_KEY</code> dans le code avec tes vraies clés Supabase.</div>
     </div>
 
+  </div>
+</div>
+
+<!-- Recueil d'enseignements -->
+<div id="view-recueil">
+  <div class="recueil-hero">
+    <div class="recueil-hero-title">📚 Recueil</div>
+    <div class="recueil-hero-sub">Enseignements du Rabbi de Loubavitch</div>
+    <div class="recueil-search-wrap">
+      <span class="recueil-search-icon">🔍</span>
+      <input class="recueil-search" id="recueil-search" type="search" placeholder="Rechercher un enseignement…" oninput="filterRecueil()" autocomplete="off">
+    </div>
+  </div>
+  <div class="recueil-filters" id="recueil-filters"></div>
+  <div class="recueil-list" id="recueil-list"></div>
+</div>
+
+<!-- Détail enseignement -->
+<div id="recueil-detail">
+  <div class="ens-detail-hero">
+    <div class="ens-detail-theme" id="ens-det-theme"></div>
+    <div class="ens-detail-title" id="ens-det-title"></div>
+  </div>
+  <div class="ens-detail-body">
+    <div class="ens-detail-texte" id="ens-det-texte"></div>
+    <div class="ens-detail-source" id="ens-det-source"></div>
+  </div>
+</div>
+
+
+<!-- VUE RECUEIL -->
+<div id="view-recueil">
+  <div class="recueil-hero">
+    <div class="recueil-hero-title">📚 Recueil d'Enseignements</div>
+    <div class="recueil-hero-sub">Sagesses du Rabbi de Loubavitch pour la vie au quotidien</div>
+    <div class="recueil-search">
+      <span class="recueil-search-icon">🔍</span>
+      <input type="text" id="recueil-search-input" placeholder="Rechercher un enseignement…" oninput="filterRecueil()" autocomplete="off">
+    </div>
+  </div>
+  <div class="recueil-themes" id="recueil-themes-bar">
+    <div class="theme-chip active" data-theme="all" onclick="setRecueilTheme('all',this)">✨ Tous</div>
+  </div>
+  <div class="recueil-count" id="recueil-count"></div>
+  <div class="recueil-list" id="recueil-list">
+    <div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>
   </div>
 </div>
 <!-- Shabbat Panel -->
@@ -1652,6 +1819,142 @@ function renderFetesCard(){
 }
 
 
+
+// ── RECUEIL D'ENSEIGNEMENTS ─────────────────────────────────────────────────
+var recueilData = null;
+var recueilTheme = 'all';
+var recueilQuery = '';
+var recueilOpen = {}; // cartes ouvertes
+
+function loadRecueil(cb){
+  if(recueilData){cb();return;}
+  fetch('./enseignements.json')
+    .then(function(r){return r.json();})
+    .then(function(d){recueilData=d;cb();})
+    .catch(function(e){
+      console.error('Recueil load error:',e);
+      recueilData={themes:[],enseignements:[]};
+      cb();
+    });
+}
+
+function showRecueilSearch(){
+  showRecueilView();
+  // Focus sur la barre de recherche
+  setTimeout(function(){
+    var input=document.getElementById('rec-search-input');
+    if(input){
+      input.focus();
+      input.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  },200);
+}
+
+function showRecueilView(){
+  // Cacher toutes les vues
+  ['view-home','view-detail','view-hayom','view-sefer','view-profile'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.style.display='none';
+  });
+  document.getElementById('view-recueil').style.display='block';
+  document.getElementById('btn-back').style.display='none';
+  window.scrollTo(0,0);
+  loadRecueil(function(){
+    buildRecueilThemesBar();
+    renderRecueil();
+  });
+}
+
+function buildRecueilThemesBar(){
+  var bar=document.getElementById('rec-themes-bar');
+  if(!bar||!recueilData) return;
+  var html='<button class="rec-theme-btn active" onclick="setRecueilTheme(\'all\',this)">Tous</button>';
+  recueilData.themes.forEach(function(t){
+    html+='<button class="rec-theme-btn" onclick="setRecueilTheme(\''+t.id+'\',this)">'+t.emoji+' '+t.label+'</button>';
+  });
+  bar.innerHTML=html;
+}
+
+function setRecueilTheme(id, btn){
+  recueilTheme=id;
+  document.querySelectorAll('.rec-theme-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  renderRecueil();
+}
+
+function filterRecueil(){
+  recueilQuery=document.getElementById('rec-search-input').value.toLowerCase().trim();
+  // Reset theme filter when searching
+  renderRecueil();
+}
+
+function getThemeEmoji(themeId){
+  if(!recueilData) return '📖';
+  var t=recueilData.themes.find(function(x){return x.id===themeId;});
+  return t?t.emoji:'📖';
+}
+
+function getThemeLabel(themeId){
+  if(!recueilData) return '';
+  var t=recueilData.themes.find(function(x){return x.id===themeId;});
+  return t?t.label:'';
+}
+
+function renderRecueil(){
+  var list=document.getElementById('rec-list');
+  var countEl=document.getElementById('rec-count');
+  if(!list||!recueilData) return;
+
+  var items=recueilData.enseignements.filter(function(e){
+    var matchTheme=(recueilTheme==='all'||e.theme===recueilTheme);
+    if(!recueilQuery) return matchTheme;
+    var haystack=(e.titre+' '+e.texte+' '+(e.mots_cles||[]).join(' ')).toLowerCase();
+    return matchTheme && haystack.indexOf(recueilQuery)>=0;
+  });
+
+  countEl.textContent=items.length+' enseignement'+(items.length>1?'s':'');
+
+  if(!items.length){
+    list.innerHTML='<div class="rec-empty">Aucun enseignement trouvé<br><span style="font-size:24px;display:block;margin-top:8px">🔍</span></div>';
+    return;
+  }
+
+  list.innerHTML=items.map(function(e){
+    var isOpen=!!recueilOpen[e.id];
+    var emoji=getThemeEmoji(e.theme);
+    var themeLabel=getThemeLabel(e.theme);
+    return '<div class="rec-card" id="rec-card-'+e.id+'">'
+      +'<div class="rec-card-header" onclick="toggleRecueilCard('+e.id+')">'
+      +'<div class="rec-card-emoji">'+emoji+'</div>'
+      +'<div class="rec-card-meta">'
+      +'<div class="rec-card-theme">'+themeLabel+'</div>'
+      +'<div class="rec-card-title">'+e.titre+'</div>'
+      +'</div>'
+      +'<div style="color:var(--gray-3);font-size:18px;transition:transform .2s'+(isOpen?';transform:rotate(90deg)':'')+'">›</div>'
+      +'</div>'
+      +'<div class="rec-card-body'+(isOpen?' open':'')+'">'
+      +e.texte
+      +'<div class="rec-card-rabbi">✡ '+e.source+'</div>'
+      +'</div>'
+      +'<button class="rec-card-toggle" onclick="toggleRecueilCard('+e.id+')">'
+      +(isOpen?'Réduire ↑':'Lire l\'enseignement ↓')
+      +'</button>'
+      +'</div>';
+  }).join('');
+}
+
+function toggleRecueilCard(id){
+  recueilOpen[id]=!recueilOpen[id];
+  renderRecueil();
+  // Scroll to card if opening
+  if(recueilOpen[id]){
+    setTimeout(function(){
+      var el=document.getElementById('rec-card-'+id);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },100);
+  }
+}
+
 // ── SHABBAT PANEL ─────────────────────────────────────────────────────────────
 function openShabbatPanel(){
   var panel=document.getElementById('shabbat-panel');
@@ -1816,6 +2119,8 @@ function buildStoryBar(){
   items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
   // Sefer
   items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
+  // Recueil
+  items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
   // Calendrier
   items.push({icon:'📅',label:'Calendrier',ring:'',fn:'openCal()'});
 
@@ -1957,8 +2262,14 @@ function goHome(){
   document.getElementById('view-detail').style.display='none';
   document.getElementById('view-hayom').style.display='none';
   document.getElementById('view-sefer').style.display='none';
-  var vp=document.getElementById('view-profile');
-  if(vp) vp.style.display='none';
+  var vp=document.getElementById('view-profile'); if(vp) vp.style.display='none';
+  var vr=document.getElementById('view-recueil'); if(vr) vr.style.display='none';
+  var vr=document.getElementById('view-recueil');
+  if(vr) vr.style.display='none';
+  var rd=document.getElementById('recueil-detail');
+  if(rd) rd.style.display='none';
+  var vr=document.getElementById('view-recueil');
+  if(vr) vr.style.display='none';
   document.getElementById('btn-back').style.display='none';
   var bar=document.getElementById('translate-bar');
   if(bar) bar.classList.remove('visible');
@@ -2949,6 +3260,225 @@ function hideSplash(){
 // Cacher après 2.2s (laisse les animations se terminer)
 setTimeout(hideSplash, 2200);
 
+
+// ── RECUEIL D'ENSEIGNEMENTS ───────────────────────────────────────────────────
+var enseignementsData = null;
+var ensCurrentTheme = 'all';
+var ensSearch = '';
+
+function showRecueil(){
+  document.querySelectorAll('#view-home,#view-detail,#view-hayom,#view-sefer,#view-profile,#recueil-detail').forEach(function(el){el.style.display='none';});
+  document.getElementById('view-recueil').style.display='block';
+  document.getElementById('btn-back').style.display='none';
+  window.scrollTo(0,0);
+  if(!enseignementsData) loadEnseignements();
+}
+
+function loadEnseignements(){
+  document.getElementById('recueil-list').innerHTML='<div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>';
+  fetch('enseignements.json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      enseignementsData=d;
+      buildRecueilFilters(d.themes);
+      renderEnseignements();
+    })
+    .catch(function(){
+      document.getElementById('recueil-list').innerHTML='<div class="loading-txt" style="color:red">Erreur de chargement.</div>';
+    });
+}
+
+function buildRecueilFilters(themes){
+  var h='<button class="recueil-filter-btn active" onclick="setEnsTheme(\'all\',this)">✨ Tous</button>';
+  themes.forEach(function(t){
+    h+='<button class="recueil-filter-btn" onclick="setEnsTheme(\''+t.id+'\',this)">'+t.emoji+' '+t.label+'</button>';
+  });
+  document.getElementById('recueil-filters').innerHTML=h;
+}
+
+function setEnsTheme(theme, btn){
+  ensCurrentTheme=theme;
+  document.querySelectorAll('.recueil-filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderEnseignements();
+}
+
+function filterRecueil(){
+  ensSearch=document.getElementById('recueil-search').value.trim().toLowerCase();
+  renderEnseignements();
+}
+
+function renderEnseignements(){
+  if(!enseignementsData) return;
+  var list=enseignementsData.enseignements;
+  // Filtre thème
+  if(ensCurrentTheme!=='all') list=list.filter(function(e){return e.theme===ensCurrentTheme;});
+  // Filtre recherche
+  if(ensSearch){
+    list=list.filter(function(e){
+      return e.titre.toLowerCase().includes(ensSearch)
+        ||e.texte.toLowerCase().includes(ensSearch)
+        ||(e.mots_cles||[]).some(function(m){return m.toLowerCase().includes(ensSearch);});
+    });
+  }
+  // Thème labels
+  var themeMap={};
+  enseignementsData.themes.forEach(function(t){themeMap[t.id]={label:t.label,emoji:t.emoji};});
+
+  var h='<div class="recueil-count">'+list.length+' enseignement'+(list.length>1?'s':'')+' trouvé'+(list.length>1?'s':'')+'</div>';
+  list.forEach(function(e){
+    var th=themeMap[e.theme]||{label:e.theme,emoji:'📖'};
+    var apercu=e.texte.substring(0,150)+(e.texte.length>150?'…':'');
+    h+='<div class="ens-card" onclick="openEnseignement('+e.id+')">'
+      +'<div class="ens-theme-badge">'+th.emoji+' '+th.label+'</div>'
+      +'<div class="ens-titre">'+e.titre+'</div>'
+      +'<div class="ens-apercu">'+apercu+'</div>'
+      +'<div class="ens-source">'+e.source+'</div>'
+      +'</div>';
+  });
+  if(list.length===0){
+    h+='<div class="loading-txt">Aucun résultat pour <em>'+ensSearch+'</em></div>';
+  }
+  document.getElementById('recueil-list').innerHTML=h;
+}
+
+function openEnseignement(id){
+  if(!enseignementsData) return;
+  var e=enseignementsData.enseignements.find(function(x){return x.id===id;});
+  if(!e) return;
+  var themeMap={};
+  enseignementsData.themes.forEach(function(t){themeMap[t.id]={label:t.label,emoji:t.emoji};});
+  var th=themeMap[e.theme]||{label:e.theme,emoji:'📖'};
+
+  document.getElementById('ens-det-theme').textContent=th.emoji+' '+th.label;
+  document.getElementById('ens-det-title').textContent=e.titre;
+  document.getElementById('ens-det-texte').textContent=e.texte;
+  document.getElementById('ens-det-source').innerHTML='📖 '+e.source;
+
+  document.getElementById('view-recueil').style.display='none';
+  document.getElementById('recueil-detail').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  window.scrollTo(0,0);
+}
+
+
+
+// ══════════════════════════════════════════════════════════════
+// RECUEIL D'ENSEIGNEMENTS
+// ══════════════════════════════════════════════════════════════
+var enseignementsData = null;
+var currentTheme = 'all';
+var expandedCards = {};
+
+function showRecueilView(){
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-detail').style.display='none';
+  document.getElementById('view-hayom').style.display='none';
+  document.getElementById('view-sefer').style.display='none';
+  var vp=document.getElementById('view-profile'); if(vp) vp.style.display='none';
+  document.getElementById('view-recueil').style.display='block';
+  document.getElementById('btn-back').style.display='none';
+  var bar=document.getElementById('translate-bar'); if(bar) bar.classList.remove('visible');
+  window.scrollTo(0,0);
+  if(!enseignementsData) loadEnseignements();
+}
+
+function loadEnseignements(){
+  fetch('enseignements.json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      enseignementsData=d;
+      buildThemesBar(d.themes);
+      renderEnseignements();
+    })
+    .catch(function(){
+      document.getElementById('recueil-list').innerHTML=
+        '<div class="ens-empty">⚠️ Recueil non disponible.<br><small>Assure-toi que enseignements.json est bien uploadé sur GitHub.</small></div>';
+    });
+}
+
+function buildThemesBar(themes){
+  var bar=document.getElementById('recueil-themes-bar');
+  if(!bar) return;
+  var html='<div class="theme-chip active" data-theme="all" onclick="setRecueilTheme(\'all\',this)">✨ Tous</div>';
+  themes.forEach(function(t){
+    html+='<div class="theme-chip" data-theme="'+t.id+'" onclick="setRecueilTheme(\''+t.id+'\',this)">'+t.emoji+' '+t.label+'</div>';
+  });
+  bar.innerHTML=html;
+}
+
+function setRecueilTheme(theme, el){
+  currentTheme=theme;
+  document.querySelectorAll('.theme-chip').forEach(function(c){c.classList.remove('active');});
+  if(el) el.classList.add('active');
+  document.getElementById('recueil-search-input').value='';
+  renderEnseignements();
+}
+
+function filterRecueil(){
+  renderEnseignements();
+}
+
+function renderEnseignements(){
+  if(!enseignementsData) return;
+  var query=(document.getElementById('recueil-search-input').value||'').toLowerCase().trim();
+  var all=enseignementsData.enseignements;
+  var themes=enseignementsData.themes;
+  var themeMap={};
+  themes.forEach(function(t){themeMap[t.id]=t;});
+
+  // Filtrer
+  var filtered=all.filter(function(e){
+    var matchTheme=(currentTheme==='all'||e.theme===currentTheme);
+    if(!matchTheme) return false;
+    if(!query) return true;
+    var haystack=(e.titre+' '+e.texte+' '+(e.mots_cles||[]).join(' ')).toLowerCase();
+    return haystack.indexOf(query)>=0;
+  });
+
+  var countEl=document.getElementById('recueil-count');
+  if(countEl) countEl.textContent=filtered.length+' enseignement'+(filtered.length>1?'s':'');
+
+  if(!filtered.length){
+    document.getElementById('recueil-list').innerHTML='<div class="ens-empty">Aucun résultat pour "'+query+'"</div>';
+    return;
+  }
+
+  var html='';
+  filtered.forEach(function(e){
+    var t=themeMap[e.theme]||{emoji:'📖',label:e.theme};
+    var isExpanded=!!expandedCards[e.id];
+    html+='<div class="ens-card">'
+      +'<div class="ens-card-header">'
+      +'<div class="ens-theme-badge">'+t.emoji+' '+t.label+'</div>'
+      +'<div class="ens-titre">'+e.titre+'</div>'
+      +'</div>'
+      +'<div class="ens-card-body">'
+      +'<div class="ens-texte '+(isExpanded?'ens-texte-full':'ens-texte-truncated')+'" id="ens-text-'+e.id+'">'+e.texte+'</div>'
+      +'<div class="ens-expand-btn" onclick="toggleEns('+e.id+')" id="ens-btn-'+e.id+'">'
+      +(isExpanded?'Voir moins ↑':'Lire la suite ↓')+'</div>'
+      +'<div class="ens-source">— '+e.source+'</div>'
+      +'</div>'
+      +'</div>';
+  });
+  document.getElementById('recueil-list').innerHTML=html;
+}
+
+function toggleEns(id){
+  expandedCards[id]=!expandedCards[id];
+  var textEl=document.getElementById('ens-text-'+id);
+  var btnEl=document.getElementById('ens-btn-'+id);
+  if(!textEl||!btnEl) return;
+  if(expandedCards[id]){
+    textEl.className='ens-texte ens-texte-full';
+    btnEl.textContent='Voir moins ↑';
+  } else {
+    textEl.className='ens-texte ens-texte-truncated';
+    btnEl.textContent='Lire la suite ↓';
+  }
+}
+
+
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
 try {
   buildHome();
@@ -2982,11 +3512,11 @@ try {
     </div>
     <span class="nav-label">Parachiot</span>
   </div>
-  <div class="nav-item" onclick="setActiveNav(this)">
+  <div class="nav-item" onclick="showRecueilSearch();setActiveNav(this)">
     <div class="nav-icon">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </div>
-    <span class="nav-label">Explorer</span>
+    <span class="nav-label">Recherche</span>
   </div>
   <div class="nav-item" onclick="setActiveNav(this)">
     <div class="nav-icon">
