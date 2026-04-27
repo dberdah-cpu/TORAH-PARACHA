@@ -24,7 +24,7 @@
 .home-date-card{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid var(--gray-2)}
 .hdc-left{}
 .hdc-dayname{font-size:13px;font-weight:600;color:var(--gray-4);margin-bottom:2px}
-.hdc-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:17px;font-weight:700;color:var(--dark);direction:rtl}
+.hdc-heb{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--purple)}
 .hdc-shabbat{display:flex;align-items:center;gap:8px;background:#FFF7ED;border-radius:10px;padding:8px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .hdc-shabbat-times{font-size:11px;color:#92400E;font-weight:600;line-height:1.6}
 
@@ -73,12 +73,13 @@
 #splash{
   position:fixed;inset:0;z-index:9999;
   background:linear-gradient(160deg,#0a0a1a 0%,#12103a 50%,#1a0a2e 100%);
-  display:flex;flex-direction:column;
+  display:flex !important;flex-direction:column;
   align-items:center;justify-content:center;
   gap:0;
-  transition:opacity .5s ease,visibility .5s ease;
+  opacity:1;visibility:visible;
+  transition:opacity .6s ease,visibility .6s ease;
 }
-#splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
+#splash.hidden{opacity:0 !important;visibility:hidden !important;pointer-events:none;transition:opacity .6s ease}
 .splash-logo{width:100px;height:100px;animation:splashPop .6s cubic-bezier(.34,1.56,.64,1) both}
 .splash-brand{display:flex;align-items:center;gap:12px;margin-top:16px;animation:splashFade .5s .3s both}
 .splash-brand-name{font-family:'Poppins',sans-serif;font-size:38px;font-weight:800;color:#fff;letter-spacing:-1px}
@@ -89,7 +90,6 @@
 @keyframes splashPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 @keyframes splashFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes splashBar{from{width:0;opacity:0}to{width:80px;opacity:1}}
-}
 
 /* ── Variables ── */
 :root{
@@ -133,7 +133,7 @@ body{
 /* ── Header ── */
 #hdr{
   position:sticky;top:0;z-index:200;
-  background:rgba(248,250,252,0.92);
+  background:rgba(255,255,255,0.95);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--gray-2);
   height:52px;padding:0 20px;
@@ -600,26 +600,7 @@ body{
 
 <!-- Splash Screen -->
 <div id="splash">
-  <svg class="splash-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#22D3EE"/>
-        <stop offset="50%" style="stop-color:#EC4899"/>
-        <stop offset="100%" style="stop-color:#F59E0B"/>
-      </linearGradient>
-      <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#8B5CF6"/>
-        <stop offset="100%" style="stop-color:#F59E0B"/>
-      </linearGradient>
-    </defs>
-    <rect x="30" y="20" width="32" height="160" rx="16" fill="url(#sg1)"/>
-    <path d="M62 100 L150 25 Q162 15 168 28 L90 108 Z" fill="url(#sg1)"/>
-    <path d="M62 100 L140 168 Q148 182 135 185 Q120 188 110 175 L75 128 Z" fill="url(#sg2)"/>
-    <path d="M82 108 Q100 95 118 108 L118 140 Q100 130 82 140 Z" fill="white" opacity="0.9"/>
-    <line x1="100" y1="97" x2="100" y2="141" stroke="white" stroke-width="2.5" opacity="0.8"/>
-    <path d="M158 38 L160 32 L162 38 L168 40 L162 42 L160 48 L158 42 L152 40 Z" fill="#F59E0B"/>
-    <path d="M148 55 L149.5 51 L151 55 L155 56.5 L151 58 L149.5 62 L148 58 L144 56.5 Z" fill="#818CF8" opacity="0.8"/>
-  </svg>
+  <img src="logo.png" alt="Kedoshim" class="splash-logo" style="width:120px;height:120px;object-fit:contain">
   <div class="splash-brand">
     <div class="splash-brand-name">Kedoshim</div>
   </div>
@@ -631,33 +612,14 @@ body{
 <div id="hdr">
   <button id="btn-back" onclick="goHome()" style="display:none;background:none;border:none;color:var(--purple);font-size:15px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;align-items:center;gap:4px">‹ Retour</button>
   <div id="hdr-logo" style="display:flex;align-items:center;gap:8px">
-    <svg width="28" height="28" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="hg1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#22D3EE"/>
-          <stop offset="50%" style="stop-color:#EC4899"/>
-          <stop offset="100%" style="stop-color:#F59E0B"/>
-        </linearGradient>
-        <linearGradient id="hg2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#8B5CF6"/>
-          <stop offset="100%" style="stop-color:#F59E0B"/>
-        </linearGradient>
-      </defs>
-      <rect x="30" y="20" width="32" height="160" rx="16" fill="url(#hg1)"/>
-      <path d="M62 100 L150 25 Q162 15 168 28 L90 108 Z" fill="url(#hg1)"/>
-      <path d="M62 100 L140 168 Q148 182 135 185 Q120 188 110 175 L75 128 Z" fill="url(#hg2)"/>
-      <path d="M82 108 Q100 95 118 108 L118 140 Q100 130 82 140 Z" fill="white" opacity="0.9"/>
-      <line x1="100" y1="97" x2="100" y2="141" stroke="white" stroke-width="2.5" opacity="0.8"/>
-    </svg>
-    <span style="font-family:Poppins,sans-serif;font-size:18px;font-weight:800;color:var(--dark);letter-spacing:-0.5px">Kedoshim</span>
+    <img src="logo.png" alt="Kedoshim" style="width:40px;height:40px;object-fit:contain">
+    <span style="font-family:Poppins,sans-serif;font-size:18px;font-weight:800;color:#1C1C1E;letter-spacing:-0.5px">Kedoshim</span>
   </div>
   <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
   </button>
 </div>
-  <div style="display:flex;gap:12px;align-items:center">
-    <div id="hdr-heb" style="font-family:Noto Sans Hebrew,sans-serif;font-size:16px;color:var(--purple)">תּוֹרָה</div>
-  </div>
+
 </div>
 
 
@@ -666,7 +628,7 @@ body{
 
 
 <!-- Profile View -->
-<div id="view-profile" style="display:none;max-width:600px;margin:0 auto;padding:0 0 80px">
+<div id="view-profile" style="display:none;max-width:600px;margin:0 auto;padding:0 0 80px;background:var(--gray-1)">
 
   <!-- Hero -->
   <div id="profile-hero" style="background:var(--grad-main);padding:56px 20px 32px;text-align:center;position:relative;overflow:hidden">
@@ -2073,8 +2035,8 @@ function buildHome(){
   // ── DATE + CHABBAT (compact) ──
   h+='<div class="home-date-card">'
     +'<div class="hdc-left">'
-    +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+'</div>'
-    +'<div class="hdc-heb">'+dateHebHeb+'</div>'
+    +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
+    +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
     +'</div>';
   if(candleTime||havdalaTime){
     h+='<div class="hdc-shabbat" onclick="openShabbatPanel()">'
@@ -2126,32 +2088,8 @@ function buildHome(){
 
   // Prochaines fêtes retirées de la home
 
-  // SECTION PARACHIOT
-  var psOpen=localStorage.getItem('ps_open')!=='0';
-  h+='<div class="card-paralist">'
-    +'<div class="pl-header" onclick="togglePS()">'
-    +'<div class="psection-title">📚 Les 54 Parachiot · התּוֹרָה</div>'
-    +'<div class="pl-arrow'+(psOpen?' open':'')+'">▼</div>'
-    +'</div>'
-    +'<div class="pl-body'+(psOpen?' open':'')+'">';
 
-  BOOKS.forEach(function(bk){
-    var list=P.filter(function(x){return x.book===bk;});
-    h+='<div class="pbook">'
-      +'<div class="pbook-name">'+bk+' <span>'+list[0].bh+'</span></div>'
-      +'<div class="pgrid">';
-    list.forEach(function(p){
-      var cc=(p.id===CID)?' cur':'';
-      h+='<div class="pcard'+cc+'" onclick="openP('+p.id+')">'
-        +'<div class="pnum">'+String(p.id).padStart(2,'0')+'</div>'
-        +'<div class="pname">'+p.name+'</div>'
-        +'<div class="pheb">'+p.heb+'</div></div>';
-    });
-    h+='</div></div>';
-  });
-
-  h+='</div></div>'; // fin psection-body + psection
-
+  // Parachiot retirées de l'accueil (onglet dédié)
   h+='</div>'; // end .feed
   document.getElementById('view-home').innerHTML=h;
 }
@@ -3168,8 +3106,11 @@ function showComingSoon(){
 // ── SPLASH SCREEN ────────────────────────────────────────────────────────────
 function hideSplash(){
   var s=document.getElementById('splash');
-  if(s) s.classList.add('hidden');
-  setTimeout(function(){if(s)s.style.display='none';},600);
+  if(!s) return;
+  s.style.opacity='0';
+  s.style.visibility='hidden';
+  s.style.pointerEvents='none';
+  setTimeout(function(){if(s)s.style.display='none';},700);
 }
 
 
