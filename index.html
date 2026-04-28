@@ -4035,31 +4035,6 @@ function showToast(msg){
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-// ── Hooks sur les actions existantes ──
-// Appelés quand l'utilisateur fait une action
-var _origOpenP = openP;
-function openP(id){
-  _origOpenP(id);
-  recordActivity('paracha', 10);
-}
-
-var _origOpenHayomYom = openHayomYom;
-function openHayomYom(){
-  _origOpenHayomYom();
-  recordActivity('hayom', 5);
-}
-
-var _origOpenSefer = openSefer;
-function openSefer(){
-  _origOpenSefer();
-  recordActivity('sefer', 5);
-}
-
-var _origShowRecueilView = showRecueilView;
-function showRecueilView(){
-  _origShowRecueilView();
-  recordActivity('recueil', 3);
-}
 
 
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
