@@ -74,11 +74,17 @@
 
 /* Streak dans le header */
 #streak-badge{
-  display:none;align-items:center;gap:5px;
+  display:none;align-items:center;gap:6px;
   background:linear-gradient(135deg,#FF6B35,#FF8E53);
-  border-radius:20px;padding:5px 10px;cursor:pointer;
+  border-radius:20px;padding:6px 10px 6px 8px;cursor:pointer;
+  box-shadow:0 2px 8px rgba(255,107,53,0.35);
+  animation:streakPulse 3s ease-in-out infinite;
 }
 #streak-badge.visible{display:flex}
+@keyframes streakPulse{
+  0%,100%{box-shadow:0 2px 8px rgba(255,107,53,0.35)}
+  50%{box-shadow:0 2px 16px rgba(255,107,53,0.6)}
+}
 #streak-fire{font-size:14px}
 #streak-count{font-size:13px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif}
 #streak-label{font-size:10px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Poppins',sans-serif}
@@ -697,7 +703,19 @@ body{
 .recueil-themes-wrap{position:relative;background:#fff;border-bottom:1px solid var(--gray-2)}
 .recueil-themes-wrap::after{content:'›';position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,1));display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:20px;color:var(--purple);pointer-events:none;font-weight:700}
 .recueil-themes-wrap.scrolled-end::after{display:none}
-.recueil-themes{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.recueil-themes-wrap.expanded::after{display:none}
+.recueil-themes{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab;flex-wrap:nowrap}
+.recueil-themes::-webkit-scrollbar{height:4px}
+.recueil-themes::-webkit-scrollbar-track{background:transparent}
+.recueil-themes::-webkit-scrollbar-thumb{background:var(--gray-2);border-radius:2px}
+.recueil-themes.expanded{flex-wrap:wrap;overflow-x:visible;cursor:default}
+.recueil-themes-toggle{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:8px 16px;font-size:12px;font-weight:600;color:var(--purple);
+  cursor:pointer;border-top:1px solid var(--gray-2);background:#fff;
+  font-family:'Poppins',sans-serif;-webkit-tap-highlight-color:transparent;
+}
+.recueil-themes-toggle:active{background:var(--gray-1)}
 .recueil-themes::-webkit-scrollbar{display:none}
 .theme-chip{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-2);background:#fff;font-size:12px;font-weight:600;color:var(--gray-4);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:'Poppins',sans-serif;white-space:nowrap;transition:all .15s}
 .theme-chip.active{background:var(--purple);border-color:var(--purple);color:#fff}
@@ -736,10 +754,13 @@ body{
     <span style="font-family:Poppins,sans-serif;font-size:18px;font-weight:800;color:#1C1C1E;letter-spacing:-0.5px">Kedoshim</span>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <div id="streak-badge" onclick="openNiveauPanel()">
+    <div id="streak-badge" onclick="openNiveauPanel()" title="Ma progression">
       <span id="streak-fire">🔥</span>
-      <span id="streak-count">0</span>
-      <span id="streak-label">jours</span>
+      <div style="display:flex;flex-direction:column;line-height:1.1">
+        <span id="streak-count" style="font-size:14px;font-weight:800;color:#fff;font-family:Poppins,sans-serif">0</span>
+        <span id="streak-label" style="font-size:9px;color:rgba(255,255,255,0.8);font-weight:600;font-family:Poppins,sans-serif">jour</span>
+      </div>
+      <span style="font-size:10px;color:rgba(255,255,255,0.7);margin-left:2px">›</span>
     </div>
     <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -890,8 +911,12 @@ body{
       <input type="text" id="recueil-search-input" placeholder="Rechercher…" oninput="filterRecueil()" autocomplete="off">
     </div>
   </div>
-  <div class="recueil-themes-wrap">
+  <div class="recueil-themes-wrap" id="recueil-themes-wrap">
     <div class="recueil-themes" id="recueil-themes-bar" onscroll="checkThemesScroll(this)"></div>
+    <div class="recueil-themes-toggle" onclick="toggleThemesExpand()" id="themes-toggle-btn">
+      <span id="themes-toggle-icon">▼</span>
+      <span id="themes-toggle-label">Voir tous les thèmes</span>
+    </div>
   </div>
   <div class="recueil-count" id="recueil-count"></div>
   <div class="recueil-list" id="recueil-list">
@@ -3398,6 +3423,27 @@ function loadEnseignements(){
     });
 }
 
+
+function toggleThemesExpand(){
+  var wrap = document.getElementById('recueil-themes-wrap');
+  var bar = document.getElementById('recueil-themes-bar');
+  var icon = document.getElementById('themes-toggle-icon');
+  var label = document.getElementById('themes-toggle-label');
+  if(!wrap||!bar) return;
+  var expanded = bar.classList.contains('expanded');
+  if(expanded){
+    bar.classList.remove('expanded');
+    wrap.classList.remove('expanded');
+    icon.textContent = '▼';
+    label.textContent = 'Voir tous les thèmes';
+  } else {
+    bar.classList.add('expanded');
+    wrap.classList.add('expanded');
+    icon.textContent = '▲';
+    label.textContent = 'Réduire';
+  }
+}
+
 function checkThemesScroll(el){
   var wrap=el.parentElement;
   if(!wrap) return;
@@ -3697,14 +3743,45 @@ var savaisTuIndex = 0;
 var shabbatOverlayShown = false;
 
 // ── INITIALISATION ──
+
+// Drag scroll souris sur la barre de thèmes
+function initThemesDragScroll(){
+  var bar = document.getElementById('recueil-themes-bar');
+  if(!bar) return;
+  var isDown=false, startX=0, scrollLeft=0;
+  bar.addEventListener('mousedown',function(e){
+    if(bar.classList.contains('expanded')) return;
+    isDown=true; bar.style.cursor='grabbing';
+    startX=e.pageX-bar.offsetLeft; scrollLeft=bar.scrollLeft;
+  });
+  bar.addEventListener('mouseleave',function(){isDown=false;bar.style.cursor='grab';});
+  bar.addEventListener('mouseup',function(){isDown=false;bar.style.cursor='grab';});
+  bar.addEventListener('mousemove',function(e){
+    if(!isDown) return;
+    e.preventDefault();
+    var x=e.pageX-bar.offsetLeft;
+    var walk=(x-startX)*1.5;
+    bar.scrollLeft=scrollLeft-walk;
+  });
+}
+
 function initGamification(){
   loadProgress();
+  setTimeout(initThemesDragScroll, 1000);
   checkShabbat();
   setTimeout(function(){
     if(document.getElementById('view-home').style.display !== 'none'){
       showSavaisTuBubble();
     }
-  }, 8000); // Apparaît 8s après l'ouverture
+  }, 8000);
+  // Tooltip "Clique pour voir ta progression" au premier lancement
+  var seen = localStorage.getItem('kedoshim_streak_tooltip');
+  if(!seen){
+    setTimeout(function(){
+      showToast('🔥 Clique sur la flamme pour voir ta progression !');
+      localStorage.setItem('kedoshim_streak_tooltip','1');
+    }, 2500);
+  }
 }
 
 // ── CHARGEMENT PROGRESSION ──
@@ -3887,7 +3964,8 @@ function updateUI(){
   var count = document.getElementById('streak-count');
   if(badge && count){
     count.textContent = streak;
-    // Toujours visible — même à 0 pour encourager
+    var lbl=document.getElementById('streak-label');
+    if(lbl) lbl.textContent = streak<=1 ? 'jour' : 'jours';
     badge.classList.add('visible');
   }
 }
