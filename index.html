@@ -2596,6 +2596,7 @@ function openHayomYom(){
   document.getElementById('view-hayom').style.display='block';
   document.getElementById('btn-back').style.display='flex';
   window.scrollTo(0,0);
+  setTimeout(function(){ if(typeof recordActivity==='function') recordActivity('hayom',5); },100);
   var t=new Date();
   var hd=parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear());
   var dateFrDisplay=hebDateFr||fmtHebFr(hd);
@@ -2865,6 +2866,7 @@ function openSefer(){
   document.getElementById('view-sefer').style.display='block';
   document.getElementById('btn-back').style.display='flex';
   window.scrollTo(0,0);
+  setTimeout(function(){ if(typeof recordActivity==='function') recordActivity('sefer',5); },100);
   var t=new Date();
   var dateHeb=hebDateFr||fmtHebFr(parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear()));
   var coursNum=getSeferCoursNumber();
@@ -3129,6 +3131,7 @@ function translateVerses(verses,lang,cb){
 }
 
 function openP(id){
+  setTimeout(function(){ if(typeof recordActivity==='function') recordActivity('paracha',10); },100);
   // Si id=currentCID et qu'on a un nom Hebcal, utiliser le mapping correct
   var p=getP(id);
   if(!p) p=P[0];
@@ -3884,8 +3887,8 @@ function updateUI(){
   var count = document.getElementById('streak-count');
   if(badge && count){
     count.textContent = streak;
-    if(streak > 0) badge.classList.add('visible');
-    else badge.classList.remove('visible');
+    // Toujours visible — même à 0 pour encourager
+    badge.classList.add('visible');
   }
 }
 
