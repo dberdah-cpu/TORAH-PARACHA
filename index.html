@@ -2590,7 +2590,9 @@ function getLoubavitchURL(id){
 }
 
 function openHayomYom(){
-  document.getElementById('view-home').style.display='none';
+  ['view-home','view-detail','view-sefer','view-recueil','view-profile'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
   document.getElementById('view-hayom').style.display='block';
   document.getElementById('btn-back').style.display='flex';
   window.scrollTo(0,0);
@@ -2857,7 +2859,9 @@ function getSeferLoubavitchURL(id){
 }
 
 function openSefer(){
-  document.getElementById('view-home').style.display='none';
+  ['view-home','view-detail','view-hayom','view-recueil','view-profile'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
   document.getElementById('view-sefer').style.display='block';
   document.getElementById('btn-back').style.display='flex';
   window.scrollTo(0,0);
