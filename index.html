@@ -69,6 +69,123 @@
 .qa-label{font-size:9px;font-weight:600;color:var(--gray-4);font-family:'Poppins',sans-serif;text-align:center;line-height:1.2;white-space:nowrap}
 .qa-sublabel{font-size:8px;color:var(--gray-3);font-family:'Poppins',sans-serif;text-align:center;white-space:nowrap}
 
+
+/* ── GAMIFICATION ── */
+
+/* Streak dans le header */
+#streak-badge{
+  display:none;align-items:center;gap:5px;
+  background:linear-gradient(135deg,#FF6B35,#FF8E53);
+  border-radius:20px;padding:5px 10px;cursor:pointer;
+}
+#streak-badge.visible{display:flex}
+#streak-fire{font-size:14px}
+#streak-count{font-size:13px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif}
+#streak-label{font-size:10px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Poppins',sans-serif}
+
+/* Panel Niveau */
+#niveau-panel{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:#fff;border-radius:24px 24px 0 0;
+  padding:12px 20px 40px;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 -4px 32px rgba(0,0,0,0.15);
+  max-height:85vh;overflow-y:auto;
+}
+#niveau-panel.open{transform:translateY(0)}
+#niveau-backdrop{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,0.35);display:none}
+#niveau-backdrop.visible{display:block}
+.np-handle{width:36px;height:4px;background:var(--gray-2);border-radius:2px;margin:0 auto 20px}
+.np-header{text-align:center;margin-bottom:24px}
+.np-niveau-icon{font-size:56px;margin-bottom:8px}
+.np-niveau-name{font-size:24px;font-weight:800;color:var(--dark);font-family:'Poppins',sans-serif}
+.np-niveau-sub{font-size:13px;color:var(--gray-3);margin-top:4px}
+.np-streak{background:linear-gradient(135deg,#FF6B35,#FF8E53);border-radius:16px;padding:16px;text-align:center;margin-bottom:20px}
+.np-streak-num{font-size:48px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;line-height:1}
+.np-streak-label{font-size:13px;color:rgba(255,255,255,0.85);font-weight:600;margin-top:4px}
+.np-streak-best{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px}
+.np-progress-section{margin-bottom:20px}
+.np-progress-title{font-size:12px;font-weight:700;color:var(--gray-3);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;font-family:'Poppins',sans-serif}
+.np-levels{display:flex;flex-direction:column;gap:8px}
+.np-level-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:var(--gray-1)}
+.np-level-item.current{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border:1.5px solid var(--purple)}
+.np-level-item.done{background:#F0FDF4;border:1.5px solid #86EFAC}
+.np-level-emoji{font-size:24px;width:40px;text-align:center}
+.np-level-info{flex:1}
+.np-level-name{font-size:14px;font-weight:700;color:var(--dark);font-family:'Poppins',sans-serif}
+.np-level-days{font-size:12px;color:var(--gray-3)}
+.np-level-check{font-size:18px}
+.np-badges-section{margin-bottom:20px}
+.np-badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.np-badge{background:var(--gray-1);border-radius:14px;padding:14px 8px;text-align:center;border:1.5px solid transparent}
+.np-badge.earned{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-color:#F59E0B}
+.np-badge-icon{font-size:28px;margin-bottom:6px}
+.np-badge-name{font-size:10px;font-weight:700;color:var(--dark);font-family:'Poppins',sans-serif;line-height:1.3}
+.np-badge.locked .np-badge-icon{filter:grayscale(1);opacity:.4}
+.np-badge.locked .np-badge-name{color:var(--gray-3)}
+.np-points{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.np-points-num{font-size:28px;font-weight:800;color:var(--purple);font-family:'Poppins',sans-serif}
+.np-points-label{font-size:12px;color:var(--gray-3);font-weight:600}
+
+/* Toast notification */
+#toast{
+  position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);
+  z-index:9999;background:var(--dark);color:#fff;
+  padding:12px 20px;border-radius:12px;
+  font-size:14px;font-weight:600;font-family:'Poppins',sans-serif;
+  opacity:0;transition:all .3s;pointer-events:none;
+  white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Shabbat overlay */
+#shabbat-overlay{
+  position:fixed;inset:0;z-index:8000;
+  background:linear-gradient(160deg,#0F172A,#1E1B4B);
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 30px;text-align:center;
+}
+#shabbat-overlay.visible{display:flex}
+.so-candle{font-size:64px;margin-bottom:20px;animation:flicker 2s ease-in-out infinite}
+.so-title{font-size:28px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:8px}
+.so-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:22px;color:#C9A84C;margin-bottom:20px}
+.so-text{font-size:16px;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:12px;max-width:320px}
+.so-quote{font-size:14px;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:28px;max-width:280px}
+.so-time{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:14px 24px;margin-bottom:28px}
+.so-time-label{font-size:11px;color:#C9A84C;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.so-time-val{font-size:22px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif}
+.so-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:12px 28px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif}
+@keyframes flicker{0%,100%{transform:scale(1)}50%{transform:scale(1.05) rotate(2deg)}}
+
+/* Savais-tu bubble */
+#savais-tu{
+  position:fixed;bottom:155px;right:16px;z-index:400;
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:none;align-items:center;justify-content:center;
+  font-size:24px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(79,70,229,0.4);
+  animation:pulse 2s ease-in-out infinite;
+}
+#savais-tu.visible{display:flex}
+@keyframes pulse{0%,100%{box-shadow:0 4px 16px rgba(79,70,229,0.4)}50%{box-shadow:0 4px 24px rgba(79,70,229,0.7)}}
+
+#savais-tu-panel{
+  position:fixed;bottom:155px;right:16px;z-index:401;
+  width:calc(100% - 32px);max-width:340px;
+  background:#fff;border-radius:20px;
+  padding:20px;box-shadow:0 8px 32px rgba(0,0,0,0.15);
+  display:none;
+}
+#savais-tu-panel.visible{display:block}
+.stp-close{position:absolute;top:12px;right:12px;background:var(--gray-1);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700}
+.stp-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:8px;font-family:'Poppins',sans-serif}
+.stp-text{font-size:15px;line-height:1.7;color:var(--dark);font-weight:500;margin-bottom:12px}
+.stp-source{font-size:11px;color:var(--gray-3);font-style:italic;margin-bottom:14px}
+.stp-next{width:100%;padding:10px;background:var(--grad-main);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif}
+
 /* ── SPLASH SCREEN ── */
 #splash{
   position:fixed;inset:0;z-index:9999;
@@ -618,9 +735,50 @@ body{
     <img src="logo.png" alt="Kedoshim" style="width:40px;height:40px;object-fit:contain">
     <span style="font-family:Poppins,sans-serif;font-size:18px;font-weight:800;color:#1C1C1E;letter-spacing:-0.5px">Kedoshim</span>
   </div>
-  <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-  </button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div id="streak-badge" onclick="openNiveauPanel()">
+      <span id="streak-fire">🔥</span>
+      <span id="streak-count">0</span>
+      <span id="streak-label">jours</span>
+    </div>
+    <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<!-- Shabbat Overlay -->
+<div id="shabbat-overlay">
+  <div class="so-candle">🕯</div>
+  <div class="so-title">Chabbat Chalom !</div>
+  <div class="so-heb">שַׁבָּת שָׁלוֹם</div>
+  <div class="so-text">L'app se repose aussi pendant Chabbat 😊<br>Profite de ce temps précieux avec ta famille.</div>
+  <div class="so-quote">"Le Chabbat est un palais dans le temps — entre dedans et laisse le monde dehors."</div>
+  <div class="so-time">
+    <div class="so-time-label">Reviens samedi soir après</div>
+    <div class="so-time-val" id="so-havdala-time">--:--</div>
+  </div>
+  <button class="so-btn" onclick="closeShabbatOverlay()">J'ai compris, Chabbat Chalom ! 🕯</button>
+</div>
+
+<!-- Niveau Panel -->
+<div id="niveau-backdrop" onclick="closeNiveauPanel()"></div>
+<div id="niveau-panel">
+  <div class="np-handle"></div>
+  <div id="niveau-panel-content"></div>
+</div>
+
+<!-- Savais-tu bubble -->
+<div id="savais-tu" onclick="openSavaisTu()">💡</div>
+<div id="savais-tu-panel">
+  <button class="stp-close" onclick="closeSavaisTu()">×</button>
+  <div class="stp-badge">💡 Savais-tu ?</div>
+  <div class="stp-text" id="stp-text"></div>
+  <div class="stp-source" id="stp-source"></div>
+  <button class="stp-next" onclick="nextSavaisTu()">Un autre → </button>
 </div><!-- Recueil d'enseignements -->
 
 
@@ -3483,6 +3641,427 @@ window.addEventListener('error', function(){
   setTimeout(hideSplash, 500);
 });
 
+
+// ══════════════════════════════════════════════════════════════
+// GAMIFICATION SYSTEM
+// ══════════════════════════════════════════════════════════════
+
+// ── Données locales (fallback sans Supabase) ──
+var localProgress = {
+  streak_current: 0, streak_best: 0, streak_last_date: null,
+  points_total: 0, niveau: 'debutant', badges: []
+};
+
+// ── Configuration ──
+var NIVEAUX = [
+  {id:'debutant', emoji:'🌱', name:'Débutant', sub:'Celui qui commence son chemin', min:0, max:7},
+  {id:'talmid', emoji:'📖', name:'Talmid', sub:'Celui qui étudie avec régularité', min:8, max:30},
+  {id:'haver', emoji:'✡️', name:'Haver', sub:'Le compagnon de la communauté', min:31, max:100},
+  {id:'rav', emoji:'🏆', name:'Rav', sub:'Celui qui peut transmettre', min:101, max:364},
+  {id:'kadosh', emoji:'👑', name:'Kadosh', sub:'Nous sommes tous Kadosh', min:365, max:9999}
+];
+
+var BADGES_DEF = [
+  {id:'premier_pas', emoji:'👣', name:'Premier pas', desc:'Premier jour d\'étude'},
+  {id:'shabbat_chalom', emoji:'🕯', name:'Chabbat Chalom', desc:'Respecté le Chabbat'},
+  {id:'beaba', emoji:'📚', name:'Béaba transmis', desc:'Partagé un enseignement'},
+  {id:'7jours', emoji:'🔥', name:'7 jours', desc:'Streak de 7 jours'},
+  {id:'30jours', emoji:'⭐', name:'30 jours', desc:'Streak de 30 jours'},
+  {id:'100jours', emoji:'💎', name:'100 jours', desc:'Streak de 100 jours'},
+  {id:'hayom', emoji:'☀️', name:'Hayom Yom', desc:'Premier Hayom Yom lu'},
+  {id:'paracha', emoji:'📖', name:'Lecteur', desc:'Première paracha lue'},
+  {id:'recueil', emoji:'💛', name:'Explorateur', desc:'10 enseignements lus'}
+];
+
+var SAVAIS_TU = [
+  {text:"Le mot 'Torah' vient de la racine hébraïque 'horé' qui signifie enseigner et guider. La Torah n'est pas une loi — c'est un chemin de vie.", source:"Tanya, ch.4"},
+  {text:"Le Baal Chem Tov enseignait que D.ieu est présent partout — y compris dans les moments de doute et de questionnement.", source:"Keter Shem Tov"},
+  {text:"Il y a 613 mitsvot : 248 positives (correspondant aux 248 membres du corps) et 365 négatives (correspondant aux 365 jours de l'année solaire).", source:"Talmud, Makkot 23b"},
+  {text:"Le mot 'Israël' signifie 'celui qui a lutté avec D.ieu et les hommes et a prévalu'. C'est un nom de combat, pas de victoire facile.", source:"Genèse 32:29"},
+  {text:"La mezouza contient les paragraphes du Shema. Chaque fois qu'on franchit une porte, on est rappelé à l'Unité divine.", source:"Deutéronome 6:9"},
+  {text:"Le Rabbi de Loubavitch disait : 'Un peu de lumière repousse beaucoup de ténèbres.' Une seule bonne action peut changer un monde.", source:"Likoutei Si'hot vol.1"},
+  {text:"Il y a 4 niveaux d'interprétation de la Torah : Pshat (simple), Remez (allusion), Drach (enseignement) et Sod (mystère). Ensemble ils forment PaRDeS — le verger.", source:"Zohar"},
+  {text:"Le Chabbat est mentionné 12 fois dans la Torah — autant que les 12 tribus d'Israël. Le Chabbat unit tout Israël.", source:"Mechilta, Yitro"},
+  {text:"La lettre Alef, première lettre de l'alphabet hébreu, est composée de deux Yod et d'un Vav — soit la valeur numérique 26, le nom de D.ieu.", source:"Sefer Yetsira"},
+  {text:"Le Rabbi enseignait que chaque Juif possède une lettre unique dans la Torah. Si une lettre manque dans un rouleau, tout le rouleau est invalide.", source:"Likoutei Si'hot vol.4"}
+];
+
+var savaisTuIndex = 0;
+var shabbatOverlayShown = false;
+
+// ── INITIALISATION ──
+function initGamification(){
+  loadProgress();
+  checkShabbat();
+  setTimeout(function(){
+    if(document.getElementById('view-home').style.display !== 'none'){
+      showSavaisTuBubble();
+    }
+  }, 8000); // Apparaît 8s après l'ouverture
+}
+
+// ── CHARGEMENT PROGRESSION ──
+function loadProgress(){
+  // Depuis localStorage d'abord
+  try {
+    var saved = localStorage.getItem('kedoshim_progress');
+    if(saved) localProgress = JSON.parse(saved);
+  } catch(e){}
+
+  // Si Supabase connecté, synchroniser
+  if(supabase && currentUser){
+    supabase.from('users_progress')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .single()
+      .then(function(r){
+        if(r.data){
+          localProgress.streak_current = r.data.streak_current || 0;
+          localProgress.streak_best = r.data.streak_best || 0;
+          localProgress.streak_last_date = r.data.streak_last_date;
+          localProgress.points_total = r.data.points_total || 0;
+          localProgress.niveau = r.data.niveau || 'debutant';
+          saveProgressLocal();
+        } else {
+          // Créer la ligne
+          createUserProgress();
+        }
+        loadBadges();
+        updateUI();
+      });
+  } else {
+    updateUI();
+  }
+}
+
+function createUserProgress(){
+  if(!supabase || !currentUser) return;
+  supabase.from('users_progress').insert({
+    user_id: currentUser.id,
+    streak_current: 0, streak_best: 0,
+    points_total: 0, niveau: 'debutant'
+  }).then(function(){loadBadges();});
+}
+
+function loadBadges(){
+  if(!supabase || !currentUser) return;
+  supabase.from('users_badges')
+    .select('badge_id')
+    .eq('user_id', currentUser.id)
+    .then(function(r){
+      if(r.data) localProgress.badges = r.data.map(function(b){return b.badge_id;});
+      saveProgressLocal();
+      updateUI();
+    });
+}
+
+function saveProgressLocal(){
+  try { localStorage.setItem('kedoshim_progress', JSON.stringify(localProgress)); } catch(e){}
+}
+
+// ── ENREGISTRER UNE ACTIVITÉ ──
+function recordActivity(type, points){
+  // Vérifier le Chabbat
+  if(isShabbatNow()) return;
+
+  var today = new Date().toISOString().split('T')[0];
+  var lastDate = localProgress.streak_last_date;
+
+  // Calculer streak
+  if(lastDate !== today){
+    var yesterday = new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    var yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    if(lastDate === yesterdayStr){
+      localProgress.streak_current++;
+    } else if(lastDate !== today){
+      localProgress.streak_current = 1;
+    }
+    localProgress.streak_last_date = today;
+    if(localProgress.streak_current > localProgress.streak_best){
+      localProgress.streak_best = localProgress.streak_current;
+    }
+  }
+
+  localProgress.points_total += points;
+  updateNiveau();
+  saveProgressLocal();
+  updateUI();
+
+  // Sync Supabase
+  if(supabase && currentUser){
+    supabase.from('users_progress').upsert({
+      user_id: currentUser.id,
+      streak_current: localProgress.streak_current,
+      streak_best: localProgress.streak_best,
+      streak_last_date: localProgress.streak_last_date,
+      points_total: localProgress.points_total,
+      niveau: localProgress.niveau,
+      updated_at: new Date().toISOString()
+    }, {onConflict:'user_id'}).then();
+
+    supabase.from('users_activity').insert({
+      user_id: currentUser.id,
+      activity_date: today,
+      activity_type: type,
+      points_earned: points
+    }).then();
+  }
+
+  // Vérifier badges
+  checkBadges(type);
+
+  // Toast streak
+  if(localProgress.streak_current > 1){
+    showToast('🔥 Streak : '+localProgress.streak_current+' jours !');
+  }
+}
+
+// ── MISE À JOUR NIVEAU ──
+function updateNiveau(){
+  var streak = localProgress.streak_current;
+  var newNiveau = 'debutant';
+  NIVEAUX.forEach(function(n){
+    if(streak >= n.min) newNiveau = n.id;
+  });
+  if(newNiveau !== localProgress.niveau){
+    var nData = NIVEAUX.find(function(n){return n.id===newNiveau;});
+    if(nData) showToast(nData.emoji+' Nouveau niveau : '+nData.name+' !');
+    localProgress.niveau = newNiveau;
+  }
+}
+
+// ── BADGES ──
+function checkBadges(type){
+  var toEarn = [];
+
+  if(localProgress.streak_current >= 1 && !hasBadge('premier_pas'))
+    toEarn.push('premier_pas');
+  if(localProgress.streak_current >= 7 && !hasBadge('7jours'))
+    toEarn.push('7jours');
+  if(localProgress.streak_current >= 30 && !hasBadge('30jours'))
+    toEarn.push('30jours');
+  if(localProgress.streak_current >= 100 && !hasBadge('100jours'))
+    toEarn.push('100jours');
+  if(type==='hayom' && !hasBadge('hayom'))
+    toEarn.push('hayom');
+  if(type==='paracha' && !hasBadge('paracha'))
+    toEarn.push('paracha');
+  if(type==='recueil' && !hasBadge('recueil'))
+    toEarn.push('recueil');
+  if(type==='shabbat_respected' && !hasBadge('shabbat_chalom'))
+    toEarn.push('shabbat_chalom');
+
+  toEarn.forEach(function(bid){
+    earnBadge(bid);
+  });
+}
+
+function hasBadge(id){ return localProgress.badges.indexOf(id) >= 0; }
+
+function earnBadge(id){
+  localProgress.badges.push(id);
+  saveProgressLocal();
+  var bData = BADGES_DEF.find(function(b){return b.id===id;});
+  if(bData) showToast('🏅 Badge débloqué : '+bData.name+' !');
+
+  if(supabase && currentUser){
+    supabase.from('users_badges').insert({
+      user_id: currentUser.id, badge_id: id
+    }).then();
+  }
+}
+
+// ── UI ──
+function updateUI(){
+  var streak = localProgress.streak_current;
+  var badge = document.getElementById('streak-badge');
+  var count = document.getElementById('streak-count');
+  if(badge && count){
+    count.textContent = streak;
+    if(streak > 0) badge.classList.add('visible');
+    else badge.classList.remove('visible');
+  }
+}
+
+// ── NIVEAU PANEL ──
+function openNiveauPanel(){
+  var panel = document.getElementById('niveau-panel');
+  var backdrop = document.getElementById('niveau-backdrop');
+  renderNiveauPanel();
+  panel.classList.add('open');
+  backdrop.classList.add('visible');
+}
+
+function closeNiveauPanel(){
+  document.getElementById('niveau-panel').classList.remove('open');
+  document.getElementById('niveau-backdrop').classList.remove('visible');
+}
+
+function renderNiveauPanel(){
+  var streak = localProgress.streak_current;
+  var nData = NIVEAUX.find(function(n){return n.id===localProgress.niveau;}) || NIVEAUX[0];
+
+  var html = '<div class="np-header">'
+    +'<div class="np-niveau-icon">'+nData.emoji+'</div>'
+    +'<div class="np-niveau-name">'+nData.name+'</div>'
+    +'<div class="np-niveau-sub">'+nData.sub+'</div>'
+    +'</div>';
+
+  // Streak
+  html += '<div class="np-streak">'
+    +'<div class="np-streak-num">🔥 '+streak+'</div>'
+    +'<div class="np-streak-label">jours consécutifs</div>'
+    +'<div class="np-streak-best">Record : '+localProgress.streak_best+' jours</div>'
+    +'</div>';
+
+  // Points
+  html += '<div class="np-points">'
+    +'<div><div class="np-points-num">'+localProgress.points_total+'</div>'
+    +'<div class="np-points-label">points spirituels</div></div>'
+    +'<div style="font-size:32px">⭐</div>'
+    +'</div>';
+
+  // Niveaux
+  html += '<div class="np-progress-section"><div class="np-progress-title">Progression</div><div class="np-levels">';
+  NIVEAUX.forEach(function(n){
+    var isCurrent = n.id === localProgress.niveau;
+    var isDone = streak > n.max;
+    var cls = isCurrent ? 'current' : (isDone ? 'done' : '');
+    html += '<div class="np-level-item '+cls+'">'
+      +'<div class="np-level-emoji">'+n.emoji+'</div>'
+      +'<div class="np-level-info">'
+      +'<div class="np-level-name">'+n.name+'</div>'
+      +'<div class="np-level-days">'+n.min+(n.max<9999?' – '+n.max:'+')+(isCurrent?' jours ← tu es ici':' jours')+'</div>'
+      +'</div>'
+      +(isDone?'<div class="np-level-check">✅</div>':isCurrent?'<div class="np-level-check">📍</div>':'')
+      +'</div>';
+  });
+  html += '</div></div>';
+
+  // Badges
+  html += '<div class="np-badges-section"><div class="np-progress-title">Badges</div><div class="np-badges-grid">';
+  BADGES_DEF.forEach(function(b){
+    var earned = hasBadge(b.id);
+    html += '<div class="np-badge '+(earned?'earned':'locked')+'">'
+      +'<div class="np-badge-icon">'+b.emoji+'</div>'
+      +'<div class="np-badge-name">'+b.name+'</div>'
+      +'</div>';
+  });
+  html += '</div></div>';
+
+  document.getElementById('niveau-panel-content').innerHTML = html;
+}
+
+// ── CHABBAT ──
+function isShabbatNow(){
+  if(!candleTime || !havdalaTime) return false;
+  var now = new Date();
+  var day = now.getDay(); // 5=vendredi, 6=samedi
+
+  function parseTime(str){
+    var m = str.match(/(\d+)[h:](\d+)/);
+    if(!m) return null;
+    var h = parseInt(m[1]), mn = parseInt(m[2]);
+    if(str.toLowerCase().indexOf('pm')>=0 && h<12) h+=12;
+    return h*60+mn;
+  }
+
+  var nowMin = now.getHours()*60+now.getMinutes();
+  var candleMin = parseTime(candleTime);
+  var havdalaMin = parseTime(havdalaTime);
+
+  if(day===5 && candleMin && nowMin >= candleMin) return true;
+  if(day===6 && havdalaMin && nowMin < havdalaMin) return true;
+  return false;
+}
+
+function checkShabbat(){
+  if(!isShabbatNow()) return;
+  if(shabbatOverlayShown) return;
+  shabbatOverlayShown = true;
+
+  // Afficher l'heure de Havdala
+  var el = document.getElementById('so-havdala-time');
+  if(el && havdalaTime) el.textContent = 'samedi soir après '+havdalaTime;
+
+  setTimeout(function(){
+    document.getElementById('shabbat-overlay').classList.add('visible');
+    // Badge Chabbat respecté
+    earnBadge('shabbat_chalom');
+  }, 1500);
+}
+
+function closeShabbatOverlay(){
+  document.getElementById('shabbat-overlay').classList.remove('visible');
+}
+
+// ── SAVAIS-TU ──
+function showSavaisTuBubble(){
+  var el = document.getElementById('savais-tu');
+  if(el) el.classList.add('visible');
+}
+
+function openSavaisTu(){
+  document.getElementById('savais-tu').classList.remove('visible');
+  renderSavaisTu();
+  document.getElementById('savais-tu-panel').classList.add('visible');
+}
+
+function closeSavaisTu(){
+  document.getElementById('savais-tu-panel').classList.remove('visible');
+  // Réapparaît dans 5 min
+  setTimeout(showSavaisTuBubble, 300000);
+}
+
+function nextSavaisTu(){
+  savaisTuIndex = (savaisTuIndex + 1) % SAVAIS_TU.length;
+  renderSavaisTu();
+}
+
+function renderSavaisTu(){
+  var item = SAVAIS_TU[savaisTuIndex];
+  document.getElementById('stp-text').textContent = item.text;
+  document.getElementById('stp-source').textContent = '— '+item.source;
+}
+
+// ── TOAST ──
+function showToast(msg){
+  var t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// ── Hooks sur les actions existantes ──
+// Appelés quand l'utilisateur fait une action
+var _origOpenP = openP;
+function openP(id){
+  _origOpenP(id);
+  recordActivity('paracha', 10);
+}
+
+var _origOpenHayomYom = openHayomYom;
+function openHayomYom(){
+  _origOpenHayomYom();
+  recordActivity('hayom', 5);
+}
+
+var _origOpenSefer = openSefer;
+function openSefer(){
+  _origOpenSefer();
+  recordActivity('sefer', 5);
+}
+
+var _origShowRecueilView = showRecueilView;
+function showRecueilView(){
+  _origShowRecueilView();
+  recordActivity('recueil', 3);
+}
+
+
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
 try {
   buildHome();
@@ -3498,6 +4077,7 @@ try {
 try {
   initLoc();
   initSupabase();
+  setTimeout(initGamification, 1000);
 } catch(e2) {
   console.error('initLoc error:', e2);
 }
