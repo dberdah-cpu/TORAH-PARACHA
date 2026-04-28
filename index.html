@@ -2615,6 +2615,7 @@ function getLoubavitchURL(id){
 }
 
 function openHayomYom(){
+  if(checkAndBlockShabbat()) return;
   ['view-home','view-detail','view-sefer','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
   });
@@ -2885,6 +2886,7 @@ function getSeferLoubavitchURL(id){
 }
 
 function openSefer(){
+  if(checkAndBlockShabbat()) return;
   ['view-home','view-detail','view-hayom','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
   });
@@ -3602,6 +3604,13 @@ function showAuthMsg(msg,isError){
 }
 
 function authSubmit(){
+  if(typeof isShabbatNow==='function' && isShabbatNow()){
+    closeShabbatOverlay&&closeShabbatOverlay();
+    document.getElementById('shabbat-overlay').classList.add('visible');
+    var el=document.getElementById('so-havdala-time');
+    if(el&&havdalaTime) el.textContent='samedi soir après '+havdalaTime;
+    return;
+  }
   if(!supabase){showAuthMsg('Supabase en cours de chargement, réessaie.',true);return;}
   var email=(document.getElementById('auth-email').value||'').trim();
   var pwd=document.getElementById('auth-pwd').value||'';
@@ -3628,6 +3637,12 @@ function authSubmit(){
 }
 
 function authGoogle(){
+  if(typeof isShabbatNow==='function' && isShabbatNow()){
+    document.getElementById('shabbat-overlay').classList.add('visible');
+    var el=document.getElementById('so-havdala-time');
+    if(el&&havdalaTime) el.textContent='samedi soir après '+havdalaTime;
+    return;
+  }
   if(!supabase){showAuthMsg('Supabase en cours de chargement.',true);return;}
   supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});
 }
@@ -4076,6 +4091,22 @@ function checkShabbat(){
     // Badge Chabbat respecté
     earnBadge('shabbat_chalom');
   }, 1500);
+}
+
+
+function showShabbatBlock(){
+  var overlay=document.getElementById('shabbat-overlay');
+  if(overlay) overlay.classList.add('visible');
+  var el=document.getElementById('so-havdala-time');
+  if(el&&havdalaTime) el.textContent='samedi soir après '+havdalaTime;
+}
+
+function checkAndBlockShabbat(){
+  if(typeof isShabbatNow==='function'&&isShabbatNow()){
+    showShabbatBlock();
+    return true;
+  }
+  return false;
 }
 
 function closeShabbatOverlay(){
