@@ -830,8 +830,17 @@ body{
       <!-- Champs communs -->
       <input type="email" id="auth-email" placeholder="Adresse e-mail" autocomplete="email"
         style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:10px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none">
-      <input type="password" id="auth-pwd" placeholder="Mot de passe" autocomplete="current-password"
-        style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:6px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none">
+      <div style="position:relative;margin-bottom:6px">
+        <input type="password" id="auth-pwd" placeholder="Mot de passe" autocomplete="current-password"
+          style="width:100%;padding:13px 44px 13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none">
+        <button type="button" onclick="togglePwdVisibility()" id="pwd-eye-btn"
+          style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:4px;color:var(--gray-3)">
+          <svg id="pwd-eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
 
       <!-- Champ prénom (register only) -->
       <input type="text" id="auth-firstname" placeholder="Prénom (optionnel)" autocomplete="given-name"
@@ -1642,6 +1651,7 @@ function scheduleHavdalaReload(){
 // CALENDAR UI
 var calY,calM,calSel=null,calEvType='greg';
 function openCal(){
+  if(!requireLogin()) return;
   var t=new Date();
   calY=t.getFullYear(); calM=t.getMonth();
   calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
@@ -2278,6 +2288,40 @@ function buildHome(){
   // Prochaines fêtes retirées de la home
 
 
+  // ── LISTE DES 54 PARASHOT ──
+  h+='<div class="card-paralist">'
+    +'<div class="pl-header" onclick="togglePS()">'
+    +'<div class="pl-title">📖 Les 54 Parashot</div>'
+    +'<div style="display:flex;align-items:center;gap:8px"><div class="pl-count">54 parashot</div><div class="pl-arrow">›</div></div>'
+    +'</div>'
+    +'<div class="pl-body" id="pl-body-main">';
+
+  var BOOKS=[
+    {name:'Berechit',heb:'בְּרֵאשִׁית',ids:[1,2,3,4,5,6,7,8,9,10,11,12]},
+    {name:'Chemot',heb:'שְׁמוֹת',ids:[13,14,15,16,17,18,19,20,21,22,23]},
+    {name:'Vayikra',heb:'וַיִּקְרָא',ids:[24,25,26,27,28,29,30,31,32,33]},
+    {name:'Bamidbar',heb:'בְּמִדְבַּר',ids:[34,35,36,37,38,39,40,41,42,43]},
+    {name:'Devarim',heb:'דְּבָרִים',ids:[44,45,46,47,48,49,50,51,52,53,54]}
+  ];
+
+  BOOKS.forEach(function(book){
+    h+='<div class="pbook-name">'+book.name+' <span class="pbook-heb">'+book.heb+'</span></div>';
+    h+='<div class="pgrid">';
+    book.ids.forEach(function(id){
+      var p=getP(id);
+      if(!p) return;
+      var isCur=(id===currentCID);
+      h+='<div class="pcard'+(isCur?' cur':'')+'" onclick="openP('+id+')">'
+        +'<div class="pnum">'+id+'</div>'
+        +'<div class="pname">'+(PARASHA_FR[p.name]||p.name)+'</div>'
+        +'<div class="pheb">'+p.heb+'</div>'
+        +'</div>';
+    });
+    h+='</div>';
+  });
+
+  h+='</div></div>';
+
   // Parachiot retirées de l'accueil (onglet dédié)
   h+='</div>'; // end .feed
   document.getElementById('view-home').innerHTML=h;
@@ -2317,6 +2361,9 @@ function goHome(){
   // Remettre Accueil actif dans la nav
   var navItems=document.querySelectorAll('.nav-item');
   if(navItems.length) { navItems.forEach(function(n){n.classList.remove('active');}); navItems[0].classList.add('active'); }
+  // Remettre la quick bar
+  var qab=document.getElementById('quick-access-bar');
+  if(qab) qab.style.display='flex';
   window.scrollTo(0,0);
 }
 
@@ -2615,6 +2662,7 @@ function getLoubavitchURL(id){
 }
 
 function openHayomYom(){
+  if(!requireLogin()) return;
   if(checkAndBlockShabbat()) return;
   ['view-home','view-detail','view-sefer','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -2886,6 +2934,7 @@ function getSeferLoubavitchURL(id){
 }
 
 function openSefer(){
+  if(!requireLogin()) return;
   if(checkAndBlockShabbat()) return;
   ['view-home','view-detail','view-hayom','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -3158,6 +3207,7 @@ function translateVerses(verses,lang,cb){
 }
 
 function openP(id){
+  if(!requireLogin()) return;
   setTimeout(function(){ if(typeof recordActivity==='function') recordActivity('paracha',10); },100);
   // Si id=currentCID et qu'on a un nom Hebcal, utiliser le mapping correct
   var p=getP(id);
@@ -3165,6 +3215,9 @@ function openP(id){
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-detail').style.display='block';
   document.getElementById('btn-back').style.display='flex';
+  // Cacher la quick bar sur la page détail
+  var qab=document.getElementById('quick-access-bar');
+  if(qab) qab.style.display='none';
   showTab('heb');
   document.getElementById('d-book').textContent=p.book+' · '+p.bh;
   document.getElementById('d-name').textContent=p.name;
@@ -3278,7 +3331,7 @@ function setActiveNav(el){
   el.classList.add('active');
 }
 function showParachiotView(){
-  // Aller à l'accueil et ouvrir la liste des parashot
+  if(!requireLogin()) return;
   goHome();
   setTimeout(function(){
     var body=document.querySelector('.pl-body');
@@ -3566,6 +3619,20 @@ function initSupabase(){
     });
   };
   document.head.appendChild(script);
+}
+
+
+function togglePwdVisibility(){
+  var inp=document.getElementById('auth-pwd');
+  var icon=document.getElementById('pwd-eye-icon');
+  if(!inp) return;
+  if(inp.type==='password'){
+    inp.type='text';
+    icon.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    inp.type='password';
+    icon.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
 }
 
 function switchAuthTab(mode){
@@ -4153,6 +4220,32 @@ function showToast(msg){
 
 
 
+
+function requireLogin(){
+  if(currentUser) return true;
+  // Pas connecté → afficher le profil avec message
+  showProfileView();
+  setTimeout(function(){
+    showAuthMsg('🔐 Connecte-toi pour accéder à cette fonctionnalité', true);
+  }, 300);
+  // Activer l'onglet Profil dans la nav
+  var navItems=document.querySelectorAll('.nav-item');
+  if(navItems.length>=5){
+    navItems.forEach(function(n){n.classList.remove('active');});
+    navItems[4].classList.add('active');
+  }
+  return false;
+}
+
+function openRecueilSearch(){
+  if(!requireLogin()) return;
+  showRecueilView();
+  setTimeout(function(){
+    var inp=document.getElementById('recueil-search-input');
+    if(inp){ inp.focus(); inp.scrollIntoView({behavior:'smooth',block:'center'}); }
+  }, 300);
+}
+
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
 try {
   buildHome();
@@ -4177,7 +4270,14 @@ try {
 <!-- Quick Access Bar (fixe au-dessus de la nav) -->
 <div id="quick-access-bar">
   <div class="qa-item" onclick="openShabbatPanel()">
-    <div class="qa-icon-wrap">🕯</div>
+    <div class="qa-icon-wrap" style="background:#FFF7ED">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2C12 2 10 5 10 8C10 9.1 10.9 10 12 10C13.1 10 14 9.1 14 8C14 5 12 2 12 2Z" fill="#F59E0B"/>
+        <rect x="11" y="10" width="2" height="8" rx="1" fill="#D97706"/>
+        <rect x="8" y="18" width="8" height="1.5" rx="0.75" fill="#92400E"/>
+        <rect x="6" y="19.5" width="12" height="1.5" rx="0.75" fill="#92400E"/>
+      </svg>
+    </div>
     <div class="qa-label">Chabbat</div>
     <div class="qa-sublabel">Horaires &amp; Paracha</div>
   </div>
@@ -4217,7 +4317,7 @@ try {
     </div>
     <span class="nav-label">Parachiot</span>
   </div>
-  <div class="nav-item" onclick="showRecueilView();setActiveNav(this)">
+  <div class="nav-item" onclick="openRecueilSearch();setActiveNav(this)">
     <div class="nav-icon">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </div>
