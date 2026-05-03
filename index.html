@@ -36,10 +36,12 @@
 .hpc-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:26px;font-weight:700;color:#fff;direction:rtl;line-height:1.3;margin-bottom:4px;position:relative;z-index:1}
 .hpc-name{font-size:19px;font-weight:700;color:rgba(255,255,255,0.95);margin-bottom:14px;font-family:'Poppins',sans-serif;position:relative;z-index:1}
 .hpc-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;position:relative;z-index:1;-webkit-tap-highlight-color:transparent}
-.hpc-brief{padding:14px 20px 16px}
-.hpc-brief-title{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:6px;font-family:'Poppins',sans-serif}
-.hpc-brief-text{font-size:14px;color:var(--gray-4);line-height:1.6}
-.hpc-brief-link{font-size:13px;color:var(--purple);font-weight:600;margin-top:8px;cursor:pointer;display:inline-block}
+.hpc-brief-inline{
+  font-size:13px;color:rgba(255,255,255,0.75);
+  line-height:1.6;margin:10px 0 14px;
+  border-left:2px solid rgba(255,255,255,0.3);
+  padding-left:10px;
+}
 
 /* Quick access bar — fixe juste au-dessus de la nav */
 #quick-access-bar{
@@ -2449,13 +2451,9 @@ function buildHome(){
     +'<div class="hpc-bg" onclick="openP(currentCID)">'
     +'<div class="hpc-heb">'+parashaHebDisplay+'</div>'
     +'<div class="hpc-name">'+parashaDisplay+'</div>'
+    +(briefText?'<div class="hpc-brief-inline">'+briefText+'</div>':'')
     +'<button class="hpc-btn">Lire la paracha →</button>'
     +'</div>'
-    +(briefText?'<div class="hpc-brief">'
-      +'<div class="hpc-brief-title">En bref</div>'
-      +'<div class="hpc-brief-text">'+briefText+'</div>'
-      +'<div class="hpc-brief-link" onclick="openP(currentCID);showTab(\'sum\')">Voir le résumé</div>'
-      +'</div>':'')
     +'</div>';
 
   // Cours du jour
