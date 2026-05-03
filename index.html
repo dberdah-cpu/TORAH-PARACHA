@@ -4595,78 +4595,101 @@ function openRecueilSearch(){
 // ══════════════════════════════════════════════════════════════
 
 var COURS_DATA = {
-  // Clé = "paracha-jour" (0=dim, 1=lun, 2=mar, 3=mer, 4=jeu, 5=ven)
   "behar-0": {
-    titre: "Behar — Dimanche",
-    sous_titre: "Lévitique 25:1 — Sur le mont Sinaï...",
-    accroche: "Qu'est-ce que le mont Sinaï vient faire dans les lois agricoles ?",
-    verset: { heb: "וַיְדַבֵּר ה' אֶל מֹשֶׁה בְּהַר סִינַי לֵאמֹר", fr: "D.ieu parla à Moïse sur le mont Sinaï en disant...", ref: "Lévitique 25:1" },
-    rachi: "Rachi s'arrête dès le premier mot et pose sa question célèbre — \"Ma inyan Chemita etsel Har Sinai ?\" — \"Quel rapport entre la Chemita et le mont Sinaï ?\" Toutes les lois ont été données au Sinaï — pourquoi mentionner le Sinaï spécifiquement ici ? Rachi répond : pour enseigner que de même que la Chemita a été transmise depuis le Sinaï avec ses principes généraux ET ses moindres détails — de même, chaque loi de la Torah a été donnée complète depuis le Sinaï. Rien n'a été ajouté après.",
-    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) prend exactement les mots de Rachi et demande : Rachi compare la Chemita à toutes les autres mitsvot — mais pourquoi la Chemita est-elle choisie pour représenter TOUTES les mitsvot ? Parmi 613 mitsvot, qu'est-ce qui la rend si représentative ?",
-    revelation: "Le Rabbi explique que la Chemita est la loi la plus difficile à accepter rationnellement. Le paysan travaille sa terre six ans — et la Torah lui dit d'arrêter complètement la septième. C'est économiquement absurde. Et c'est précisément pour ça que Rachi la choisit. Une loi que l'homme invente lui-même n'a pas besoin du Sinaï pour être justifiée. Mais la Chemita, personne ne l'invente. Elle ne peut venir que de D.ieu. C'est l'exemple le plus irréfutable.",
-    message: "Il y a dans ta vie des moments où D.ieu te demande quelque chose qui ne rentre pas dans ta logique. La Chemita te dit : c'est exactement là — dans ce qui dépasse ta raison — que se trouve la connexion la plus profonde au Sinaï. Ce n'est pas malgré l'incompréhension qu'on s'approche de D.ieu. C'est souvent grâce à elle.",
-    source: "Rachi sur Lévitique 25:1 · Likoutei Si'hot vol. 27, Behar",
-    sefaria: "https://www.sefaria.org/Leviticus.25.1?lang=bi&with=Rashi&lang2=fr"
+    "titre": "Behar — Dimanche",
+    "sous_titre": "Lévitique 25:1 — Sur le mont Sinaï...",
+    "accroche": "Qu'est-ce que le mont Sinaï vient faire dans les lois agricoles ?",
+    "verset": {
+      "heb": "וַיְדַבֵּר ה׳ אֶל מֹשֶׁה בְּהַר סִינַי",
+      "fr": "D.ieu parla à Moïse sur le mont Sinaï...",
+      "ref": "Lévitique 25:1"
+    },
+    "rachi": "Rachi s'arrête dès le premier mot et pose sa question célèbre : Ma inyan Chemita etsel Har Sinai — Quel rapport entre la Chemita et le mont Sinaï ? Toutes les lois ont été données au Sinaï — pourquoi mentionner le Sinaï spécifiquement ici, pour cette loi agricole ? Rachi répond : pour enseigner que de même que la Chemita a été transmise depuis le Sinaï avec ses principes généraux ET ses moindres détails — de même, chaque loi de la Torah a été donnée complète depuis le Sinaï. Rien n'a été ajouté après. Chaque détail, chaque nuance, chaque cas particulier — tout vient du Sinaï.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) pose deux questions décisives. Première : Rachi compare la Chemita à toutes les mitsvot — mais pourquoi la Chemita est-elle choisie pour représenter la totalité de la Torah ? Parmi 613 mitsvot, qu'est-ce qui la rend si représentative ? Deuxième : Rachi lui-même enseigne que son rôle est d'expliquer le sens simple du texte. Or son explication ici est une déclaration théologique générale sur toute la Torah. Il doit y avoir quelque chose de spécifique dans la Chemita elle-même qui justifie ce choix.",
+    "revelation": "Le Rabbi explique que Rachi n'a pas choisi la Chemita par hasard. La Chemita est la loi la plus difficile à accepter rationnellement. Réfléchis : le paysan juif a travaillé sa terre pendant six années entières. Il a semé, irrigué, protégé ses récoltes, planifié ses saisons. Cette terre, c'est sa vie, sa famille, sa sécurité économique. Et la Torah lui dit : la septième année, tu t'arrêtes complètement. Tu ne sèmes pas. Tu ne tailles pas. Tu laisses les pauvres et les animaux entrer librement dans tes champs. Tu abandonnes tout contrôle. C'est économiquement absurde. Et c'est précisément pour ça que Rachi la choisit. Une loi que l'homme aurait inventée par lui-même n'a pas besoin du Sinaï pour être justifiée. Mais la Chemita, personne ne l'invente. Aucun législateur humain n'aurait jamais créé une telle loi. Elle ne peut venir que de D.ieu. Donc quand Rachi dit : de même que la Chemita vient du Sinaï avec tous ses détails — il choisit l'exemple le plus irréfutable. Si même cette loi qui défie toute logique économique vient du Sinaï, alors a fortiori toutes les autres. Le Rabbi ajoute une dimension supplémentaire : la Chemita nous enseigne que la Torah n'est pas un système que l'homme peut modifier selon ses convenances. On ne peut pas observer les lois qui semblent raisonnables et ignorer celles qui dérangent. Le critère n'est pas notre compréhension — c'est la volonté divine.",
+    "message": "Il y a dans ta vie des engagements qui ne rentrent pas dans ta logique du moment. La Chemita te dit : c'est exactement là — dans ce qui dépasse ta raison immédiate — que se trouve la connexion la plus profonde au Sinaï. Ce n'est pas malgré l'incompréhension qu'on s'approche de D.ieu. C'est souvent grâce à elle. Accepter ce qu'on ne comprend pas entièrement — c'est ça, la foi en acte.",
+    "source": "Rachi sur Lévitique 25:1 · Likoutei Si'hot vol. 27, Behar",
+    "sefaria": "https://www.sefaria.org/Leviticus.25.1?lang=bi&with=Rashi&lang2=fr"
   },
   "behar-1": {
-    titre: "Behar — Lundi",
-    sous_titre: "Lévitique 25:8-10 — Le Jubilé",
-    accroche: "Et si la liberté avait une date ?",
-    verset: { heb: "וְקִדַּשְׁתֶּם אֵת שְׁנַת הַחֲמִשִּׁים שָׁנָה", fr: "Tu sanctifieras la cinquantième année.", ref: "Lévitique 25:10" },
-    rachi: "Rachi note que sept fois sept ans font 49 — et non 50. Le Jubilé est la 50ème année, distincte du compte. Chaque année sabbatique est une étape consciente dans la préparation. Sur le shofar, Rachi précise un détail important : c'est Yom Kippour de la 50ème année que le shofar est sonné — \"bekhal ha'aretz\" — dans tout le pays — par tout le peuple simultanément. La libération est proclamée collectivement.",
-    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) prend exactement ce que dit Rachi et demande : si les 49 années préparent le Jubilé, alors le Jubilé devrait être l'aboutissement de ce compte — la 49ème année. Pourquoi est-il la 50ème, une année qui dépasse le compte ? Et si la libération est automatique — pourquoi a-t-on besoin du shofar ?",
-    revelation: "Le Rabbi explique que 50 représente ce qui dépasse le naturel. 49 = le maximum que l'homme peut atteindre par son propre effort. La 50ème porte est un cadeau divin — elle ne s'atteint pas, elle se reçoit. Le Jubilé représente ce que D.ieu ajoute par-dessus tout notre travail. Et le shofar ? Rachi dit que tout le peuple le sonne — ce cri collectif transforme la loi en vécu.",
-    message: "Il y a des libertés dans ta vie que tu possèdes déjà mais que tu n'as jamais vraiment vécues. Le Jubilé te dit : parfois la liberté demande un cri. Un moment où tu décides consciemment de recevoir ce que D.ieu t'offre depuis toujours. Quel est ton shofar aujourd'hui ?",
-    source: "Rachi sur Lévitique 25:8-10 · Likoutei Si'hot vol. 27, Behar",
-    sefaria: "https://www.sefaria.org/Leviticus.25.8?lang=bi&with=Rashi&lang2=fr"
+    "titre": "Behar — Lundi",
+    "sous_titre": "Lévitique 25:8-10 — Le Jubilé",
+    "accroche": "Et si la liberté avait une date — pas quand tu es prêt, mais quand D.ieu décide ?",
+    "verset": {
+      "heb": "וְקִדַּשְׁתֶּם אֵת שְׁנַת הַחֲמִשִּׁים שָׁנָה",
+      "fr": "Vous sanctifierez la cinquantième année et proclamerez la liberté dans le pays.",
+      "ref": "Lévitique 25:10"
+    },
+    "rachi": "Rachi note une précision importante : sept fois sept ans font 49, pas 50. Le Jubilé est la 50ème année, distincte du compte. Chaque année sabbatique est une étape consciente dans la préparation. Sur le shofar, Rachi est précis : il est sonné le jour de Yom Kippour de la 50ème année, bekhal ha'aretz — dans tout le pays, simultanément, par tout le peuple. Pas une annonce du roi ou du Cohen Gadol — une proclamation collective et universelle.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) pose deux questions. Première : si les 49 années mènent au Jubilé, le Jubilé devrait être leur aboutissement — la 49ème année. Pourquoi est-il la 50ème, une année qui sort entièrement du compte ? Deuxième : la libération des esclaves est automatique. À quoi sert le shofar si la loi s'applique de toute façon ?",
+    "revelation": "Le Rabbi révèle quelque chose de fondamental dans le chiffre 50. Dans la pensée de la Torah, 49 représente le maximum que l'homme peut atteindre par son propre effort — les 49 portes de la compréhension. L'homme peut travailler, progresser, se perfectionner. Mais la 50ème porte est d'une autre nature. Elle ne s'atteint pas — elle se reçoit. C'est un don divin. Voilà pourquoi le Jubilé est la 50ème année et non la 49ème : la vraie libération ne vient pas de l'aboutissement du travail humain. Elle vient de D.ieu, par-dessus tout ce qu'on a accompli. On peut travailler 49 ans, tout faire correctement — et pourtant, la liberté totale n'est pas le résultat mécanique de nos efforts. Elle est un cadeau. Elle arrive quand D.ieu décide. Et le shofar ? Le Rabbi reprend Rachi : tout le peuple le sonne ensemble. Ce n'est pas une formalité juridique. C'est le moment où chaque personne prend conscience de sa liberté. La libération légale existait déjà — mais sans ce cri collectif, elle restait abstraite. Le shofar transforme la loi en réalité vécue. Il n'y a pas de liberté sans conscience de la liberté.",
+    "message": "Il y a des libertés dans ta vie que tu possèdes déjà mais que tu n'as jamais vraiment vécues. Des chaînes que tu portes encore alors qu'elles ont été brisées. Le Jubilé te dit : fais ton travail des 49 ans — avance, construis, progresse. Mais sache que la vraie libération ne viendra pas de toi seul. Et quand elle vient — crie. Fais sonner ton shofar intérieur. Prends conscience que tu es libre.",
+    "source": "Rachi sur Lévitique 25:8-10 · Likoutei Si'hot vol. 27, Behar",
+    "sefaria": "https://www.sefaria.org/Leviticus.25.8?lang=bi&with=Rashi&lang2=fr"
   },
   "behar-2": {
-    titre: "Behar — Mardi",
-    sous_titre: "Lévitique 25:47 — Lui et ses fils avec lui",
-    accroche: "Pourquoi la Torah mentionne-t-elle les fils d'un esclave ?",
-    verset: { heb: "הוּא וּבָנָיו עִמּוֹ", fr: "Lui et ses fils avec lui.", ref: "Lévitique 25:54" },
-    rachi: "Rachi s'arrête sur \"hu uvanav imo\" — lui et ses fils avec lui. Il explique que les fils nés pendant la servitude auraient pu rester chez le maître. La Torah dit non — ils sortent avec leur père à l'année du Jubilé. Rachi précise : \"mekan sheamar\" — c'est de là qu'on apprend que le fils suit le statut du père, pas celui de la maison dans laquelle il a grandi.",
-    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 17, Behar) prend exactement les mots de Rachi et demande : si le rachat libère le père, pourquoi la Torah a-t-elle besoin de préciser 'uvanav imo' ? Les fils n'étaient pas vendus. Et pourquoi Rachi dit-il que leur servitude est 'interdite' — mot si fort pour quelque chose qui semble évident ?",
-    revelation: "Le Rabbi révèle que Rachi ne parle pas seulement de droit. Il révèle quelque chose de fondamental : l'âme juive ne se vend pas. Les fils ont grandi dans la maison du non-Juif — mais leur identité ne dépend pas de l'environnement. 'Hu uvanav imo' — le fils reste attaché à son père, à son origine, à sa source. L'interdiction d'asservir ces fils est une déclaration sur la nature de l'identité juive : elle vient de l'intérieur et ne s'arrache pas.",
-    message: "Il y a des moments où l'environnement essaie de te définir. La Torah te dit : ce que tu portes en toi ne dépend pas de l'extérieur. Ton identité, tes valeurs, ce que tu transmettras — ça ne se vend pas et ça ne s'arrache pas.",
-    source: "Rachi sur Lévitique 25:54 · Likoutei Si'hot vol. 17, Behar",
-    sefaria: "https://www.sefaria.org/Leviticus.25.54?lang=bi&with=Rashi&lang2=fr"
+    "titre": "Behar — Mardi",
+    "sous_titre": "Lévitique 25:54 — Lui et ses fils avec lui",
+    "accroche": "Comment un homme peut-il être esclave — et que ses fils soient libres ?",
+    "verset": {
+      "heb": "הוּא וּבָנָיו עִמּוֹ",
+      "fr": "Lui et ses fils avec lui.",
+      "ref": "Lévitique 25:54"
+    },
+    "rachi": "Rachi s'arrête sur trois mots qui semblent évidents : hu uvanav imo — lui et ses fils avec lui. Il explique que ces mots sont nécessaires : les fils nés pendant la servitude ont grandi dans la maison du maître non-juif. On aurait pu penser qu'ils appartiennent à cet environnement. La Torah dit non — ils sortent avec leur père au Jubilé. Rachi précise : mekan sheamar — c'est de là qu'on apprend que le fils suit le statut de son père, pas celui de la maison dans laquelle il a été élevé.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 17, Behar) pose une question fondamentale : si le rachat libère le père, pourquoi la Torah précise-t-elle uvanav imo ? Les fils n'ont jamais été vendus — ils n'ont donc jamais été en servitude. Pourquoi les mentionner ? Et pourquoi Rachi insiste-t-il sur le fait que l'environnement dans lequel un enfant grandit ne détermine pas son statut ?",
+    "revelation": "Le Rabbi révèle que Rachi ne parle pas seulement de droit. Ces trois mots — hu uvanav imo — contiennent une déclaration fondamentale sur l'identité juive. Les fils ont grandi dans la maison du non-Juif. Ils ont mangé à sa table, parlé peut-être sa langue, vécu dans son univers depuis leur naissance. Et pourtant — ils sortent avec leur père. Parce que l'identité juive ne se construit pas de l'extérieur. Elle vient de l'intérieur. Elle est transmise de père en fils, de génération en génération, indépendamment de l'environnement. L'âme juive porte quelque chose que les circonstances extérieures ne peuvent pas effacer. Ni la servitude, ni l'exil, ni l'assimilation forcée ne peuvent atteindre ce noyau intérieur. C'est pourquoi la Torah dit hu uvanav imo — même si le fils a grandi là-bas, il reste avec lui, avec son père, avec son peuple, avec sa source. Le Rabbi ajoute une dimension historique : cette loi est une prophétie sur toute l'histoire juive. Le peuple juif a vécu dans des exils successifs, sous des dominations qui cherchaient à l'effacer. Et chaque fois — hu uvanav imo — il est sorti intact, avec ses fils, avec sa Torah. Non pas parce que les circonstances le permettaient, mais parce que quelque chose en lui ne pouvait pas être vendu.",
+    "message": "Il y a des moments où l'environnement essaie de te définir. Le lieu où tu travailles, les gens qui t'entourent, les pressions que tu n'as pas choisies. Hu uvanav imo — ce que tu portes en toi ne dépend pas de l'extérieur. Ton identité, tes valeurs, ce que tu transmettras — ça ne se vend pas. Ça ne s'efface pas. Ça sort avec toi.",
+    "source": "Rachi sur Lévitique 25:54 · Likoutei Si'hot vol. 17, Behar",
+    "sefaria": "https://www.sefaria.org/Leviticus.25.54?lang=bi&with=Rashi&lang2=fr"
   },
   "behar-3": {
-    titre: "🎉 Lag BaOmer — 18 Iyar",
-    sous_titre: "Deux lumières en une journée",
-    accroche: "Pourquoi ces deux événements sont-ils célébrés le même jour ?",
-    verset: { heb: "וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ", fr: "Tu aimeras ton prochain comme toi-même.", ref: "Lévitique 19:18" },
-    rachi: "Le Talmud (Yevamot 62b) rapporte que Rabbi Akiva avait 24 000 élèves, \"et ils moururent tous parce qu'ils ne se respectaient pas entre eux\" — \"shelo nahagu kavod ze laze\". Rachi sur ce passage précise : il ne s'agissait pas d'un manque de respect grossier — mais d'une jalousie dans la Torah, chacun pensant que son approche était la seule valide.",
-    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 17, Behar-Lag BaOmer) demande : pourquoi ces deux événements si différents sont-ils célébrés le même jour ? La fin d'une tragédie et la célébration d'une vie — quel est le lien profond entre eux ?",
-    revelation: "Le Rabbi révèle que ces deux événements sont complémentaires. Les élèves de Rabbi Akiva connaissaient la Torah — mais n'avaient pas intégré le principe fondamental de leur maître : aimer l'autre comme soi-même. Rabbi Chimon bar Yochaï représente l'autre face : l'homme qui a passé 13 ans dans une grotte pour percer les profondeurs de la Torah et les donner au monde. Lag BaOmer célèbre la jonction : la profondeur intérieure sans amour de l'autre reste stérile. Et l'amour sans profondeur reste superficiel.",
-    message: "La tradition rapporte que Rabbi Chimon a promis : celui qui se réjouit le jour de son hilloula — il viendra personnellement à son aide quand il en aura besoin. Allume un feu ce soir. Réjouis-toi. Ce n'est pas seulement une fête — c'est une promesse.",
-    source: "Talmud Yevamot 62b · Likoutei Si'hot vol. 17, Behar-Lag BaOmer",
-    sefaria: "https://www.sefaria.org/Yevamot.62b?lang=bi&lang2=fr"
+    "titre": "🎉 Lag BaOmer — 18 Iyar",
+    "sous_titre": "Deux lumières en une journée",
+    "accroche": "Pourquoi la fin d'un deuil et la célébration d'une vie sont-elles le même jour ?",
+    "verset": {
+      "heb": "וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ",
+      "fr": "Tu aimeras ton prochain comme toi-même.",
+      "ref": "Lévitique 19:18 — principe fondamental de Rabbi Akiva"
+    },
+    "rachi": "Le Talmud (Yevamot 62b) rapporte que Rabbi Akiva avait 24 000 élèves — tous des géants de la Torah. Ils moururent entre Pessah et Chavouot parce qu'ils ne se respectaient pas entre eux — shelo nahagu kavod ze laze. Rachi précise : il ne s'agissait pas d'un manque de respect grossier. C'était une jalousie subtile — chacun pensant que son approche était la seule valide, refusant de reconnaître la légitimité spirituelle de l'autre. Lag BaOmer est le jour où cette épidémie s'est arrêtée. C'est aussi l'hilloula de Rabbi Chimon bar Yochaï — le jour où il quitta ce monde dans un état de révélation spirituelle extraordinaire.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 17, Behar-Lag BaOmer) demande : pourquoi ces deux événements — fin d'une tragédie et célébration d'une vie — sont-ils commémorés le même jour ? L'un concerne les élèves de Rabbi Akiva. L'autre est l'hilloula d'un Tanna d'une génération plus tard. Y a-t-il un lien profond — ou est-ce une simple coïncidence calendaire ?",
+    "revelation": "Le Rabbi révèle que ces deux événements sont les deux faces d'une même réalité. Les élèves de Rabbi Akiva étaient des géants qui étudiaient avec une intensité extraordinaire. Mais ils moururent parce qu'ils n'avaient pas intégré le principe central de leur maître : aimer l'autre comme soi-même. Ils avaient la profondeur sans l'amour. Rabbi Chimon bar Yochaï représente exactement l'autre face : l'homme qui passa 13 ans dans une grotte pour percer les profondeurs de la Torah et les donner au monde entier. Quand il sortit la première fois, son regard était si intense qu'il brûlait tout ce qu'il regardait. Il dut retourner dans la grotte. Quand il ressortit, son regard guérissait. Il avait appris à allier la profondeur intérieure à l'amour du monde. Le Rabbi révèle la leçon de Lag BaOmer : la profondeur sans amour de l'autre est destructrice. Et l'amour sans profondeur est superficiel. Ces deux dimensions sont inséparables. La mort des élèves de Rabbi Akiva et l'hilloula de Rabbi Chimon enseignent la même chose — l'un par la tragédie, l'autre par la lumière. La tradition rapporte que Rabbi Chimon a promis : celui qui se réjouit le jour de son hilloula — il viendra personnellement à son aide quand il en aura besoin. Ce n'est pas une légende. C'est la promesse d'un homme qui a percé les secrets de la Torah et qui sait que la joie est une porte spirituelle.",
+    "message": "Lag BaOmer te demande de tenir les deux ensemble : la profondeur intérieure — creuse, étudie, cherche. Et l'amour de l'autre — regarde les gens autour de toi, reconnais leur valeur. Allume un feu ce soir. Réjouis-toi. La lumière de Rabbi Chimon brille encore — pour toi, aujourd'hui.",
+    "source": "Talmud Yevamot 62b · Likoutei Si'hot vol. 17, Behar-Lag BaOmer",
+    "sefaria": "https://www.sefaria.org/Yevamot.62b?lang=bi&lang2=fr"
   },
   "behar-4": {
-    titre: "Behar — Jeudi",
-    sous_titre: "Lévitique 25:36-37 — Ne prête pas à intérêt",
-    accroche: "Pourquoi D.ieu interdit-il de gagner de l'argent... avec de l'argent ?",
-    verset: { heb: "אַל תִּקַּח מֵאִתּוֹ נֶשֶׁךְ וְתַרְבִּית", fr: "Ne prends pas de lui intérêt ni usure.", ref: "Lévitique 25:36" },
-    rachi: "Rachi distingue deux termes que le verset emploie côte à côte : neshech — littéralement \"morsure\" — désigne l'intérêt prélevé sur l'argent prêté, qui ronge progressivement l'emprunteur. Tarbit — \"augmentation\" — désigne l'intérêt prélevé sur des marchandises ou denrées. Rachi note : la Torah les interdit tous les deux séparément pour enseigner qu'aucune forme d'intérêt n'est tolérée — ni sur l'argent ni sur la nourriture.",
-    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) prend exactement la distinction de Rachi et demande : le Talmud lui-même dit que neshech et tarbit désignent la même réalité vue sous deux angles. Si c'est la même chose — pourquoi Rachi insiste-t-il sur cette distinction ?",
-    revelation: "Le Rabbi explique que Rachi distingue les deux pour révéler les deux dimensions du mal dans le prêt à intérêt. Neshech — la morsure — décrit l'effet sur celui qui emprunte : ça ronge, ça dévore. Tarbit — l'augmentation — décrit l'effet sur celui qui prête : son argent 'travaille' sans effort. Et juste après, la Torah rappelle : 'Je suis l'Éternel qui vous ai fait sortir d'Égypte.' En Égypte, votre travail enrichissait d'autres sans contrepartie. Le prêt à intérêt reproduit ce mécanisme.",
-    message: "La Torah ne condamne pas la richesse. Elle condamne la richesse qui se construit sur l'appauvrissement de l'autre. La prochaine fois que tu prends une décision financière — demande-toi : est-ce que je crée quelque chose de réel, ou est-ce que je profite de la vulnérabilité de quelqu'un d'autre ?",
-    source: "Rachi sur Lévitique 25:36-37 · Likoutei Si'hot vol. 27, Behar",
-    sefaria: "https://www.sefaria.org/Leviticus.25.36?lang=bi&with=Rashi&lang2=fr"
+    "titre": "Behar — Jeudi",
+    "sous_titre": "Lévitique 25:36-37 — Ne prête pas à intérêt",
+    "accroche": "Pourquoi D.ieu interdit-il de gagner de l'argent avec de l'argent ?",
+    "verset": {
+      "heb": "אַל תִּקַּח מֵאִתּוֹ נֶשֶׁךְ וְתַרְבִּית",
+      "fr": "Ne prends pas de lui intérêt ni usure — crains ton D.ieu.",
+      "ref": "Lévitique 25:36"
+    },
+    "rachi": "Rachi distingue deux termes. Neshech — morsure — désigne l'intérêt sur l'argent prêté, qui ronge progressivement l'emprunteur. Tarbit — augmentation — désigne l'intérêt sur des marchandises ou denrées. Rachi insiste : la Torah les interdit séparément pour enseigner qu'aucune forme d'intérêt n'est tolérée entre Juifs — ni sur l'argent ni sur la nourriture.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) demande : le Talmud dit que neshech et tarbit désignent la même réalité vue sous deux angles. Si c'est la même chose, pourquoi Rachi insiste-t-il sur leur distinction ? Et pourquoi le verset ajoute immédiatement : veyareta me'Elokekha — crains ton D.ieu ? Quel rapport entre l'intérêt et la crainte divine ?",
+    "revelation": "Le Rabbi révèle que Rachi distingue neshech et tarbit pour révéler les deux dimensions du mal dans le prêt à intérêt. Neshech — la morsure — décrit ce que l'intérêt fait à celui qui emprunte. Il ronge silencieusement. L'emprunteur s'appauvrit progressivement sans s'en rendre compte, comme une morsure invisible. Tarbit — l'augmentation — décrit ce que l'intérêt fait à celui qui prête. Son argent travaille pendant qu'il dort. Il s'enrichit sans effort, sans créer de valeur réelle. Et c'est là le cœur du problème : le prêt à intérêt crée une illusion — l'illusion que la richesse peut se multiplier d'elle-même, sans travail réel. C'est une déconnexion fondamentale de la réalité divine dans laquelle la valeur vient de l'effort et de la créativité. Et c'est pourquoi le verset ajoute crains ton D.ieu — parce que le prêt à intérêt est une faute qu'on rationalise facilement, qu'on habille de justifications économiques. La crainte divine est le seul rempart contre une transgression qui semble logique. Le Rabbi rappelle le contexte : ce verset arrive après la Chemita et le Jubilé, qui proclament que tout appartient à D.ieu. Profiter d'un frère appauvri pour s'enrichir dans ce contexte — c'est nier tout ce que la Torah vient d'enseigner.",
+    "message": "La Torah ne condamne pas la richesse. Elle condamne deux choses : exploiter la vulnérabilité de l'autre, et croire qu'on peut créer de la valeur sans rien créer. La prochaine fois que tu prends une décision financière — demande-toi : est-ce que je crée quelque chose de réel, ou est-ce que je profite de la situation de quelqu'un d'autre ?",
+    "source": "Rachi sur Lévitique 25:36-37 · Likoutei Si'hot vol. 27, Behar",
+    "sefaria": "https://www.sefaria.org/Leviticus.25.36?lang=bi&with=Rashi&lang2=fr"
   },
   "behar-5": {
-    titre: "Behar-Bechukotai — Vendredi",
-    sous_titre: "Lévitique 26:3 — Si vous marchez dans Mes lois",
-    accroche: "Pourquoi les bénédictions et les malédictions sont-elles dans la même paracha ?",
-    verset: { heb: "אִם בְּחֻקֹּתַי תֵּלֵכוּ", fr: "Si vous marchez dans Mes lois...", ref: "Lévitique 26:3" },
-    rachi: "Rachi s'arrête sur \"im bechoukkotai telechu\" et dit explicitement : \"she'tihou amelim baTorah\" — que vous vous fatiguiez dans l'étude de la Torah. Ce n'est pas l'accomplissement des mitsvot — c'est la suite du verset. \"Telechu\" — marcher — indique un effort continu, pas ponctuel. Et \"choukkotai\" — Mes lois — désigne les lois dont on ne connaît pas le motif, qu'on observe par pure obéissance.",
-    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 22, Behar-Bechukotai) prend exactement ce que Rachi dit et demande : Rachi utilise le mot 'choukkotai' — les lois incompréhensibles — pour parler d'étude en général. Pourquoi ce mot précis ? Et pourquoi l'étude précède-t-elle les mitsvot dans la liste des conditions ?",
-    revelation: "Le Rabbi explique que Rachi choisit 'choukkotai' délibérément : le niveau d'étude le plus élevé est celui où on avance sans attendre de comprendre. Et l'étude précède les mitsvot parce qu'elle ne prépare pas l'action — elle transforme celui qui agit. Une mitsva accomplie par quelqu'un qui étudie est différente de la même mitsva sans étude. C'est qui tu es qui détermine la qualité de tout ce que tu fais. Et 've'im lo tishme'ou' — le premier danger n'est pas la transgression. C'est l'indifférence.",
-    message: "'Im bechoukkotai telechu' — marche. Pas besoin de tout comprendre avant de commencer. Et garde ton oreille ouverte — à la Torah, aux autres, à D.ieu. La fermeture commence toujours par là.",
-    source: "Rachi sur Lévitique 26:3 · Likoutei Si'hot vol. 22, Behar-Bechukotai",
-    sefaria: "https://www.sefaria.org/Leviticus.26.3?lang=bi&with=Rashi&lang2=fr"
+    "titre": "Behar-Bechukotai — Vendredi",
+    "sous_titre": "Lévitique 26:3 — Si vous marchez dans Mes lois",
+    "accroche": "Pourquoi D.ieu conditionne-t-Il les bénédictions matérielles à l'étude de la Torah ?",
+    "verset": {
+      "heb": "אִם בְּחֻקֹּתַי תֵּלֵכוּ וְאֶת מִצְוֹתַי תִּשְׁמְרוּ",
+      "fr": "Si vous marchez dans Mes lois et observez Mes commandements...",
+      "ref": "Lévitique 26:3"
+    },
+    "rachi": "Rachi s'arrête sur im bechoukkotai telechu et dit explicitement : she'tihou amelim baTorah — que vous vous fatiguiez dans l'étude de la Torah. Ce n'est pas l'accomplissement des mitsvot — c'est la suite du verset. Marcher dans Mes lois désigne l'effort dans l'étude. Telechu — marcher — indique un mouvement continu et régulier. Et choukkotai — Mes lois — désigne précisément les lois dont on ne comprend pas le motif, qu'on observe uniquement par obéissance divine.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 22, Behar-Bechukotai) pose plusieurs questions. Première : Rachi utilise choukkotai — les lois incompréhensibles — pour parler de l'étude en général. Pourquoi ce mot précis, alors que l'étude inclut aussi les lois rationnelles ? Deuxième : Rachi traduit telechu par se fatiguer — amelim. Pourquoi insiste-t-il sur la fatigue ? L'étude devrait être une joie — pourquoi ce mot si laborieux ?",
+    "revelation": "Le Rabbi révèle une compréhension profonde. Rachi utilise choukkotai parce que c'est précisément ce niveau d'étude qui est visé. L'étude des lois rationnelles est naturelle — on y trouve satisfaction et compréhension. Mais l'étude des choukim demande plus : continuer même quand on ne comprend pas. Se lever le matin même quand la Torah résiste. Étudier un passage difficile même quand il reste opaque après la dixième lecture. C'est ça, se fatiguer dans la Torah — ne pas attendre que ça soit facile pour commencer. Le Rabbi explique pourquoi c'est cette forme d'étude qui conditionne les bénédictions : quand tu étudies les lois rationnelles, tu étudies parce que ça a du sens. Quand tu étudies les choukim, tu étudies parce que c'est D.ieu qui le demande. Ce changement de motivation est radical. Ce n'est plus la satisfaction intellectuelle qui pousse — c'est la dévotion inconditionnelle. Et c'est ce niveau de relation qui ouvre les canaux des bénédictions. Le Rabbi ajoute : telechu — marcher. Pas courir. Pas voler. Marcher. Un pas après l'autre, régulièrement. C'est l'image de quelqu'un qui n'attend pas d'être inspiré pour étudier. Qui n'attend pas le moment parfait. Qui marche, même lentement, même imparfaitement — mais chaque jour. Et cette marche quotidienne, même petite, même difficile, transforme progressivement celui qui la fait. Ce n'est pas la quantité qui compte — c'est la constance.",
+    "message": "Im bechoukkotai telechu — si vous marchez. Pas si vous courez. Pas si vous volez. Si vous marchez. Un pas après l'autre, chaque jour. Même si tu ne comprends pas tout. Même si c'est difficile. La marche régulière transforme. Et c'est cette transformation qui attire les bénédictions — pas la performance, pas la quantité, mais la fidélité quotidienne.",
+    "source": "Rachi sur Lévitique 26:3 · Likoutei Si'hot vol. 22, Behar-Bechukotai",
+    "sefaria": "https://www.sefaria.org/Leviticus.26.3?lang=bi&with=Rashi&lang2=fr"
   }
 };
 
