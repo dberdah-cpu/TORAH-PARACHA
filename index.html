@@ -2849,6 +2849,7 @@ function getLoubavitchURL(id){
 
 function openHayomYom(){
   if(!requireLogin()) return;
+  var vc=document.getElementById('view-cours'); if(vc) vc.style.display='none';
   if(checkAndBlockShabbat()) return;
   ['view-home','view-detail','view-sefer','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -3121,6 +3122,7 @@ function getSeferLoubavitchURL(id){
 
 function openSefer(){
   if(!requireLogin()) return;
+  var vc=document.getElementById('view-cours'); if(vc) vc.style.display='none';
   if(checkAndBlockShabbat()) return;
   ['view-home','view-detail','view-hayom','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -4715,10 +4717,13 @@ function openCours(key){
   if(!view){
     view = document.createElement('div');
     view.id = 'view-cours';
-    view.style.cssText = 'max-width:600px;margin:0 auto;padding:16px 16px 100px;';
-    document.getElementById('btn-back').parentElement.insertBefore(view, document.getElementById('btn-back').nextSibling);
+    view.style.cssText = 'display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;';
+    // Insérer dans le body principal, après le header
+    var hdr = document.getElementById('hdr');
+    hdr.parentNode.insertBefore(view, hdr.nextSibling);
   }
   view.style.display = 'block';
+  window.scrollTo(0,0);
 
   view.innerHTML = '<div class="cours-view">'
     // Header
