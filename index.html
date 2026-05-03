@@ -192,6 +192,96 @@
 .stp-source{font-size:11px;color:var(--gray-3);font-style:italic;margin-bottom:14px}
 .stp-next{width:100%;padding:10px;background:var(--grad-main);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif}
 
+
+/* ── Animation pièces → flamme ── */
+.coin-anim{
+  position:fixed;z-index:9998;pointer-events:none;
+  font-size:20px;
+  animation:coinFly 1s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes coinFly{
+  0%{opacity:1;transform:scale(1) translate(0,0)}
+  60%{opacity:1;transform:scale(1.2) translate(var(--cx),var(--cy))}
+  100%{opacity:0;transform:scale(0.3) translate(var(--cx),var(--cy))}
+}
+.points-popup{
+  position:fixed;z-index:9997;pointer-events:none;
+  font-size:16px;font-weight:800;color:#F59E0B;
+  font-family:'Poppins',sans-serif;
+  text-shadow:0 1px 4px rgba(0,0,0,0.2);
+  animation:pointsPop .8s ease forwards;
+}
+@keyframes pointsPop{
+  0%{opacity:0;transform:translateY(0) scale(0.8)}
+  30%{opacity:1;transform:translateY(-20px) scale(1.1)}
+  100%{opacity:0;transform:translateY(-50px) scale(0.9)}
+}
+
+
+/* ── Profil enrichi ── */
+.profile-step{display:none}
+.profile-step.active{display:block}
+.profile-question{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:16px;font-family:'Poppins',sans-serif;text-align:center}
+.profile-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.profile-options.single{grid-template-columns:1fr}
+.profile-option{
+  padding:14px 12px;border-radius:var(--radius);
+  border:2px solid var(--gray-2);background:var(--gray-1);
+  cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;
+  transition:all .15s;
+}
+.profile-option:active{transform:scale(0.97)}
+.profile-option.selected{border-color:var(--purple);background:#EEF2FF}
+.profile-option-emoji{font-size:28px;margin-bottom:6px}
+.profile-option-label{font-size:13px;font-weight:700;color:var(--dark);font-family:'Poppins',sans-serif}
+.profile-option-sub{font-size:11px;color:var(--gray-3);margin-top:2px}
+.profile-next-btn{
+  width:100%;padding:14px;background:var(--grad-main);color:#fff;
+  border:none;border-radius:var(--radius);font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'Poppins',sans-serif;margin-top:4px;
+}
+.profile-next-btn:disabled{opacity:.5;cursor:not-allowed}
+.profile-step-indicator{display:flex;justify-content:center;gap:6px;margin-bottom:20px}
+.psi-dot{width:8px;height:8px;border-radius:50%;background:var(--gray-2)}
+.psi-dot.active{background:var(--purple);width:24px;border-radius:4px}
+.psi-dot.done{background:var(--green)}
+
+
+/* ── COURS DU JOUR ── */
+.cours-card{
+  margin:16px;border-radius:18px;
+  background:linear-gradient(135deg,#1E1B4B,#312E81);
+  padding:18px 20px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(49,46,129,0.3);
+}
+.cours-card-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-family:'Poppins',sans-serif}
+.cours-card-titre{font-size:17px;font-weight:800;color:#fff;font-family:'Poppins',sans-serif;margin-bottom:4px}
+.cours-card-sous-titre{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:10px}
+.cours-card-accroche{font-size:14px;color:rgba(255,255,255,0.85);font-style:italic;line-height:1.5;margin-bottom:14px;border-left:3px solid #818CF8;padding-left:10px}
+.cours-card-btn{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;font-family:'Poppins',sans-serif}
+
+/* ── VUE COURS ── */
+.cours-view{font-family:'Poppins',sans-serif}
+.cv-label{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.cv-titre{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.cv-sous-titre{font-size:14px;color:var(--gray-3);margin-bottom:24px}
+.cv-section{display:flex;gap:14px;margin-bottom:20px;background:var(--gray-1);border-radius:16px;padding:16px}
+.cv-section-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.cv-section-label{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px}
+.cv-section-text{font-size:15px;line-height:1.75;color:var(--dark)}
+.cv-accroche{background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border:1.5px solid #C7D2FE}
+.cv-accroche .cv-section-text{font-style:italic;font-weight:600}
+.cv-verset{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border:1.5px solid #FDE68A}
+.cv-verset-heb{font-family:'Noto Sans Hebrew',sans-serif;font-size:18px;direction:rtl;text-align:right;color:#92400E;margin-bottom:6px;line-height:1.6}
+.cv-verset-fr{font-size:15px;color:#78350F;font-style:italic;margin-bottom:6px;line-height:1.6}
+.cv-verset-ref{font-size:11px;color:#B45309;font-weight:700}
+.cv-rachi{background:#F0FDF4;border:1.5px solid #86EFAC}
+.cv-questions{background:linear-gradient(135deg,#FFF1F2,#FFE4E6);border:1.5px solid #FECDD3}
+.cv-revelation{background:linear-gradient(135deg,#F0F9FF,#E0F2FE);border:1.5px solid #BAE6FD}
+.cv-message{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:2px solid #F59E0B}
+.cv-message-text{font-weight:600;font-size:15px}
+.cv-source{font-size:11px;color:var(--gray-3);font-style:italic;margin-top:8px;padding:0 4px}
+
 /* ── SPLASH SCREEN ── */
 #splash{
   position:fixed;inset:0;z-index:9999;
@@ -492,6 +582,7 @@ body{
   font-size:15px;line-height:1.9;color:var(--text);
   white-space:pre-line;margin-bottom:16px;
 }
+.detail-body{padding:16px 16px 100px}
 .hyd-source{font-size:12px;color:var(--gray-3);padding-top:12px;border-top:1px solid var(--gray-2);line-height:1.6}
 .hyd-source a{color:var(--purple);text-decoration:none;font-weight:500}
 
@@ -872,6 +963,95 @@ body{
       </button>
     </div>
 
+
+<!-- Formulaire profil post-inscription -->
+<div id="profile-setup-block" style="display:none;background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
+  <div style="text-align:center;margin-bottom:20px">
+    <div style="font-size:32px;margin-bottom:8px">👤</div>
+    <div style="font-size:18px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif">Personnalise ton expérience</div>
+    <div style="font-size:13px;color:var(--gray-3);margin-top:4px">3 questions rapides</div>
+  </div>
+
+  <!-- Indicateur étapes -->
+  <div class="profile-step-indicator" id="psi">
+    <div class="psi-dot active" id="psi-1"></div>
+    <div class="psi-dot" id="psi-2"></div>
+    <div class="psi-dot" id="psi-3"></div>
+  </div>
+
+  <!-- Étape 1 : Genre -->
+  <div class="profile-step active" id="pstep-1">
+    <div class="profile-question">Tu es...</div>
+    <div class="profile-options">
+      <div class="profile-option" onclick="selectOption('genre','homme',this)">
+        <div class="profile-option-emoji">👨</div>
+        <div class="profile-option-label">Homme</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('genre','femme',this)">
+        <div class="profile-option-emoji">👩</div>
+        <div class="profile-option-label">Femme</div>
+      </div>
+    </div>
+    <button class="profile-next-btn" id="pnext-1" disabled onclick="nextProfileStep(2)">Suivant →</button>
+  </div>
+
+  <!-- Étape 2 : Niveau -->
+  <div class="profile-step" id="pstep-2">
+    <div class="profile-question">Mon niveau de pratique</div>
+    <div class="profile-options">
+      <div class="profile-option" onclick="selectOption('niveau','debutant',this)">
+        <div class="profile-option-emoji">🌱</div>
+        <div class="profile-option-label">Débutant</div>
+        <div class="profile-option-sub">Je découvre</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('niveau','pratiquant',this)">
+        <div class="profile-option-emoji">📖</div>
+        <div class="profile-option-label">Pratiquant</div>
+        <div class="profile-option-sub">Mitsvot de base</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('niveau','religieux',this)">
+        <div class="profile-option-emoji">✡️</div>
+        <div class="profile-option-label">Religieux</div>
+        <div class="profile-option-sub">Pratique complète</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('niveau','orthodoxe',this)">
+        <div class="profile-option-emoji">🏛️</div>
+        <div class="profile-option-label">Orthodoxe</div>
+        <div class="profile-option-sub">Pratique stricte</div>
+      </div>
+    </div>
+    <button class="profile-next-btn" id="pnext-2" disabled onclick="nextProfileStep(3)">Suivant →</button>
+  </div>
+
+  <!-- Étape 3 : Durée d'étude -->
+  <div class="profile-step" id="pstep-3">
+    <div class="profile-question">Mon objectif d'étude quotidien</div>
+    <div class="profile-options">
+      <div class="profile-option" onclick="selectOption('duree','10min',this)">
+        <div class="profile-option-emoji">⚡</div>
+        <div class="profile-option-label">10 minutes</div>
+        <div class="profile-option-sub">L'essentiel</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('duree','30min',this)">
+        <div class="profile-option-emoji">📚</div>
+        <div class="profile-option-label">30 minutes</div>
+        <div class="profile-option-sub">Régulier</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('duree','1h',this)">
+        <div class="profile-option-emoji">🎓</div>
+        <div class="profile-option-label">1 heure</div>
+        <div class="profile-option-sub">Approfondi</div>
+      </div>
+      <div class="profile-option" onclick="selectOption('duree','1h+',this)">
+        <div class="profile-option-emoji">👑</div>
+        <div class="profile-option-label">+1 heure</div>
+        <div class="profile-option-sub">Intensif</div>
+      </div>
+    </div>
+    <button class="profile-next-btn" id="pnext-3" disabled onclick="saveProfileSetup()">Commencer ! 🚀</button>
+  </div>
+</div>
+
     <!-- Profil connecté (affiché si connecté) -->
     <div id="profile-connected-block" style="display:none;background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
       <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;font-family:Poppins,sans-serif">Mon compte</div>
@@ -1035,16 +1215,19 @@ body{
 </div>
 
 <div id="view-hayom">
-  <div class="hyd-header">
-    <div class="hyd-icon">☀️</div>
-    <div><div class="hyd-title">Hayom Yom</div><div class="hyd-subtitle">💡 Une idée pour améliorer ta journée</div></div>
+  <div class="detail-hero hayom-hero">
+    <div class="detail-hero-icon">☀️</div>
+    <div class="detail-hero-title">Hayom Yom</div>
+    <div class="detail-hero-sub">✨ L'enseignement du jour</div>
+    <div class="detail-hero-date" id="hy-date"></div>
   </div>
-  <div class="hyd-date" id="hy-date"></div>
-  <div id="hy-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
-  <div id="hy-iframe-container" style="display:none">
-    <iframe id="hy-iframe" style="width:100%;border:none;min-height:500px;background:#fdf9f2" scrolling="yes"></iframe>
-    <div style="margin-top:12px;text-align:center">
-      <a id="hy-loubavitch-link" href="#" target="_blank" style="color:#c97c1a;font-size:13px">Ouvrir sur loubavitch.fr ↗</a>
+  <div class="detail-body">
+    <div id="hy-content"><div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div></div>
+    <div id="hy-iframe-container" style="display:none">
+      <iframe id="hy-iframe" style="width:100%;border:none;min-height:500px;background:#fdf9f2" scrolling="yes"></iframe>
+      <div style="margin-top:12px;text-align:center">
+        <a id="hy-loubavitch-link" href="#" target="_blank" style="color:var(--purple);font-size:13px;font-weight:600">Ouvrir sur loubavitch.fr ↗</a>
+      </div>
     </div>
   </div>
 </div>
@@ -2273,6 +2456,9 @@ function buildHome(){
       +'<div class="hpc-brief-link" onclick="openP(currentCID);showTab(\'sum\')">Voir le résumé</div>'
       +'</div>':'')
     +'</div>';
+
+  // Cours du jour
+  h += buildCoursCard();
 
   // Verset du jour
   h+='<div class="card-verset">'
@@ -3622,6 +3808,140 @@ function initSupabase(){
 }
 
 
+
+// ── Animation pièces → flamme ──
+var pointsBuffer = 0;
+var COIN_THRESHOLD = 10;
+
+function triggerCoinAnimation(points, sourceEl){
+  pointsBuffer += points;
+  
+  // Afficher popup +points
+  var popup = document.createElement('div');
+  popup.className = 'points-popup';
+  popup.textContent = '+'+points+' ✨';
+  var rect = sourceEl ? sourceEl.getBoundingClientRect() : {left: window.innerWidth/2, top: window.innerHeight/2};
+  popup.style.left = (rect.left + rect.width/2 - 20) + 'px';
+  popup.style.top = (rect.top - 10) + 'px';
+  document.body.appendChild(popup);
+  setTimeout(function(){ popup.remove(); }, 800);
+
+  // Lancer les pièces si seuil atteint
+  if(pointsBuffer >= COIN_THRESHOLD){
+    pointsBuffer = 0;
+    launchCoins(sourceEl);
+  }
+}
+
+function launchCoins(sourceEl){
+  var badge = document.getElementById('streak-badge');
+  if(!badge) return;
+  var targetRect = badge.getBoundingClientRect();
+  var tx = targetRect.left + targetRect.width/2;
+  var ty = targetRect.top + targetRect.height/2;
+
+  var startX = sourceEl ? sourceEl.getBoundingClientRect().left + sourceEl.getBoundingClientRect().width/2 : window.innerWidth/2;
+  var startY = sourceEl ? sourceEl.getBoundingClientRect().top : window.innerHeight/2;
+
+  for(var i=0; i<5; i++){
+    (function(idx){
+      setTimeout(function(){
+        var coin = document.createElement('div');
+        coin.className = 'coin-anim';
+        coin.textContent = '🪙';
+        var jitterX = (Math.random()-0.5)*60;
+        var jitterY = (Math.random()-0.5)*40;
+        coin.style.left = (startX + jitterX) + 'px';
+        coin.style.top = (startY + jitterY) + 'px';
+        var cx = tx - startX - jitterX;
+        var cy = ty - startY - jitterY;
+        coin.style.setProperty('--cx', cx+'px');
+        coin.style.setProperty('--cy', cy+'px');
+        document.body.appendChild(coin);
+        setTimeout(function(){ coin.remove(); }, 1000);
+      }, idx * 80);
+    })(i);
+  }
+
+  // Flash sur la flamme
+  setTimeout(function(){
+    var badge2 = document.getElementById('streak-badge');
+    if(badge2){
+      badge2.style.transform='scale(1.3)';
+      badge2.style.transition='transform .2s';
+      setTimeout(function(){ badge2.style.transform='scale(1)'; }, 200);
+    }
+  }, 500);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// PROFILE SETUP
+// ══════════════════════════════════════════════════════════════
+var profileAnswers = {genre: null, niveau: null, duree: null};
+
+function selectOption(field, value, el){
+  profileAnswers[field] = value;
+  // Désélectionner les autres dans le même groupe
+  var parent = el.parentElement;
+  parent.querySelectorAll('.profile-option').forEach(function(o){
+    o.classList.remove('selected');
+  });
+  el.classList.add('selected');
+  // Activer le bouton suivant
+  var stepMap = {genre:1, niveau:2, duree:3};
+  var btn = document.getElementById('pnext-'+stepMap[field]);
+  if(btn) btn.disabled = false;
+}
+
+function nextProfileStep(step){
+  // Cacher étape courante
+  document.querySelectorAll('.profile-step').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('pstep-'+step).classList.add('active');
+  // Mettre à jour indicateur
+  for(var i=1; i<=3; i++){
+    var dot = document.getElementById('psi-'+i);
+    if(!dot) continue;
+    dot.className = 'psi-dot';
+    if(i < step) dot.classList.add('done');
+    else if(i === step) dot.classList.add('active');
+  }
+}
+
+function saveProfileSetup(){
+  if(!profileAnswers.duree) return;
+  // Sauvegarder dans Supabase si connecté
+  if(supabase && currentUser){
+    supabase.from('users_progress').upsert({
+      user_id: currentUser.id,
+      genre: profileAnswers.genre,
+      niveau_pratique: profileAnswers.niveau,
+      objectif_duree: profileAnswers.duree,
+      updated_at: new Date().toISOString()
+    }, {onConflict:'user_id'}).then(function(r){
+      console.log('Profile saved:', r);
+    });
+  }
+  // Sauvegarder en local
+  try {
+    localStorage.setItem('kedoshim_profile', JSON.stringify(profileAnswers));
+  } catch(e){}
+  // Cacher le formulaire et afficher le profil connecté
+  document.getElementById('profile-setup-block').style.display = 'none';
+  updateProfileUI();
+  showToast('🎉 Bienvenue sur Kedoshim !');
+  // Donner un badge premier pas
+  if(typeof earnBadge === 'function') earnBadge('premier_pas');
+}
+
+function showProfileSetup(){
+  document.getElementById('auth-form-block').style.display = 'none';
+  document.getElementById('profile-connected-block').style.display = 'none';
+  document.getElementById('profile-setup-block').style.display = 'block';
+  profileAnswers = {genre: null, niveau: null, duree: null};
+  nextProfileStep(1);
+}
+
 function togglePwdVisibility(){
   var inp=document.getElementById('auth-pwd');
   var icon=document.getElementById('pwd-eye-icon');
@@ -3822,6 +4142,7 @@ var SAVAIS_TU = [
 ];
 
 var savaisTuIndex = 0;
+var savaisTuSeen = [];
 var shabbatOverlayShown = false;
 
 // ── INITIALISATION ──
@@ -3954,6 +4275,9 @@ function recordActivity(type, points){
   updateNiveau();
   saveProgressLocal();
   updateUI();
+  // Animation pièces
+  var activeEl = document.activeElement || document.body;
+  triggerCoinAnimation(points, activeEl);
 
   // Sync Supabase
   if(supabase && currentUser){
@@ -4188,6 +4512,22 @@ function showSavaisTuBubble(){
 
 function openSavaisTu(){
   document.getElementById('savais-tu').classList.remove('visible');
+  // Choisir un index pas encore vu aujourd'hui
+  var todayKey = 'savais_tu_seen_' + new Date().toISOString().split('T')[0];
+  try {
+    var seenToday = JSON.parse(localStorage.getItem(todayKey) || '[]');
+    savaisTuSeen = seenToday;
+    var available = SAVAIS_TU.map(function(_,i){return i;})
+      .filter(function(i){ return seenToday.indexOf(i) < 0; });
+    if(available.length === 0){
+      localStorage.removeItem(todayKey);
+      savaisTuSeen = [];
+      available = SAVAIS_TU.map(function(_,i){return i;});
+    }
+    savaisTuIndex = available[Math.floor(Math.random() * available.length)];
+    savaisTuSeen.push(savaisTuIndex);
+    localStorage.setItem(todayKey, JSON.stringify(savaisTuSeen));
+  } catch(e){}
   renderSavaisTu();
   document.getElementById('savais-tu-panel').classList.add('visible');
 }
@@ -4199,7 +4539,16 @@ function closeSavaisTu(){
 }
 
 function nextSavaisTu(){
-  savaisTuIndex = (savaisTuIndex + 1) % SAVAIS_TU.length;
+  // Éviter les répétitions
+  var available = SAVAIS_TU.map(function(_,i){return i;})
+    .filter(function(i){ return savaisTuSeen.indexOf(i) < 0 && i !== savaisTuIndex; });
+  if(available.length === 0){
+    // Tous vus — réinitialiser
+    savaisTuSeen = [];
+    available = SAVAIS_TU.map(function(_,i){return i;}).filter(function(i){return i !== savaisTuIndex;});
+  }
+  savaisTuSeen.push(savaisTuIndex);
+  savaisTuIndex = available[Math.floor(Math.random() * available.length)];
   renderSavaisTu();
 }
 
@@ -4244,6 +4593,156 @@ function openRecueilSearch(){
     var inp=document.getElementById('recueil-search-input');
     if(inp){ inp.focus(); inp.scrollIntoView({behavior:'smooth',block:'center'}); }
   }, 300);
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// COURS TORAH · RACHI · RABBI
+// ══════════════════════════════════════════════════════════════
+
+var COURS_DATA = {
+  // Clé = "paracha-jour" (0=dim, 1=lun, 2=mar, 3=mer, 4=jeu, 5=ven)
+  "behar-0": {
+    titre: "Behar — Dimanche",
+    sous_titre: "Lévitique 25:1 — Sur le mont Sinaï...",
+    accroche: "Qu'est-ce que le mont Sinaï vient faire dans les lois agricoles ?",
+    verset: { heb: "וַיְדַבֵּר ה' אֶל מֹשֶׁה בְּהַר סִינַי לֵאמֹר", fr: "D.ieu parla à Moïse sur le mont Sinaï en disant...", ref: "Lévitique 25:1" },
+    rachi: "Rachi pose sa question célèbre : \"Ma inyan Chemita etsel Har Sinai ?\" — Quel est le lien entre la Chemita et le mont Sinaï ? Sa réponse : de même que la Chemita a été dite avec ses généralités ET ses détails depuis le Sinaï — de même toutes les mitsvot ont été dites avec leurs généralités et leurs détails depuis le Sinaï.",
+    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) prend exactement les mots de Rachi et demande : Rachi compare la Chemita à toutes les autres mitsvot — mais pourquoi la Chemita est-elle choisie pour représenter TOUTES les mitsvot ? Parmi 613 mitsvot, qu'est-ce qui la rend si représentative ?",
+    revelation: "Le Rabbi explique que la Chemita est la loi la plus difficile à accepter rationnellement. Le paysan travaille sa terre six ans — et la Torah lui dit d'arrêter complètement la septième. C'est économiquement absurde. Et c'est précisément pour ça que Rachi la choisit. Une loi que l'homme invente lui-même n'a pas besoin du Sinaï pour être justifiée. Mais la Chemita, personne ne l'invente. Elle ne peut venir que de D.ieu. C'est l'exemple le plus irréfutable.",
+    message: "Il y a dans ta vie des moments où D.ieu te demande quelque chose qui ne rentre pas dans ta logique. La Chemita te dit : c'est exactement là — dans ce qui dépasse ta raison — que se trouve la connexion la plus profonde au Sinaï. Ce n'est pas malgré l'incompréhension qu'on s'approche de D.ieu. C'est souvent grâce à elle.",
+    source: "Rachi sur Lévitique 25:1 · Likoutei Si'hot vol. 27, Behar"
+  },
+  "behar-1": {
+    titre: "Behar — Lundi",
+    sous_titre: "Lévitique 25:8-10 — Le Jubilé",
+    accroche: "Et si la liberté avait une date ?",
+    verset: { heb: "וְקִדַּשְׁתֶּם אֵת שְׁנַת הַחֲמִשִּׁים שָׁנָה", fr: "Tu sanctifieras la cinquantième année.", ref: "Lévitique 25:10" },
+    rachi: "Rachi s'arrête sur le compte : sept fois sept ans font 49 ans. Mais le Jubilé est la 50ème année. Rachi explique : les 49 années sont une préparation consciente étape par étape. Et sur le shofar, Rachi précise : il est sonné par tout le peuple — pas seulement par le Cohen Gadol. La libération est une affaire collective.",
+    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) prend exactement ce que dit Rachi et demande : si les 49 années préparent le Jubilé, alors le Jubilé devrait être l'aboutissement de ce compte — la 49ème année. Pourquoi est-il la 50ème, une année qui dépasse le compte ? Et si la libération est automatique — pourquoi a-t-on besoin du shofar ?",
+    revelation: "Le Rabbi explique que 50 représente ce qui dépasse le naturel. 49 = le maximum que l'homme peut atteindre par son propre effort. La 50ème porte est un cadeau divin — elle ne s'atteint pas, elle se reçoit. Le Jubilé représente ce que D.ieu ajoute par-dessus tout notre travail. Et le shofar ? Rachi dit que tout le peuple le sonne — ce cri collectif transforme la loi en vécu.",
+    message: "Il y a des libertés dans ta vie que tu possèdes déjà mais que tu n'as jamais vraiment vécues. Le Jubilé te dit : parfois la liberté demande un cri. Un moment où tu décides consciemment de recevoir ce que D.ieu t'offre depuis toujours. Quel est ton shofar aujourd'hui ?",
+    source: "Rachi sur Lévitique 25:8-10 · Likoutei Si'hot vol. 27, Behar"
+  },
+  "behar-2": {
+    titre: "Behar — Mardi",
+    sous_titre: "Lévitique 25:47 — Lui et ses fils avec lui",
+    accroche: "Pourquoi la Torah mentionne-t-elle les fils d'un esclave ?",
+    verset: { heb: "הוּא וּבָנָיו עִמּוֹ", fr: "Lui et ses fils avec lui.", ref: "Lévitique 25:54" },
+    rachi: "Rachi s'arrête sur 'hu uvanav imo' — lui et ses fils avec lui. Il explique : les fils nés pendant la servitude auraient pu être considérés comme appartenant au maître. La Torah dit non — ils sortent avec leur père. Rachi ajoute : leur servitude est interdite. Non seulement impossible — interdite.",
+    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 17, Behar) prend exactement les mots de Rachi et demande : si le rachat libère le père, pourquoi la Torah a-t-elle besoin de préciser 'uvanav imo' ? Les fils n'étaient pas vendus. Et pourquoi Rachi dit-il que leur servitude est 'interdite' — mot si fort pour quelque chose qui semble évident ?",
+    revelation: "Le Rabbi révèle que Rachi ne parle pas seulement de droit. Il révèle quelque chose de fondamental : l'âme juive ne se vend pas. Les fils ont grandi dans la maison du non-Juif — mais leur identité ne dépend pas de l'environnement. 'Hu uvanav imo' — le fils reste attaché à son père, à son origine, à sa source. L'interdiction d'asservir ces fils est une déclaration sur la nature de l'identité juive : elle vient de l'intérieur et ne s'arrache pas.",
+    message: "Il y a des moments où l'environnement essaie de te définir. La Torah te dit : ce que tu portes en toi ne dépend pas de l'extérieur. Ton identité, tes valeurs, ce que tu transmettras — ça ne se vend pas et ça ne s'arrache pas.",
+    source: "Rachi sur Lévitique 25:54 · Likoutei Si'hot vol. 17, Behar"
+  },
+  "behar-3": {
+    titre: "🎉 Lag BaOmer — 18 Iyar",
+    sous_titre: "Deux lumières en une journée",
+    accroche: "Pourquoi ces deux événements sont-ils célébrés le même jour ?",
+    verset: { heb: "וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ", fr: "Tu aimeras ton prochain comme toi-même.", ref: "Lévitique 19:18" },
+    rachi: "Le Talmud (Yevamot 62b) rapporte que 24 000 élèves de Rabbi Akiva sont morts entre Pessah et Chavouot parce qu'ils ne se respectaient pas entre eux — 'shelo nahagu kavod ze laze'. Lag BaOmer est le jour où cette épidémie s'est arrêtée. C'est aussi le jour de l'hilloula de Rabbi Chimon bar Yochaï — le jour de sa plus grande révélation spirituelle.",
+    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 17, Behar-Lag BaOmer) demande : pourquoi ces deux événements si différents sont-ils célébrés le même jour ? La fin d'une tragédie et la célébration d'une vie — quel est le lien profond entre eux ?",
+    revelation: "Le Rabbi révèle que ces deux événements sont complémentaires. Les élèves de Rabbi Akiva connaissaient la Torah — mais n'avaient pas intégré le principe fondamental de leur maître : aimer l'autre comme soi-même. Rabbi Chimon bar Yochaï représente l'autre face : l'homme qui a passé 13 ans dans une grotte pour percer les profondeurs de la Torah et les donner au monde. Lag BaOmer célèbre la jonction : la profondeur intérieure sans amour de l'autre reste stérile. Et l'amour sans profondeur reste superficiel.",
+    message: "La tradition rapporte que Rabbi Chimon a promis : celui qui se réjouit le jour de son hilloula — il viendra personnellement à son aide quand il en aura besoin. Allume un feu ce soir. Réjouis-toi. Ce n'est pas seulement une fête — c'est une promesse.",
+    source: "Talmud Yevamot 62b · Likoutei Si'hot vol. 17, Behar-Lag BaOmer"
+  },
+  "behar-4": {
+    titre: "Behar — Jeudi",
+    sous_titre: "Lévitique 25:36-37 — Ne prête pas à intérêt",
+    accroche: "Pourquoi D.ieu interdit-il de gagner de l'argent... avec de l'argent ?",
+    verset: { heb: "אַל תִּקַּח מֵאִתּוֹ נֶשֶׁךְ וְתַרְבִּית", fr: "Ne prends pas de lui intérêt ni usure.", ref: "Lévitique 25:36" },
+    rachi: "Rachi s'arrête sur la répétition : le verset 36 interdit 'neshech' et le verset 37 interdit 'tarbit'. Rachi explique que ce ne sont pas deux mots pour la même chose : Neshech — littéralement 'morsure' — c'est l'intérêt sur l'argent. Tarbit — 'augmentation' — c'est l'intérêt sur les marchandises. Deux types d'intérêt, deux interdictions distinctes.",
+    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 27, Behar) prend exactement la distinction de Rachi et demande : le Talmud lui-même dit que neshech et tarbit désignent la même réalité vue sous deux angles. Si c'est la même chose — pourquoi Rachi insiste-t-il sur cette distinction ?",
+    revelation: "Le Rabbi explique que Rachi distingue les deux pour révéler les deux dimensions du mal dans le prêt à intérêt. Neshech — la morsure — décrit l'effet sur celui qui emprunte : ça ronge, ça dévore. Tarbit — l'augmentation — décrit l'effet sur celui qui prête : son argent 'travaille' sans effort. Et juste après, la Torah rappelle : 'Je suis l'Éternel qui vous ai fait sortir d'Égypte.' En Égypte, votre travail enrichissait d'autres sans contrepartie. Le prêt à intérêt reproduit ce mécanisme.",
+    message: "La Torah ne condamne pas la richesse. Elle condamne la richesse qui se construit sur l'appauvrissement de l'autre. La prochaine fois que tu prends une décision financière — demande-toi : est-ce que je crée quelque chose de réel, ou est-ce que je profite de la vulnérabilité de quelqu'un d'autre ?",
+    source: "Rachi sur Lévitique 25:36-37 · Likoutei Si'hot vol. 27, Behar"
+  },
+  "behar-5": {
+    titre: "Behar-Bechukotai — Vendredi",
+    sous_titre: "Lévitique 26:3 — Si vous marchez dans Mes lois",
+    accroche: "Pourquoi les bénédictions et les malédictions sont-elles dans la même paracha ?",
+    verset: { heb: "אִם בְּחֻקֹּתַי תֵּלֵכוּ", fr: "Si vous marchez dans Mes lois...", ref: "Lévitique 26:3" },
+    rachi: "Rachi s'arrête sur 'im bechoukkotai telechu' et dit explicitement : cela ne signifie pas l'accomplissement des mitsvot — c'est la suite du verset. 'Marcher dans Mes lois' signifie : se fatiguer dans l'étude de la Torah. Puis sur 've'im lo tishme'ou' — si vous ne m'écoutez pas — Rachi souligne : la faute commence par l'écoute. Avant l'acte, c'est l'oreille qui se ferme.",
+    questions: "Le Rabbi dans le Likoutei Si'hot (vol. 22, Behar-Bechukotai) prend exactement ce que Rachi dit et demande : Rachi utilise le mot 'choukkotai' — les lois incompréhensibles — pour parler d'étude en général. Pourquoi ce mot précis ? Et pourquoi l'étude précède-t-elle les mitsvot dans la liste des conditions ?",
+    revelation: "Le Rabbi explique que Rachi choisit 'choukkotai' délibérément : le niveau d'étude le plus élevé est celui où on avance sans attendre de comprendre. Et l'étude précède les mitsvot parce qu'elle ne prépare pas l'action — elle transforme celui qui agit. Une mitsva accomplie par quelqu'un qui étudie est différente de la même mitsva sans étude. C'est qui tu es qui détermine la qualité de tout ce que tu fais. Et 've'im lo tishme'ou' — le premier danger n'est pas la transgression. C'est l'indifférence.",
+    message: "'Im bechoukkotai telechu' — marche. Pas besoin de tout comprendre avant de commencer. Et garde ton oreille ouverte — à la Torah, aux autres, à D.ieu. La fermeture commence toujours par là.",
+    source: "Rachi sur Lévitique 26:3 · Likoutei Si'hot vol. 22, Behar-Bechukotai"
+  }
+};
+
+// Détecter la paracha courante et le jour
+function getCoursKey(){
+  var day = new Date().getDay(); // 0=dim, 1=lun... 6=sam
+  if(day === 6) return null; // Chabbat — pas de cours
+  // Mapping paracha courante → clé
+  var paracha = (currentParashaName||'').toLowerCase();
+  var key = null;
+  if(paracha.indexOf('behar') >= 0 || paracha.indexOf('b\'har') >= 0){
+    key = 'behar-' + day;
+  }
+  // À étendre avec les autres parashot
+  return key;
+}
+
+function buildCoursCard(){
+  var key = getCoursKey();
+  if(!key || !COURS_DATA[key]) return '';
+  var c = COURS_DATA[key];
+  return '<div class="cours-card" onclick="openCours(\''+key+'\')">'
+    +'<div class="cours-card-label">📜 Cours du jour · Torah · Rachi · Rabbi</div>'
+    +'<div class="cours-card-titre">'+c.titre+'</div>'
+    +'<div class="cours-card-sous-titre">'+c.sous_titre+'</div>'
+    +'<div class="cours-card-accroche">'+c.accroche+'</div>'
+    +'<div class="cours-card-btn">Lire le cours →</div>'
+    +'</div>';
+}
+
+function openCours(key){
+  if(!requireLogin()) return;
+  if(checkAndBlockShabbat()) return;
+  var c = COURS_DATA[key];
+  if(!c) return;
+  // Masquer toutes les vues
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  var qab=document.getElementById('quick-access-bar');
+  if(qab) qab.style.display='none';
+  document.getElementById('btn-back').style.display='flex';
+  window.scrollTo(0,0);
+
+  var view = document.getElementById('view-cours');
+  if(!view){
+    view = document.createElement('div');
+    view.id = 'view-cours';
+    view.style.cssText = 'max-width:600px;margin:0 auto;padding:16px 16px 100px;';
+    document.getElementById('btn-back').parentElement.insertBefore(view, document.getElementById('btn-back').nextSibling);
+  }
+  view.style.display = 'block';
+
+  view.innerHTML = '<div class="cours-view">'
+    // Header
+    +'<div class="cv-label">📜 Torah · Rachi · Rabbi</div>'
+    +'<div class="cv-titre">'+c.titre+'</div>'
+    +'<div class="cv-sous-titre">'+c.sous_titre+'</div>'
+    // Question accroche
+    +'<div class="cv-section cv-accroche"><div class="cv-section-icon">🎯</div><div class="cv-section-content"><div class="cv-section-label">La question</div><div class="cv-section-text">'+c.accroche+'</div></div></div>'
+    // Verset
+    +'<div class="cv-section cv-verset"><div class="cv-section-icon">📖</div><div class="cv-section-content"><div class="cv-section-label">Le verset</div><div class="cv-verset-heb">'+c.verset.heb+'</div><div class="cv-verset-fr">'+c.verset.fr+'</div><div class="cv-verset-ref">'+c.verset.ref+'</div></div></div>'
+    // Rachi
+    +'<div class="cv-section cv-rachi"><div class="cv-section-icon">💬</div><div class="cv-section-content"><div class="cv-section-label">Rachi</div><div class="cv-section-text">'+c.rachi+'</div></div></div>'
+    // Questions du Rabbi
+    +'<div class="cv-section cv-questions"><div class="cv-section-icon">🔥</div><div class="cv-section-content"><div class="cv-section-label">Les questions du Rabbi</div><div class="cv-section-text">'+c.questions+'</div></div></div>'
+    // Révélation
+    +'<div class="cv-section cv-revelation"><div class="cv-section-icon">✨</div><div class="cv-section-content"><div class="cv-section-label">Ce que le Rabbi révèle</div><div class="cv-section-text">'+c.revelation+'</div></div></div>'
+    // Message
+    +'<div class="cv-section cv-message"><div class="cv-section-icon">💡</div><div class="cv-section-content"><div class="cv-section-label">Pour toi, aujourd\'hui</div><div class="cv-section-text cv-message-text">'+c.message+'</div></div></div>'
+    // Source
+    +'<div class="cv-source">📚 '+c.source+'</div>'
+    +'</div>';
+
+  // Points
+  if(typeof recordActivity==='function') recordActivity('cours', 8);
 }
 
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
