@@ -1190,6 +1190,7 @@ body{
 <div id="cal-day-sheet"></div>
 </div>
 <div id="view-home"></div>
+<div id="view-cours" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 
 <!-- HAYOM YOM -->
 <!-- Barre de traduction fixe en bas -->
@@ -2529,18 +2530,11 @@ function togglePS(){
 }
 
 function goHome(){
+  // Cacher toutes les vues
+  ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
   document.getElementById('view-home').style.display='block';
-  document.getElementById('view-detail').style.display='none';
-  document.getElementById('view-hayom').style.display='none';
-  document.getElementById('view-sefer').style.display='none';
-  var vp=document.getElementById('view-profile'); if(vp) vp.style.display='none';
-  var vr=document.getElementById('view-recueil'); if(vr) vr.style.display='none';
-  var vr=document.getElementById('view-recueil');
-  if(vr) vr.style.display='none';
-  var rd=document.getElementById('recueil-detail');
-  if(rd) rd.style.display='none';
-  var vr=document.getElementById('view-recueil');
-  if(vr) vr.style.display='none';
   document.getElementById('btn-back').style.display='none';
   var bar=document.getElementById('translate-bar');
   if(bar) bar.classList.remove('visible');
@@ -4714,14 +4708,7 @@ function openCours(key){
   window.scrollTo(0,0);
 
   var view = document.getElementById('view-cours');
-  if(!view){
-    view = document.createElement('div');
-    view.id = 'view-cours';
-    view.style.cssText = 'display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;';
-    // Insérer dans le body principal, après le header
-    var hdr = document.getElementById('hdr');
-    hdr.parentNode.insertBefore(view, hdr.nextSibling);
-  }
+  if(!view) return;
   view.style.display = 'block';
   window.scrollTo(0,0);
 
