@@ -6498,7 +6498,14 @@ function buildCoursCard(){
 
   if(!key || !COURS_DATA[key]) return '';
   var c = COURS_DATA[key];
-  return '<div class="cours-card" onclick="openCours(''+key+'')">'    +'<div class="cours-card-label">📜 Cours du jour · Torah · Rachi · Rabbi</div>'    +'<div class="cours-card-titre">'+c.titre+'</div>'    +'<div class="cours-card-sous-titre">'+c.sous_titre+'</div>'    +'<div class="cours-card-accroche">'+c.accroche+'</div>'    +'<div class="cours-card-btn">Lire le cours →</div>'    +'</div>';
+  var html = '<div class="cours-card" onclick="openCours(\'' + key + '\')">';
+  html += '<div class="cours-card-label">📜 Cours du jour · Torah · Rachi · Rabbi</div>';
+  html += '<div class="cours-card-titre">' + c.titre + '</div>';
+  html += '<div class="cours-card-sous-titre">' + c.sous_titre + '</div>';
+  html += '<div class="cours-card-accroche">' + c.accroche + '</div>';
+  html += '<div class="cours-card-btn">Lire le cours →</div>';
+  html += '</div>';
+  return html;
 }
 function openCours(key){
   if(!requireLogin()) return;
