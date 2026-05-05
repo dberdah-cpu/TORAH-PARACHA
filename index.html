@@ -6861,7 +6861,16 @@ function renderHistoires(){
   Object.keys(cats).forEach(function(cat){
     h += '<div class="hist-cat-label">'+cat+'</div>';
     cats[cat].forEach(function(s){
-      h += '<div class="hist-card" onclick="openHistoireDetail(''+s.id+'')">'        +'<div class="hist-card-body">'        +'<div class="hist-card-cat">'+s.categorie+'</div>'        +'<div class="hist-card-title">'+s.titre+'</div>'        +'<div class="hist-card-sub">'+s.sous_titre+'</div>'        +'<div class="hist-card-footer">'        +'<span class="hist-card-epoque">'+s.epoque+'</span>'        +'<span class="hist-card-duree">⏱ '+s.duree+'</span>'        +'</div></div></div>';
+      var hCard = '<div class="hist-card" onclick="openHistoireDetail(\'' + s.id + '\')">';
+      hCard += '<div class="hist-card-body">';
+      hCard += '<div class="hist-card-cat">' + s.categorie + '</div>';
+      hCard += '<div class="hist-card-title">' + s.titre + '</div>';
+      hCard += '<div class="hist-card-sub">' + s.sous_titre + '</div>';
+      hCard += '<div class="hist-card-footer">';
+      hCard += '<span class="hist-card-epoque">' + s.epoque + '</span>';
+      hCard += '<span class="hist-card-duree">⏱ ' + s.duree + '</span>';
+      hCard += '</div></div></div>';
+      h += hCard;
     });
   });
 
@@ -6991,7 +7000,7 @@ function buildCoursCard(){
       + '</div>';
   }
 
-  var html = '<div class="cours-card" onclick="openCours(''+key+'')">';
+  var html = '<div class="cours-card" onclick="openCours(\'' + key + '\')">';
   html += '<div class="cours-card-label">📜 Cours du jour · Torah · Rachi · Rabbi</div>';
   html += '<div class="cours-card-titre">' + c.titre + '</div>';
   html += '<div class="cours-card-sous-titre">' + c.sous_titre + '</div>';
