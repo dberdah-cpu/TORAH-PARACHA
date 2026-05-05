@@ -2587,6 +2587,14 @@ function buildHome(){
   console.log('[buildHome] cours-card='+ (_cc?'OK':'VIDE'));
   h += '<div id="cours-card-container">'+_cc+'</div>';
 
+  // Carte Histoires Juives
+  h += '<div onclick="openHistoires()" style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">📖</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Histoires Juives</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">David, Hillel, le Baal Shem Tov, la famille Ovitz...</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
   // Verset du jour
   h+='<div class="card-verset">'
     +'<div class="card-verset-top">'
