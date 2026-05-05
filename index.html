@@ -271,6 +271,38 @@
 .cv-section-icon{font-size:22px;flex-shrink:0;margin-top:2px}
 .cv-section-label{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px}
 .cv-section-text{font-size:15px;line-height:1.75;color:var(--dark)}
+/* ── HISTOIRES ─────────────────────────────────────────── */
+.hist-header{padding:24px 16px 8px;text-align:center;}
+.hist-header-title{font-size:22px;font-weight:800;font-family:Poppins,sans-serif;color:var(--dark);}
+.hist-header-sub{font-size:13px;color:var(--gray-4);margin-top:4px;font-family:Poppins,sans-serif;}
+.hist-cat-label{font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;text-transform:uppercase;padding:16px 16px 6px;font-family:Poppins,sans-serif;}
+.hist-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px 12px;overflow:hidden;cursor:pointer;transition:transform .15s;}
+.hist-card:active{transform:scale(.98);}
+.hist-card-body{padding:14px 16px;}
+.hist-card-cat{font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-family:Poppins,sans-serif;}
+.hist-card-title{font-size:16px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:3px;}
+.hist-card-sub{font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:8px;}
+.hist-card-footer{display:flex;align-items:center;gap:8px;}
+.hist-card-epoque{font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;}
+.hist-card-duree{font-size:11px;color:var(--gray-4);background:var(--gray-1);padding:2px 8px;border-radius:10px;font-family:Poppins,sans-serif;}
+/* Détail histoire */
+.hd-cat{font-size:12px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-family:Poppins,sans-serif;}
+.hd-title{font-size:22px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.3;margin-bottom:4px;}
+.hd-sub{font-size:14px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:12px;}
+.hd-meta{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.hd-meta-tag{font-size:12px;color:var(--gray-4);background:var(--gray-1);padding:4px 10px;border-radius:12px;font-family:Poppins,sans-serif;}
+.hd-source-badge{display:inline-block;font-size:12px;color:var(--purple);background:rgba(124,58,237,.08);padding:6px 12px;border-radius:12px;margin-bottom:20px;font-family:Poppins,sans-serif;font-weight:600;}
+.hd-body{font-size:15px;line-height:1.85;color:var(--dark);font-family:Georgia,serif;white-space:pre-line;margin-bottom:24px;}
+.hd-lecon{background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(236,72,153,.06));border-left:3px solid var(--purple);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:16px;margin-bottom:20px;}
+.hd-lecon-label{font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-family:Poppins,sans-serif;}
+.hd-lecon-text{font-size:14px;line-height:1.7;color:var(--dark);font-family:Poppins,sans-serif;}
+.hd-source-detail{font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.6;padding:12px;background:var(--gray-1);border-radius:var(--radius-sm);}
+.cv-week-nav{
+  display:flex;gap:6px;flex-wrap:wrap;
+  margin:0 0 16px;padding:12px 16px;
+  background:#fff;border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-sm);
+}
 .cv-accroche-titre{
   font-size:18px;font-weight:800;color:var(--dark);
   font-family:'Poppins',sans-serif;
@@ -887,6 +919,16 @@ body{
   <button class="so-btn" onclick="closeShabbatOverlay()">J'ai compris, Chabbat Chalom ! 🕯</button>
 </div>
 
+<!-- Fête Overlay -->
+<div id="fete-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#1a0533 0%,#2d0b5e 50%,#1a0533 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px;">
+  <div id="fo-icone" style="font-size:64px;margin-bottom:16px;">📜</div>
+  <div id="fo-heb" style="font-size:28px;color:#fff;font-family:serif;margin-bottom:8px;"></div>
+  <div id="fo-nom" style="font-size:24px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;margin-bottom:20px;"></div>
+  <div id="fo-msg" style="font-size:15px;color:rgba(255,255,255,0.85);text-align:center;line-height:1.7;max-width:320px;margin-bottom:24px;font-family:Poppins,sans-serif;"></div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:24px;font-family:Poppins,sans-serif;">L'app reprend <span id="fo-fin"></span></div>
+  <button onclick="document.getElementById('fete-overlay').style.display='none'" style="background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:24px;padding:13px 28px;font-size:15px;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Compris, Bonne Fête ! 🎊</button>
+</div>
+
 <!-- Niveau Panel -->
 <div id="niveau-backdrop" onclick="closeNiveauPanel()"></div>
 <div id="niveau-panel">
@@ -1202,6 +1244,8 @@ body{
 </div>
 <div id="view-home"></div>
 <div id="view-cours" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
+<div id="view-histoires" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
+<div id="view-histoire-detail" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 
 <!-- HAYOM YOM -->
 <!-- Barre de traduction fixe en bas -->
@@ -1838,7 +1882,7 @@ function gregToJD(d,m,y){m=m+1;return Math.floor(365.25*(y+4716))+Math.floor(30.
 function jdToHeb(jd){jd=Math.floor(jd)+0.5;var yr=Math.floor((jd-347997)/365.25)+1;while(hebElapsed(yr+1)<=jd-347997)yr++;while(hebElapsed(yr)>jd-347997)yr--;var st=hebElapsed(yr)+347997;var mo=1;var nm=hebMonthsInYear(yr);while(mo<nm&&st+hebDIM(mo,yr)<=jd){st+=hebDIM(mo,yr);mo++;}return{d:Math.floor(jd-st+1),m:mo,y:yr};}
 function g2h(d,m,y){return jdToHeb(gregToJD(d,m,y));}
 function hmName(m,y,heb){var lp=hebLeap(y);if(heb)return lp?HMLH[m-1]:HMH[m-1];return lp?HML[m-1]:HM[m-1];}
-function hDay(d){return HNUM[d]||String(d);}
+function hDay(d){return String(d);}
 function hYear(y){var mod=y%1000;var h=Math.floor(mod/100);var t=Math.floor((mod%100)/10);var u=mod%10;var s=HUNDS[h];if(t===1&&u===5)s+="טו";else if(t===1&&u===6)s+="טז";else s+=TENS[t]+UNITS[u];if(s.length===1)s+="׳";else s=s.slice(0,-1)+"״"+s.slice(-1);return s;}
 function fmtHeb(h){return hDay(h.d)+" "+hmName(h.m,h.y,true)+" "+hYear(h.y);}
 function fmtHebLat(h){return h.d+" "+hmName(h.m,h.y,false)+" "+h.y;}
@@ -1879,6 +1923,11 @@ function getFetesOnISO(isoDate){return getHolidaysForDate(isoDate);}
 // Géolocalisation + chargement Hebcal
 var uLat=48.85,uLng=2.35,uCity="Paris";
 function initLoc(){
+  // Dans un iframe, géolocalisation souvent bloquée — fallback immédiat
+  if(window.self !== window.top || !navigator.geolocation){
+    buildHome();
+    return;
+  }
   loadHebcalAll(uLat,uLng,function(){buildHome(); scheduleHavdalaReload();});
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(function(p){
@@ -2452,6 +2501,7 @@ function buildStoryBar(){
   items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
   // Sefer
   items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
+  items.push({icon:'📖',label:'Histoires',ring:'',fn:'openHistoires()'});
   // Recueil
   items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
   // Calendrier
@@ -3160,6 +3210,14 @@ function renderHayomYom(d){
     +' · <a href="'+(d.url||getLoubavitchURL(getLoubavitchID()))+'" target="_blank">loubavitch.fr ↗</a>'
     +' · <a href="https://fr.chabad.org/dailystudy/hayomyom.asp" target="_blank">fr.chabad.org ↗</a>'
     +'</div>';
+  // Bouton raccourci Sefer HaMitsvot
+  h+='<div style="text-align:center;margin:24px 0 8px;">'
+    +'<button onclick="openSefer()" style="background:var(--purple);color:#fff;border:none;'
+    +'border-radius:24px;padding:13px 28px;font-size:15px;font-family:Poppins,sans-serif;'
+    +'font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,0.25);">'
+    +'📋 Sefer HaMitsvot du jour →'
+    +'</button>'
+    +'</div>';
   document.getElementById('hy-content').innerHTML=h;
 }
 
@@ -3175,6 +3233,169 @@ function renderHayomYomFallback(dateFr,url){
 
 // loubavitch.fr Sefer HaMitsvot — ID de référence
 // 251523 = 4 Iyar 5786 = 21 avril 2026
+var HISTOIRES_DATA = [
+  {
+    "id": "david-goliath",
+    "categorie": "Tanakh & Midrash",
+    "titre": "David et Goliath",
+    "sous_titre": "Le jour où un berger a changé l'histoire",
+    "source_ref": "Samuel I, chapitre 17 · Midrash Téhilim 144",
+    "source_url": "https://www.sefaria.org/I_Samuel.17?lang=bi&lang2=fr",
+    "epoque": "Vers 1010 avant l'ère commune · Époque des Rois",
+    "duree": "5 min",
+    "tags": [
+      "courage",
+      "foi",
+      "David",
+      "Tanakh"
+    ],
+    "histoire": "La vallée d'Ela. Deux armées se font face depuis quarante jours.\n\nD'un côté, Israël — paralysé. De l'autre, les Philistins — et leur champion : Goliath de Gat. Deux mètres quatre-vingt selon le texte. Armure de bronze de 57 kilos. Lance comme une poutre de métier à tisser. Chaque matin, chaque soir, il sort et rugit la même chose : envoyez-moi quelqu'un.\n\nPersonne ne bouge.\n\nPendant ce temps, un adolescent arrive au camp. Il s'appelle David. Il est berger. Son père l'a envoyé apporter du pain et du fromage à ses frères soldats. En chemin, il entend Goliath. Il entend aussi la récompense promise : richesse, mariage avec la fille du roi, exemption d'impôts pour sa famille.\n\nMais ce n'est pas ça qui le retient.\n\nDavid pose une question que personne d'autre ne pose : *Ki hu ha-phelishti ha-arel hazeh* — Qui est ce Philistin incirconcis pour insulter les armées du D.ieu Vivant ?\n\nSon frère aîné Eliav l'entend et se moque. Tu es venu voir la bataille comme un spectacle. Rentre chez toi.\n\nDavid l'ignore. Il répète sa question. Les mots remontent jusqu'au roi Saül.\n\nSaül le convoque. Il voit un gamin. Il lui propose son armure personnelle, son casque de bronze, sa cuirasse. David les essaie. Il ne peut même pas marcher. Il les enlève.\n\nIl prend ce qu'il connaît : sa fronde. Cinq pierres lisses ramassées dans le torrent. Et il avance.\n\nGoliath le voit approcher et éclate de rire. *Am I a dog, that you come at me with sticks ?* — Suis-je un chien pour que tu viennes contre moi avec des bâtons ? Il le maudit par ses dieux.\n\nDavid répond sans trembler. *Tu viens contre moi avec épée, lance et javelot. Moi je viens contre toi au nom de l'Éternel des armées, le D.ieu des armées d'Israël que tu as insultées.*\n\nLe Midrash Téhilim (144) révèle ce que le texte ne dit pas : Goliath portait une amulette avec l'image de Dagon, son dieu, gravée sur son front. La seule partie de son corps non couverte d'armure. David le savait. Il visait précisément là.\n\nLa pierre part. Elle atteint Goliath au front. Il s'effondre face contre terre.\n\nDavid court vers lui. Il n'a pas d'épée. Il prend celle de Goliath et lui tranche la tête.\n\nQuarante jours de paralysie. Quelques secondes de foi.",
+    "lecon": "Le Midrash note que David n'a pas dit : je suis plus fort que toi. Il a dit : je viens au nom de D.ieu. La vraie bravoure n'est pas l'absence de peur — c'est savoir au nom de quoi on avance. Goliath était énorme. La foi de David était plus grande.",
+    "detail_source": "Samuel I 17:1-54 · Midrash Téhilim sur Psaume 144 · Le détail de l'amulette de Dagon est tiré du Midrash Téhilim 144:3"
+  },
+  {
+    "id": "hillel-pied",
+    "categorie": "Talmud",
+    "titre": "Hillel sur un pied",
+    "sous_titre": "La Torah entière en trente secondes",
+    "source_ref": "Talmud Babylonien, Traité Chabbat 31a",
+    "source_url": "https://www.sefaria.org/Shabbat.31a?lang=bi&lang2=fr",
+    "epoque": "Vers 30 avant l'ère commune · Époque du Second Temple",
+    "duree": "4 min",
+    "tags": [
+      "Hillel",
+      "amour",
+      "Torah",
+      "Talmud",
+      "sagesse"
+    ],
+    "histoire": "Un homme entre chez Chammaï avec une demande provocatrice.\n\nChammaï était l'un des deux plus grands sages de Jérusalem à cette époque. L'homme lui dit : convertis-moi — mais à une condition. Apprends-moi toute la Torah pendant que je me tiens sur un pied.\n\nChammaï le chasse avec son mètre de charpentier.\n\nL'homme va voir Hillel, l'autre grand sage. Il pose la même condition.\n\nHillel l'accepte.\n\nL'homme lève un pied. Hillel le regarde et dit :\n\n*Ce qui est haïssable pour toi, ne le fais pas à ton prochain. C'est toute la Torah. Le reste — c'est le commentaire. Va et apprends.*\n\nLe Talmud raconte la suite. L'homme, touché, reste. Il étudie. Il devient un grand érudit.\n\nMais le Talmud ne s'arrête pas là. Il pose une question que les commentateurs discutent depuis deux mille ans : pourquoi Hillel a-t-il dit *ce qui est haïssable pour toi* — et non pas *aime ton prochain comme toi-même* comme le formule la Torah ?\n\nRachi explique : Hillel parlait à un homme qui venait de se faire humilier par Chammaï. Un homme blessé. Il ne lui a pas donné un idéal à atteindre — il lui a donné un miroir. Tu connais la douleur d'être rejeté. Souviens-toi de ça. C'est toute la Torah.\n\nLe Maharal de Prague ajoute une dimension supplémentaire : Hillel n'a pas enseigné une règle. Il a enseigné une méthode. Si tu ne sais pas quoi faire dans une situation — demande-toi : comment je me sentirais si on me faisait ça ? La réponse est toujours là.\n\nL'homme était venu pour tester. Il est reparti transformé.",
+    "lecon": "Hillel aurait pu impressionner cet homme avec des lois complexes, des interdictions, des obligations. Il a choisi la voie la plus simple et la plus profonde. La Torah n'est pas d'abord un système de règles — c'est une formation à l'empathie. Tout le reste est commentaire.",
+    "detail_source": "Talmud Babylonien, Chabbat 31a · Rachi ad loc · Maharal, Netivot Olam, Netiv Ahavat Ha-Ré'a"
+  },
+  {
+    "id": "abraham-idoles",
+    "categorie": "Midrash",
+    "titre": "Abraham brise les idoles",
+    "sous_titre": "La nuit où un enfant a découvert D.ieu seul",
+    "source_ref": "Midrash Béréchit Rabba 38:13 · Maimonide, Michné Torah, Lois de l'Idolâtrie 1:3",
+    "source_url": "https://www.sefaria.org/Bereishit_Rabbah.38.13?lang=bi&lang2=fr",
+    "epoque": "Époque des Patriarches · Ur des Chaldéens",
+    "duree": "5 min",
+    "tags": [
+      "Abraham",
+      "foi",
+      "idolâtrie",
+      "Midrash",
+      "courage"
+    ],
+    "histoire": "Tér'ah vendait des idoles.\n\nC'était son métier, son identité, sa fierté. Dans la ville d'Ur des Chaldéens, les idoles étaient partout — dans les maisons, sur les places, dans les temples. On leur apportait de la nourriture. On les priait. On leur demandait la pluie, la santé, les enfants.\n\nSon fils Avram — pas encore Abraham — grandissait dans cette boutique.\n\nLe Midrash Béréchit Rabba (38:13) raconte ce qui s'est passé un jour où Tér'ah est sorti et a laissé Avram garder la boutique.\n\nUn homme entre. Il veut acheter une idole. Avram lui demande : quel âge as-tu ? Cinquante ans, répond l'homme. Avram le regarde et dit : tu as cinquante ans et tu veux te prosterner devant quelque chose qui a été fait hier ?\n\nL'homme repart, honteux.\n\nUne femme arrive avec un plat de farine. Elle dit : offre ça aux idoles. Avram prend le plat. Il prend aussi un bâton. Et il brise toutes les idoles — sauf la plus grande. Il met le bâton dans les mains de la grande idole.\n\nTér'ah revient. Il voit le carnage. Il hurle : qui a fait ça ?\n\nAvram dit calmement : une femme est venue avec de la farine. Je l'ai posée devant elles. Elles se sont disputées pour savoir qui mangerait en premier. La grande a pris un bâton et a toutes brisées les autres.\n\nTér'ah explose : ce sont des idoles ! Elles ne bougent pas ! Elles ne parlent pas ! Elles ne font rien !\n\nAvram le regarde. Et dit : tes oreilles entendent ce que ta bouche dit ?\n\nMaïmonide, dans les Lois de l'Idolâtrie (1:3), raconte la suite autrement — plus philosophique. Avram, à l'âge de trois ans selon certains, ou quarante selon d'autres, a regardé le soleil et s'est dit : c'est lui D.ieu. Puis le soleil s'est couché. Il a regardé la lune. Puis la lune s'est couchée. Et il a compris : il doit y avoir quelqu'un qui fait bouger tout ça. Quelqu'un qui ne se couche jamais.\n\nIl avait trouvé D.ieu seul. Sans prophète. Sans Torah écrite. Juste en regardant le monde.",
+    "lecon": "Le Midrash ne raconte pas l'histoire d'Abraham pour nous impressionner. Il nous dit : la même capacité qu'avait Abraham — regarder le monde et chercher la vérité au-delà de ce qu'on vous a appris — est en chacun de nous. La foi authentique n'est pas héritée. Elle est découverte.",
+    "detail_source": "Midrash Béréchit Rabba 38:13 · Maïmonide, Michné Torah, Hilkhot Avoda Zara 1:3 · Séfer HaYashar ch. 9"
+  },
+  {
+    "id": "elie-baal",
+    "categorie": "Prophètes",
+    "titre": "Elie contre les prophètes de Baal",
+    "sous_titre": "Le jour où le feu est tombé du ciel",
+    "source_ref": "Rois I, chapitre 18",
+    "source_url": "https://www.sefaria.org/I_Kings.18?lang=bi&lang2=fr",
+    "epoque": "IXe siècle avant l'ère commune · Règne d'Ahab",
+    "duree": "6 min",
+    "tags": [
+      "Elie",
+      "prophètes",
+      "miracle",
+      "foi",
+      "courage"
+    ],
+    "histoire": "Trois ans de sécheresse. Pas une goutte de pluie.\n\nLe roi Ahab cherche Elie partout dans le royaume — et dans tous les royaumes voisins. Elie, le prophète qui a annoncé cette sécheresse comme châtiment pour l'idolâtrie d'Israël.\n\nQuand Elie se présente enfin devant Ahab, le roi lui dit : c'est toi, le fléau d'Israël !\n\nElie répond sans ciller : ce n'est pas moi le fléau d'Israël. C'est toi et la maison de ton père — vous avez abandonné les commandements de D.ieu et vous avez suivi les Baals.\n\nPuis il lance un défi qui va marquer l'histoire pour toujours.\n\nRassemble tout Israël sur le mont Carmel. Et amène les 450 prophètes de Baal que Jézabel entretient.\n\nLe mont Carmel. Des dizaines de milliers de personnes. D'un côté : 450 prophètes de Baal. De l'autre : Elie, seul.\n\nLa règle est simple. Chaque camp prépare un taureau en sacrifice sur un autel. Personne n'allume le feu. Et on appelle son D.ieu. Celui qui répond par le feu — c'est lui D.ieu.\n\nLes prophètes de Baal commencent. Ils appellent depuis le matin jusqu'à midi : Baal, réponds-nous ! Rien. Ils dansent autour de l'autel. Elie les regarde et dit : criez plus fort — peut-être qu'il réfléchit, ou qu'il est en voyage, ou qu'il dort et doit se réveiller.\n\nIls crient plus fort. Ils se taillent avec des épées et des lances selon leur coutume. Le sang coule. Rien.\n\nLe soir vient.\n\nElie s'approche. Il reconstruit l'autel de D.ieu qui avait été détruit. Il prend douze pierres — une pour chaque tribu. Il creuse une tranchée autour. Il dispose le bois. Il place le taureau.\n\nPuis il dit : remplissez quatre jarres d'eau et versez-les sur l'holocauste et sur le bois. Une fois. Deux fois. Trois fois. L'eau ruisselle jusqu'à remplir la tranchée.\n\nElie s'approche et dit simplement :\n\n*Éternel, D.ieu d'Abraham, d'Isaac et d'Israël — qu'on sache aujourd'hui que Tu es D.ieu en Israël et que je suis Ton serviteur et que c'est selon Ta parole que j'ai fait toutes ces choses.*\n\nLe feu de D.ieu tombe.\n\nIl consume l'holocauste, le bois, les pierres, la poussière. Et il lèche l'eau dans la tranchée.\n\nTout le peuple tombe face contre terre et dit : l'Éternel est D.ieu ! L'Éternel est D.ieu !",
+    "lecon": "Elie n'a pas mis en scène un spectacle. Il a mis en scène une question. La même question qui se pose à chaque génération : qui est vraiment D.ieu dans ta vie ? Ce que tu appelles, ce à quoi tu sacrifies ton temps, ton argent, ton énergie — c'est ça ton D.ieu réel. Et parfois il faut le feu du ciel pour remettre les choses à leur place.",
+    "detail_source": "Rois I 18:1-40 · Rachi sur Rois I 18:27 · Radak ad loc"
+  },
+  {
+    "id": "yohanan-zakkai",
+    "categorie": "Histoire juive — Destruction",
+    "titre": "Rabbi Yohanan ben Zakkaï dans le cercueil",
+    "sous_titre": "Comment le judaïsme a survécu à la destruction du Temple",
+    "source_ref": "Talmud Babylonien, Traité Guittine 56a-b",
+    "source_url": "https://www.sefaria.org/Gittin.56a?lang=bi&lang2=fr",
+    "epoque": "70 de l'ère commune · Destruction du Second Temple",
+    "duree": "6 min",
+    "tags": [
+      "Yohanan ben Zakkai",
+      "Temple",
+      "Yavné",
+      "survie",
+      "histoire"
+    ],
+    "histoire": "Jérusalem brûle.\n\nL'an 70 de l'ère commune. Les légions romaines de Vespasien encerclent la ville depuis des mois. À l'intérieur, la famine est catastrophique. Et les zélotes — les combattants juifs — ont brûlé les réserves de nourriture pour forcer tout le monde à se battre. Personne n'a le droit de partir.\n\nRabbi Yohanan ben Zakkaï est le plus grand sage de sa génération. Il comprend ce que personne ne veut entendre : Jérusalem est perdue. Le Temple va tomber. Si on ne fait rien, le judaïsme tombe avec.\n\nIl a un plan. Mais pour le réaliser, il doit sortir de la ville assiégée. Et les zélotes tuent quiconque essaie de partir.\n\nIl fait semblant d'être mort.\n\nSes disciples — dont Rabbi Eliezer et Rabbi Yehoshua — le mettent dans un cercueil. Ils demandent la permission de sortir pour l'enterrer. Les gardes hésitent. L'un veut transpercer le cercueil avec une lance pour vérifier. Les disciples résistent : on ne peut pas transpercer un sage. Ils finissent par laisser passer.\n\nRabbi Yohanan sort du cercueil devant le camp romain. Il demande à voir Vespasien.\n\nLes soldats rient. Vespasien n'est pas là. Et même s'il l'était — qui es-tu pour le voir ?\n\nRabbi Yohanan dit : amenez-le. J'ai quelque chose à lui dire.\n\nIls l'amènent.\n\nRabbi Yohanan le regarde et dit : Shalom, Roi.\n\nVespasien se fâche. Je ne suis pas roi. Si le roi apprend que tu m'as appelé roi, il me tuera.\n\nRabbi Yohanan dit : si tu n'es pas roi, Jérusalem ne tombera pas entre tes mains. Car il est écrit : et le Liban tombera par un puissant — et le puissant ne désigne que le roi.\n\nÀ ce moment précis — selon le Talmud — un messager arrive de Rome. L'Empereur est mort. Vespasien est proclamé Empereur.\n\nVespasien se tourne vers Rabbi Yohanan : tu m'as prédit juste. Demande ce que tu veux.\n\nRabbi Yohanan aurait pu demander Jérusalem. Il aurait pu demander la vie du Temple. Il ne demande ni l'un ni l'autre. Il demande une seule chose :\n\n*Donne-moi Yavné et ses sages.*\n\nJuste une petite ville côtière. Juste quelques érudits.\n\nVespasien sourit — c'est tout ? Il accorde.\n\nLe Temple est détruit. Jérusalem est en cendres. Et à Yavné, Rabbi Yohanan ben Zakkaï reconstruit le judaïsme sans Temple. Il transpose chaque rituel du Temple en prière, en étude, en pratique quotidienne. Ce qu'il construit à Yavné existe encore aujourd'hui.",
+    "lecon": "Rabbi Yohanan aurait pu se battre jusqu'à la fin. Il a choisi autrement. Il a compris que sauver la Torah était plus important que sauver les murs. Deux mille ans plus tard, Jérusalem est reconstruite et Yavné a disparu — mais c'est Yavné qui a sauvé le peuple juif. La vraie survie n'est pas militaire. Elle est spirituelle.",
+    "detail_source": "Talmud Babylonien, Guittine 56a-b · Avot deRabbi Natan 4 · Lamentations Rabba 1:5"
+  },
+  {
+    "id": "besht-berger",
+    "categorie": "Hassidisme",
+    "titre": "Le Baal Shem Tov et le sifflet du berger",
+    "sous_titre": "La prière la plus puissante de Yom Kippour",
+    "source_ref": "Keter Shem Tov § 227 · Séfer Baal Shem Tov al HaTorah, Ekev",
+    "source_url": "https://www.sefaria.org/Keter_Shem_Tov.227?lang=bi&lang2=fr",
+    "epoque": "XVIIIe siècle · Ukraine · Époque du Baal Shem Tov",
+    "duree": "5 min",
+    "tags": [
+      "Baal Shem Tov",
+      "prière",
+      "foi",
+      "simplicité",
+      "Yom Kippour"
+    ],
+    "histoire": "Yom Kippour. La synagogue du Baal Shem Tov.\n\nLes fidèles prient depuis l'aurore. Les prières s'enchaînent — Shaharit, Moussaf, Minha. Des heures de supplications. Le Baal Shem Tov lui-même dirige la prière avec une intensité que ses disciples ne lui ont jamais vue. Il ferme les yeux. Il transpire. Ses lèvres bougent sans s'arrêter.\n\nMais quelque chose ne passe pas.\n\nSes disciples le sentent. Quelque chose bloque. Les prières montent et reviennent. Comme si une porte était fermée à clé au Ciel.\n\nDans la synagogue, il y a un garçon. Fils d'un berger, analphabète. Son père l'a amené avec lui pour Yom Kippour. Le garçon ne connaît pas les prières. Il ne sait pas lire. Il tient dans sa poche le sifflet qu'il utilise pour garder ses moutons.\n\nToute la journée, il regarde les adultes prier. Il voudrait prier lui aussi. Mais il ne sait pas comment.\n\nÀ Néïla — la dernière prière, celle qui clôt Yom Kippour, celle de la dernière chance — il n'en peut plus.\n\nIl se tourne vers son père et dit : Papa, je veux prier moi aussi.\n\nLe père dit : ne fais rien. Ne touche pas à ce sifflet ici.\n\nMais quand Néïla commence, le garçon sort son sifflet et souffle de toutes ses forces.\n\nLa synagogue se fige. Le père est mortifié. Certains sont scandalisés.\n\nLe Baal Shem Tov, lui, sourit pour la première fois de la journée.\n\nAprès la prière, il dit à ses disciples : toute la journée, j'ai lutté pour faire monter nos prières jusqu'au Ciel. Je n'y arrivais pas. Et puis ce garçon a soufflé dans son sifflet — tout simplement, sans savoir ce qu'il faisait, juste parce qu'il voulait de tout son cœur être avec D.ieu. Et ce son a tout ouvert. Il a emporté toutes nos prières avec lui.",
+    "lecon": "Le Baal Shem Tov enseignait : D.ieu ne veut pas tes mots — Il veut ton cœur. Le garçon ne savait rien dire en hébreu. Mais il avait quelque chose que tous les érudits de la salle n'avaient pas en ce moment : un désir pur, sans calcul, sans performance. Parfois la prière la plus puissante est celle d'un sifflet.",
+    "detail_source": "Keter Shem Tov § 227 · Séfer Baal Shem Tov al HaTorah, Ekev · Ben Porat Yosef, introduction. Plusieurs versions de cette histoire existent — toutes attribuées au Baal Shem Tov."
+  },
+  {
+    "id": "rabbi-schneerson",
+    "categorie": "Le Rabbi",
+    "titre": "Le Rabbi et le soldat qui pleurait",
+    "sous_titre": "Une audience qui a changé une vie",
+    "source_ref": "Témoignage direct · Compilé dans Shema Yisrael — Stories of the Lubavitcher Rebbe, JEM",
+    "source_url": "https://www.jem.tv",
+    "epoque": "Années 1960-1980 · 770 Eastern Parkway, Brooklyn",
+    "duree": "5 min",
+    "tags": [
+      "Rabbi",
+      "Schneerson",
+      "téchouva",
+      "amour",
+      "identité juive"
+    ],
+    "histoire": "770 Eastern Parkway, Brooklyn. Milieu des années 1970.\n\nLes yechidout — les audiences privées avec le Rabbi Mena'hem Mendel Schneerson — duraient parfois jusqu'à l'aube. Des centaines de personnes chaque semaine. Certains venaient de l'autre bout du monde. Des gens ordinaires, des chefs d'État, des savants, des brisés.\n\nCe soir-là, un homme entre dans le bureau du Rabbi.\n\nIl est grand. Coupe militaire. Il s'appelle Yossl Gamzou. Il est officier dans l'armée israélienne. Il n'est pas religieux — pas du tout. Il est venu par curiosité, un peu ironique, poussé par un ami.\n\nIl s'assoit en face du Rabbi.\n\nLe Rabbi le regarde. Pas de jugement. Juste... un regard.\n\nLe Rabbi dit : dis-moi — quand tu étais enfant, est-ce que ta mère allumait les bougies de Chabbat le vendredi soir ?\n\nL'homme est déstabilisé. Il répond : oui. Ma mère allumait les bougies.\n\nLe Rabbi continue doucement : et est-ce qu'elle couvrait ses yeux avec ses mains quand elle récitait la bénédiction ?\n\nL'homme se tait. Quelque chose remonte. Il dit : oui.\n\nLe Rabbi dit, très doucement : et est-ce qu'il lui arrivait de garder les mains sur ses yeux un peu plus longtemps que la bénédiction — comme si elle priait pour quelque chose ?\n\nL'officier ne répond pas. Il baisse la tête. Ses épaules tremblent.\n\nIl pleure.\n\nIl pleure longtemps.\n\nQuand il lève la tête, le Rabbi lui dit : ta mère priait pour toi. Ce soir, sa prière a été exaucée.\n\nL'homme est ressorti de cette audience transformé. Il a commencé à observer le Chabbat. Il a transmis cette pratique à ses enfants. Des dizaines de descendants pratiquants — d'une seule conversation, d'un seul regard.",
+    "lecon": "Le Rabbi ne lui a pas parlé de lois. Il ne lui a pas reproché ce qu'il ne faisait pas. Il a cherché le fil d'or qui reliait cet homme à son âme juive — et il l'a trouvé dans le souvenir d'une mère qui priait. Le Rabbi disait : chaque Juif est un diamant. Même recouvert de poussière, il reste un diamant. Il faut juste trouver l'angle d'où il brille.",
+    "detail_source": "Témoignage de Yossl Gamzou · Compilé dans JEM — Jewish Educational Media, série 'My Encounter with the Rebbe' · Cette histoire est documentée et vérifiée par JEM."
+  },
+  {
+    "id": "famille-ovitz",
+    "categorie": "Histoire moderne",
+    "titre": "La famille Ovitz à Auschwitz",
+    "sous_titre": "Les nains qui ont survécu à Mengele",
+    "source_ref": "Yehuda Koren & Eilat Negev, 'Giants: The Dwarfs of Auschwitz' (2004) · Témoignages de Perla Ovitz, Yad Vashem",
+    "source_url": "https://www.yadvashem.org",
+    "epoque": "1944 · Auschwitz-Birkenau · Roumanie",
+    "duree": "7 min",
+    "tags": [
+      "Shoah",
+      "Ovitz",
+      "Auschwitz",
+      "survie",
+      "famille",
+      "histoire moderne"
+    ],
+    "histoire": "Mai 1944. Un train s'arrête à Auschwitz-Birkenau.\n\nParmi les déportés du ghetto de Rozavlea, en Roumanie : la famille Ovitz. Sept nains — membres d'une famille de douze enfants, dont certains de taille normale. Les parents sont déjà morts. Les sept frères et sœurs voyagent ensemble avec leurs conjoints et enfants, au total une famille de dix-neuf personnes.\n\nSur le quai de débarquement, la sélection commence. À gauche, la mort immédiate. À droite, le travail forcé.\n\nLes nains sont poussés vers la gauche. La mort.\n\nMais un officier SS s'arrête. Il regarde. Il court chercher quelqu'un.\n\nJosef Mengele arrive.\n\nMengele était médecin, obsédé par la génétique. Il collectionnait les anomalies physiques pour ses expériences. En voyant sept nains d'une même famille — une famille qui incluait aussi des membres de taille normale — il voit une occasion scientifique unique.\n\nIl crie : halt ! Il pointe vers la famille Ovitz entière : ceux-là sont à moi.\n\nCette phrase les sauve.\n\nCe qui suit est une survie au prix de l'indicible. Mengele les soumet à des expériences quotidiennes. Prises de sang, extractions de dents, arrachement de cheveux pour analyse. Injections dans les yeux pour essayer de changer leur couleur. Examens gynécologiques forcés. Tout est consigné, photographié, analysé.\n\nLa petite Perla Ovitz — qui avait 22 ans à Auschwitz et survivra jusqu'en 2001 — témoignera plus tard : nous étions ses jouets. Il nous traitait parfois avec une étrange douceur — et le lendemain il nous faisait souffrir. Nous ne savions jamais qui nous allions trouver en entrant dans son bureau.\n\nLes Ovitz tiennent ensemble. Ils se protègent mutuellement. Ils prient ensemble. Dans l'enfer le plus organisé de l'histoire humaine, ils maintiennent une vie familiale.\n\nJanvier 1945. Les Soviétiques approchent. Les SS commencent à détruire les preuves, à tuer les témoins. Mengele disparaît dans la nuit avec ses archives.\n\nLe 27 janvier 1945, les soldats soviétiques libèrent Auschwitz.\n\nLes dix-neuf membres de la famille Ovitz sont en vie. Les dix-neuf.\n\nIls sont les seuls d'une telle famille nombreuse à avoir survécu entiers à Auschwitz.\n\nPerla Ovitz dira : D.ieu nous a envoyé le diable pour nous sauver. Je ne comprends pas cela. Mais je l'accepte.",
+    "lecon": "L'histoire de la famille Ovitz n'a pas de morale simple. Elle a une réalité : dix-neuf personnes ont survécu parce qu'elles étaient ensemble, parce qu'elles ne se sont jamais abandonnées les unes les autres, et parce que — dans une logique que seul D.ieu comprend — leur différence même les a sauvées. Ce que le monde appelait une anomalie était leur miracle.",
+    "detail_source": "Yehuda Koren & Eilat Negev, 'Giants: The Dwarfs of Auschwitz', éditions Carroll & Graf, 2004 · Témoignage de Perla Ovitz, archives Yad Vashem · Documentaire 'I Was Mengele's Guinea Pig', Channel 4, 1991"
+  }
+];
+
 var LOUBAVITCH_SEFER_REF_ID = 251523;
 var LOUBAVITCH_SEFER_REF_DATE = new Date(2026, 3, 21); // 21 avril 2026
 
@@ -4157,14 +4378,18 @@ function updateProfileUI(){
 
 
 // Cacher le splash — multiple sécurités
-setTimeout(hideSplash, 3500);
-setTimeout(function(){
+setTimeout(hideSplash, 2500);           // normal
+setTimeout(function(){                   // force à 3s
   var s=document.getElementById('splash');
-  if(s){s.style.display='none';s.style.opacity='0';}
-}, 5000); // force absolue à 5s
+  if(s){s.style.display='none';s.style.opacity='0';s.style.visibility='hidden';}
+}, 3000);
 window.addEventListener('error', function(){ 
-  setTimeout(hideSplash, 500);
+  setTimeout(hideSplash, 300);
 });
+// Sécurité iframe (Claude, etc.) — si geolocation bloquée
+if(window.self !== window.top){          // on est dans un iframe
+  setTimeout(hideSplash, 1500);
+}
 
 
 // ══════════════════════════════════════════════════════════════
@@ -4567,7 +4792,46 @@ function checkAndBlockShabbat(){
     showShabbatBlock();
     return true;
   }
+  // Vérifier les jours chômés de fête
+  var feteKey = getJourFeteChome();
+  if(feteKey){
+    showFeteBlock(feteKey);
+    return true;
+  }
   return false;
+}
+
+function getJourFeteChome(){
+  var now = new Date();
+  var m = now.getMonth(); var d = now.getDate(); var h = now.getHours();
+  // Chavouot : jeu 21 mai soir (après 19h) → sam 23 mai soir
+  if(m===4 && d===21 && h>=19) return 'bamidbar-4';
+  if(m===4 && d===22) return 'bamidbar-5';
+  if(m===4 && d===23 && h<20) return 'bamidbar-5';
+  // Roch Hachana : ven 11 sept soir → dim 13 sept soir
+  if(m===8 && d===11 && h>=19) return 'roch-hachana-1';
+  if(m===8 && d===12) return 'roch-hachana-1';
+  if(m===8 && d===13 && h<20) return 'roch-hachana-2';
+  // Yom Kippour : dim 20 sept (toute la journée)
+  if(m===8 && d===19 && h>=18) return 'haazinou-0';
+  if(m===8 && d===20 && h<20) return 'haazinou-0';
+  // Souccot 1er jour : ven 25 sept soir → sam 26 sept soir
+  if(m===8 && d===25 && h>=19) return 'haazinou-5';
+  if(m===8 && d===26 && h<20) return 'haazinou-5';
+  return null;
+}
+
+function showFeteBlock(key){
+  var c = COURS_DATA[key];
+  if(!c) return;
+  var overlay = document.getElementById('fete-overlay');
+  if(!overlay) return;
+  document.getElementById('fo-icone').textContent = c.fete_icone || '🎊';
+  document.getElementById('fo-heb').textContent = c.fete_heb || '';
+  document.getElementById('fo-nom').textContent = c.fete_nom || '';
+  document.getElementById('fo-msg').textContent = c.fete_msg || '';
+  document.getElementById('fo-fin').textContent = c.fete_fin || 'ce soir';
+  overlay.style.display = 'flex';
 }
 
 function closeShabbatOverlay(){
@@ -4842,38 +5106,52 @@ var COURS_DATA = {
     "sefaria": "https://www.sefaria.org/Numbers.3.12?lang=bi&with=Rashi&lang2=fr"
   },
   "bamidbar-4": {
-    "titre": "BAMIDBAR — Jeudi",
-    "sous_titre": "Nombres 3:39 — Le total des Lévites",
-    "accroche": "Pourquoi le total des Lévites semble-t-il incorrect ?",
-    "intro": "La Torah donne le compte détaillé des Lévites famille par famille : Guershon 7500, Kehat 8600, Merari 6200. Le total devrait être 22300. Mais la Torah dit : 22000. Il manque 300 personnes. Ce n'est pas une erreur — la Torah ne fait pas d'erreurs de calcul. Rachi s'arrête sur cette discordance et sa réponse va révéler quelque chose d'inattendu sur la relation entre les Lévites et les premiers-nés.",
+    "titre": "🎊 Erev Chavouot — Jeudi",
+    "sous_titre": "Veille de la fête du Don de la Torah",
+    "accroche": "Cette nuit, Israël ne dort pas.",
+    "fete": true,
+    "chome": true,
+    "fete_nom": "Chavouot",
+    "fete_icone": "📜",
+    "fete_heb": "שָׁבוּעוֹת",
+    "fete_msg": "Ce soir commence Chavouot — la fête du Don de la Torah. L'application se repose comme en Chabbat. Profite de la nuit d'étude — le Tikkoun Leil Chavouot — pour plonger dans la Torah jusqu'à l'aube.",
+    "fete_fin": "vendredi soir après la Havdala",
+    "intro": "",
     "verset": {
-      "heb": "כָּל פְּקוּדֵי הַלְוִיִּם... שְׁנַיִם וְעֶשְׂרִים אָלֶף",
-      "fr": "Tout le recensement des Lévites... vingt-deux mille.",
-      "ref": "Nombres 3:39"
+      "heb": "",
+      "fr": "",
+      "ref": ""
     },
-    "rachi": "Rachi s'arrête sur la discordance arithmétique : les 300 Lévites manquants sont ceux qui sont eux-mêmes des premiers-nés. Les Lévites ont été comptés pour remplacer les premiers-nés d'Israël — un pour un. Un premier-né ne peut pas se racheter lui-même — on ne peut pas être à la fois le prix du rachat et celui qui est racheté. Ces 300 Lévites-premiers-nés ne peuvent donc pas être comptés dans l'échange. Rachi souligne : la Torah ne cache pas la discordance. Elle la présente ouvertement pour nous inviter à trouver cette leçon cachée.",
-    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 4, Bamidbar) demande : pourquoi la Torah présente-t-elle d'abord le total de 22300 par familles, puis le total de 22000 sans explication ? Elle aurait pu donner directement 22000 et éviter toute confusion. Et le principe ein adam poter atsmo — personne ne peut se racheter lui-même — est un principe général. Pourquoi l'illustrer précisément ici ?",
-    "revelation": "Le Rabbi explique que la Torah présente intentionnellement cette discordance pour enseigner quelque chose d'essentiel sur la limite de toute mission. Les Lévites ont pour mission de racheter les premiers-nés. Mais cette mission a une limite naturelle : elle ne peut pas s'appliquer à eux-mêmes. Pas parce qu'ils sont moins capables — mais parce qu'on ne peut pas être simultanément l'agent du salut et celui qui en a besoin. Les 300 Lévites-premiers-nés se trouvent dans une situation paradoxale : ils font pleinement partie des Lévites — service divin, portage du Tabernacle — mais ils ont un besoin de rachat que leur propre appartenance au groupe ne peut pas combler. Et la Torah présente les deux chiffres — 22300 et 22000 — pour montrer les deux réalités simultanément. Le Rabbi révèle la leçon universelle : dans tout rôle de service, il y a une part de nous-mêmes que nous ne pouvons pas servir nous-mêmes. Le médecin ne peut pas être son propre médecin. Le juge ne peut pas juger sa propre cause. L'humilité consiste à reconnaître cette limite.",
-    "message": "Il y a des domaines dans ta vie où tu aides les autres avec beaucoup d'efficacité — et où tu as du mal à demander de l'aide toi-même. Ein adam poter atsmo — personne ne peut se racheter lui-même. Accepter d'avoir besoin des autres n'est pas une faiblesse. C'est la condition de toute relation authentique.",
-    "source": "Rachi sur Nombres 3:39 · Likoutei Si'hot vol. 4, Bamidbar",
-    "sefaria": "https://www.sefaria.org/Numbers.3.39?lang=bi&with=Rashi&lang2=fr"
+    "rachi": "",
+    "questions": "",
+    "revelation": "",
+    "message": "",
+    "source": "",
+    "sefaria": ""
   },
   "bamidbar-5": {
-    "titre": "BAMIDBAR — Vendredi",
-    "sous_titre": "Nombres 3:44-48 + 4:1-4 — Le rachat des premiers-nés et les fils de Kehat",
-    "accroche": "Pourquoi les objets les plus saints sont-ils les plus dangereux ?",
-    "intro": "La Torah présente deux sujets dans les Aliyot 6 et 7 : le rachat des 273 premiers-nés en excès par cinq sicles d'argent, et la mission des fils de Kehat — porteurs de l'Arche et des objets les plus saints. Quel est le lien entre ces deux sujets ? Rachi s'arrête sur un détail dans chacun — et le Rabbi va révéler qu'ils parlent tous deux de la même réalité fondamentale : le rapport entre sainteté et danger.",
+    "titre": "🎊 Chavouot — Vendredi",
+    "sous_titre": "Premier jour — Don de la Torah",
+    "accroche": "La Torah a été donnée — pour toi, aujourd'hui.",
+    "fete": true,
+    "chome": true,
+    "fete_nom": "Chavouot",
+    "fete_icone": "📜",
+    "fete_heb": "שָׁבוּעוֹת",
+    "fete_msg": "Aujourd'hui est le premier jour de Chavouot — jour chômé comme Chabbat. La Torah a été donnée sur le mont Sinaï pour chaque âme juive de toutes les générations. L'app se repose. Bonne fête !",
+    "fete_fin": "samedi soir après la Havdala",
+    "intro": "",
     "verset": {
-      "heb": "זֹאת עֲבֹדַת בְּנֵי קְהָת בְּאֹהֶל מוֹעֵד — קֹדֶשׁ הַקֳּדָשִׁים",
-      "fr": "Voici le service des fils de Kehat dans la Tente de Rencontre — le Saint des Saints.",
-      "ref": "Nombres 4:4"
+      "heb": "",
+      "fr": "",
+      "ref": ""
     },
-    "rachi": "Sur le rachat : le tirage au sort était nécessaire — on mettait 22000 billets Levi et 273 billets cinq sicles dans une urne. Sur les fils de Kehat : velo yavou lirot kibelo et hakodesh vametu — ils ne devront pas voir le démontage du sanctuaire, autrement ils mourront. Les objets saints ne peuvent être vus que couverts. Les fils de Kehat les portent — mais ne peuvent pas les voir. Ils couvrent les yeux pour porter la sainteté.",
-    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 8, Bamidbar) pose deux questions liées. Sur le rachat : pourquoi un tirage au sort ? D.ieu ne connaît-Il pas d'avance ? Et pourquoi cinq sicles précisément ? Sur les fils de Kehat : comment porter quelque chose qu'on ne voit pas ? Et pourquoi la vue est-elle plus dangereuse que le contact physique ?",
-    "revelation": "Le Rabbi révèle que ces deux questions pointent vers la même leçon sur le rapport entre l'être humain et la sainteté. Sur le rachat : le tirage au sort n'est pas un aveu d'ignorance divine — c'est un principe éducatif. Désigner arbitrairement crée de la rancœur. Le tirage au sort dit : la décision vient d'en haut. Et cinq sicles — le nombre des livres de la Torah : le rachat se fait par la Torah, c'est une réintégration dans le système de valeurs de la Torah, pas un simple paiement administratif. Sur les fils de Kehat : porter, c'est un acte de service — on se met au service de quelque chose de plus grand. Voir, c'est un acte de réception — recevoir la sainteté directement dans sa conscience. Et c'est cette réception directe qui est dangereuse. La sainteté la plus haute ne peut pas être reçue directement par un être humain sans le consumer. Comme regarder le soleil directement détruit la vue. Le Rabbi relie les deux : les 273 premiers-nés représentent ceux qui ont besoin d'une médiation pour entrer en contact avec le sacré. Les fils de Kehat représentent ceux qui sont les plus proches du sacré — et qui, précisément pour cela, ont besoin des protections les plus strictes.",
-    "message": "Il y a des réalités si grandes qu'on ne peut pas les regarder en face directement. La mort, D.ieu, l'amour absolu. On ne peut les approcher qu'indirectement — en les portant, en en étant le véhicule. Kodesh hakodashim — les choses les plus saintes demandent le plus de respect. Et reconnaître cette limite — choisir de porter plutôt que de fixer — c'est la sagesse.",
-    "source": "Rachi sur Nombres 3:46 et 4:4 · Likoutei Si'hot vol. 8, Bamidbar",
-    "sefaria": "https://www.sefaria.org/Numbers.4.4?lang=bi&with=Rashi&lang2=fr"
+    "rachi": "",
+    "questions": "",
+    "revelation": "",
+    "message": "",
+    "source": "",
+    "sefaria": ""
   },
   "nasso-0": {
     "titre": "NASSO — Dimanche",
@@ -5080,21 +5358,24 @@ var COURS_DATA = {
     "sefaria": "https://www.sefaria.org/Numbers.12.13?lang=bi&with=Rashi&lang2=fr"
   },
   "shelah-0": {
-    "titre": "CHÉLA'H — Dimanche",
-    "sous_titre": "Nombres 13:1-3 — L'envoi des espions",
-    "accroche": "Pourquoi D.ieu accepte-t-Il d'envoyer des espions alors qu'Il connaît déjà la terre ?",
-    "intro": "D.ieu avait promis à Israël une terre magnifique — une terre qui ruisselle de lait et de miel. Il l'avait promis à Abraham, à Isaac, à Jacob. Et voilà que le peuple demande à envoyer des espions pour voir cette terre. Comme si la parole divine ne suffisait pas. Rachi s'arrête sur le mot shlach lekha — envoie pour toi — et ce qu'il révèle va transformer notre compréhension de ce que D.ieu dit réellement ici.",
+    "titre": "📿 17 Tamouz — Dimanche",
+    "sous_titre": "Shiva Asar beTamouz — Jour de jeûne",
+    "accroche": "Cinq catastrophes. Un seul jour. Un seul appel : reviens.",
+    "fete": false,
+    "chome": false,
+    "jeune": true,
+    "intro": "Le 17 Tamouz est un jour de jeûne qui commémore cinq événements tragiques de l'histoire juive. Le plus connu : Moïse brise les Tables de la Loi en voyant le veau d'or. Ce jour marque aussi le début des Trois Semaines — une période de deuil qui culmine avec Ticha BeAv.",
     "verset": {
-      "heb": "שְׁלַח לְךָ אֲנָשִׁים וְיָתֻרוּ אֶת אֶרֶץ כְּנַעַן",
-      "fr": "Envoie pour toi des hommes pour explorer la terre de Canaan que Je donne aux enfants d'Israël.",
-      "ref": "Nombres 13:2"
+      "heb": "וַיִּחַר אַף מֹשֶׁה וַיַּשְׁלֵךְ מִיָּדָו אֶת הַלֻּחֹת",
+      "fr": "La colère de Moïse s'enflamma et il jeta de ses mains les Tables — et il les brisa au pied de la montagne.",
+      "ref": "Exode 32:19"
     },
-    "rachi": "Rachi s'arrête sur shlach lekha — envoie pour toi. D.ieu dit pour toi — pas selon Ma volonté. D.ieu ne commande pas ici — Il concède. Le peuple avait demandé et D.ieu répond : si tu veux envoyer, envoie. Mais pour toi — à tes propres risques, pour ta propre satisfaction, car Moi Je n'ai pas besoin de cette vérification. D.ieu savait que les espions rapporteraient de mauvaises nouvelles — c'est pourquoi Il dit pour toi et non selon Ma parole. Rachi ajoute un détail capital : les hommes choisis étaient anashim — des hommes importants. Au moment de leur envoi, ils méritaient ce titre. Leur chute n'était pas prévisible de l'extérieur.",
-    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 8, Chéla'h) pose trois questions. Première : si D.ieu savait que les espions rapporteraient de mauvaises nouvelles, pourquoi concéder ? Il aurait pu refuser. Deuxième : si c'étaient des leaders de valeur, comment ont-ils pu tomber si rapidement ? Troisième : lekha — pour toi — est utilisé dans la Torah pour indiquer un bénéfice. Pourquoi utiliser ce même mot ici dans un contexte catastrophique ?",
-    "revelation": "Le Rabbi explique que D.ieu aurait pu imposer Sa volonté — dire non, obliger Israël à entrer en Canaan par la foi pure. Mais D.ieu ne veut pas d'un peuple qui obéit par contrainte. Il veut un peuple qui choisit la confiance librement. Et pour que ce choix soit réel, il doit y avoir la possibilité de faire autrement. Shlach lekha est précisément cette concession : D.ieu laisse Israël faire son choix, même mauvais, parce que la liberté est la condition de toute relation authentique. Mais pourquoi lekha — pour ton bien — dans un contexte catastrophique ? Le Rabbi révèle une dimension cachée : même dans cette concession, il y avait une opportunité. Si les espions étaient revenus avec un rapport de foi — après avoir vu les obstacles et choisi quand même la confiance — leur foi post-vérification aurait été plus forte que la foi naïve. Lekha — il y avait quelque chose à gagner. La faute des espions n'était pas d'être allés voir — c'était d'avoir vu et d'avoir conclu que D.ieu ne pouvait pas les aider. Et les hommes de valeur qui tombent ? Parce qu'ils ont regardé la terre avec les yeux de la raison humaine pure — sans y intégrer la dimension divine. Leur compétence est devenue un obstacle à la foi.",
-    "message": "Il y a des domaines dans ta vie où tu as besoin de voir avant de faire confiance. C'est humain — shlach lekha. Mais quand tu vas voir, quand tu fais face aux obstacles réels — n'oublie pas que tu vis dans une réalité qui dépasse ton évaluation humaine. Les obstacles que tu vois sont réels. Mais ils ne sont pas toute la réalité.",
-    "source": "Rachi sur Nombres 13:2 · Likoutei Si'hot vol. 8, Chéla'h",
-    "sefaria": "https://www.sefaria.org/Numbers.13.2?lang=bi&with=Rashi&lang2=fr"
+    "rachi": "Rachi s'arrête sur vayashlekh midav et halouchot — il jeta de ses mains les Tables. Rachi justifie l'acte de Moïse : les Tables portaient la mention 'ne commets pas d'adultère'. Faire entrer des Tables qui interdisent l'idolâtrie dans un camp qui pratique l'idolâtrie serait comme apporter un acte de fiançailles à une femme déjà infidèle. Rachi note que D.ieu a félicité Moïse pour cet acte — yishar kokhakha shibarta — bien fait pour avoir brisé.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 21, Ki Tissa) pose deux questions. Première : si Moïse avait prévu de briser les Tables, pourquoi les avoir portées jusqu'en bas de la montagne — pourquoi ne pas les avoir brisées en haut ? Deuxième : les Tables venaient de D.ieu — comment Moïse pouvait-il se permettre de les briser, même pour une bonne raison ?",
+    "revelation": "Le Rabbi révèle que Moïse a porté les Tables jusqu'en bas précisément pour que le peuple les voie — et voie ce qu'il perdait. Ce n'était pas une punition visible — c'était un miroir. Moïse voulait qu'Israël comprenne, dans un choc visuel inoubliable, la gravité de ce qu'il venait de faire. Et D.ieu a approuvé parce que l'acte de Moïse venait d'un amour profond pour le peuple — pas de la colère aveugle. Briser les Tables pour sauver Israël d'une culpabilité insurmontable — car posséder les Tables tout en les ayant trahies aurait été une condamnation définitive. La brisure était un acte de miséricorde. Le Rabbi ajoute : le 17 Tamouz n'est pas un jour de désespoir — c'est un jour d'appel. D.ieu a pardonné la faute du veau d'or. Yom Kippour, quarante jours plus tard, a apporté les deuxièmes Tables. La brisure précède toujours le renouvellement.",
+    "message": "Le 17 Tamouz marque le début d'un chemin vers Yom Kippour. Les Tables ont été brisées — et elles ont été données à nouveau. Dans ta vie, il y a des ruptures qui semblent définitives. Elles ne le sont pas. La même miséricorde qui a accordé de nouvelles Tables à Israël est disponible pour toi aujourd'hui.",
+    "source": "Rachi sur Exode 32:19 · Likoutei Si'hot vol. 21, Ki Tissa",
+    "sefaria": "https://www.sefaria.org/Exodus.32.19?lang=bi&with=Rashi&lang2=fr"
   },
   "shelah-1": {
     "titre": "CHÉLA'H — Lundi",
@@ -5284,21 +5565,24 @@ var COURS_DATA = {
     "sefaria": "https://www.sefaria.org/Numbers.18.20?lang=bi&with=Rashi&lang2=fr"
   },
   "choukat-0": {
-    "titre": "CHOUKAT — Dimanche",
-    "sous_titre": "Nombres 19:1-2 — La vache rousse, loi incompréhensible",
-    "accroche": "Pourquoi la loi qui purifie rend-elle impur celui qui la pratique ?",
-    "intro": "La vache rousse — parah adoumah — est la mitsva que Salomon lui-même, le plus sage de tous les hommes, disait ne pas comprendre. Une vache rousse est brûlée. Ses cendres, mélangées à de l'eau, purifient celui qui a été contaminé par un mort. Mais paradoxe absolu — ceux qui préparent l'eau de purification deviennent eux-mêmes impurs. La même eau purifie l'un et souille l'autre. Rachi s'arrête sur ce paradoxe — et le Rabbi va révéler pourquoi cette loi incompréhensible est au cœur de la Torah.",
+    "titre": "💔 Ticha BeAv — Dimanche",
+    "sous_titre": "Tisha beAv — Jour de deuil national",
+    "accroche": "Pourquoi pleurer une maison détruite il y a 2000 ans ?",
+    "fete": false,
+    "chome": false,
+    "jeune": true,
+    "intro": "Ticha BeAv — le neuvième jour du mois d'Av — est le jour le plus solennel du calendrier juif après Yom Kippour. Les deux Temples ont été détruits ce même jour. Cinq grandes catastrophes de l'histoire juive ont eu lieu le 9 Av. C'est le jour du Grand Deuil. Et pourtant — le Talmud dit que le Machia'h naît le 9 Av. La destruction et la délivrance portent la même date.",
     "verset": {
-      "heb": "זֹאת חֻקַּת הַתּוֹרָה אֲשֶׁר צִוָּה ה'",
-      "fr": "Voici la loi de la Torah que D.ieu a commandée.",
-      "ref": "Nombres 19:2"
+      "heb": "אֵיכָה יָשְׁבָה בָדָד הָעִיר",
+      "fr": "Comment la ville qui était si peuplée est-elle restée solitaire !",
+      "ref": "Lamentations 1:1 — Eikha"
     },
-    "rachi": "Rachi s'arrête sur zot choukat haTorah — voici la loi de la Torah — et note que la Torah dit la loi de la Torah, pas simplement la loi de la vache rousse. Rachi explique : parce que c'est une chok — une loi incompréhensible, dont la raison est cachée. Et c'est précisément parce qu'elle est incompréhensible que la Torah l'introduit avec une formulation si solennelle. Rachi cite que le Satan et les nations interrogeront Israël sur cette loi — parce qu'elle semble absurde. Et la réponse est : c'est un décret du Roi, on ne questionne pas.",
-    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 18, Choukat) pose deux questions. Première : si cette loi est incompréhensible, pourquoi la Torah en parle-t-elle du tout avec une telle emphase ? Elle aurait pu simplement la donner sans en souligner l'incompréhensibilité. Deuxième : comment la même eau peut-elle à la fois purifier et souiller ?",
-    "revelation": "Le Rabbi révèle que Rachi souligne intentionnellement l'incompréhensibilité de la vache rousse pour enseigner quelque chose d'essentiel sur la nature de la Torah dans son ensemble. La Torah contient des lois que la raison humaine peut comprendre — les mishpatim — et des lois qu'elle ne peut pas comprendre — les choukim. Les mishpatim renforcent notre rapport à la Torah parce qu'ils confirment notre intelligence. Les choukim renforcent notre rapport à la Torah d'une façon plus profonde : ils nous demandent de faire confiance à D.ieu au-delà de notre compréhension. Et le paradoxe de la purification-souillure ? Le Rabbi révèle que la même réalité peut avoir des effets opposés selon la perspective et la relation. Pour celui qui est impur, l'eau est purifiante. Pour celui qui prépare l'eau — qui manipule les cendres de la mort — elle est souilleuse. Cette dualité est réelle et résiste à toute explication rationnelle simple. Elle est là pour nous apprendre que certaines réalités transcendent notre logique binaire.",
-    "message": "Il y a dans ta vie des réalités qui résistent à l'explication. Des épreuves qui semblent incompréhensibles, des lois de l'existence qui paraissent injustes. La Torah ne te demande pas de cesser de questionner. Elle te demande de continuer à avancer même quand tu ne comprends pas. Zot choukat haTorah — parfois, c'est simplement la loi. Et cette acceptation elle-même est un acte de foi profond.",
-    "source": "Rachi sur Nombres 19:2 · Likoutei Si'hot vol. 18, Choukat",
-    "sefaria": "https://www.sefaria.org/Numbers.19.2?lang=bi&with=Rashi&lang2=fr"
+    "rachi": "Rachi s'arrête sur eikha — comment — et explique que ce mot exprime à la fois la lamentation et l'étonnement. Comment est-ce possible ? Comment une ville aussi grande, aussi sainte, aussi protégée par D.ieu a-t-elle pu être détruite ? Rachi note que le même mot eikha apparaît dans la Torah quand Moïse dit : eikha essa levadi — comment porterai-je seul la charge de ce peuple ? Et dans les prophètes quand Isaïe dit : eikha hayta lizona — comment est-elle devenue une prostituée ? Le même mot porte la même douleur à travers toute l'histoire.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 23, Devarim-Ticha BeAv) pose deux questions. Première : pourquoi lire Eikha la nuit de Ticha BeAv — le Livre des Lamentations — dans l'obscurité, en deuil ? N'est-ce pas aggraver la tristesse plutôt que d'apporter l'espoir ? Deuxième : le Talmud dit que celui qui pleure Jérusalem mérite de la voir dans sa joie. Pourquoi cette condition — pourquoi le deuil comme condition de la joie ?",
+    "revelation": "Le Rabbi révèle que la lecture d'Eikha n'est pas là pour déprimer — elle est là pour éveiller. La tristesse de Ticha BeAv est une tristesse active, pas passive. Elle demande : qu'est-ce qui manque dans ma vie qui correspond à ce qui manque dans le monde ? Qu'est-ce que la destruction du Temple signifie concrètement pour moi aujourd'hui ? Le Temple représentait la présence divine manifeste dans le monde — la réalité que D.ieu est ici, visible, accessible. Sans le Temple, cette présence est cachée. Et Ticha BeAv dit : sens ce manque. Ne t'y habitue pas. Et c'est pourquoi celui qui pleure Jérusalem mérite de la voir dans sa joie. Pas parce que le deuil est une condition rituelle — mais parce que celui qui ressent vraiment l'absence est celui qui reconnaîtra vraiment la présence quand elle reviendra. Et le Machia'h naît le 9 Av parce que la délivrance germe dans le lieu le plus sombre.",
+    "message": "Eikha — comment ? Cette question posée sur Jérusalem peut être posée sur ta propre vie spirituelle. Comment suis-je devenu si éloigné ? Comment ai-je laissé le Temple intérieur se dégrader ? Ticha BeAv n'est pas un appel au désespoir. C'est un appel au réveil. Et dans ce réveil, la délivrance est déjà en germe.",
+    "source": "Rachi sur Lamentations 1:1 · Likoutei Si'hot vol. 23, Devarim-Ticha BeAv",
+    "sefaria": "https://www.sefaria.org/Lamentations.1.1?lang=bi&with=Rashi&lang2=fr"
   },
   "choukat-1": {
     "titre": "CHOUKAT — Lundi",
@@ -6389,23 +6673,122 @@ var COURS_DATA = {
     "sefaria": "https://www.sefaria.org/Deuteronomy.31.19?lang=bi&with=Rashi&lang2=fr"
   },
   "nitsavim-5": {
-    "titre": "NITSAVIM-VAYELECH — Vendredi",
-    "sous_titre": "Deutéronome 32:1-4 — Le chant de Haazinou — introduction",
-    "accroche": "Pourquoi Moïse appelle-t-Il les cieux et la terre comme témoins ?",
-    "intro": "Ha'azinou hashamayim vaadabera — prêtez l'oreille, cieux, et je parlerai. Vetishma ha'aretz imrei fi — et que la terre entende les paroles de ma bouche. Moïse commence son chant final en appelant les cieux et la terre comme témoins. Pourquoi appeler ces témoins inanimés pour un discours destiné au peuple ? Rachi s'arrête sur cette ouverture extraordinaire.",
+    "titre": "🎊 Erev Roch Hachana — Vendredi",
+    "sous_titre": "Veille du Nouvel An hébraïque 5787",
+    "accroche": "Ce soir, toute la création passe en jugement.",
+    "fete": true,
+    "chome": false,
+    "erev": true,
+    "intro": "Ce soir commence Roch Hachana — le Nouvel An juif, le jour du jugement de toute la création. D.ieu ouvre les livres. Chaque âme passe devant Lui. Et pourtant — on vient en fête, habillé en blanc, avec des tables garnies. Parce qu'on sait que la miséricorde divine est plus grande que le jugement.",
     "verset": {
-      "heb": "הַאֲזִינוּ הַשָּׁמַיִם וַאֲדַבֵּרָה",
-      "fr": "Prêtez l'oreille, cieux, et je parlerai.",
-      "ref": "Deutéronome 32:1"
+      "heb": "תִּקְעוּ בַחֹדֶשׁ שׁוֹפָר בַּכֵּסֶה לְיוֹם חַגֵּנוּ",
+      "fr": "Sonnez le shofar au début du mois, à la pleine lune, pour notre jour de fête.",
+      "ref": "Psaumes 81:4"
     },
-    "rachi": "Rachi s'arrête sur ha'azinou hashamayim — prêtez l'oreille, cieux — et explique que Moïse appelle les cieux et la terre comme témoins de l'alliance entre D.ieu et Israël. Pourquoi eux ? Parce qu'ils existent pour l'éternité — ils verront tout ce qui arrivera à Israël à travers les générations. Les témoins humains meurent — les cieux et la terre durent. Et Rachi note que Moïse dit ha'azinou — prêtez l'oreille — aux cieux (plus proches de lui) et vetishma — qu'elle entende — à la terre (plus éloignée).",
-    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 9, Haazinou) demande : pourquoi Moïse a-t-il besoin de témoins pour son chant ? Et que révèle la différence de formulation entre ha'azinou pour les cieux et vetishma pour la terre ?",
-    "revelation": "Le Rabbi révèle que Rachi souligne ici quelque chose d'essentiel sur la dimension cosmique du chant de Moïse. Ce n'est pas simplement un discours d'adieu. C'est une déclaration qui engage l'histoire entière d'Israël — ses hauts et ses bas, ses fidélités et ses trahisons, ses récompenses et ses punitions. Et pour une telle déclaration, il faut des témoins qui dureront autant que l'histoire elle-même. Les cieux et la terre seront là pour voir si la prophétie de Moïse se réalise. Et la différence de formulation — ha'azinou (prêtez l'oreille, être attentif) pour les cieux versus vetishma (entend) pour la terre — dit quelque chose sur la relation de Moïse à ces deux témoins. Les cieux, proches de lui spirituellement, il les appelle à être attentifs. La terre, le domaine humain physique, il lui demande simplement d'entendre.",
-    "message": "Ha'azinou — prêtez l'oreille. Il y a des paroles dans ta vie qui méritent d'être entendues avec plus qu'une oreille distraite. Les cieux et la terre étaient témoins de chaque engagement pris dans cette paracha. Quand tu prends un engagement important — sache que l'univers entier est témoin.",
-    "source": "Rachi sur Deutéronome 32:1 · Likoutei Si'hot vol. 9, Haazinou",
-    "sefaria": "https://www.sefaria.org/Deuteronomy.32.1?lang=bi&with=Rashi&lang2=fr"
+    "rachi": "Rachi s'arrête sur bakese — à la pleine lune — qui est inhabituellement associé à Roch Hachana, qui tombe au début du mois (nouvelle lune). Rachi explique : bakese ne signifie pas pleine lune ici — il signifie le jour où la lune est couverte, cachée. Roch Hachana est le seul jour de fête où la lune n'est pas visible. Et c'est précisément ce cachement qui symbolise le jugement : en ce jour, le résultat est incertain, caché, en suspens.",
+    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 2, Nitsavim-Roch Hachana) demande : pourquoi Roch Hachana tombe-t-il précisément le premier jour du septième mois — et non le premier jour de l'année civile hébraïque (Nissan) ? Et pourquoi le shofar, dont le son est brisé et gémissant, est-il l'instrument central d'un jour de fête ?",
+    "revelation": "Le Rabbi révèle que Roch Hachana au 1er Tichri marque le jour de la création de l'Adam — le premier être humain. Ce n'est pas le Nouvel An de la nature ou du calendrier — c'est le Nouvel An de l'humanité, de la conscience, de la responsabilité morale. Et le shofar — avec son son brisé — n'est pas un son de tristesse. C'est le son de l'âme qui se réveille. Tekia : une tenue longue et ferme — je suis là, entier. Chevarim : trois sanglots — je reconnais mes ruptures. Terou'ah : neuf gémissements rapides — je frappe à Ta porte. Et tekia finale : je suis prêt à recommencer. Le shofar est la Torah sans mots — la prière de l'âme qui dépasse le langage.",
+    "message": "Ce soir commence une nouvelle année. Pas un simple renouvellement du calendrier — une nouvelle chance d'être qui tu es vraiment. Tekia — sonne. Laisse ton âme parler au-delà des mots. Et sache que D.ieu attend ce son précis — le son de ton âme — plus que toute autre chose ce soir.",
+    "source": "Rachi sur Psaumes 81:4 · Likoutei Si'hot vol. 2, Nitsavim-Roch Hachana",
+    "sefaria": "https://www.sefaria.org/Psalms.81.4?lang=bi&with=Rashi&lang2=fr"
+  },
+  "roch-hachana-1": {
+    "titre": "🎊 Roch Hachana — 1er jour",
+    "sous_titre": "1er Tichri 5787 — Jour chômé",
+    "accroche": "Le Roi est dans les champs — Il attend.",
+    "fete": true,
+    "chome": true,
+    "fete_nom": "Roch Hachana",
+    "fete_icone": "🎺",
+    "fete_heb": "רֹאשׁ הַשָּׁנָה",
+    "fete_msg": "Aujourd'hui est le premier jour de Roch Hachana — Nouvel An hébraïque 5787 — jour chômé comme Chabbat. À la synagogue, le shofar résonne 100 fois. Les livres sont ouverts. Que tu sois inscrit et scellé pour une bonne année ! שָׁנָה טוֹבָה וּמְתוּקָה",
+    "fete_fin": "ce soir après la Havdala du 2ème jour",
+    "intro": "",
+    "verset": {
+      "heb": "",
+      "fr": "",
+      "ref": ""
+    },
+    "rachi": "",
+    "questions": "",
+    "revelation": "",
+    "message": "",
+    "source": "",
+    "sefaria": ""
+  },
+  "roch-hachana-2": {
+    "titre": "🎊 Roch Hachana — 2ème jour",
+    "sous_titre": "2 Tichri 5787 — Jour chômé",
+    "accroche": "Chaque son de shofar porte ton nom.",
+    "fete": true,
+    "chome": true,
+    "fete_nom": "Roch Hachana",
+    "fete_icone": "🎺",
+    "fete_heb": "רֹאשׁ הַשָּׁנָה",
+    "fete_msg": "Aujourd'hui est le deuxième jour de Roch Hachana — jour chômé. Le shofar sonne à nouveau. Les portes du jugement et de la miséricorde sont encore ouvertes. Yom Kippour commence dans 9 jours — les Yamim Nora'im, les Jours Redoutables, sont en cours. שָׁנָה טוֹבָה",
+    "fete_fin": "ce soir après la Havdala",
+    "intro": "",
+    "verset": {
+      "heb": "",
+      "fr": "",
+      "ref": ""
+    },
+    "rachi": "",
+    "questions": "",
+    "revelation": "",
+    "message": "",
+    "source": "",
+    "sefaria": ""
+  },
+  "haazinou-0": {
+    "titre": "⚪ Yom Kippour — Dimanche",
+    "sous_titre": "10 Tichri 5787 — Le Grand Pardon",
+    "accroche": "Aujourd'hui tu es pur. Aujourd'hui tu es neuf.",
+    "fete": true,
+    "chome": true,
+    "fete_nom": "Yom Kippour",
+    "fete_icone": "⚪",
+    "fete_heb": "יוֹם כִּפּוּר",
+    "fete_msg": "Aujourd'hui est Yom Kippour — le Jour du Grand Pardon. Jour chômé, jour de jeûne complet. En ce jour, D.ieu a dit à Moïse : Salachti kidvarekha — J'ai pardonné comme tu l'as demandé. Ces mots résonnent pour toi aujourd'hui. L'app se repose. Gmar 'Hatima Tova — que tu sois scellé pour le bien. גְּמַר חֲתִימָה טוֹבָה",
+    "fete_fin": "ce soir après le son du shofar final",
+    "intro": "",
+    "verset": {
+      "heb": "",
+      "fr": "",
+      "ref": ""
+    },
+    "rachi": "",
+    "questions": "",
+    "revelation": "",
+    "message": "",
+    "source": "",
+    "sefaria": ""
+  },
+  "haazinou-5": {
+    "titre": "🌿 Souccot — Vendredi",
+    "sous_titre": "15 Tichri 5787 — Premier jour de Souccot",
+    "accroche": "Quitte ta maison permanente pour ta maison éternelle.",
+    "fete": true,
+    "chome": true,
+    "fete_nom": "Souccot",
+    "fete_icone": "🌿",
+    "fete_heb": "סֻכּוֹת",
+    "fete_msg": "Aujourd'hui est le premier jour de Souccot — la Fête des Cabanes — jour chômé. On quitte sa maison permanente pour vivre dans une souca fragile pendant sept jours. Parce que la vraie sécurité n'est pas dans les murs — elle est dans la relation avec D.ieu. Chag Sameach ! חַג שָׂמֵחַ",
+    "fete_fin": "samedi soir après la Havdala",
+    "intro": "",
+    "verset": {
+      "heb": "",
+      "fr": "",
+      "ref": ""
+    },
+    "rachi": "",
+    "questions": "",
+    "revelation": "",
+    "message": "",
+    "source": "",
+    "sefaria": ""
   }
-};
+};;
 
 // Détecter la paracha courante et le jour
 function getCoursKey(paracha, day){
@@ -6446,6 +6829,84 @@ function getCoursKey(paracha, day){
   return null;
 }
 
+// ══════════════════════════════════════════════════════════════
+// HISTOIRES JUIVES
+// ══════════════════════════════════════════════════════════════
+
+function openHistoires(){
+  if(!requireLogin()) return;
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoire-detail'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  document.getElementById('view-histoires').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  var qab=document.getElementById('quick-access-bar'); if(qab) qab.style.display='none';
+  window.scrollTo(0,0);
+  renderHistoires();
+}
+
+function renderHistoires(){
+  var h='<div class="hist-header">'
+    +'<div class="hist-header-title">📖 Histoires Juives</div>'
+    +'<div class="hist-header-sub">Des récits vrais · Des sources authentiques</div>'
+    +'</div>';
+
+  // Grouper par catégorie
+  var cats = {};
+  HISTOIRES_DATA.forEach(function(s){
+    if(!cats[s.categorie]) cats[s.categorie]=[];
+    cats[s.categorie].push(s);
+  });
+
+  Object.keys(cats).forEach(function(cat){
+    h += '<div class="hist-cat-label">'+cat+'</div>';
+    cats[cat].forEach(function(s){
+      h += '<div class="hist-card" onclick="openHistoireDetail(''+s.id+'')">'        +'<div class="hist-card-body">'        +'<div class="hist-card-cat">'+s.categorie+'</div>'        +'<div class="hist-card-title">'+s.titre+'</div>'        +'<div class="hist-card-sub">'+s.sous_titre+'</div>'        +'<div class="hist-card-footer">'        +'<span class="hist-card-epoque">'+s.epoque+'</span>'        +'<span class="hist-card-duree">⏱ '+s.duree+'</span>'        +'</div></div></div>';
+    });
+  });
+
+  document.getElementById('view-histoires').innerHTML=h;
+}
+
+function openHistoireDetail(id){
+  var s = HISTOIRES_DATA.find(function(x){return x.id===id;});
+  if(!s) return;
+  ['view-histoires'].forEach(function(vid){
+    var el=document.getElementById(vid); if(el) el.style.display='none';
+  });
+  document.getElementById('view-histoire-detail').style.display='block';
+  window.scrollTo(0,0);
+
+  // Swipe retour vers liste
+  var _sx=0;
+  document.ontouchstart=function(e){_sx=e.touches[0].clientX;};
+  document.ontouchend=function(e){
+    if(e.changedTouches[0].clientX-_sx>80){
+      document.getElementById('view-histoire-detail').style.display='none';
+      document.getElementById('view-histoires').style.display='block';
+      window.scrollTo(0,0);
+    }
+  };
+
+  // Tags
+  var tags = (s.tags||[]).map(function(t){return '<span class="hd-meta-tag">'+t+'</span>';}).join('');
+
+  var h='<div style="padding:16px;">'
+    +'<div class="hd-cat">'+s.categorie+'</div>'
+    +'<div class="hd-title">'+s.titre+'</div>'
+    +'<div class="hd-sub">'+s.sous_titre+'</div>'
+    +'<div class="hd-meta">'+tags+'<span class="hd-meta-tag">⏱ '+s.duree+'</span><span class="hd-meta-tag">📅 '+s.epoque+'</span></div>'
+    +'<div class="hd-source-badge">📚 '+s.source_ref+'</div>'
+    +'<div class="hd-body">'+s.histoire+'</div>'
+    +'<div class="hd-lecon"><div class="hd-lecon-label">💎 Ce que ça nous apprend</div><div class="hd-lecon-text">'+s.lecon+'</div></div>'
+    +'<div class="hd-source-detail">🔎 Source exacte : '+s.detail_source+'<br><a href="'+s.source_url+'" target="_blank" style="color:var(--purple);font-weight:600;">Lire la source originale ↗</a></div>'
+    +'</div>';
+
+  document.getElementById('view-histoire-detail').innerHTML=h;
+
+  if(typeof recordActivity==='function') recordActivity('histoire',5);
+}
+
 function refreshCoursCard(){
   var card = buildCoursCard();
   console.log('[Cours] refreshCoursCard card='+(card?'OK':'VIDE')+' container='+(document.getElementById('cours-card-container')?'EXISTS':'MISSING'));
@@ -6465,46 +6926,84 @@ function buildCoursCard(){
   var courseDay = (jsDay===6) ? -1 : jsDay;
   if(courseDay < 0) return '';
 
-  // Déterminer la paracha par le calendrier hardcodé
   var parashaName = currentParashaName || getParashaFromCalendar() || '';
   var key = getCoursKey(parashaName, courseDay);
   console.log('[COURS] paracha='+parashaName+' day='+courseDay+' key='+key);
 
-  // Fallback par plages de dates si getCoursKey échoue
+  // Fallback par plages de dates
+  var m = now.getMonth(); var d = now.getDate();
+  var prefix = null;
+  if(m===4 && d>=3  && d<=9)  prefix='behar';
+  else if(m===4 && d>=10 && d<=16) prefix='bamidbar';
+  else if(m===4 && d>=17 && d<=23) prefix='nasso';
+  else if(m===4 && d>=24 || (m===5 && d<=6)) prefix='behalotecha';
+  else if(m===5 && d>=7  && d<=13) prefix='shelah';
+  else if(m===5 && d>=14 && d<=20) prefix='korah';
+  else if(m===5 && d>=21 && d<=27) prefix='choukat';
+  else if(m===5 && d>=28 || (m===6 && d<=4)) prefix='balak';
+  else if(m===6 && d>=5  && d<=11) prefix='pinhas';
+  else if(m===6 && d>=12 && d<=18) prefix='matot';
+  else if(m===6 && d>=19 && d<=25) prefix='devarim';
+  else if(m===6 && d>=26 || (m===7 && d<=1)) prefix='vaethanan';
+  else if(m===7 && d>=2  && d<=8)  prefix='ekev';
+  else if(m===7 && d>=9  && d<=15) prefix='reeh';
+  else if(m===7 && d>=16 && d<=22) prefix='choftim';
+  else if(m===7 && d>=23 && d<=29) prefix='kitavo';
+  else if(m===7 && d>=30 || (m===8 && d<=5)) prefix='nitsavim';
+
   if(!key || !COURS_DATA[key]){
-    var m = now.getMonth(); // 0-indexé
-    var d = now.getDate();
-    var prefix = null;
-    if(m===4 && d>=3  && d<=9)  prefix='behar';
-    if(m===4 && d>=10 && d<=16) prefix='bamidbar';
-    if(m===4 && d>=17 && d<=23) prefix='nasso';
-    if(m===4 && d>=24 || (m===5 && d<=6)) prefix='behalotecha';
-    if(m===5 && d>=7  && d<=13) prefix='shelah';
-    if(m===5 && d>=14 && d<=20) prefix='korah';
-    if(m===5 && d>=21 && d<=27) prefix='choukat';
-    if(m===5 && d>=28 || (m===6 && d<=4)) prefix='balak';
-    if(m===6 && d>=5  && d<=11) prefix='pinhas';
-    if(m===6 && d>=12 && d<=18) prefix='matot';
-    if(m===6 && d>=19 && d<=25) prefix='devarim';
-    if(m===6 && d>=26 || (m===7 && d<=1)) prefix='vaethanan';
-    if(m===7 && d>=2  && d<=8)  prefix='ekev';
-    if(m===7 && d>=9  && d<=15) prefix='reeh';
-    if(m===7 && d>=16 && d<=22) prefix='choftim';
-    if(m===7 && d>=23 && d<=29) prefix='kitavo';
-    if(m===7 && d>=30 || (m===8 && d<=5)) prefix='nitsavim';
     if(prefix) key = prefix+'-'+courseDay;
-    console.log('[COURS] fallback prefix='+prefix+' key='+key);
+    if(!key || !COURS_DATA[key]) return '';
+  }
+  if(!prefix){
+    // extraire prefix depuis key
+    prefix = key.split('-')[0];
+    if(key.split('-').length > 2) prefix = key.split('-').slice(0,-1).join('-');
+    // retrouver prefix correct
+    var dayNames2=['dimanche','lundi','mardi','mercredi','jeudi','vendredi'];
+    for(var ii=0;ii<=5;ii++){
+      if(COURS_DATA[key.split('-').slice(0,-1).join('-')+'-'+ii]) {
+        prefix = key.split('-').slice(0,-1).join('-'); break;
+      }
+    }
   }
 
-  if(!key || !COURS_DATA[key]) return '';
   var c = COURS_DATA[key];
-  var html = '<div class="cours-card" onclick="openCours(\'' + key + '\')">';
+  var dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven'];
+
+  // Construire la liste des jours de la semaine
+  var listItems = '';
+  for(var i=0; i<=5; i++){
+    var k2 = prefix+'-'+i;
+    if(!COURS_DATA[k2]) continue;
+    var isToday = (i === courseDay);
+    var isPast  = (i < courseDay);
+    var bg = isToday ? 'background:rgba(124,58,237,0.08);' : '';
+    var txtColor = isToday ? 'color:var(--purple);font-weight:700;' : isPast ? 'color:var(--dark);' : 'color:#aaa;';
+    var dot = isToday ? '▶' : isPast ? '✓' : '·';
+    var dotColor = isToday ? 'color:var(--purple)' : isPast ? 'color:#10BB81' : 'color:#ccc';
+    var clickable = !isToday && !isPast ? '' : 'onclick="openCours(\'' + k2 + '\')"';
+    var cursor = (!isToday && !isPast) ? 'cursor:default;' : 'cursor:pointer;';
+    listItems += '<div ' + clickable + ' style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-top:1px solid rgba(0,0,0,0.05);'+bg+cursor+'">'
+      + '<span style="font-size:11px;'+dotColor+'">'+dot+'</span>'
+      + '<span style="font-size:13px;'+txtColor+'font-family:Poppins,sans-serif;">'+dayNames[i]+'</span>'
+      + '<span style="font-size:12px;color:#999;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+COURS_DATA[k2].accroche+'</span>'
+      + '</div>';
+  }
+
+  var html = '<div class="cours-card" onclick="openCours(''+key+'')">';
   html += '<div class="cours-card-label">📜 Cours du jour · Torah · Rachi · Rabbi</div>';
   html += '<div class="cours-card-titre">' + c.titre + '</div>';
   html += '<div class="cours-card-sous-titre">' + c.sous_titre + '</div>';
   html += '<div class="cours-card-accroche">' + c.accroche + '</div>';
   html += '<div class="cours-card-btn">Lire le cours →</div>';
   html += '</div>';
+  // Liste des jours sous la carte (stopPropagation pour éviter d'ouvrir le cours du jour)
+  if(listItems){
+    html += '<div style="background:#fff;border-radius:0 0 var(--radius) var(--radius);margin-top:-4px;padding-bottom:4px;box-shadow:var(--shadow-sm);" onclick="event.stopPropagation()">';
+    html += listItems;
+    html += '</div>';
+  }
   return html;
 }
 function openCours(key){
@@ -6525,12 +7024,13 @@ function openCours(key){
   if(!view) return;
   view.style.display = 'block';
   window.scrollTo(0,0);
-  // Swipe droite pour retour
-  var touchStartX = 0;
-  view.ontouchstart = function(e){ touchStartX = e.touches[0].clientX; };
-  view.ontouchend = function(e){
-    var dx = e.changedTouches[0].clientX - touchStartX;
-    if(dx > 80) goHome();
+  // Swipe droite pour retour (sur tout l'écran)
+  var _swipeStartX = 0;
+  document.ontouchstart = function(e){ _swipeStartX = e.touches[0].clientX; };
+  document.ontouchend = function(e){
+    var dx = e.changedTouches[0].clientX - _swipeStartX;
+    var viewC = document.getElementById('view-cours');
+    if(dx > 80 && viewC && viewC.style.display !== 'none') goHome();
   };
 
   view.innerHTML = '<div class="cours-view">'
