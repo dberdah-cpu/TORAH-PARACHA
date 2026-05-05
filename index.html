@@ -466,6 +466,8 @@ body{
 .story-ring{width:56px;height:56px;border-radius:50%;padding:2.5px;background:var(--grad-main);position:relative}
 .story-ring.shabbat{background:linear-gradient(45deg,var(--orange),#FCD34D)}
 .story-ring.fete{background:linear-gradient(45deg,var(--purple),var(--pink))}
+.story-ring.histoires{background:linear-gradient(135deg,#7c3aed,#ec4899);}
+.story-ring.histoires .story-inner{background:linear-gradient(135deg,#8b5cf6,#f472b6);}
 .story-ring.recueil{background:linear-gradient(45deg,var(--pink),var(--orange))}
 .story-inner{width:100%;height:100%;border-radius:50%;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:22px}
 .home-hero .story-inner{background:rgba(15,23,42,0.85)}
@@ -2500,8 +2502,8 @@ function buildStoryBar(){
   // Hayom Yom
   items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
   // Sefer
+  items.push({icon:'📖',label:'Histoires',ring:'histoires',fn:'openHistoires()'});
   items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
-  items.push({icon:'📖',label:'Histoires',ring:'',fn:'openHistoires()'});
   // Recueil
   items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
   // Calendrier
