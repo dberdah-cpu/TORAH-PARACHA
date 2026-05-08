@@ -297,6 +297,38 @@
 .hd-lecon-label{font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-family:Poppins,sans-serif;}
 .hd-lecon-text{font-size:14px;line-height:1.7;color:var(--dark);font-family:Poppins,sans-serif;}
 .hd-source-detail{font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.6;padding:12px;background:var(--gray-1);border-radius:var(--radius-sm);}
+/* ── LECTEUR AUDIO + TAILLE TEXTE ──────────────────────── */
+.reader-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;background:#fff;
+  border-radius:var(--radius-sm);box-shadow:var(--shadow-sm);
+  margin:0 0 16px;flex-wrap:wrap;
+}
+.reader-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--purple);color:#fff;border:none;
+  border-radius:20px;padding:8px 16px;
+  font-size:13px;font-family:Poppins,sans-serif;font-weight:600;
+  cursor:pointer;transition:opacity .2s;flex-shrink:0;
+}
+.reader-btn:active{opacity:.8;}
+.reader-btn.paused{background:var(--gray-3);color:var(--dark);}
+.reader-size{display:flex;align-items:center;gap:8px;flex:1;min-width:160px;}
+.reader-size-label{font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;white-space:nowrap;}
+.reader-size input[type=range]{
+  flex:1;accent-color:var(--purple);height:4px;cursor:pointer;
+}
+.vid-header{padding:20px 16px 8px;}
+.vid-header-title{font-size:20px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;}
+.vid-header-sub{font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:3px;}
+.vid-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px 12px;overflow:hidden;}
+.vid-player{width:100%;max-height:240px;background:#000;display:block;}
+.vid-info{padding:10px 14px;}
+.vid-title{font-size:14px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;}
+.vid-meta{font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:3px;}
+.vid-empty{text-align:center;padding:40px 20px;color:var(--gray-4);font-family:Poppins,sans-serif;}
+.story-ring.videos{background:linear-gradient(135deg,#ef4444,#f97316);}
+.story-ring.videos .story-inner{background:linear-gradient(135deg,#f87171,#fb923c);}
 .cv-week-nav{
   display:flex;gap:6px;flex-wrap:wrap;
   margin:0 0 16px;padding:12px 16px;
@@ -1248,6 +1280,7 @@ body{
 <div id="view-cours" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-histoires" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-histoire-detail" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
+<div id="view-videos" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
 
 <!-- HAYOM YOM -->
 <!-- Barre de traduction fixe en bas -->
@@ -1971,11 +2004,11 @@ function getHomeBanners(){
   if(holidays.length === 0 && html.indexOf('fete-banner') < 0){
     var cit = getCitationDuJour();
     if(cit){
-      var auteur = cit.auteur ? '<span style="font-size:11px;opacity:.75;"> — '+cit.auteur+'</span>' : '';
-      var source = cit.source ? '<div class="fh">'+cit.source+'</div>' : '';
-      html += '<div class="fete-banner" style="cursor:default;">'
-        +'<div style="font-size:10px;font-weight:700;letter-spacing:1px;opacity:.7;margin-bottom:5px;font-family:Poppins,sans-serif;">✦ CONSEIL DU JOUR</div>'
-        +'<div class="fn" style="font-size:14px;line-height:1.55;font-weight:500;">'+cit.texte+auteur+'</div>'
+      var auteur = cit.auteur ? '<span style="font-size:11px;color:rgba(255,255,255,0.7);"> — '+cit.auteur+'</span>' : '';
+      var source = cit.source ? '<div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:6px;font-family:Poppins,sans-serif;">'+cit.source+'</div>' : '';
+      html += '<div style="background:linear-gradient(135deg,var(--purple),var(--purple-2));border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px;padding:14px 16px;">'
+        +'<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.75);margin-bottom:6px;font-family:Poppins,sans-serif;">✦ CONSEIL DU JOUR</div>'
+        +'<div style="font-size:14px;line-height:1.65;font-weight:500;color:#fff;font-family:Poppins,sans-serif;">'+cit.texte+auteur+'</div>'
         +source
         +'</div>';
     }
@@ -2568,6 +2601,7 @@ function buildStoryBar(){
   items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
   // Sefer
   items.push({icon:'📖',label:'Histoires',ring:'histoires',fn:'openHistoires()'});
+  items.push({icon:'🎬',label:'Vidéos',ring:'videos',fn:'openVideos()'});
   items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
   // Recueil
   items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
@@ -2594,7 +2628,7 @@ function buildHome(){
   var ht=g2h(gd,gm,gy);
   var v=getVerset(ht)||VERSETS[0];
 
-  var h=getHomeBanners();
+  var h='';
 
   var dateHebHeb=hebDateHeb||'...';
   var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
@@ -2625,6 +2659,9 @@ function buildHome(){
   }
   h+='</div>';
 
+  // ── BANNIÈRE CONSEIL / FÊTE ──
+  h+=getHomeBanners();
+
   // ── PARACHA — style prototype ──
   var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
   var parashaHebDisplay=currentParashaHeb||cur.heb;
@@ -2653,6 +2690,13 @@ function buildHome(){
   h += '<div id="cours-card-container">'+_cc+'</div>';
 
   // Carte Histoires Juives
+  h += '<div onclick="openVideos()" style="margin:0 16px 12px;background:linear-gradient(135deg,#ef4444,#f97316);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">🎬</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Vidéos du Rabbi</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Archives JEM France</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
   h += '<div onclick="openHistoires()" style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
   h += '<span style="font-size:28px;">📖</span>';
   h += '<div style="flex:1;">';
@@ -2729,6 +2773,8 @@ function togglePS(){
 }
 
 function goHome(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  _readerPlaying = false;
   // Cacher toutes les vues
   ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -4391,6 +4437,66 @@ var HISTOIRES_DATA = [
     "histoire": "À Tanger, dans le Mellah, vivait la famille Hatchouel.\n\nLe père, Haïm, était marchand — homme intègre, connu et respecté. Sa fille Soulika était, dit-on, d'une beauté extraordinaire. Et d'une foi tout aussi extraordinaire.\n\nUn fils d'une riche famille musulmane voisine voulait l'épouser. Soulika refusa. Son père refusa. Ce n'était pas possible — une Juive ne se marie pas hors de sa foi.\n\nLa famille voisine ne l'accepta pas. Peu après, une voisine se présenta devant le gouverneur de Tanger et déclara que Soulika avait exprimé le désir de se convertir à l'Islam.\n\nC'était faux. Mais c'était suffisant.\n\nSoulika, 14 ans, fut arrêtée et amenée devant le gouverneur. Elle nia. Catégoriquement, calmement, sans trembler. Je suis née juive. Je mourrai juive. Je n'ai jamais dit vouloir me convertir.\n\nLe gouverneur ne la crut pas — ou fit semblant de ne pas la croire. Elle fut jetée en prison.\n\nPendant trois ans, elle resta emprisonnée à Fès. Sa punition : jeûner jusqu'à ce qu'elle cède. Le grand rabbin de Fès, Rabbi Serfaty, lui envoyait en secret de la nourriture.\n\nLes notables juifs de Fès plaidèrent sa cause. La communauté juive de Tanger supplia. Le corps diplomatique européen tenta d'intervenir. Sa propre famille lui dit : convertis-toi en apparence pour survivre — tu pourras continuer à être juive dans ton cœur.\n\nSoulika refusa. Elle dit : mon cœur et ma bouche ne se contrediront pas.\n\nOn la conduisit devant le sultan Moulay Abderrahman. Un homme puissant, entouré de ses conseillers, face à une adolescente emprisonnée depuis trois ans.\n\nIl lui offrit la vie, la liberté, la richesse. Il suffit de prononcer quelques mots.\n\nElle dit : je suis née juive et juive je dois mourir. Il n'y a pas de D.ieu comme le mien. Je ne changerai ni ma foi ni ma religion pour tout l'or du monde.\n\nLe sultan, touché malgré lui par son courage — selon certaines sources — aurait retardé la sentence plusieurs fois. Mais les Oulémas avaient rendu leur jugement : la peine de mort pour apostasie.\n\nLe 5 juin 1834, un jour de souk à Fès, Soulika fut amenée en place publique.\n\nLa tradition orale des communautés juives marocaines — transmise de génération en génération, de mère en fille — raconte ce qui se passa juste avant l'exécution.\n\nOn lui demanda quel était son dernier souhait.\n\nElle demanda une aiguille et du fil.\n\nOn lui apporta une aiguille et du fil.\n\nEt devant ses bourreaux, devant la foule, devant ceux qui allaient la tuer — elle cousit sa robe sur ses jambes, point par point, pour que sa pudeur soit préservée quand son corps serait traîné.\n\nElle fut décapitée en public. Elle avait 17 ans.\n\nLa communauté juive de Fès dut payer — et payer cher — pour récupérer son corps et sa tête, et l'enterrer selon la loi de Moïse. Le rabbin Rafael Encaoua jeta des pièces d'or en l'air. Pendant que la foule se baissait pour les ramasser, le corps fut emporté.\n\nElle fut enterrée au cimetière juif de Fès, aux côtés de Rabbi Yehouda Ben Attar et Rabbi Avner Hatsarfati — deux des plus grands sages du Maroc.\n\nSur sa pierre tombale en français, on peut lire :\n\nICI REPOSE Mlle SOLICA HATCHOUEL\nNÉE À TANGER EN 1817\nREFUSANT DE RENTRER DANS LA RELIGION ISLAMISME\nLES ARABES L'ONT ASSASSINÉE À FEZ EN 1834\nARRACHÉE DE SA FAMILLE\nTOUT LE MONDE REGRETTE CETTE ENFANT SAINTE\n\nQuelque chose d'inattendu se produisit après sa mort.\n\nLes Musulmans de Fès se mirent à vénérer sa tombe. Ils l'appelèrent Lalla Suleika — la Sainte Dame. Ils venaient prier sur sa tombe pour obtenir des guérisons, des protections. Sa tombe devint un lieu de pèlerinage pour les Juifs et les Musulmans ensemble.\n\nQuand son corps fut déplacé en 1884, ceux qui l'exhumèrent sentirent, dit-on, une odeur de fleurs.",
     "lecon": "Il existe des milliers de façons de résister. Soulika a choisi la sienne : pas une arme, pas un cri, pas une fuite. Une aiguille et du fil. Un geste de pudeur absolue face à la mort certaine. Ce geste — s'il est tel que la tradition le rapporte — dit tout : jusqu'à la dernière seconde, elle est restée elle-même. Ni la prison, ni le sultan, ni la mort n'avaient pu changer qui elle était. Sol ha-Tsadika — la Juste Sol. Que son mérite nous protège.",
     "detail_source": "Sources documentées : Malkhei Rabanan (hébreu) · Antonio Calle, 'El Martirio de la joven Hachuel o La heroína hebrea', Gibraltar 1852 · Léon Godard, 'Description et histoire du Maroc', 1860 · Rapport consulaire britannique, Edward William Auriol Drummond Hay, Tanger 1834 · Sharon Vance, 'The Martyrdom of a Moroccan Jewish Saint', Brill Academic Publishers, 2011 · Le détail de l'aiguille et de la robe est une tradition orale transmise dans les communautés juives marocaines — non confirmé par les sources écrites connues, mais préservé dans la mémoire collective de la communauté."
+  },
+  {
+    "id": "rabanit-anniversaire",
+    "categorie": "Le Rabbi",
+    "titre": "La Rabanit et l'anniversaire secret",
+    "sous_titre": "La femme qui vivait dans l'ombre pour que son mari rayonne",
+    "source_ref": "Témoignages directs · Yemei Bereshit, Mémoires de proches · JEM Archives",
+    "source_url": "https://www.jem.tv",
+    "epoque": "1901-1988 · Russie · Paris · Brooklyn",
+    "duree": "5 min",
+    "tags": [
+      "Rabanit",
+      "Haya Mouchka",
+      "Le Rabbi",
+      "discrétion",
+      "amour"
+    ],
+    "histoire": "La Rabanit Haya Mouchka Schneerson n'aimait pas qu'on parle d'elle.\n\nFille du précédent Rabbi — Rabbi Yossef Yts'hak Schneerson — elle avait grandi dans la royauté hassidique. Elle aurait pu vivre dans la lumière des projecteurs. Elle avait choisi l'ombre.\n\nQuand son mari devint Rabbi en 1951, la Rabanit fit une chose qui surprit tout le monde : elle disparut presque complètement de la vie publique. Pas d'apparitions officielles. Pas de discours. Pas d'audiences. Juste une présence silencieuse et absolue au côté de son mari.\n\nDes 'hassidim qui venaient à Brooklyn cherchaient à la rencontrer. Elle les recevait rarement — et brièvement.\n\nUn jour, une femme réussit à la joindre au téléphone et lui demanda : Rabanit, pourquoi ne vous voyons-nous jamais ? Pourquoi vous cachez-vous ?\n\nLa Rabanit répondit simplement : le Rabbi est la lumière. Je suis le foyer qui garde cette lumière allumée. On ne regarde pas le foyer — on regarde la lumière.\n\nSon anniversaire — le 25 Adar — n'était connu que d'un petit cercle. Elle n'en parlait jamais. Le Rabbi, lui, y attachait une grande importance. Chaque année, lors de ses farbrengens du 25 Adar, il parlait de la sainteté du jour — sans jamais nommer explicitement pourquoi ce jour était particulier. Ceux qui savaient comprenaient. Les autres cherchaient dans le calendrier hébraïque.\n\nUn an, quelqu'un demanda directement au Rabbi pourquoi il soulignait ce jour. Il dit avec un sourire : c'est le jour de naissance de quelqu'un de très important pour moi.",
+    "lecon": "La Rabanit Haya Mouchka représente une forme de grandeur que le monde moderne comprend mal : la grandeur de celle qui choisit de ne pas être vue. Elle aurait pu être une figure publique immense. Elle a choisi d'être la force silencieuse qui permettait à son mari d'être qui il était. Le Rabbi lui-même disait que tout ce qu'il accomplissait lui était redevable.",
+    "detail_source": "JEM — Jewish Educational Media, archives · Témoignages de proches · Discours du Rabbi du 25 Adar · Sichat du Rabbi après le décès de la Rabanit, 2 Nissan 5748"
+  },
+  {
+    "id": "rabanit-depart",
+    "categorie": "Le Rabbi",
+    "titre": "Le Rabbi et le départ de la Rabanit",
+    "sous_titre": "Le discours le plus douloureux du Rabbi",
+    "source_ref": "Sichat du Rabbi, 2 Nissan 5748 (18 mars 1988) · Torat Mena'hem 5748 · JEM Archives",
+    "source_url": "https://www.jem.tv",
+    "epoque": "22 février 1988 · Brooklyn · 770 Eastern Parkway",
+    "duree": "5 min",
+    "tags": [
+      "Rabanit",
+      "Haya Mouchka",
+      "deuil",
+      "Le Rabbi",
+      "amour"
+    ],
+    "histoire": "La Rabanit Haya Mouchka Schneerson mourut le 22 Shevat 5748 — le 22 février 1988.\n\nElle avait 86 ans. Elle était la fille du précédent Rabbi, l'épouse du Rabbi depuis 1928 — soixante ans de mariage.\n\nLe Rabbi avait 85 ans. Il était debout à 770 depuis l'aube, recevant des milliers de 'hassidim. Quand les médecins l'appelèrent, il se rendit à l'hôpital. Il resta à ses côtés jusqu'à la fin.\n\nDix jours après, le 2 Nissan, le Rabbi parla pour la première fois en public depuis le décès.\n\nCeux qui étaient présents disent que ce fut le discours le plus douloureux qu'ils aient jamais entendu du Rabbi.\n\nIl dit :\n\nPendant plus de soixante ans, nous avons vécu ensemble. Et elle ne vivait que pour moi — pour me permettre d'accomplir ma mission. Elle a renoncé à tout. Pas de voyages, pas de vacances, pas de vie sociale. Uniquement pour que je puisse servir le Maître du monde et son peuple.\n\nIl s'arrêta longuement.\n\nIl dit : je ne sais pas comment je vais continuer. Mais je dois continuer — parce que c'est ce qu'elle aurait voulu.\n\nPuis il dit quelque chose qui frappa tous ceux présents : La Rabanit disait toujours que je ne m'occupais pas assez d'elle — que le peuple juif prenait tout mon temps. Et elle avait raison. Et maintenant elle n'est plus là pour me le dire.\n\nSa voix se brisa.\n\nIl continua quand même à parler pendant des heures — de Torah, de la mission, de la Rédemption. Comme elle l'aurait voulu.",
+    "lecon": "Le Rabbi — l'homme qui avait consolé des milliers de personnes dans leur deuil, qui avait répondu à des centaines de milliers de lettres, qui avait guidé des générations entières — se retrouvait sans les mots. Ce moment d'humanité absolue n'a pas diminué sa grandeur. Il l'a rendue plus réelle, plus proche, plus humaine. Il a continué. Parce qu'elle l'aurait voulu.",
+    "detail_source": "Sichat du Rabbi, 2 Nissan 5748 (18 mars 1988) · Torat Mena'hem 5748 · Archives JEM · Témoignages de 'hassidim présents"
+  },
+  {
+    "id": "rabanit-telephone",
+    "categorie": "Le Rabbi",
+    "titre": "La Rabanit et l'appel de minuit",
+    "sous_titre": "Comment elle protégeait son mari sans qu'il le sache",
+    "source_ref": "Témoignages de secrétaires du Rabbi · JEM Archives · Recueil de témoignages sur la Rabanit",
+    "source_url": "https://www.jem.tv",
+    "epoque": "Années 1960-1980 · Brooklyn · 770 Eastern Parkway",
+    "duree": "4 min",
+    "tags": [
+      "Rabanit",
+      "Haya Mouchka",
+      "protection",
+      "famille",
+      "discrétion"
+    ],
+    "histoire": "Le Rabbi travaillait souvent jusqu'à deux, trois, quatre heures du matin.\n\nLes yechidout — les audiences privées — pouvaient durer jusqu'à l'aube. Des centaines de personnes attendaient. Le Rabbi ne refusait personne.\n\nLa Rabanit ne dormait pas non plus.\n\nUn des secrétaires du Rabbi raconte : certaines nuits, vers deux heures du matin, le téléphone sonnait dans le bureau. C'était la Rabanit. Elle ne disait rien d'urgent. Elle demandait : est-ce qu'il a mangé ? Est-ce qu'il a bu quelque chose ?\n\nParfois elle disait simplement : dis-lui que je l'attends.\n\nLe secrétaire transmettait. Le Rabbi s'arrêtait quelques minutes. Il mangeait quelque chose. Il buvait un verre d'eau. Et il continuait.\n\nUn autre témoignage : un soir, un 'hassid qui attendait depuis des heures vit sortir du bureau du Rabbi un plateau avec de la nourriture. Il demanda d'où ça venait. Le secrétaire dit : de la Rabanit. Elle l'a préparé elle-même et l'a envoyé.\n\nLe 'hassid dit : mais le Rabbi n'arrêtera pas de recevoir pour manger.\n\nLe secrétaire dit : non. Mais elle envoie quand même. Chaque soir.\n\nUn jour, quelqu'un demanda à la Rabanit comment elle supportait les nuits seules, pendant que le Rabbi recevait jusqu'à l'aube. Elle dit : je ne suis pas seule. Je suis avec lui. De loin — mais avec lui.",
+    "lecon": "La Rabanit Haya Mouchka n'apparaissait pas dans les livres d'histoire, pas dans les discours publics, pas dans les photographies officielles. Mais sans elle — sans ses appels de minuit, ses plateaux de nourriture, ses silences qui portaient —  le Rabbi n'aurait pas pu être le Rabbi. Derrière chaque grande lumière, il y a quelqu'un qui veille à ce qu'elle ne s'éteigne pas.",
+    "detail_source": "Témoignages de secrétaires du Rabbi compilés dans JEM · Recueil 'The Rebbetzin' · Archives orales de la communauté Loubavitch"
   }
 ];
 
@@ -7898,7 +8004,10 @@ function openHistoireDetail(id){
   // Tags
   var tags = (s.tags||[]).map(function(t){return '<span class="hd-meta-tag">'+t+'</span>';}).join('');
 
+  var histReaderBar = readerBar('hist-text-content','hist-reader');
   var h='<div style="padding:16px;">'
+    +histReaderBar
+    +'<div id="hist-text-content">'
     +'<div class="hd-cat">'+s.categorie+'</div>'
     +'<div class="hd-title">'+s.titre+'</div>'
     +'<div class="hd-sub">'+s.sous_titre+'</div>'
@@ -7907,11 +8016,151 @@ function openHistoireDetail(id){
     +'<div class="hd-body">'+s.histoire+'</div>'
     +'<div class="hd-lecon"><div class="hd-lecon-label">💎 Ce que ça nous apprend</div><div class="hd-lecon-text">'+s.lecon+'</div></div>'
     +'<div class="hd-source-detail">🔎 Source exacte : '+s.detail_source+'<br><a href="'+s.source_url+'" target="_blank" style="color:var(--purple);font-weight:600;">Lire la source originale ↗</a></div>'
+    +'</div>'
     +'</div>';
 
   document.getElementById('view-histoire-detail').innerHTML=h;
 
   if(typeof recordActivity==='function') recordActivity('histoire',5);
+}
+
+// ══════════════════════════════════════════════════════════════
+// LECTEUR AUDIO (Web Speech API) + TAILLE TEXTE
+// ══════════════════════════════════════════════════════════════
+var _readerUtterance = null;
+var _readerPlaying = false;
+
+function readerBar(textId, barId){
+  return '<div class="reader-bar" id="'+barId+'">'
+    +'<button class="reader-btn" id="'+barId+'-btn" onclick="readerToggle(\'' + textId + '\',\'' + barId + '\')">'
+    +'🔊 Écouter</button>'
+    +'<button class="reader-btn paused" onclick="readerStop(\'' + barId + '\')" style="padding:8px 12px;">■</button>'
+    +'<div class="reader-size">'
+    +'<span class="reader-size-label">Aa</span>'
+    +'<input type="range" min="13" max="22" value="15" '
+    +'oninput="readerFontSize(\'' + textId + '\',this.value)" />'
+    +'<span class="reader-size-label" style="font-size:15px;">Aa</span>'
+    +'</div>'
+    +'</div>';
+}
+
+function readerToggle(textId, barId){
+  var el = document.getElementById(textId);
+  var btn = document.getElementById(barId+'-btn');
+  if(!el || !window.speechSynthesis) return;
+
+  if(_readerPlaying){
+    window.speechSynthesis.pause();
+    _readerPlaying = false;
+    if(btn){ btn.innerHTML='▶ Reprendre'; btn.classList.add('paused'); }
+    return;
+  }
+
+  // Si pausé — reprendre
+  if(window.speechSynthesis.paused){
+    window.speechSynthesis.resume();
+    _readerPlaying = true;
+    if(btn){ btn.innerHTML='⏸ Pause'; btn.classList.remove('paused'); }
+    return;
+  }
+
+  // Nouveau démarrage
+  window.speechSynthesis.cancel();
+  var text = el.innerText || el.textContent || '';
+  text = text.replace(/[\u{1F300}-\u{1FFFF}]/gu,''); // enlever emojis
+  _readerUtterance = new SpeechSynthesisUtterance(text);
+  _readerUtterance.lang = 'fr-FR';
+  _readerUtterance.rate = 0.92;
+  _readerUtterance.pitch = 1;
+
+  // Choisir voix française si disponible
+  var voices = window.speechSynthesis.getVoices();
+  var frVoice = voices.find(function(v){ return v.lang.startsWith('fr') && v.localService; })
+    || voices.find(function(v){ return v.lang.startsWith('fr'); });
+  if(frVoice) _readerUtterance.voice = frVoice;
+
+  _readerUtterance.onend = function(){
+    _readerPlaying = false;
+    if(btn){ btn.innerHTML='🔊 Écouter'; btn.classList.remove('paused'); }
+  };
+  _readerUtterance.onerror = function(){
+    _readerPlaying = false;
+    if(btn){ btn.innerHTML='🔊 Écouter'; btn.classList.remove('paused'); }
+  };
+
+  window.speechSynthesis.speak(_readerUtterance);
+  _readerPlaying = true;
+  if(btn){ btn.innerHTML='⏸ Pause'; btn.classList.remove('paused'); }
+}
+
+function readerStop(barId){
+  window.speechSynthesis.cancel();
+  _readerPlaying = false;
+  var btn = document.getElementById(barId+'-btn');
+  if(btn){ btn.innerHTML='🔊 Écouter'; btn.classList.remove('paused'); }
+}
+
+function readerFontSize(textId, size){
+  var el = document.getElementById(textId);
+  if(el) el.style.fontSize = size+'px';
+}
+
+// VIDEOS
+function openVideos(){
+  if(!requireLogin()) return;
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  document.getElementById('view-videos').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  var qab=document.getElementById('quick-access-bar'); if(qab) qab.style.display='none';
+  window.scrollTo(0,0);
+  renderVideos();
+}
+
+function renderVideos(){
+  var view=document.getElementById('view-videos');
+  view.innerHTML='<div class="vid-header">'
+    +'<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
+    +'<div class="vid-header-sub">Archives JEM France</div>'
+    +'</div><div id="vid-list"><div class="vid-empty">Chargement...</div></div>';
+  fetch('https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/list/videos',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek',
+      'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek'
+    },
+    body:JSON.stringify({limit:100,offset:0,sortBy:{column:'created_at',order:'desc'}})
+  })
+  .then(function(r){return r.json();})
+  .then(function(files){
+    if(!files||!files.length){
+      document.getElementById('vid-list').innerHTML='<div class="vid-empty">Aucune vidéo.</div>';
+      return;
+    }
+    var html='';
+    files.forEach(function(f){
+      if(!f.name||f.name==='.emptyFolderPlaceholder') return;
+      var url='https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/'+encodeURIComponent(f.name);
+      var title=f.name.replace(/WhatsApp Video /gi,'').replace(/\.mp4$/i,'').replace(/%20/g,' ').trim();
+      var size=f.metadata&&f.metadata.size?(f.metadata.size/1024/1024).toFixed(1)+' Mo':'';
+      html+='<div class="vid-card">'
+        +'<video class="vid-player" controls preload="metadata" playsinline>'
+        +'<source src="'+url+'" type="video/mp4">'
+        +'</video>'
+        +'<div class="vid-info">'
+        +'<div class="vid-title">🎬 '+title+'</div>'
+        +(size?'<div class="vid-meta">'+size+'</div>':'')
+        +'</div></div>';
+    });
+    document.getElementById('vid-list').innerHTML=html||'<div class="vid-empty">Aucune vidéo.</div>';
+  })
+  .catch(function(e){
+    document.getElementById('vid-list').innerHTML='<div class="vid-empty">Erreur de chargement.</div>';
+    console.error(e);
+  });
 }
 
 function refreshCoursCard(){
@@ -8021,7 +8270,7 @@ function toggleSemaineCours(btn){
 
 function openAllCours(){
   if(!requireLogin()) return;
-  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail'].forEach(function(id){
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
   });
   var view = document.getElementById('view-histoires');
