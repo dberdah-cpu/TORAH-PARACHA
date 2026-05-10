@@ -318,6 +318,15 @@
 .reader-size input[type=range]{
   flex:1;accent-color:var(--purple);height:4px;cursor:pointer;
 }
+.sidra-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px 12px;overflow:hidden;cursor:pointer;}
+.sidra-card-header{background:linear-gradient(135deg,#0ea5e9,#6366f1);padding:14px 16px;}
+.sidra-card-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:1px;text-transform:uppercase;font-family:Poppins,sans-serif;margin-bottom:4px;}
+.sidra-card-titre{font-size:16px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;margin-bottom:2px;}
+.sidra-card-date{font-size:12px;color:rgba(255,255,255,.7);font-family:Poppins,sans-serif;}
+.sidra-card-body{padding:12px 16px;}
+.sidra-card-desc{font-size:13px;line-height:1.65;color:var(--dark);font-family:Poppins,sans-serif;}
+.sidra-card-btn{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;}
+.sidra-loading{text-align:center;padding:40px 20px;color:var(--gray-4);font-family:Poppins,sans-serif;}
 .vid-header{padding:20px 16px 8px;}
 .vid-header-title{font-size:20px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;}
 .vid-header-sub{font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:3px;}
@@ -511,8 +520,6 @@ body{
 .story-ring{width:56px;height:56px;border-radius:50%;padding:2.5px;background:var(--grad-main);position:relative}
 .story-ring.shabbat{background:linear-gradient(45deg,var(--orange),#FCD34D)}
 .story-ring.fete{background:linear-gradient(45deg,var(--purple),var(--pink))}
-.story-ring.sidra{background:linear-gradient(135deg,#0ea5e9,#6366f1);}
-.story-ring.sidra .story-inner{background:linear-gradient(135deg,#38bdf8,#818cf8);}
 .story-ring.histoires{background:linear-gradient(135deg,#7c3aed,#ec4899);}
 .story-ring.histoires .story-inner{background:linear-gradient(135deg,#8b5cf6,#f472b6);}
 .story-ring.recueil{background:linear-gradient(45deg,var(--pink),var(--orange))}
@@ -1296,7 +1303,6 @@ body{
 <div id="view-histoires" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-histoire-detail" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-videos" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
-<div id="view-sidra" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
 
 <!-- HAYOM YOM -->
 <!-- Barre de traduction fixe en bas -->
@@ -2618,7 +2624,6 @@ function buildStoryBar(){
   // Sefer
   items.push({icon:'📖',label:'Histoires vraies',ring:'histoires',fn:'openHistoires()'});
   items.push({icon:'🎬',label:'Vidéos',ring:'videos',fn:'openVideos()'});
-  items.push({icon:'📰',label:'La Sidra',ring:'sidra',fn:'openSidra()'});
   items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
   // Recueil
   items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
@@ -2707,12 +2712,7 @@ function buildHome(){
   h += '<div id="cours-card-container">'+_cc+'</div>';
 
   // Carte Histoires Vraies
-  h += '<div onclick="openSidra()" style="margin:0 16px 12px;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
-  h += '<span style="font-size:28px;">📰</span>';
-  h += '<div style="flex:1;">';
-  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">La Sidra de la Semaine</div>';
-  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Éditorial · Paracha · Halacha · Récit · loubavitch.fr</div>';
-  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
 
   h += '<div onclick="openVideos()" style="margin:0 16px 12px;background:linear-gradient(135deg,#ef4444,#f97316);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
   h += '<span style="font-size:28px;">🎬</span>';
@@ -8238,30 +8238,97 @@ function openVideos(){
 function renderVideos(){
   var VIDEOS_LIST = [
     {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/chaque%20instant%20compte.mp4',
+      titre: 'Chaque instant compte',
+      message: "L'horloge ne s'arrête pas. Les opportunités non plus. Le Rabbi enseignait que chaque seconde est une porte qui s'ouvre — et qui ne reviendra jamais. La question n'est pas d'avoir le temps, mais de choisir comment l'habiter."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/deuxieme%20chance.mp4',
+      titre: 'La deuxième chance',
+      message: "Pessah Cheni — la Torah offre une deuxième opportunité à ceux qui ont raté la première. Ce n'est pas une exception : c'est un principe fondamental. Il n'est jamais trop tard pour se reconnecter. La distance n'est jamais définitive."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/ton%20passe%20te%20detruit.mp4',
+      titre: 'Ton passé ne te définit pas',
+      message: "Chaque fois que tu revis tes échecs, tu laisses le passé décider de ton futur. La Torah ne demande pas d'effacer ce qui s'est passé — elle demande de le transformer. Tu n'es pas ce qui t'a brisé. Tu es ce que tu construis maintenant."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/donnez%20avant%20de%20recevoir.mp4',
+      titre: 'Donnez avant de recevoir',
+      message: "Le Rabbi révèle un secret contre-intuitif : le canal de l'abondance s'ouvre par le don, pas par la retenue. Donner avant de recevoir n'est pas une prise de risque — c'est la loi spirituelle la plus puissante de la création."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/faire%20participer%20les%20enfant.mp4',
+      titre: 'Faire participer les enfants',
+      message: "Quand un enfant participe — même pour applaudir — quelque chose se grave en lui pour toujours. Le Rabbi enseignait que l'éducation ne passe pas par les mots mais par l'inclusion. Laisser un enfant faire partie de quelque chose, c'est lui dire : tu comptes."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/jamais%20seul.mp4',
+      titre: 'Jamais seul',
+      message: "Rabbi Shimon bar Yochaï enseignait une vérité intemporelle : peu importe les ténèbres, la présence divine ne disparaît jamais. Dans la grotte, dans l'exil, dans les moments les plus sombres — Il est là. Tu n'es jamais vraiment seul."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/l%20ame%20ne%20meurt%20jamais.mp4',
+      titre: "L'âme ne meurt jamais",
+      message: "Ce qu'Auschwitz n'a pas pu détruire. Quand un être cher disparaît, la douleur est réelle — mais quelque chose d'essentiel continue. L'âme est éternelle. La flamme que quelqu'un a allumée en toi ne s'éteint pas avec lui."
+    },
+    {
       url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/la%20cle%20de%20la%20benediction.mp4',
       titre: 'La clé de la bénédiction',
-      description: 'Archives JEM France'
+      message: "Dans la paracha, D.ieu révèle la puissance qu'il y a à vivre en accord avec le Divin. La bénédiction n'est pas un miracle extérieur — c'est la conséquence naturelle d'une vie alignée. La clé est entre tes mains."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/montrez%20l%20exemple.mp4',
+      titre: "Montrez l'exemple",
+      message: "Ce n'est pas ce que vous dites qui forme vos enfants et vos proches — c'est ce qu'ils voient. Le Rabbi enseignait : sois la Torah que tu veux transmettre. Les mots s'oublient. L'exemple reste gravé pour toujours."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/quel%20est%20le%20but%20dans%20la%20vie.mp4',
+      titre: 'Quel est le but dans la vie ?',
+      message: "Trouver sa mission peut sembler écrasant. Mais le Rabbi enseignait que ta raison d'être n'est pas cachée au bout du monde — elle est dans ce que tu es déjà, dans ce qui te tient à cœur, dans les talents que D.ieu t'a donnés. La réponse est plus proche qu'on ne le pense."
+    },
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/un%20lien%20indefectible.mp4',
+      titre: 'Un lien indéfectible',
+      message: "D.ieu dépasse toutes les limites de ce monde. Quand nous nous connectons à Lui, nous accédons à une force qui nous dépasse infiniment. Ce lien n'est jamais rompu — même quand on croit l'avoir perdu. Il suffit de le retrouver."
     },
   ];
+
+  // Vidéo du jour — rotation automatique
+  var dayIndex = Math.floor(Date.now() / (1000*60*60*24)) % VIDEOS_LIST.length;
+  var featured = VIDEOS_LIST[dayIndex];
+
   var view = document.getElementById('view-videos');
-  if(!VIDEOS_LIST.length){
-    view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos du Rabbi</div></div><div class="vid-empty">Aucune vidéo disponible.</div>';
-    return;
-  }
   var html = '<div class="vid-header">'
     + '<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
-    + '<div class="vid-header-sub">Archives JEM France · '+VIDEOS_LIST.length+' vidéo'+(VIDEOS_LIST.length>1?'s':'')+' disponible'+(VIDEOS_LIST.length>1?'s':'')+'</div>'
+    + '<div class="vid-header-sub">Archives JEM France · ' + VIDEOS_LIST.length + ' vidéos disponibles</div>'
     + '</div>';
-  VIDEOS_LIST.forEach(function(v){
-    html += '<div class="vid-card">'
-      + '<video class="vid-player" controls preload="metadata" playsinline>'
-      + '<source src="'+v.url+'" type="video/mp4">'
+
+  // Vidéo du jour en vedette
+  html += '<div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0533,#2d0b5e);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);">'
+    + '<div style="padding:10px 14px 6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR</div>'
+    + '<div style="padding:0 14px 10px;font-size:16px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">' + featured.titre + '</div>'
+    + '<div style="padding:0 14px 12px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-family:Poppins,sans-serif;">' + featured.message + '</div>'
+    + '<video style="width:100%;max-height:240px;background:#000;display:block;" controls preload="metadata" playsinline>'
+    + '<source src="' + featured.url + '" type="video/mp4">'
+    + '</video>'
+    + '</div>';
+
+  // Toutes les vidéos
+  html += '<div style="margin:0 16px 4px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">TOUTES LES VIDÉOS</div>';
+  VIDEOS_LIST.forEach(function(v, idx){
+    var isToday = (idx === dayIndex);
+    html += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;"'
+      + (isToday ? ' style="border:2px solid var(--purple);"' : '') + '>'
+      + '<div style="padding:10px 14px 6px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'
+      + (isToday ? '▶ ' : '') + v.titre + '</div>'
+      + '<div style="padding:0 14px 10px;font-size:12px;color:var(--gray-4);line-height:1.55;font-family:Poppins,sans-serif;">' + v.message + '</div>'
+      + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
+      + '<source src="' + v.url + '" type="video/mp4">'
       + '</video>'
-      + '<div class="vid-info">'
-      + '<div class="vid-title">🎬 '+v.titre+'</div>'
-      + (v.description?'<div class="vid-meta">'+v.description+'</div>':'')
-      + '</div></div>';
+      + '</div>';
   });
+
   view.innerHTML = html;
 }
 function getSidraURL(){
@@ -8380,6 +8447,114 @@ function renderSidraFallback(sidra){
     +'</div>';
 }
 
+// SIDRA VIA RSS LOUBAVITCH.FR
+var SIDRA_RSS_URL = 'https://www.loubavitch.fr/etude/la-sidra?format=feed&type=rss';
+var SIDRA_CACHE = null;
+
+// Calendrier fallback
+var SIDRA_CAL = [
+  ["2026-05-09","1485-semaine-14","Behar-Behoukotai"],
+  ["2026-05-16","1486-semaine-15","Bamidbar"],
+  ["2026-05-23","1487-semaine-16","Nasso"],
+  ["2026-05-30","1488-semaine-17","Behalotcha"],
+  ["2026-06-06","1489-semaine-18","Chelah"],
+  ["2026-06-13","1490-semaine-19","Korah"],
+  ["2026-06-20","1491-semaine-20","Houkat"],
+  ["2026-06-27","1492-semaine-21","Balak"],
+  ["2026-07-04","1493-semaine-22","Pinhas"],
+  ["2026-07-11","1494-semaine-23","Matot-Massei"],
+  ["2026-07-18","1495-semaine-24","Devarim"],
+  ["2026-07-25","1496-semaine-25","Vaethanan"],
+  ["2026-08-01","1497-semaine-26","Ekev"],
+  ["2026-08-08","1498-semaine-27","Reeh"],
+  ["2026-08-15","1499-semaine-28","Choftim"],
+  ["2026-08-22","1500-semaine-29","Ki Tetse"],
+  ["2026-08-29","1501-semaine-30","Ki Tavo"],
+  ["2026-09-05","1502-semaine-31","Nitsavim-Vayelech"],
+  ["2026-09-12","1503-semaine-32","Haazinou"],
+];
+
+function getSidraFallback(){
+  var now = new Date();
+  var best = null; var bestDiff = Infinity;
+  for(var i=0;i<SIDRA_CAL.length;i++){
+    var s = SIDRA_CAL[i];
+    var shabbat = new Date(s[0]);
+    var sunday = new Date(shabbat); sunday.setDate(shabbat.getDate()-6);
+    if(now >= sunday && now <= shabbat) return {titre:s[2], url:'https://www.loubavitch.fr/etude/la-sidra/item/'+s[1], desc:''};
+    var diff = Math.abs(now-shabbat);
+    if(diff < bestDiff){ bestDiff=diff; best={titre:s[2], url:'https://www.loubavitch.fr/etude/la-sidra/item/'+s[1], desc:''}; }
+  }
+  return best;
+}
+
+function openSidra(){
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile',
+   'view-cours','view-histoires','view-histoire-detail','view-videos'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  document.getElementById('view-sidra').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  var qab=document.getElementById('quick-access-bar'); if(qab) qab.style.display='none';
+  window.scrollTo(0,0);
+  renderSidra();
+}
+
+function renderSidra(){
+  var view = document.getElementById('view-sidra');
+  view.innerHTML = '<div class="sidra-loading">Chargement...</div>';
+
+  // Essayer RSS via rss2json.com (gratuit, pas de CORS)
+  var rssUrl = encodeURIComponent('https://www.loubavitch.fr/etude/la-sidra?format=feed&type=rss');
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=' + rssUrl + '&count=1')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(data.status !== 'ok' || !data.items || !data.items.length) throw new Error('no items');
+    var item = data.items[0];
+    var titre = item.title || '';
+    var lien = item.link || '';
+    var desc = item.description || '';
+    // Nettoyer le HTML de la description
+    var tmp = document.createElement('div');
+    tmp.innerHTML = desc;
+    var texte = (tmp.textContent || tmp.innerText || '').substring(0,300).trim();
+    if(texte.length === 300) texte += '...';
+    renderSidraContent({titre:titre, url:lien, desc:texte});
+  })
+  .catch(function(){
+    // Fallback calendrier
+    var s = getSidraFallback();
+    if(s) renderSidraContent(s);
+    else view.innerHTML = '<div class="sidra-loading">Sidra non disponible.</div>';
+  });
+}
+
+function renderSidraContent(s){
+  var view = document.getElementById('view-sidra');
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  view.innerHTML =
+    '<div style="padding:16px 16px 0;">'
+    +'<div style="font-size:20px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;">📰 La Sidra de la Semaine</div>'
+    +'<div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:16px;">Commentaires sur la paracha · loubavitch.fr</div>'
+    +'</div>'
+    +'<div class="sidra-card" onclick="window.open(\'' + s.url + '\',\'_blank\')">'
+    +'<div class="sidra-card-header">'
+    +'<div class="sidra-card-label">📖 Paracha de la semaine</div>'
+    +'<div class="sidra-card-titre">'+s.titre+'</div>'
+    +'<div class="sidra-card-date">'+dateStr+'</div>'
+    +'</div>'
+    +(s.desc ? '<div class="sidra-card-body"><div class="sidra-card-desc">'+s.desc+'</div><div class="sidra-card-btn">Lire la Sidra complète ↗</div></div>' : '')
+    +'</div>'
+    +'<div style="margin:0 16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
+    +'<div style="padding:12px 16px;font-size:12px;font-weight:700;color:var(--gray-4);font-family:Poppins,sans-serif;letter-spacing:.5px;">SECTIONS DE LA SIDRA</div>'
+    +['✍️ Éditorial','📖 Vivre avec la Paracha','✨ Étincelles de Machiah','⚖️ Le Coin de la Halacha','🕯 Le Récit de la Semaine'].map(function(sec){
+      return '<div onclick="window.open(\'' + s.url + '\',\'_blank\')" style="padding:10px 16px;border-top:1px solid var(--gray-2);font-size:14px;font-family:Poppins,sans-serif;color:var(--dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">'+sec+'<span style="color:var(--gray-4);">›</span></div>';
+    }).join('')
+    +'</div>';
+}
+
 function refreshCoursCard(){
   var card = buildCoursCard();
   console.log('[Cours] refreshCoursCard card='+(card?'OK':'VIDE')+' container='+(document.getElementById('cours-card-container')?'EXISTS':'MISSING'));
@@ -8487,7 +8662,7 @@ function toggleSemaineCours(btn){
 
 function openAllCours(){
   if(!requireLogin()) return;
-  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos','view-sidra'].forEach(function(id){
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
   });
   var view = document.getElementById('view-histoires');
