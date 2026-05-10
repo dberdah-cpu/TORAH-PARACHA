@@ -8242,15 +8242,15 @@ function renderVideos(){
     +'<div class="vid-header-sub">Archives JEM France</div>'
     +'</div><div id="vid-list"><div class="vid-empty">Chargement...</div></div>';
   // API Supabase Storage — lister les fichiers du bucket public
+  // API Supabase Storage — body minimal requis
   fetch('https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/list/videos',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',
       'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek',
-      'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek',
-      'x-upsert':'false'
+      'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek'
     },
-    body:JSON.stringify({limit:100,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})
+    body:'{}'
   })
   .then(function(r){
     if(!r.ok) throw new Error('HTTP '+r.status);
@@ -8316,38 +8316,13 @@ function openSidra(){
 }
 
 function renderSidra(){
-  var view = document.getElementById('view-sidra');
-  view.innerHTML = '<div class="sidra-loading">Chargement...</div>';
-
-  // Essayer de charger la liste des sidrot depuis loubavitch.fr
-  var listUrl = 'https://www.loubavitch.fr/etude/la-sidra/itemlist/category/51-2026';
-  fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(listUrl))
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    var html = data.contents || '';
-    // Extraire les items de la liste — trouver le plus récent
-    var matches = html.match(/href="(\/etude\/la-sidra\/item\/[^"]+)"/g) || [];
-    var items = [];
-    matches.forEach(function(m){
-      var href = m.replace('href="','').replace('"','');
-      if(href.indexOf('/item/')>=0 && items.indexOf(href)<0) items.push(href);
-    });
-    // Prendre le dernier item = le plus récent
-    var latestPath = items[items.length-1] || null;
-    var sidra = getSidraURL(); // fallback calendrier
-    if(latestPath){
-      var slug = latestPath.split('/').pop();
-      var url = 'https://www.loubavitch.fr' + latestPath;
-      sidra = {url:url, nom: sidra ? sidra.nom : 'Sidra de la semaine'};
-    }
-    if(sidra) renderSidraFallback(sidra);
-    else view.innerHTML = '<div class="sidra-loading">Aucune Sidra disponible.</div>';
-  })
-  .catch(function(){
-    var sidra = getSidraURL();
-    if(sidra) renderSidraFallback(sidra);
-    else view.innerHTML = '<div class="sidra-loading">Impossible de charger la Sidra.</div>';
-  });
+  // Utiliser directement le calendrier hardcodé — pas de proxy externe
+  var sidra = getSidraURL();
+  if(sidra) renderSidraFallback(sidra);
+  else {
+    document.getElementById('view-sidra').innerHTML =
+      '<div class="sidra-loading">Sidra non disponible pour le moment.</div>';
+  }
 }
 
 function parseSidra(html, sidra){
