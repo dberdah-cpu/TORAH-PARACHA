@@ -8241,19 +8241,24 @@ function renderVideos(){
     +'<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
     +'<div class="vid-header-sub">Archives JEM France</div>'
     +'</div><div id="vid-list"><div class="vid-empty">Chargement...</div></div>';
+  // API Supabase Storage — lister les fichiers du bucket public
   fetch('https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/list/videos',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',
       'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek',
-      'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek'
+      'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek',
+      'x-upsert':'false'
     },
-    body:JSON.stringify({limit:100,offset:0,sortBy:{column:'created_at',order:'desc'}})
+    body:JSON.stringify({limit:100,offset:0,prefix:'',sortBy:{column:'name',order:'asc'}})
   })
-  .then(function(r){return r.json();})
+  .then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  })
   .then(function(files){
-    if(!files||!files.length){
-      document.getElementById('vid-list').innerHTML='<div class="vid-empty">Aucune vidéo.</div>';
+    if(!files||!Array.isArray(files)||!files.length){
+      document.getElementById('vid-list').innerHTML='<div class="vid-empty">Aucune vidéo dans le bucket.</div>';
       return;
     }
     var html='';
@@ -8311,28 +8316,37 @@ function openSidra(){
 }
 
 function renderSidra(){
-  var sidra = getSidraURL();
   var view = document.getElementById('view-sidra');
-  if(!sidra){
-    view.innerHTML = '<div class="sidra-loading">Aucune Sidra disponible.</div>';
-    return;
-  }
-  view.innerHTML = '<div class="sidra-header">'
-    +'<div class="sidra-header-title">📰 La Sidra de la Semaine</div>'
-    +'<div class="sidra-header-sub">'+ sidra.nom +' · loubavitch.fr</div>'
-    +'</div>'
-    +'<div class="sidra-loading">Chargement...</div>';
+  view.innerHTML = '<div class="sidra-loading">Chargement...</div>';
 
-  // Charger via proxy CORS ou afficher bouton lien
-  fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(sidra.url))
+  // Essayer de charger la liste des sidrot depuis loubavitch.fr
+  var listUrl = 'https://www.loubavitch.fr/etude/la-sidra/itemlist/category/51-2026';
+  fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(listUrl))
   .then(function(r){ return r.json(); })
   .then(function(data){
     var html = data.contents || '';
-    var sections = parseSidra(html, sidra);
-    renderSidraContent(sections, sidra);
+    // Extraire les items de la liste — trouver le plus récent
+    var matches = html.match(/href="(\/etude\/la-sidra\/item\/[^"]+)"/g) || [];
+    var items = [];
+    matches.forEach(function(m){
+      var href = m.replace('href="','').replace('"','');
+      if(href.indexOf('/item/')>=0 && items.indexOf(href)<0) items.push(href);
+    });
+    // Prendre le dernier item = le plus récent
+    var latestPath = items[items.length-1] || null;
+    var sidra = getSidraURL(); // fallback calendrier
+    if(latestPath){
+      var slug = latestPath.split('/').pop();
+      var url = 'https://www.loubavitch.fr' + latestPath;
+      sidra = {url:url, nom: sidra ? sidra.nom : 'Sidra de la semaine'};
+    }
+    if(sidra) renderSidraFallback(sidra);
+    else view.innerHTML = '<div class="sidra-loading">Aucune Sidra disponible.</div>';
   })
   .catch(function(){
-    renderSidraFallback(sidra);
+    var sidra = getSidraURL();
+    if(sidra) renderSidraFallback(sidra);
+    else view.innerHTML = '<div class="sidra-loading">Impossible de charger la Sidra.</div>';
   });
 }
 
