@@ -329,6 +329,19 @@
 .vid-empty{text-align:center;padding:40px 20px;color:var(--gray-4);font-family:Poppins,sans-serif;}
 .story-ring.videos{background:linear-gradient(135deg,#ef4444,#f97316);}
 .story-ring.videos .story-inner{background:linear-gradient(135deg,#f87171,#fb923c);}
+.sidra-header{padding:20px 16px 8px;}
+.sidra-header-title{font-size:20px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;}
+.sidra-header-sub{font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:3px;}
+.sidra-loading{text-align:center;padding:40px 20px;color:var(--gray-4);font-family:Poppins,sans-serif;}
+.sidra-section{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px 12px;overflow:hidden;}
+.sidra-section-header{padding:12px 16px 8px;background:linear-gradient(135deg,var(--purple),var(--purple-2));display:flex;align-items:center;gap:8px;}
+.sidra-section-icon{font-size:18px;}
+.sidra-section-title{font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;text-transform:uppercase;letter-spacing:.5px;}
+.sidra-section-body{padding:14px 16px;font-size:14px;line-height:1.75;color:var(--dark);font-family:Poppins,sans-serif;}
+.sidra-section-body h3{font-size:15px;font-weight:700;margin:12px 0 6px;color:var(--dark);}
+.sidra-section-body strong{font-weight:700;}
+.sidra-section-body em{font-style:italic;}
+.sidra-link{display:block;text-align:center;padding:12px;color:var(--purple);font-size:13px;font-weight:600;font-family:Poppins,sans-serif;border-top:1px solid var(--gray-2);}
 .cv-week-nav{
   display:flex;gap:6px;flex-wrap:wrap;
   margin:0 0 16px;padding:12px 16px;
@@ -498,6 +511,8 @@ body{
 .story-ring{width:56px;height:56px;border-radius:50%;padding:2.5px;background:var(--grad-main);position:relative}
 .story-ring.shabbat{background:linear-gradient(45deg,var(--orange),#FCD34D)}
 .story-ring.fete{background:linear-gradient(45deg,var(--purple),var(--pink))}
+.story-ring.sidra{background:linear-gradient(135deg,#0ea5e9,#6366f1);}
+.story-ring.sidra .story-inner{background:linear-gradient(135deg,#38bdf8,#818cf8);}
 .story-ring.histoires{background:linear-gradient(135deg,#7c3aed,#ec4899);}
 .story-ring.histoires .story-inner{background:linear-gradient(135deg,#8b5cf6,#f472b6);}
 .story-ring.recueil{background:linear-gradient(45deg,var(--pink),var(--orange))}
@@ -1281,6 +1296,7 @@ body{
 <div id="view-histoires" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-histoire-detail" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-videos" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
+<div id="view-sidra" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
 
 <!-- HAYOM YOM -->
 <!-- Barre de traduction fixe en bas -->
@@ -2600,8 +2616,9 @@ function buildStoryBar(){
   // Hayom Yom
   items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
   // Sefer
-  items.push({icon:'📖',label:'Histoires',ring:'histoires',fn:'openHistoires()'});
+  items.push({icon:'📖',label:'Histoires vraies',ring:'histoires',fn:'openHistoires()'});
   items.push({icon:'🎬',label:'Vidéos',ring:'videos',fn:'openVideos()'});
+  items.push({icon:'📰',label:'La Sidra',ring:'sidra',fn:'openSidra()'});
   items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
   // Recueil
   items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
@@ -2689,7 +2706,14 @@ function buildHome(){
   console.log('[buildHome] cours-card='+ (_cc?'OK':'VIDE'));
   h += '<div id="cours-card-container">'+_cc+'</div>';
 
-  // Carte Histoires Juives
+  // Carte Histoires Vraies
+  h += '<div onclick="openSidra()" style="margin:0 16px 12px;background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">📰</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">La Sidra de la Semaine</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Éditorial · Paracha · Halacha · Récit · loubavitch.fr</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
   h += '<div onclick="openVideos()" style="margin:0 16px 12px;background:linear-gradient(135deg,#ef4444,#f97316);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
   h += '<span style="font-size:28px;">🎬</span>';
   h += '<div style="flex:1;">';
@@ -2700,7 +2724,7 @@ function buildHome(){
   h += '<div onclick="openHistoires()" style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
   h += '<span style="font-size:28px;">📖</span>';
   h += '<div style="flex:1;">';
-  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Histoires Juives</div>';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Histoires Vraies</div>';
   h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">David, Hillel, le Baal Shem Tov, la famille Ovitz...</div>';
   h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
 
@@ -3531,8 +3555,8 @@ var HISTOIRES_DATA = [
       "Tanakh",
       "fraternité"
     ],
-    "histoire": "Ils ont failli le tuer.\n\nYossef, dix-sept ans, fils préféré de Yaakov, porteur de la tunique aux couleurs multiples. Ses frères le voient venir de loin. L'un d'eux dit : voilà le maître des rêves. Tuons-le.\n\nRéouven intervient : ne versez pas de sang. Jetez-le dans cette citerne. Il voulait le sauver en secret.\n\nIls le jettent dans la citerne. Ils s'assoient pour manger. Une caravane d'Ismaélites passe. Yehouda dit : qu'avons-nous à gagner à tuer notre frère ? Vendons-le.\n\nVingt pièces d'argent. Le prix d'un esclave.\n\nIls trempent sa tunique dans le sang d'un chevreau. Ils la rapportent à leur père. Yaakov reconnaît la tunique. Il tombe à terre. Il pleure des semaines. Il ne peut pas être consolé.\n\nYossef est emmené en Égypte. Acheté par Potiphar, officier de Pharaon. Emprisonné sur une fausse accusation. Oublié dans un cachot pendant deux ans.\n\nEt pourtant — à chaque étape — le texte répète une seule phrase : et l'Éternel était avec Yossef.\n\nVingt ans passent.\n\nPharaon rêve. Sept vaches grasses dévorées par sept vaches maigres. Sept épis pleins dévorés par sept épis desséchés. Personne dans toute l'Égypte ne peut interpréter ces rêves. Alors seulement on se souvient de Yossef, l'esclave hébreu qui interprète les songes.\n\nIl sort du cachot. Il se rase, se change. Il se tient devant Pharaon.\n\nSept années d'abondance. Sept années de famine. Stockez maintenant.\n\nPharaon le nomme vice-roi d'Égypte. En un jour, du cachot au trône.\n\nLa famine frappe. Toute la région. Canaan aussi. Yaakov envoie ses fils acheter du grain en Égypte.\n\nIls se prosternent devant le vice-roi sans le reconnaître.\n\nYossef les reconnaît. Il se retourne pour pleurer. Il se contrôle. Il les teste. Une fois. Deux fois. Il veut savoir : ont-ils changé ?\n\nLa scène décisive : Yehouda — celui qui avait proposé de vendre Yossef — se lève et dit : laissez mon frère Binyamin rentrer chez notre père. Prenez-moi à sa place. Mon père mourra si Binyamin ne revient pas.\n\nYossef ne peut plus se contrôler.\n\nIl fait sortir tous ses serviteurs. Et dans le silence, il pleure si fort que les Égyptiens l'entendent dans les pièces voisines.\n\nIl dit : je suis Yossef. Mon père est-il encore vivant ?\n\nSes frères ne peuvent pas répondre. Ils sont pétrifiés de terreur.\n\nYossef dit : approchez de moi. Je suis Yossef votre frère — que vous avez vendu en Égypte. Et maintenant — ne soyez pas affligés et ne vous reprochez rien de m'avoir vendu ici. Car c'est pour préserver la vie que D.ieu m'a envoyé devant vous.",
-    "lecon": "Le Midrash note que Yossef a dit : ce n'est pas vous qui m'avez envoyé ici — c'est D.ieu. Vingt ans de souffrance, de prison, d'humiliation — et Yossef voit la main divine dans chaque étape. C'est la leçon la plus difficile de la Torah : ce qui nous est fait par les hommes peut être voulu par D.ieu pour une raison qu'on ne comprend que des années plus tard.",
+    "histoire": "Yaakov aimait Yossef plus que tous ses autres fils.\n\nIl lui avait offert une tunique aux couleurs multiples — signe public de préférence. Et Yossef, dix-sept ans, ne cachait rien : il rapportait à son père les fautes de ses frères. Il leur racontait ses rêves — des rêves où les gerbes de ses frères se prosternaient devant la sienne, où le soleil, la lune et onze étoiles s'inclinaient devant lui.\n\nSes frères le haïssaient. Ils ne pouvaient pas lui dire un mot en paix.\n\nUn jour, Yaakov envoya Yossef rejoindre ses frères qui gardaient les troupeaux au loin. Ils le virent arriver de loin — la tunique aux couleurs qui brillait. L'un dit : voilà le maître des rêves. Tuons-le. Nous verrons ce que deviendront ses rêves.\n\nRéouven intervint : ne versez pas de sang. Jetez-le dans cette citerne. Il voulait le sauver en secret et le ramener à son père.\n\nIls lui arrachèrent sa tunique. Ils le jetèrent dans la citerne. La citerne était vide — pas d'eau dedans. Ils s'assirent pour manger.\n\nUne caravane d'Ismaélites passa. Yehouda dit : qu'avons-nous à gagner à tuer notre frère ? Vendons-le. C'est notre frère, notre chair.\n\nVingt pièces d'argent. Le prix d'un esclave.\n\nIls trempèrent la tunique dans le sang d'un chevreau. Ils la rapportèrent à leur père. Yaakov reconnut la tunique. Il déchira ses vêtements. Il pleura des semaines. Toute sa famille tenta de le consoler — il refusa d'être consolé. Il dit : je descendrai en deuil vers mon fils dans la tombe.\n\nYossef, lui, fut emmené en Égypte et vendu à Potiphar, officier de Pharaon.\n\nEt le texte dit alors — pour la première fois — une phrase qui va se répéter tout au long de son histoire : vayehi Hashem et Yossef — et l'Éternel était avec Yossef.\n\nPotiphar vit que D.ieu accompagnait tout ce que faisait Yossef. Il lui confia sa maison entière. Tout ce que Yossef touchait prospérait.\n\nMais la femme de Potiphar le désirait. Il refusa. Elle l'accusa faussement. Potiphar le fit jeter en prison.\n\nEt là encore — vayehi Hashem et Yossef — l'Éternel était avec Yossef.\n\nLe chef de la prison vit ce que D.ieu faisait à travers lui. Il lui confia l'administration de toute la prison. Yossef gérait tout. Et dans cette prison, deux prisonniers de marque arrivèrent un jour : l'échanson de Pharaon et son boulanger.\n\nUn matin, ils avaient chacun fait un rêve troublant. Yossef les vit abattus et leur dit : les interprétations n'appartiennent-elles pas à D.ieu ? Racontez-moi vos rêves.\n\nL'échanson raconta. Yossef interpréta : dans trois jours, tu seras rétabli dans ta fonction. Quand tout ira bien pour toi — souviens-toi de moi. Parle de moi à Pharaon. Car j'ai été enlevé du pays des Hébreux, et ici aussi je n'ai rien fait pour mériter la prison.\n\nLe boulanger raconta. Yossef interpréta : dans trois jours, Pharaon te fera pendre.\n\nTout se passa exactement comme Yossef l'avait dit.\n\nMais l'échanson oublia Yossef. Deux ans passèrent.\n\nDeux ans.\n\nPuis Pharaon fit un rêve. Sept vaches grasses dévorées par sept vaches maigres. Sept épis pleins dévorés par sept épis desséchés. Personne dans toute l'Égypte ne pouvait interpréter ces rêves. Alors l'échanson se souvint. Il dit à Pharaon : j'ai un jeune Hébreu en prison — il m'a interprété mon rêve avec une précision absolue.\n\nOn courut chercher Yossef. Il se rasa, se changea. Il se tint devant Pharaon.\n\nPharaon dit : j'ai entendu dire que tu interprètes les rêves.\n\nYossef dit : ce n'est pas moi — c'est D.ieu qui donnera à Pharaon une réponse de paix.\n\nSept années d'abondance. Sept années de famine. Stockez maintenant, massivement. Nommez quelqu'un de sage pour superviser tout cela.\n\nPharaon regarda ses conseillers et dit : où trouverons-nous un homme comme celui-là — un homme en qui est l'esprit de D.ieu ?\n\nIl se tourna vers Yossef et dit : puisque D.ieu t'a fait connaître tout cela, il n'y a personne d'aussi sage que toi. Tu seras sur ma maison. Mon peuple obéira à tes ordres. Je serai seulement plus grand que toi par le trône.\n\nDu cachot au trône. En un jour. Yossef avait trente ans.\n\nLa famine frappa tout le monde. Canaan aussi. Yaakov apprit qu'il y avait du grain en Égypte. Il envoya ses dix fils aînés — tous sauf Binyamine, le dernier-né, qu'il ne voulait pas perdre.\n\nIls se prosternèrent devant le vice-roi d'Égypte, le visage contre terre.\n\nYossef les reconnut immédiatement. Ses rêves d'enfance — les gerbes qui se prosternaient — se réalisaient sous ses yeux. Il se contrôla. Il prit une voix dure. Il leur parla par interprète comme s'il ne comprenait pas leur langue.\n\nIl les accusa d'être des espions. Il les interrogea. Qui êtes-vous ? D'où venez-vous ? Avez-vous un père, un frère ?\n\nIls dirent : nous sommes douze frères, fils d'un même homme en Canaan. Le plus jeune est resté avec notre père. Et l'un — n'est plus.\n\nYossef se retourna. Il pleurait. Il se ressaisit.\n\nIl les garda trois jours en prison. Puis il les libéra en gardant Shimon comme otage. Il remplit leurs sacs de grain — et fit glisser secrètement leur argent dans chaque sac. Il leur dit : revenez avec votre frère cadet — et je vous croirai.\n\nIls repartirent. En chemin, ils trouvèrent l'argent dans leurs sacs. Ils eurent peur. Ils dirent : qu'est-ce que D.ieu nous fait ?\n\nYaakov refusa d'abord d'envoyer Binyamine. Mais la famine continua. Le grain s'épuisa. Il n'y avait pas le choix.\n\nQuand ils revinrent avec Binyamine, Yossef les fit inviter à sa table. Il les plaça par ordre de naissance — du premier-né au dernier. Les frères se regardèrent, stupéfaits. Comment cet Égyptien pouvait-il connaître leur ordre d'âge ?\n\nYossef regarda Binyamine — son frère de mère, l'enfant de Rachel. Il dut sortir précipitamment. Il pleurait dans sa chambre.\n\nPuis il se lava le visage. Il revint. Il servit lui-même la nourriture. Il donna à Binyamine cinq fois plus qu'aux autres.\n\nUne dernière épreuve. Il fit cacher sa coupe d'argent dans le sac de Binyamine. Il envoya ses hommes les arrêter sur la route. La coupe fut trouvée. Ils furent ramenés devant lui.\n\nC'est alors que Yehouda — celui qui avait proposé de vendre Yossef vingt ans plus tôt — s'avança. Il parla longuement. Il décrivit la douleur du père. Il dit : si le garçon ne rentre pas avec nous, notre père mourra. Prends-moi à la place de Binyamine. Je serai ton esclave. Laisse-le rentrer chez son père.\n\nYossef ne put plus se contrôler.\n\nIl fit sortir tout le monde. Tous les Égyptiens, tous les serviteurs. Il resta seul avec ses frères.\n\nEt il éclata en sanglots — si fort que les Égyptiens l'entendirent dans les pièces voisines. Si fort que la nouvelle parvint jusqu'à la maison de Pharaon.\n\nIl dit — en hébreu, sans interprète : ani Yossef — Je suis Yossef.\n\nPuis il demanda : Ha'od avi haï — Mon père est-il encore vivant ?\n\nSes frères ne pouvaient pas répondre. Ils étaient pétrifiés de terreur.\n\nYossef dit : approchez de moi.\n\nIls s'approchèrent.\n\nIl dit : je suis Yossef votre frère — que vous avez vendu en Égypte. Et maintenant ne soyez pas affligés et ne vous reprochez rien de m'avoir vendu ici. Car c'est pour préserver la vie que D.ieu m'a envoyé devant vous. Il y a deux ans que la famine est dans le pays — et il y aura encore cinq ans sans labour ni moisson. D.ieu m'a envoyé devant vous pour assurer votre survie sur la terre.\n\nCe n'est donc pas vous qui m'avez envoyé ici — c'est D.ieu.",
+    "lecon": "L'histoire de Yossef est la plus longue de la Genèse — et la plus humaine. La jalousie des frères, la douleur d'un père, l'injustice de la prison, l'oubli de l'échanson. Et à chaque étape — vayehi Hashem et Yossef. D.ieu était avec lui. Pas pour lui éviter les épreuves — mais pour être présent au cœur de chacune d'elles. Et la révélation finale de Yossef à ses frères est peut-être la déclaration de foi la plus extraordinaire de toute la Torah : ce n'est pas vous qui m'avez envoyé ici — c'est D.ieu. Vingt ans de souffrance vus comme un plan divin. C'est ça, la foi qui traverse le temps.",
     "detail_source": "Béréchit 37-45 · Midrash Béréchit Rabba 84-93 · Rachi sur Béréchit 45:1 · Sforno sur Béréchit 50:20"
   },
   {
@@ -4497,6 +4521,86 @@ var HISTOIRES_DATA = [
     "histoire": "Le Rabbi travaillait souvent jusqu'à deux, trois, quatre heures du matin.\n\nLes yechidout — les audiences privées — pouvaient durer jusqu'à l'aube. Des centaines de personnes attendaient. Le Rabbi ne refusait personne.\n\nLa Rabanit ne dormait pas non plus.\n\nUn des secrétaires du Rabbi raconte : certaines nuits, vers deux heures du matin, le téléphone sonnait dans le bureau. C'était la Rabanit. Elle ne disait rien d'urgent. Elle demandait : est-ce qu'il a mangé ? Est-ce qu'il a bu quelque chose ?\n\nParfois elle disait simplement : dis-lui que je l'attends.\n\nLe secrétaire transmettait. Le Rabbi s'arrêtait quelques minutes. Il mangeait quelque chose. Il buvait un verre d'eau. Et il continuait.\n\nUn autre témoignage : un soir, un 'hassid qui attendait depuis des heures vit sortir du bureau du Rabbi un plateau avec de la nourriture. Il demanda d'où ça venait. Le secrétaire dit : de la Rabanit. Elle l'a préparé elle-même et l'a envoyé.\n\nLe 'hassid dit : mais le Rabbi n'arrêtera pas de recevoir pour manger.\n\nLe secrétaire dit : non. Mais elle envoie quand même. Chaque soir.\n\nUn jour, quelqu'un demanda à la Rabanit comment elle supportait les nuits seules, pendant que le Rabbi recevait jusqu'à l'aube. Elle dit : je ne suis pas seule. Je suis avec lui. De loin — mais avec lui.",
     "lecon": "La Rabanit Haya Mouchka n'apparaissait pas dans les livres d'histoire, pas dans les discours publics, pas dans les photographies officielles. Mais sans elle — sans ses appels de minuit, ses plateaux de nourriture, ses silences qui portaient —  le Rabbi n'aurait pas pu être le Rabbi. Derrière chaque grande lumière, il y a quelqu'un qui veille à ce qu'elle ne s'éteigne pas.",
     "detail_source": "Témoignages de secrétaires du Rabbi compilés dans JEM · Recueil 'The Rebbetzin' · Archives orales de la communauté Loubavitch"
+  },
+  {
+    "id": "nahman-pauvre-riche",
+    "categorie": "Contes de Rabbi Nahman",
+    "titre": "Le Pauvre et le Riche",
+    "sous_titre": "Pourquoi celui qui a tout est plus pauvre que celui qui n'a rien",
+    "source_ref": "Sipourey Maassiot — Contes de Rabbi Nahman de Breslev, conte n°9",
+    "source_url": "https://www.sefaria.org/Sippurey_Maasiyot",
+    "epoque": "XVIIIe siècle · Ukraine · Breslev",
+    "duree": "5 min",
+    "tags": [
+      "Rabbi Nahman",
+      "conte",
+      "richesse",
+      "foi",
+      "Breslev"
+    ],
+    "histoire": "Il était une fois un homme pauvre et un homme riche qui vivaient dans la même ville.\n\nL'homme pauvre n'avait rien — mais il avait confiance. Chaque matin, il se levait avec la certitude que D.ieu lui enverrait ce dont il avait besoin pour la journée. Et chaque jour, d'une façon ou d'une autre, il trouvait de quoi nourrir sa famille.\n\nL'homme riche avait tout — de grandes maisons, des serviteurs, des caves remplies d'or. Mais il vivait dans une peur permanente. La nuit, il comptait ses pièces. Le jour, il scrutait les marchés. Il avait peur de perdre, peur des voleurs, peur des mauvaises récoltes, peur de demain.\n\nUn jour, le pauvre dit au riche : tu es l'homme le plus pauvre que je connaisse.\n\nLe riche fut offensé. Il dit : moi, pauvre ? Regarde mes maisons, regarde mon or !\n\nLe pauvre dit : tu n'as jamais assez — parce que la peur du manque ne disparaît pas avec l'argent. Elle grandit avec lui. Moi, j'ai juste assez pour aujourd'hui — et ça me suffit. Lequel de nous deux est riche ?\n\nRabbi Nahman conclut ce conte en disant : la vraie richesse n'est pas d'avoir beaucoup — c'est de vouloir peu. Et la vraie pauvreté n'est pas de manquer — c'est de ne jamais être satisfait.",
+    "lecon": "Rabbi Nahman enseignait que la bitahon — la confiance en D.ieu — est la seule vraie sécurité. Quelqu'un qui vit dans la confiance est riche même sans rien. Quelqu'un qui vit dans la peur est pauvre même avec tout. Ce conte est une redéfinition radicale de ce que signifie posséder.",
+    "detail_source": "Sipourey Maassiot, conte n°9 · Rabbi Nahman de Breslev, recueilli par son disciple Rabbi Natan de Nemirov · Traduction française dans 'Les Contes de Rabbi Nahman', Albin Michel"
+  },
+  {
+    "id": "nahman-coeur-fontaine",
+    "categorie": "Contes de Rabbi Nahman",
+    "titre": "Le Cœur du Monde et la Source",
+    "sous_titre": "Le conte le plus mystérieux de Rabbi Nahman",
+    "source_ref": "Sipourey Maassiot — Contes de Rabbi Nahman, conte n°13 'Les Sept Mendiants'",
+    "source_url": "https://www.sefaria.org/Sippurey_Maasiyot",
+    "epoque": "XVIIIe siècle · Ukraine · Breslev",
+    "duree": "6 min",
+    "tags": [
+      "Rabbi Nahman",
+      "conte",
+      "mystique",
+      "Breslev",
+      "âme"
+    ],
+    "histoire": "Au milieu de l'océan se dresse une montagne.\n\nSur cette montagne se trouve une source.\n\nEt il y a dans le monde un Cœur — le Cœur du Monde. Ce cœur se tient face à la source et désire ardemment l'atteindre. Il la regarde de loin et languit.\n\nLa source est sur la montagne, de l'autre côté du monde. Le Cœur la voit — mais ne peut jamais l'atteindre. Car dès qu'il avance vers elle, la montagne s'éloigne. Et dès qu'il s'arrête de la regarder, il mourrait — car c'est la source qui lui donne la vie.\n\nAlors il se tient là, à regarder.\n\nEt de l'autre côté, la source regarde aussi le Cœur. Et languit aussi.\n\nLe Cœur ne dort jamais — car dès qu'il fermerait les yeux, il ne verrait plus la source, et mourrait. Et la source ne dort jamais — car le Cœur bat pour elle.\n\nRabbi Nahman disait à ses disciples : ce conte parle de l'âme et de D.ieu. L'âme regarde D.ieu de loin et languit de Le rejoindre. D.ieu regarde l'âme et languit aussi. Et c'est ce désir mutuel — jamais complètement satisfait dans ce monde — qui maintient le monde en vie.\n\nLe jour où le Cœur rejoindra la source — ce sera la Rédemption.\n\nEt il s'arrêtait là. Et ne disait plus rien.",
+    "lecon": "Rabbi Nahman n'expliquait pas ses contes — il disait que les expliquer les tuerait. Ce conte parle du désir spirituel qui est à la fois la plus grande souffrance et la plus grande vie. Languidir vers D.ieu — ne jamais être complètement satisfait de sa relation avec le divin — c'est précisément ce qui maintient l'âme vivante et en mouvement.",
+    "detail_source": "Sipourey Maassiot, conte n°13 'Les Sept Mendiants' · Rabbi Nahman de Breslev, recueilli par Rabbi Natan de Nemirov · Arthur Green, 'Tormented Master: The Life and Spiritual Quest of Rabbi Nahman of Bratslav', 1979"
+  },
+  {
+    "id": "nahman-roi-sage",
+    "categorie": "Contes de Rabbi Nahman",
+    "titre": "Le Roi et le Fils du Sage",
+    "sous_titre": "Comment retrouver sa vraie nature quand on l'a oubliée",
+    "source_ref": "Sipourey Maassiot — Contes de Rabbi Nahman, conte n°1",
+    "source_url": "https://www.sefaria.org/Sippurey_Maasiyot",
+    "epoque": "XVIIIe siècle · Ukraine · Breslev",
+    "duree": "5 min",
+    "tags": [
+      "Rabbi Nahman",
+      "conte",
+      "identité",
+      "téchouva",
+      "Breslev"
+    ],
+    "histoire": "Il était une fois un roi qui avait un fils unique.\n\nIl l'envoya étudier chez le plus grand sage du royaume. Des années passèrent. Quand le fils revint, il semblait savant — mais quelque chose n'allait pas.\n\nLe fils croyait être un coq.\n\nIl s'asseyait sous la table, nu, ne mangeait que des grains de blé, battait des bras comme des ailes. Le roi appela les meilleurs médecins — rien n'y fit. Désespéré, il accepta finalement l'aide d'un homme étrange qui se présenta à la cour.\n\nCet homme ôta ses habits. Il se glissa sous la table, à côté du fils, et se mit à battre des bras lui aussi.\n\nLe fils lui demanda : qui es-tu ?\n\nL'homme dit : je suis un coq.\n\nIls restèrent ensemble plusieurs jours. Puis l'homme commença à s'habiller. Le fils dit : mais les coqs ne portent pas de vêtements !\n\nL'homme dit : qui dit qu'un coq ne peut pas porter de vêtements et rester un coq ?\n\nLe fils réfléchit. Et il s'habilla aussi.\n\nPuis l'homme commença à manger de la nourriture d'homme. Le fils dit : mais les coqs ne mangent pas ça !\n\nL'homme dit : qui dit qu'un coq ne peut pas manger de nourriture d'homme et rester un coq ?\n\nPeu à peu, le fils retrouva sa vie normale. Et un matin, il ne savait plus pourquoi il avait cru être un coq.",
+    "lecon": "Rabbi Nahman enseignait que pour ramener quelqu'un à lui-même, il faut d'abord le rejoindre là où il est — sans le juger, sans lui dire qu'il a tort. L'homme qui a sauvé le fils n'a pas dit : tu n'es pas un coq. Il a dit : moi aussi je suis un coq. Et c'est de l'intérieur de son monde qu'il l'a guidé vers la sortie. C'est la méthode du vrai éducateur, du vrai thérapeute — et du vrai maître spirituel.",
+    "detail_source": "Sipourey Maassiot, conte n°1 · Rabbi Nahman de Breslev, recueilli par Rabbi Natan de Nemirov · Adin Steinsaltz, 'Beggars and Prayers', 1985"
+  },
+  {
+    "id": "nahman-mendiants",
+    "categorie": "Contes de Rabbi Nahman",
+    "titre": "Le Mariage dans la Forêt",
+    "sous_titre": "Les sept mendiants et leurs sept dons cachés",
+    "source_ref": "Sipourey Maassiot — Contes de Rabbi Nahman, conte n°13 'Les Sept Mendiants'",
+    "source_url": "https://www.sefaria.org/Sippurey_Maasiyot",
+    "epoque": "XVIIIe siècle · Ukraine · Breslev",
+    "duree": "6 min",
+    "tags": [
+      "Rabbi Nahman",
+      "conte",
+      "pauvreté",
+      "cadeaux cachés",
+      "Breslev"
+    ],
+    "histoire": "Deux enfants — un garçon et une fille — se perdirent dans la forêt.\n\nIls erraient, affamés et apeurés. Un mendiant les trouva. Il leur donna du pain. Ils mangèrent.\n\nLe mendiant était aveugle. Avant de les quitter, il leur dit : que vous soit accordé de vieillir comme moi.\n\nLes enfants ne comprirent pas ce vœu étrange.\n\nD'autres mendiants les trouvèrent au fil des jours. L'un était sourd. L'un bégayait. L'un avait le cou tordu. L'un était bossu. L'un n'avait pas de mains. L'un n'avait pas de pieds. Chacun leur donnait à manger. Chacun leur faisait le même vœu étrange : que vous vieillissiez comme moi.\n\nLes enfants grandissant, on organisa leur mariage. Et au mariage, les sept mendiants revinrent — l'un après l'autre — pour offrir leur cadeau de mariage.\n\nL'aveugle dit : vous pensez que je suis aveugle ? Je ne suis pas aveugle. Mon regard est si élevé qu'il ne peut pas s'abaisser aux illusions du temps. Je vois l'éternité. Ma \"cécité\" est une vision que vous n'imaginez pas.\n\nLe sourd dit : vous pensez que je suis sourd ? Je n'entends pas les complaintes du monde — parce qu'elles ne m'atteignent pas. Ma joie est totale.\n\nEt ainsi de suite — chaque infirmité était en réalité un don extraordinaire, une capacité spirituelle cachée sous une apparence de manque.\n\nRabbi Nahman n'a jamais terminé ce conte. Il disait : le septième mendiant — celui qui n'a pas de pieds — je raconterai son histoire seulement quand le Machia'h viendra.",
+    "lecon": "Ce conte parle de la réalité cachée derrière les apparences. Ce que le monde voit comme une infirmité, une faiblesse, un manque — peut être la manifestation d'une capacité spirituelle extraordinaire. Chaque être humain est un mendiant qui porte en lui un don que le monde ne voit pas. Le travail de la vie est de découvrir quel est ce don.",
+    "detail_source": "Sipourey Maassiot, conte n°13 'Les Sept Mendiants' (inachevé) · Rabbi Nahman de Breslev · Adin Steinsaltz, 'Beggars and Prayers', Basic Books, 1985"
   }
 ];
 
@@ -6009,19 +6113,7 @@ function showToast(msg){
 
 
 function requireLogin(){
-  if(currentUser) return true;
-  // Pas connecté → afficher le profil avec message
-  showProfileView();
-  setTimeout(function(){
-    showAuthMsg('🔐 Connecte-toi pour accéder à cette fonctionnalité', true);
-  }, 300);
-  // Activer l'onglet Profil dans la nav
-  var navItems=document.querySelectorAll('.nav-item');
-  if(navItems.length>=5){
-    navItems.forEach(function(n){n.classList.remove('active');});
-    navItems[4].classList.add('active');
-  }
-  return false;
+  return true; // Login désactivé temporairement
 }
 
 function openRecueilSearch(){
@@ -7951,7 +8043,7 @@ function openHistoires(){
 
 function renderHistoires(){
   var h='<div class="hist-header">'
-    +'<div class="hist-header-title">📖 Histoires Juives</div>'
+    +'<div class="hist-header-title">📖 Histoires Vraies</div>'
     +'<div class="hist-header-sub">Des récits vrais · Des sources authentiques</div>'
     +'</div>';
 
@@ -8028,6 +8120,7 @@ function openHistoireDetail(id){
 // LECTEUR AUDIO (Web Speech API) + TAILLE TEXTE
 // ══════════════════════════════════════════════════════════════
 var _readerUtterance = null;
+var _skipAutoSpeak = false;
 var _readerPlaying = false;
 
 function readerBar(textId, barId){
@@ -8046,7 +8139,7 @@ function readerBar(textId, barId){
 
 function readerToggle(textId, barId){
   var el = document.getElementById(textId);
-  var btn = document.getElementById(barId+'-btn');
+  var btn = document.getElementById('cours-rbtn') || document.getElementById('hist-rbtn') || document.getElementById(barId+'-btn');
   if(!el || !window.speechSynthesis) return;
 
   if(_readerPlaying){
@@ -8073,11 +8166,31 @@ function readerToggle(textId, barId){
   _readerUtterance.rate = 0.92;
   _readerUtterance.pitch = 1;
 
-  // Choisir voix française si disponible
-  var voices = window.speechSynthesis.getVoices();
-  var frVoice = voices.find(function(v){ return v.lang.startsWith('fr') && v.localService; })
-    || voices.find(function(v){ return v.lang.startsWith('fr'); });
-  if(frVoice) _readerUtterance.voice = frVoice;
+  // Choisir la meilleure voix française disponible
+  var setVoice = function(){
+    var voices = window.speechSynthesis.getVoices();
+    // Priorité : voix premium Apple/Google en français
+    var preferred = ['Thomas','Amélie','Nicolas','Google français','fr-FR-Wavenet','Audrey'];
+    var frVoice = null;
+    for(var p=0;p<preferred.length;p++){
+      frVoice = voices.find(function(v){ return v.name.indexOf(preferred[p])>=0; });
+      if(frVoice) break;
+    }
+    if(!frVoice) frVoice = voices.find(function(v){ return v.lang.startsWith('fr') && v.localService; });
+    if(!frVoice) frVoice = voices.find(function(v){ return v.lang.startsWith('fr'); });
+    if(frVoice) _readerUtterance.voice = frVoice;
+    window.speechSynthesis.speak(_readerUtterance);
+    _readerPlaying = true;
+    if(btn){ btn.innerHTML='⏸ Pause'; btn.classList.remove('paused'); }
+  };
+  // Les voix peuvent ne pas être chargées immédiatement
+  if(window.speechSynthesis.getVoices().length > 0){
+    setVoice();
+  } else {
+    window.speechSynthesis.onvoiceschanged = setVoice;
+  }
+  // Annuler le speak automatique ci-dessous (on le fait dans setVoice)
+  _skipAutoSpeak = true;
 
   _readerUtterance.onend = function(){
     _readerPlaying = false;
@@ -8088,9 +8201,12 @@ function readerToggle(textId, barId){
     if(btn){ btn.innerHTML='🔊 Écouter'; btn.classList.remove('paused'); }
   };
 
-  window.speechSynthesis.speak(_readerUtterance);
-  _readerPlaying = true;
-  if(btn){ btn.innerHTML='⏸ Pause'; btn.classList.remove('paused'); }
+  if(!_skipAutoSpeak){
+    window.speechSynthesis.speak(_readerUtterance);
+    _readerPlaying = true;
+    if(btn){ btn.innerHTML='⏸ Pause'; btn.classList.remove('paused'); }
+  }
+  _skipAutoSpeak = false;
 }
 
 function readerStop(barId){
@@ -8161,6 +8277,141 @@ function renderVideos(){
     document.getElementById('vid-list').innerHTML='<div class="vid-empty">Erreur de chargement.</div>';
     console.error(e);
   });
+}
+
+// SIDRA DE LA SEMAINE
+var SIDRA_CALENDAR = [["2026-01-10", "1472-semaine-02", "Chémot"], ["2026-01-17", "1473-semaine-03", "Vaéra"], ["2026-01-24", "1474-semaine-04", "Bo"], ["2026-01-31", "1475-semaine-05", "Bechala'h"], ["2026-02-07", "1476-semaine-06", "Yitro"], ["2026-02-14", "1476-semaine-07", "Téroumah"], ["2026-02-21", "1476-semaine-07", "Téroumah"], ["2026-02-28", "1477-semaine-08", "Tetsavé"], ["2026-03-07", "1478-semaine-09", "Ki Tissa"], ["2026-03-14", "1479-semaine-10", "Vayakhel-Pekoudeï"], ["2026-03-21", "1480-semaine-10", "Vayikra"], ["2026-04-01", "1481-semaine-11", "Pessa'h"], ["2026-04-18", "1482-semaine-11", "Tazria-Metsora"], ["2026-04-25", "1483-semaine-12", "A'hareï Mot-Kedochim"], ["2026-05-02", "1484-semaine-13", "Emor"], ["2026-05-09", "1485-semaine-14", "Behar-Be'houkotaï"], ["2026-05-16", "1486-semaine-15", "Bamidbar"], ["2026-05-23", "1487-semaine-16", "Nasso"], ["2026-05-30", "1488-semaine-17", "Beha'alotcha"], ["2026-06-06", "1489-semaine-18", "Chel'ah"], ["2026-06-13", "1490-semaine-19", "Kora'h"], ["2026-06-20", "1491-semaine-20", "Houkat"], ["2026-06-27", "1492-semaine-21", "Balak"], ["2026-07-04", "1493-semaine-22", "Pin'has"], ["2026-07-11", "1494-semaine-23", "Matot-Massei"], ["2026-07-18", "1495-semaine-24", "Devarim"], ["2026-07-25", "1496-semaine-25", "Vaet'hanan"], ["2026-08-01", "1497-semaine-26", "Ekev"], ["2026-08-08", "1498-semaine-27", "Reéh"], ["2026-08-15", "1499-semaine-28", "Choftim"], ["2026-08-22", "1500-semaine-29", "Ki Tetsé"], ["2026-08-29", "1501-semaine-30", "Ki Tavo"], ["2026-09-05", "1502-semaine-31", "Nitsavim-Vayelech"], ["2026-09-12", "1503-semaine-32", "Haazinou"]];
+
+function getSidraURL(){
+  var now = new Date();
+  var best = null;
+  var bestDiff = Infinity;
+  for(var i=0;i<SIDRA_CALENDAR.length;i++){
+    var s = SIDRA_CALENDAR[i];
+    var shabbat = new Date(s[0]);
+    var sunday = new Date(shabbat); sunday.setDate(shabbat.getDate()-6);
+    var url = 'https://www.loubavitch.fr/etude/la-sidra/item/'+s[1];
+    if(now >= sunday && now <= shabbat) return {id:s[1], nom:s[2], url:url};
+    var diff = Math.abs(now - shabbat);
+    if(diff < bestDiff){ bestDiff=diff; best={id:s[1], nom:s[2], url:url}; }
+  }
+  return best;
+}
+
+function openSidra(){
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  document.getElementById('view-sidra').style.display='block';
+  document.getElementById('btn-back').style.display='flex';
+  var qab=document.getElementById('quick-access-bar'); if(qab) qab.style.display='none';
+  window.scrollTo(0,0);
+  renderSidra();
+}
+
+function renderSidra(){
+  var sidra = getSidraURL();
+  var view = document.getElementById('view-sidra');
+  if(!sidra){
+    view.innerHTML = '<div class="sidra-loading">Aucune Sidra disponible.</div>';
+    return;
+  }
+  view.innerHTML = '<div class="sidra-header">'
+    +'<div class="sidra-header-title">📰 La Sidra de la Semaine</div>'
+    +'<div class="sidra-header-sub">'+ sidra.nom +' · loubavitch.fr</div>'
+    +'</div>'
+    +'<div class="sidra-loading">Chargement...</div>';
+
+  // Charger via proxy CORS ou afficher bouton lien
+  fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(sidra.url))
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var html = data.contents || '';
+    var sections = parseSidra(html, sidra);
+    renderSidraContent(sections, sidra);
+  })
+  .catch(function(){
+    renderSidraFallback(sidra);
+  });
+}
+
+function parseSidra(html, sidra){
+  // Parser le HTML pour extraire les sections
+  var sections = [];
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(html, 'text/html');
+
+  // Editorial
+  var editorial = doc.getElementById('editorial');
+  if(!editorial){
+    // Chercher par texte h2
+    var h2s = doc.querySelectorAll('h2,h3');
+    h2s.forEach(function(h){
+      if(h.textContent.indexOf('Editorial')>=0 || h.textContent.indexOf('ditorial')>=0){
+        editorial = h.parentElement;
+      }
+    });
+  }
+
+  // Extraire les sections par ancres
+  var anchors = {'editorial':'✍️ Éditorial','machiah':'✨ Étincelles de Machia\'h','paracha':'📖 Vivre avec la Paracha','halacha':'⚖️ Le Coin de la Halacha','recit':'🕯 Le Récit de la Semaine'};
+  Object.keys(anchors).forEach(function(anchor){
+    var el = doc.getElementById(anchor);
+    if(!el) return;
+    // Prendre le contenu du parent
+    var parent = el.closest('div') || el.parentElement;
+    if(parent){
+      sections.push({label: anchors[anchor], html: parent.innerHTML});
+    }
+  });
+
+  return sections;
+}
+
+function renderSidraContent(sections, sidra){
+  var view = document.getElementById('view-sidra');
+  var html = '<div class="sidra-header">'
+    +'<div class="sidra-header-title">📰 La Sidra de la Semaine</div>'
+    +'<div class="sidra-header-sub">'+sidra.nom+' · loubavitch.fr</div>'
+    +'</div>';
+
+  if(!sections || !sections.length){
+    renderSidraFallback(sidra);
+    return;
+  }
+
+  sections.forEach(function(s){
+    html += '<div class="sidra-section">'
+      +'<div class="sidra-section-header">'
+      +'<span class="sidra-section-icon">'+s.label.split(' ')[0]+'</span>'
+      +'<span class="sidra-section-title">'+s.label.substring(s.label.indexOf(' ')+1)+'</span>'
+      +'</div>'
+      +'<div class="sidra-section-body">'+s.html+'</div>'
+      +'</div>';
+  });
+
+  html += '<a href="'+sidra.url+'" target="_blank" class="sidra-section" style="display:block;text-align:center;padding:14px 16px;color:var(--purple);font-size:14px;font-weight:600;font-family:Poppins,sans-serif;">Lire la version complète sur loubavitch.fr ↗</a>';
+  view.innerHTML = html;
+}
+
+function renderSidraFallback(sidra){
+  var view = document.getElementById('view-sidra');
+  view.innerHTML = '<div class="sidra-header">'
+    +'<div class="sidra-header-title">📰 La Sidra de la Semaine</div>'
+    +'<div class="sidra-header-sub">'+sidra.nom+'</div>'
+    +'</div>'
+    +'<div style="margin:0 16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:24px 16px;text-align:center;">'
+    +'<div style="font-size:48px;margin-bottom:12px;">📰</div>'
+    +'<div style="font-size:17px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:6px;">'+sidra.nom+'</div>'
+    +'<div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:20px;line-height:1.6;">'
+    +'Éditorial · Étincelles de Machiah · Vivre avec la Paracha · Halacha · Récit</div>'
+    +'<a href="'+sidra.url+'" target="_blank" '
+    +'style="display:inline-block;background:var(--purple);color:#fff;'
+    +'padding:13px 28px;border-radius:24px;font-size:15px;font-weight:600;'
+    +'font-family:Poppins,sans-serif;text-decoration:none;">'
+    +'Lire la Sidra sur loubavitch.fr ↗</a>'
+    +'</div>';
 }
 
 function refreshCoursCard(){
@@ -8270,7 +8521,7 @@ function toggleSemaineCours(btn){
 
 function openAllCours(){
   if(!requireLogin()) return;
-  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos'].forEach(function(id){
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos','view-sidra'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
   });
   var view = document.getElementById('view-histoires');
@@ -8392,9 +8643,18 @@ function openCours(key){
     if(dx > 80 && viewC && viewC.style.display !== 'none') goHome();
   };
 
+  var rBar = '<div class="reader-bar">'
+    +'<button class="reader-btn" id="cours-rbtn" onclick="readerToggle(\'cours-txt\',\'cours-rb\')" >🔊 Écouter</button>'
+    +'<button class="reader-btn paused" onclick="readerStop(\'cours-rb\')" style="padding:8px 12px;">■</button>'
+    +'<div class="reader-size"><span class="reader-size-label">A</span>'
+    +'<input type="range" min="13" max="22" value="15" oninput="document.getElementById(\'cours-txt\').style.fontSize=this.value+\'px\'" />'
+    +'<span class="reader-size-label" style="font-size:17px;">A</span></div>'
+    +'</div>';
+
   view.innerHTML = '<div class="cours-view">'
-    // Header
-    +'<div class="cv-label">📜 Torah · Rachi · Rabbi</div>'
+    + rBar
+    + '<div id="cours-txt">'
+    + '<div class="cv-label">📜 Torah · Rachi · Rabbi</div>'
     +'<div class="cv-titre">'+c.titre+'</div>'
     +'<div class="cv-sous-titre">'+c.sous_titre+'</div>'
     +'<div class="cv-accroche-titre">'+c.accroche+'</div>'
