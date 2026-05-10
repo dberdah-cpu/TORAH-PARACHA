@@ -8236,57 +8236,34 @@ function openVideos(){
 }
 
 function renderVideos(){
-  var view=document.getElementById('view-videos');
-  view.innerHTML='<div class="vid-header">'
-    +'<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
-    +'<div class="vid-header-sub">Archives JEM France</div>'
-    +'</div><div id="vid-list"><div class="vid-empty">Chargement...</div></div>';
-  // API Supabase Storage — lister les fichiers du bucket public
-  // API Supabase Storage — body minimal requis
-  fetch('https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/list/videos',{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek',
-      'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek'
+  var VIDEOS_LIST = [
+    {
+      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/la%20cle%20de%20la%20benediction.mp4',
+      titre: 'La clé de la bénédiction',
+      description: 'Archives JEM France'
     },
-    body:'{}'
-  })
-  .then(function(r){
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return r.json();
-  })
-  .then(function(files){
-    if(!files||!Array.isArray(files)||!files.length){
-      document.getElementById('vid-list').innerHTML='<div class="vid-empty">Aucune vidéo dans le bucket.</div>';
-      return;
-    }
-    var html='';
-    files.forEach(function(f){
-      if(!f.name||f.name==='.emptyFolderPlaceholder') return;
-      var url='https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/'+encodeURIComponent(f.name);
-      var title=f.name.replace(/WhatsApp Video /gi,'').replace(/\.mp4$/i,'').replace(/%20/g,' ').trim();
-      var size=f.metadata&&f.metadata.size?(f.metadata.size/1024/1024).toFixed(1)+' Mo':'';
-      html+='<div class="vid-card">'
-        +'<video class="vid-player" controls preload="metadata" playsinline>'
-        +'<source src="'+url+'" type="video/mp4">'
-        +'</video>'
-        +'<div class="vid-info">'
-        +'<div class="vid-title">🎬 '+title+'</div>'
-        +(size?'<div class="vid-meta">'+size+'</div>':'')
-        +'</div></div>';
-    });
-    document.getElementById('vid-list').innerHTML=html||'<div class="vid-empty">Aucune vidéo.</div>';
-  })
-  .catch(function(e){
-    document.getElementById('vid-list').innerHTML='<div class="vid-empty">Erreur de chargement.</div>';
-    console.error(e);
+  ];
+  var view = document.getElementById('view-videos');
+  if(!VIDEOS_LIST.length){
+    view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos du Rabbi</div></div><div class="vid-empty">Aucune vidéo disponible.</div>';
+    return;
+  }
+  var html = '<div class="vid-header">'
+    + '<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
+    + '<div class="vid-header-sub">Archives JEM France · '+VIDEOS_LIST.length+' vidéo'+(VIDEOS_LIST.length>1?'s':'')+' disponible'+(VIDEOS_LIST.length>1?'s':'')+'</div>'
+    + '</div>';
+  VIDEOS_LIST.forEach(function(v){
+    html += '<div class="vid-card">'
+      + '<video class="vid-player" controls preload="metadata" playsinline>'
+      + '<source src="'+v.url+'" type="video/mp4">'
+      + '</video>'
+      + '<div class="vid-info">'
+      + '<div class="vid-title">🎬 '+v.titre+'</div>'
+      + (v.description?'<div class="vid-meta">'+v.description+'</div>':'')
+      + '</div></div>';
   });
+  view.innerHTML = html;
 }
-
-// SIDRA DE LA SEMAINE
-var SIDRA_CALENDAR = [["2026-01-10", "1472-semaine-02", "Chémot"], ["2026-01-17", "1473-semaine-03", "Vaéra"], ["2026-01-24", "1474-semaine-04", "Bo"], ["2026-01-31", "1475-semaine-05", "Bechala'h"], ["2026-02-07", "1476-semaine-06", "Yitro"], ["2026-02-14", "1476-semaine-07", "Téroumah"], ["2026-02-21", "1476-semaine-07", "Téroumah"], ["2026-02-28", "1477-semaine-08", "Tetsavé"], ["2026-03-07", "1478-semaine-09", "Ki Tissa"], ["2026-03-14", "1479-semaine-10", "Vayakhel-Pekoudeï"], ["2026-03-21", "1480-semaine-10", "Vayikra"], ["2026-04-01", "1481-semaine-11", "Pessa'h"], ["2026-04-18", "1482-semaine-11", "Tazria-Metsora"], ["2026-04-25", "1483-semaine-12", "A'hareï Mot-Kedochim"], ["2026-05-02", "1484-semaine-13", "Emor"], ["2026-05-09", "1485-semaine-14", "Behar-Be'houkotaï"], ["2026-05-16", "1486-semaine-15", "Bamidbar"], ["2026-05-23", "1487-semaine-16", "Nasso"], ["2026-05-30", "1488-semaine-17", "Beha'alotcha"], ["2026-06-06", "1489-semaine-18", "Chel'ah"], ["2026-06-13", "1490-semaine-19", "Kora'h"], ["2026-06-20", "1491-semaine-20", "Houkat"], ["2026-06-27", "1492-semaine-21", "Balak"], ["2026-07-04", "1493-semaine-22", "Pin'has"], ["2026-07-11", "1494-semaine-23", "Matot-Massei"], ["2026-07-18", "1495-semaine-24", "Devarim"], ["2026-07-25", "1496-semaine-25", "Vaet'hanan"], ["2026-08-01", "1497-semaine-26", "Ekev"], ["2026-08-08", "1498-semaine-27", "Reéh"], ["2026-08-15", "1499-semaine-28", "Choftim"], ["2026-08-22", "1500-semaine-29", "Ki Tetsé"], ["2026-08-29", "1501-semaine-30", "Ki Tavo"], ["2026-09-05", "1502-semaine-31", "Nitsavim-Vayelech"], ["2026-09-12", "1503-semaine-32", "Haazinou"]];
-
 function getSidraURL(){
   var now = new Date();
   var best = null;
