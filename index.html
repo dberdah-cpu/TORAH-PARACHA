@@ -351,6 +351,39 @@
 .sidra-section-body strong{font-weight:700;}
 .sidra-section-body em{font-style:italic;}
 .sidra-link{display:block;text-align:center;padding:12px;color:var(--purple);font-size:13px;font-weight:600;font-family:Poppins,sans-serif;border-top:1px solid var(--gray-2);}
+/* ── ADMIN ───────────────────────────────────────────────── */
+#view-admin{display:none;position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto;}
+.admin-header{background:linear-gradient(135deg,#1a0533,#2d0b5e);padding:60px 16px 20px;position:sticky;top:0;z-index:10;}
+.admin-title{font-size:22px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;}
+.admin-sub{font-size:13px;color:rgba(255,255,255,.6);font-family:Poppins,sans-serif;margin-top:2px;}
+.admin-tabs{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--gray-2);overflow-x:auto;position:sticky;top:0;z-index:9;}
+.admin-tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;border:none;cursor:pointer;white-space:nowrap;background:var(--gray-1);color:var(--gray-4);}
+.admin-tab.active{background:var(--purple);color:#fff;}
+.admin-section{display:none;padding:16px;}
+.admin-section.active{display:block;}
+.admin-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px;margin-bottom:12px;}
+.admin-card-title{font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.admin-input{width:100%;padding:10px 14px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:14px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none;margin-bottom:10px;box-sizing:border-box;}
+.admin-input:focus{border-color:var(--purple);}
+.admin-textarea{width:100%;padding:10px 14px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:14px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none;margin-bottom:10px;box-sizing:border-box;resize:vertical;min-height:80px;}
+.admin-btn{padding:11px 20px;border:none;border-radius:20px;font-size:14px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;}
+.admin-btn-primary{background:var(--purple);color:#fff;}
+.admin-btn-danger{background:#ef4444;color:#fff;}
+.admin-btn-secondary{background:var(--gray-1);color:var(--dark);}
+.admin-vid-item{background:var(--gray-1);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
+.admin-vid-info{flex:1;}
+.admin-vid-titre{font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;}
+.admin-vid-msg{font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:3px;line-height:1.5;}
+.admin-user-item{background:var(--gray-1);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;}
+.admin-user-email{font-size:14px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;}
+.admin-user-meta{font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:3px;}
+.admin-stat{background:var(--gray-1);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.admin-stat-label{font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;}
+.admin-stat-val{font-size:18px;font-weight:800;color:var(--purple);font-family:Poppins,sans-serif;}
+.admin-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;font-family:Poppins,sans-serif;}
+.admin-badge-green{background:#d1fae5;color:#065f46;}
+.admin-badge-red{background:#fee2e2;color:#991b1b;}
+.admin-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;z-index:9999;display:none;}
 .cv-week-nav{
   display:flex;gap:6px;flex-wrap:wrap;
   margin:0 0 16px;padding:12px 16px;
@@ -2795,6 +2828,48 @@ function togglePS(){
   if(arrow) arrow.classList.toggle('open',!isOpen);
   try{localStorage.setItem('ps_open',isOpen?'0':'1');}catch(e){}
 }
+
+// ══ SWIPE NAVIGATION GLOBALE ══════════════════════════════
+var _swX = 0; var _swY = 0; var _swActive = false;
+
+document.addEventListener('touchstart', function(e){
+  _swX = e.touches[0].clientX;
+  _swY = e.touches[0].clientY;
+  _swActive = _swX < 50; // Seulement depuis le bord gauche (50px)
+}, {passive:true});
+
+document.addEventListener('touchend', function(e){
+  if(!_swActive) return;
+  var dx = e.changedTouches[0].clientX - _swX;
+  var dy = Math.abs(e.changedTouches[0].clientY - _swY);
+  // Swipe horizontal > 60px et plus horizontal que vertical
+  if(dx > 60 && dy < 80){
+    // Déterminer quelle vue est active et où revenir
+    var views = {
+      'view-cours': function(){ goHome(); },
+      'view-histoire-detail': function(){
+        document.getElementById('view-histoire-detail').style.display='none';
+        document.getElementById('view-histoires').style.display='block';
+        window.scrollTo(0,0);
+      },
+      'view-histoires': function(){ goHome(); },
+      'view-videos': function(){ goHome(); },
+      'view-hayom': function(){ goHome(); },
+      'view-sefer': function(){ goHome(); },
+      'view-recueil': function(){ goHome(); },
+      'view-detail': function(){ goHome(); },
+      'view-profile': function(){ goHome(); },
+    };
+    for(var id in views){
+      var el = document.getElementById(id);
+      if(el && el.style.display !== 'none' && el.style.display !== ''){
+        views[id]();
+        break;
+      }
+    }
+  }
+  _swActive = false;
+}, {passive:true});
 
 function goHome(){
   if(window.speechSynthesis) window.speechSynthesis.cancel();
@@ -8082,16 +8157,7 @@ function openHistoireDetail(id){
   document.getElementById('view-histoire-detail').style.display='block';
   window.scrollTo(0,0);
 
-  // Swipe retour vers liste
-  var _sx=0;
-  document.ontouchstart=function(e){_sx=e.touches[0].clientX;};
-  document.ontouchend=function(e){
-    if(e.changedTouches[0].clientX-_sx>80){
-      document.getElementById('view-histoire-detail').style.display='none';
-      document.getElementById('view-histoires').style.display='block';
-      window.scrollTo(0,0);
-    }
-  };
+
 
   // Tags
   var tags = (s.tags||[]).map(function(t){return '<span class="hd-meta-tag">'+t+'</span>';}).join('');
@@ -8295,6 +8361,8 @@ function renderVideos(){
   ];
 
   // Vidéo du jour — rotation automatique
+  // Si vidéos chargées depuis la DB — les utiliser
+  if(window._videosFromDB && window._videosFromDB.length) VIDEOS_LIST = window._videosFromDB;
   var dayIndex = Math.floor(Date.now() / (1000*60*60*24)) % VIDEOS_LIST.length;
   var featured = VIDEOS_LIST[dayIndex];
 
@@ -8553,6 +8621,184 @@ function renderSidraContent(s){
       return '<div onclick="window.open(\'' + s.url + '\',\'_blank\')" style="padding:10px 16px;border-top:1px solid var(--gray-2);font-size:14px;font-family:Poppins,sans-serif;color:var(--dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;">'+sec+'<span style="color:var(--gray-4);">›</span></div>';
     }).join('')
     +'</div>';
+}
+
+// ══════════════════════════════════════════════════════════════
+// DASHBOARD ADMIN
+// ══════════════════════════════════════════════════════════════
+var ADMIN_CODE = 'kedoshim2026';
+var SUPABASE_URL = 'https://atsfgzabpwirfhnzpzei.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0c2ZnemFicHdpcmZobnpwemVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjYzNjcsImV4cCI6MjAyODI0MjM2N30.I5PxIHmMwSUxTEIkEoIj0PEsHVhp5w_vlFRYWzVREek';
+var _adminTapCount = 0; var _adminTapTimer = null;
+
+function sbFetch(path, method, body){
+  return fetch(SUPABASE_URL + path, {
+    method: method || 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Prefer': 'return=representation'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  }).then(function(r){ return r.json(); });
+}
+
+function openAdmin(){
+  var code = prompt('Code administrateur :');
+  if(code !== ADMIN_CODE){ alert('Code incorrect.'); return; }
+  document.getElementById('view-admin').style.display = 'block';
+  adminTab('videos');
+  adminLoadVideos();
+  adminLoadUsers();
+  adminLoadStats();
+}
+
+function closeAdmin(){
+  document.getElementById('view-admin').style.display = 'none';
+}
+
+function adminTab(tab){
+  document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.admin-section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('admin-'+tab).classList.add('active');
+  event.target.classList.add('active');
+  if(tab==='users') adminLoadUsers();
+  if(tab==='stats') adminLoadStats();
+}
+
+function adminToast(msg, ok){
+  var t = document.getElementById('admin-toast');
+  t.textContent = (ok ? '✅ ' : '❌ ') + msg;
+  t.style.display = 'block';
+  setTimeout(function(){ t.style.display='none'; }, 3000);
+}
+
+// ── VIDÉOS ────────────────────────────────────────────────────
+function adminLoadVideos(){
+  sbFetch('/rest/v1/videos_data?order=ordre.asc,created_at.desc&select=*')
+  .then(function(data){
+    if(!Array.isArray(data)){ 
+      document.getElementById('adm-vid-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo enregistrée.</div>';
+      return;
+    }
+    var html = '';
+    data.forEach(function(v){
+      html += '<div class="admin-vid-item">'
+        + '<div class="admin-vid-info">'
+        + '<div class="admin-vid-titre">' + v.titre + '</div>'
+        + '<div class="admin-vid-msg">' + (v.message||'').substring(0,80) + '...</div>'
+        + '<span class="admin-badge ' + (v.actif ? 'admin-badge-green' : 'admin-badge-red') + '">'
+        + (v.actif ? 'En ligne' : 'Masquée') + '</span>'
+        + '</div>'
+        + '<button onclick="adminDeleteVideo(\'' + v.id + '\')" class="admin-btn admin-btn-danger" style="padding:6px 12px;font-size:12px;">✕</button>'
+        + '</div>';
+    });
+    document.getElementById('adm-vid-list').innerHTML = html || '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo.</div>';
+    // Mettre à jour aussi la section vidéos de l'app
+    if(data.length) syncVideosFromDB(data);
+  })
+  .catch(function(){
+    document.getElementById('adm-vid-list').innerHTML = '<div style="color:#ef4444;font-size:13px;">Erreur de connexion Supabase.</div>';
+  });
+}
+
+function adminAddVideo(){
+  var url = document.getElementById('adm-vid-url').value.trim();
+  var titre = document.getElementById('adm-vid-titre').value.trim();
+  var msg = document.getElementById('adm-vid-msg').value.trim();
+  if(!url || !titre){ adminToast('URL et titre obligatoires'); return; }
+  sbFetch('/rest/v1/videos_data', 'POST', {url:url, titre:titre, message:msg, actif:true, ordre:0})
+  .then(function(data){
+    if(data && !data.error){
+      adminToast('Vidéo ajoutée !', true);
+      document.getElementById('adm-vid-url').value = '';
+      document.getElementById('adm-vid-titre').value = '';
+      document.getElementById('adm-vid-msg').value = '';
+      adminLoadVideos();
+    } else {
+      adminToast('Erreur: ' + (data.message || 'inconnue'));
+    }
+  });
+}
+
+function adminDeleteVideo(id){
+  if(!confirm('Supprimer cette vidéo ?')) return;
+  sbFetch('/rest/v1/videos_data?id=eq.'+id, 'DELETE')
+  .then(function(){ adminToast('Vidéo supprimée', true); adminLoadVideos(); });
+}
+
+function syncVideosFromDB(data){
+  // Mettre à jour VIDEOS_LIST en temps réel depuis la DB
+  window._videosFromDB = data;
+}
+
+// ── UTILISATEURS ──────────────────────────────────────────────
+function adminLoadUsers(){
+  sbFetch('/rest/v1/profiles?order=created_at.desc&select=*')
+  .then(function(data){
+    if(!Array.isArray(data) || !data.length){
+      document.getElementById('adm-user-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucun utilisateur inscrit.</div>';
+      return;
+    }
+    var html = '';
+    data.forEach(function(u){
+      var date = u.created_at ? new Date(u.created_at).toLocaleDateString('fr-FR') : '-';
+      var last = u.last_seen ? new Date(u.last_seen).toLocaleDateString('fr-FR') : 'jamais';
+      html += '<div class="admin-user-item">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;">'
+        + '<div class="admin-user-email">' + (u.email || u.id.substring(0,8)+'...') + '</div>'
+        + '<span class="admin-badge ' + (u.actif ? 'admin-badge-green' : 'admin-badge-red') + '">' + (u.actif?'Actif':'Inactif') + '</span>'
+        + '</div>'
+        + '<div class="admin-user-meta">Inscrit le ' + date + ' · Dernière visite: ' + last + '</div>'
+        + (u.role==='admin' ? '<span class="admin-badge" style="background:#ede9fe;color:#5b21b6;">Admin</span>' : '')
+        + '</div>';
+    });
+    document.getElementById('adm-user-list').innerHTML = html;
+  })
+  .catch(function(){
+    document.getElementById('adm-user-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Connexion à la DB utilisateurs impossible.</div>';
+  });
+}
+
+// ── STATISTIQUES ───────────────────────────────────────────────
+function adminLoadStats(){
+  var statsHtml = '';
+  // Stats locales
+  statsHtml += '<div class="admin-stat"><span class="admin-stat-label">📜 Cours rédigés</span><span class="admin-stat-val">102</span></div>';
+  statsHtml += '<div class="admin-stat"><span class="admin-stat-label">📖 Histoires vraies</span><span class="admin-stat-val">61</span></div>';
+  statsHtml += '<div class="admin-stat"><span class="admin-stat-label">✦ Citations 365</span><span class="admin-stat-val">365</span></div>';
+  statsHtml += '<div class="admin-stat"><span class="admin-stat-label">🎬 Vidéos en ligne</span><span class="admin-stat-val" id="stat-vid-count">...</span></div>';
+  
+  // Compter les vidéos
+  sbFetch('/rest/v1/videos_data?actif=eq.true&select=id')
+  .then(function(data){
+    var count = Array.isArray(data) ? data.length : '-';
+    document.getElementById('stat-vid-count').textContent = count;
+  }).catch(function(){});
+
+  statsHtml += '<div style="margin-top:16px;padding:12px;background:var(--gray-1);border-radius:var(--radius-sm);">'
+    + '<div style="font-size:12px;font-weight:700;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:8px;">PARASHOT COUVERTES</div>'
+    + '<div style="font-size:13px;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.8;">'
+    + 'Behar · Bamidbar · Nasso · Behalotecha · Chelah · Korah · Choukat · Balak · Pinhas · Matot · Devarim · Vaethanan · Ekev · Reeh · Choftim · Ki Tavo · Nitsavim'
+    + '</div></div>';
+
+  document.getElementById('adm-stats-content').innerHTML = statsHtml;
+}
+
+// ── MESSAGE DU JOUR ────────────────────────────────────────────
+function adminSaveMsg(){
+  var msg = document.getElementById('adm-msg-jour').value.trim();
+  localStorage.setItem('admin_msg_jour', msg);
+  adminToast('Message enregistré !', true);
+}
+
+// ── ACCÈS ADMIN (triple tap sur titre app) ───────────────────
+function adminTitleTap(){
+  _adminTapCount++;
+  clearTimeout(_adminTapTimer);
+  if(_adminTapCount >= 3){ _adminTapCount=0; openAdmin(); return; }
+  _adminTapTimer = setTimeout(function(){ _adminTapCount=0; }, 600);
 }
 
 function refreshCoursCard(){
@@ -8908,4 +9154,84 @@ try {
     <span class="nav-label">Profil</span>
   </div>
 </nav>
+
+<!-- ADMIN PANEL -->
+<div id="view-admin">
+  <div class="admin-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div class="admin-title">⚙️ Dashboard Admin</div>
+        <div class="admin-sub">Kedoshim · Torah App</div>
+      </div>
+      <button onclick="closeAdmin()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">✕ Fermer</button>
+    </div>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="adminTab('videos')">🎬 Vidéos</button>
+    <button class="admin-tab" onclick="adminTab('users')">👥 Utilisateurs</button>
+    <button class="admin-tab" onclick="adminTab('stats')">📊 Statistiques</button>
+    <button class="admin-tab" onclick="adminTab('app')">⚙️ App</button>
+  </div>
+
+  <!-- VIDÉOS -->
+  <div id="admin-videos" class="admin-section active">
+    <div class="admin-card">
+      <div class="admin-card-title">➕ Ajouter une vidéo</div>
+      <input id="adm-vid-url" class="admin-input" placeholder="URL Supabase de la vidéo" />
+      <input id="adm-vid-titre" class="admin-input" placeholder="Titre de la vidéo" />
+      <textarea id="adm-vid-msg" class="admin-textarea" placeholder="Mini message (3-4 lignes sur le sujet)"></textarea>
+      <button class="admin-btn admin-btn-primary" onclick="adminAddVideo()" style="width:100%;">Enregistrer la vidéo</button>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-title">📋 Vidéos en ligne</div>
+      <div id="adm-vid-list">Chargement...</div>
+    </div>
+  </div>
+
+  <!-- UTILISATEURS -->
+  <div id="admin-users" class="admin-section">
+    <div class="admin-card">
+      <div class="admin-card-title">👥 Utilisateurs inscrits</div>
+      <div id="adm-user-list">Chargement...</div>
+    </div>
+  </div>
+
+  <!-- STATISTIQUES -->
+  <div id="admin-stats" class="admin-section">
+    <div class="admin-card">
+      <div class="admin-card-title">📊 Statistiques de l'app</div>
+      <div id="adm-stats-content">Chargement...</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="admin-app" class="admin-section">
+    <div class="admin-card">
+      <div class="admin-card-title">💬 Message du jour</div>
+      <textarea id="adm-msg-jour" class="admin-textarea" placeholder="Message spécial affiché en bannière aujourd'hui..."></textarea>
+      <button class="admin-btn admin-btn-primary" onclick="adminSaveMsg()">Enregistrer</button>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-title">🔧 Sections actives</div>
+      <div id="adm-sections-list">
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 0;font-family:Poppins,sans-serif;font-size:14px;"><input type="checkbox" checked id="sec-videos"> 🎬 Vidéos</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 0;font-family:Poppins,sans-serif;font-size:14px;"><input type="checkbox" checked id="sec-histoires"> 📖 Histoires Vraies</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:8px 0;font-family:Poppins,sans-serif;font-size:14px;"><input type="checkbox" checked id="sec-cours"> 📜 Cours du jour</label>
+      </div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-title">🔑 Infos Admin</div>
+      <div class="admin-stat"><span class="admin-stat-label">Version app</span><span class="admin-stat-val">1.0</span></div>
+      <div class="admin-stat"><span class="admin-stat-label">Hébergement</span><span class="admin-stat-val" style="font-size:13px;">GitHub Pages</span></div>
+      <div class="admin-stat"><span class="admin-stat-label">Base de données</span><span class="admin-stat-val" style="font-size:13px;">Supabase</span></div>
+      <div class="admin-stat"><span class="admin-stat-label">Code admin</span><span class="admin-stat-val" style="font-size:13px;">kedoshim2026</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="admin-toast" id="admin-toast"></div>
+
+<!-- Bouton admin caché (triple tap sur le titre) -->
+
 </body></html>
