@@ -1194,7 +1194,12 @@ body{
   </div>
 </div>
 
-    <!-- Profil connecté (affiché si connecté) -->
+    <!-- Bouton admin discret -->
+    <div style="text-align:center;margin-top:32px;">
+      <button onclick="openAdmin()" style="background:transparent;border:1px solid var(--gray-2);color:var(--gray-4);padding:8px 20px;border-radius:20px;font-size:12px;font-family:Poppins,sans-serif;cursor:pointer;">⚙️</button>
+    </div>
+
+<!-- Profil connecté (affiché si connecté) -->
     <div id="profile-connected-block" style="display:none;background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
       <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;font-family:Poppins,sans-serif">Mon compte</div>
       <div id="profile-info" style="font-size:14px;color:var(--gray-4);margin-bottom:20px;line-height:1.6"></div>
@@ -8797,8 +8802,8 @@ function adminSaveMsg(){
 function adminTitleTap(){
   _adminTapCount++;
   clearTimeout(_adminTapTimer);
-  if(_adminTapCount >= 3){ _adminTapCount=0; openAdmin(); return; }
-  _adminTapTimer = setTimeout(function(){ _adminTapCount=0; }, 600);
+  if(_adminTapCount >= 5){ _adminTapCount=0; openAdmin(); return; }
+  _adminTapTimer = setTimeout(function(){ _adminTapCount=0; }, 800);
 }
 
 function refreshCoursCard(){
@@ -9065,6 +9070,11 @@ function openCours(key){
 }
 
 // INIT — buildHome est appelé par initLoc après chargement Hebcal
+// Accès admin via URL ?admin=kedoshim2026
+if(window.location.search.indexOf('admin=kedoshim2026') >= 0){
+  setTimeout(function(){ openAdmin(); }, 1000);
+}
+
 try {
   buildHome();
 } catch(e) {
