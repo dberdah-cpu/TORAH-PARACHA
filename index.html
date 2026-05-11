@@ -8307,102 +8307,65 @@ function openVideos(){
 }
 
 function renderVideos(){
-  var VIDEOS_LIST = [
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/chaque%20instant%20compte.mp4',
-      titre: 'Chaque instant compte',
-      message: "L'horloge ne s'arrête pas. Les opportunités non plus. Le Rabbi enseignait que chaque seconde est une porte qui s'ouvre — et qui ne reviendra jamais. La question n'est pas d'avoir le temps, mais de choisir comment l'habiter."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/deuxieme%20chance.mp4',
-      titre: 'La deuxième chance',
-      message: "Pessah Cheni — la Torah offre une deuxième opportunité à ceux qui ont raté la première. Ce n'est pas une exception : c'est un principe fondamental. Il n'est jamais trop tard pour se reconnecter. La distance n'est jamais définitive."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/ton%20passe%20te%20detruit.mp4',
-      titre: 'Ton passé ne te définit pas',
-      message: "Chaque fois que tu revis tes échecs, tu laisses le passé décider de ton futur. La Torah ne demande pas d'effacer ce qui s'est passé — elle demande de le transformer. Tu n'es pas ce qui t'a brisé. Tu es ce que tu construis maintenant."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/donnez%20avant%20de%20recevoir.mp4',
-      titre: 'Donnez avant de recevoir',
-      message: "Le Rabbi révèle un secret contre-intuitif : le canal de l'abondance s'ouvre par le don, pas par la retenue. Donner avant de recevoir n'est pas une prise de risque — c'est la loi spirituelle la plus puissante de la création."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/faire%20participer%20les%20enfant.mp4',
-      titre: 'Faire participer les enfants',
-      message: "Quand un enfant participe — même pour applaudir — quelque chose se grave en lui pour toujours. Le Rabbi enseignait que l'éducation ne passe pas par les mots mais par l'inclusion. Laisser un enfant faire partie de quelque chose, c'est lui dire : tu comptes."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/jamais%20seul.mp4',
-      titre: 'Jamais seul',
-      message: "Rabbi Shimon bar Yochaï enseignait une vérité intemporelle : peu importe les ténèbres, la présence divine ne disparaît jamais. Dans la grotte, dans l'exil, dans les moments les plus sombres — Il est là. Tu n'es jamais vraiment seul."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/l%20ame%20ne%20meurt%20jamais.mp4',
-      titre: "L'âme ne meurt jamais",
-      message: "Ce qu'Auschwitz n'a pas pu détruire. Quand un être cher disparaît, la douleur est réelle — mais quelque chose d'essentiel continue. L'âme est éternelle. La flamme que quelqu'un a allumée en toi ne s'éteint pas avec lui."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/la%20cle%20de%20la%20benediction.mp4',
-      titre: 'La clé de la bénédiction',
-      message: "Dans la paracha, D.ieu révèle la puissance qu'il y a à vivre en accord avec le Divin. La bénédiction n'est pas un miracle extérieur — c'est la conséquence naturelle d'une vie alignée. La clé est entre tes mains."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/montrez%20l%20exemple.mp4',
-      titre: "Montrez l'exemple",
-      message: "Ce n'est pas ce que vous dites qui forme vos enfants et vos proches — c'est ce qu'ils voient. Le Rabbi enseignait : sois la Torah que tu veux transmettre. Les mots s'oublient. L'exemple reste gravé pour toujours."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/quel%20est%20le%20but%20dans%20la%20vie.mp4',
-      titre: 'Quel est le but dans la vie ?',
-      message: "Trouver sa mission peut sembler écrasant. Mais le Rabbi enseignait que ta raison d'être n'est pas cachée au bout du monde — elle est dans ce que tu es déjà, dans ce qui te tient à cœur, dans les talents que D.ieu t'a donnés. La réponse est plus proche qu'on ne le pense."
-    },
-    {
-      url: 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/un%20lien%20indefectible.mp4',
-      titre: 'Un lien indéfectible',
-      message: "D.ieu dépasse toutes les limites de ce monde. Quand nous nous connectons à Lui, nous accédons à une force qui nous dépasse infiniment. Ce lien n'est jamais rompu — même quand on croit l'avoir perdu. Il suffit de le retrouver."
-    },
-  ];
+  var view = document.getElementById('view-videos');
+  view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos du Rabbi</div><div class="vid-header-sub">Archives JEM France</div></div><div style="text-align:center;padding:30px;color:var(--gray-4);font-family:Poppins,sans-serif;">Chargement...</div>';
+  fetch('https://atsfgzabpwirfhnzpzei.supabase.co/rest/v1/videos_data?actif=eq.true&order=ordre.asc,created_at.desc&select=*', {
+    headers: {
+      'apikey': 'sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK',
+      'Authorization': 'Bearer sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK'
+    }
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(!Array.isArray(data) || !data.length){ renderVideosHardcoded(); return; }
+    var dayIndex = Math.floor(Date.now() / (1000*60*60*24)) % data.length;
+    var featured = data[dayIndex];
+    var html = '<div class="vid-header">'
+      + '<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
+      + '<div class="vid-header-sub">Archives JEM France · ' + data.length + ' vidéo' + (data.length>1?'s':'') + '</div>'
+      + '</div>';
+    html += '<div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0533,#2d0b5e);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);">'
+      + '<div style="padding:10px 14px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR</div>'
+      + '<div style="padding:0 14px 6px;font-size:16px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">' + featured.titre + '</div>'
+      + '<div style="padding:0 14px 12px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-family:Poppins,sans-serif;">' + (featured.message||'') + '</div>'
+      + '<video style="width:100%;max-height:240px;background:#000;display:block;" controls preload="metadata" playsinline>'
+      + '<source src="' + featured.url + '" type="video/mp4">'
+      + '</video></div>';
+    if(data.length > 1){
+      html += '<div style="margin:0 16px 4px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;padding:0 0 8px;">TOUTES LES VIDÉOS</div>';
+      data.forEach(function(v, idx){
+        if(idx === dayIndex) return;
+        html += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
+          + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
+          + '<div style="padding:0 14px 10px;font-size:12px;color:var(--gray-4);line-height:1.55;font-family:Poppins,sans-serif;">' + (v.message||'') + '</div>'
+          + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
+          + '<source src="' + v.url + '" type="video/mp4">'
+          + '</video></div>';
+      });
+    }
+    view.innerHTML = html;
+  })
+  .catch(function(){ renderVideosHardcoded(); });
+}
 
-  // Vidéo du jour — rotation automatique
-  // Si vidéos chargées depuis la DB — les utiliser
+function renderVideosHardcoded(){
+  var VIDEOS_LIST = [
+    {url:'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/la%20cle%20de%20la%20benediction.mp4',titre:'La clé de la bénédiction',message:'Dans la paracha, D.ieu révèle la puissance qu\'il y a à vivre en accord avec le Divin. La bénédiction n\'est pas un miracle extérieur.'},
+    {url:'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/chaque%20instant%20compte.mp4',titre:'Chaque instant compte',message:'L\'horloge ne s\'arrête pas. Chaque seconde est une porte qui s\'ouvre et ne reviendra jamais.'},
+    {url:'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/deuxieme%20chance.mp4',titre:'La deuxième chance',message:'Il n\'est jamais trop tard. La Torah offre une deuxième opportunité à ceux qui ont raté la première.'},
+  ];
   if(window._videosFromDB && window._videosFromDB.length) VIDEOS_LIST = window._videosFromDB;
   var dayIndex = Math.floor(Date.now() / (1000*60*60*24)) % VIDEOS_LIST.length;
   var featured = VIDEOS_LIST[dayIndex];
-
   var view = document.getElementById('view-videos');
-  var html = '<div class="vid-header">'
-    + '<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
-    + '<div class="vid-header-sub">Archives JEM France · ' + VIDEOS_LIST.length + ' vidéos disponibles</div>'
-    + '</div>';
-
-  // Vidéo du jour en vedette
-  html += '<div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0533,#2d0b5e);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);">'
-    + '<div style="padding:10px 14px 6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR</div>'
-    + '<div style="padding:0 14px 10px;font-size:16px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">' + featured.titre + '</div>'
-    + '<div style="padding:0 14px 12px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-family:Poppins,sans-serif;">' + featured.message + '</div>'
+  view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
+    + '<div class="vid-header-sub">Archives JEM France</div></div>'
+    + '<div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0533,#2d0b5e);border-radius:var(--radius);overflow:hidden;">'
+    + '<div style="padding:10px 14px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR</div>'
+    + '<div style="padding:0 14px 6px;font-size:16px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">' + featured.titre + '</div>'
+    + '<div style="padding:0 14px 12px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-family:Poppins,sans-serif;">' + (featured.message||'') + '</div>'
     + '<video style="width:100%;max-height:240px;background:#000;display:block;" controls preload="metadata" playsinline>'
-    + '<source src="' + featured.url + '" type="video/mp4">'
-    + '</video>'
-    + '</div>';
-
-  // Toutes les vidéos
-  html += '<div style="margin:0 16px 4px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">TOUTES LES VIDÉOS</div>';
-  VIDEOS_LIST.forEach(function(v, idx){
-    var isToday = (idx === dayIndex);
-    html += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;"'
-      + (isToday ? ' style="border:2px solid var(--purple);"' : '') + '>'
-      + '<div style="padding:10px 14px 6px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'
-      + (isToday ? '▶ ' : '') + v.titre + '</div>'
-      + '<div style="padding:0 14px 10px;font-size:12px;color:var(--gray-4);line-height:1.55;font-family:Poppins,sans-serif;">' + v.message + '</div>'
-      + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
-      + '<source src="' + v.url + '" type="video/mp4">'
-      + '</video>'
-      + '</div>';
-  });
-
-  view.innerHTML = html;
+    + '<source src="' + featured.url + '" type="video/mp4"></video></div>';
 }
 function getSidraURL(){
   var now = new Date();
