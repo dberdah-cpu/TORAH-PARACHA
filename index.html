@@ -8671,6 +8671,54 @@ function adminLoadVideos(){
   });
 }
 
+function adminFileSelected(input){
+  var file = input.files[0]; if(!file) return;
+  document.getElementById('adm-upload-zone').innerHTML = '<div style="font-size:20px;">🎬</div>'
+    + '<div style="font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">' + file.name + '</div>'
+    + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;">' + (file.size/1024/1024).toFixed(1) + ' Mo</div>';
+  var titre = document.getElementById('adm-vid-titre');
+  if(!titre.value) titre.value = file.name.replace(/\.mp4$/i,'').replace(/[-_]/g,' ');
+  adminUploadFile(file);
+}
+
+function adminUploadFile(file){
+  var progress = document.getElementById('adm-upload-progress');
+  var bar = document.getElementById('adm-progress-bar');
+  var txt = document.getElementById('adm-progress-text');
+  progress.style.display = 'block';
+  bar.style.width = '0%';
+  txt.textContent = 'Upload en cours...';
+  var xhr = new XMLHttpRequest();
+  var uploadUrl = 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/videos/' + encodeURIComponent(file.name);
+  xhr.open('POST', uploadUrl, true);
+  xhr.setRequestHeader('apikey', 'sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK');
+  xhr.setRequestHeader('Authorization', 'Bearer sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK');
+  xhr.setRequestHeader('Content-Type', file.type || 'video/mp4');
+  xhr.setRequestHeader('x-upsert', 'true');
+  xhr.upload.onprogress = function(e){
+    if(e.lengthComputable){
+      var pct = Math.round(e.loaded/e.total*100);
+      bar.style.width = pct+'%';
+      txt.textContent = pct+'% uploadé...';
+    }
+  };
+  xhr.onload = function(){
+    if(xhr.status===200||xhr.status===201){
+      var pubUrl = 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/' + encodeURIComponent(file.name);
+      document.getElementById('adm-vid-url').value = pubUrl;
+      bar.style.width = '100%';
+      bar.style.background = '#10bb81';
+      txt.textContent = '✅ Upload terminé !';
+      adminToast('Vidéo uploadée !', true);
+    } else {
+      txt.textContent = '❌ Erreur '+xhr.status;
+      adminToast('Erreur upload');
+    }
+  };
+  xhr.onerror = function(){ txt.textContent='❌ Erreur réseau'; adminToast('Erreur réseau'); };
+  xhr.send(file);
+}
+
 function adminAddVideo(){
   var url = document.getElementById('adm-vid-url').value.trim();
   var titre = document.getElementById('adm-vid-titre').value.trim();
@@ -9150,7 +9198,20 @@ try {
   <div id="admin-videos" class="admin-section active">
     <div class="admin-card">
       <div class="admin-card-title">➕ Ajouter une vidéo</div>
-      <input id="adm-vid-url" class="admin-input" placeholder="URL Supabase de la vidéo" />
+      <!-- Upload depuis iPhone -->
+      <div id="adm-upload-zone" style="border:2px dashed var(--purple);border-radius:var(--radius-sm);padding:20px;text-align:center;margin-bottom:12px;cursor:pointer;" onclick="document.getElementById('adm-file-input').click()">
+        <div style="font-size:32px;margin-bottom:8px;">📱</div>
+        <div style="font-size:14px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">Choisir une vidéo</div>
+        <div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Depuis ta pellicule iPhone</div>
+        <input type="file" id="adm-file-input" accept="video/mp4,video/*" style="display:none;" onchange="adminFileSelected(this)">
+      </div>
+      <div id="adm-upload-progress" style="display:none;margin-bottom:10px;">
+        <div style="background:var(--gray-2);border-radius:10px;height:6px;overflow:hidden;">
+          <div id="adm-progress-bar" style="background:var(--purple);height:100%;width:0%;transition:width .3s;border-radius:10px;"></div>
+        </div>
+        <div id="adm-progress-text" style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:6px;text-align:center;">Upload en cours...</div>
+      </div>
+      <input id="adm-vid-url" class="admin-input" placeholder="Ou coller une URL directement" />
       <input id="adm-vid-titre" class="admin-input" placeholder="Titre de la vidéo" />
       <textarea id="adm-vid-msg" class="admin-textarea" placeholder="Mini message (3-4 lignes sur le sujet)"></textarea>
       <button class="admin-btn admin-btn-primary" onclick="adminAddVideo()" style="width:100%;">Enregistrer la vidéo</button>
