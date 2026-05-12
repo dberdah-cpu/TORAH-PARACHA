@@ -8343,52 +8343,44 @@ function playYT(videoId){
 
 function renderVideosMixed(ytItems, dbVideos){
   var view = document.getElementById('view-videos');
+  var dayIndex = ytItems.length ? Math.floor(Date.now()/(1000*60*60*24)) % ytItems.length : 0;
+
   var html = '<div class="vid-header">'
     + '<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
-    + '<div class="vid-header-sub">JEM France · ' + ytItems.length + ' vidéos</div>'
+    + '<div class="vid-header-sub">JEM France · ' + (ytItems.length||0) + ' vidéos</div>'
     + '</div>';
 
-  // Vidéo du jour YouTube (rotation)
-  var dayIndex = Math.floor(Date.now() / (1000*60*60*24)) % ytItems.length;
-  var featured = ytItems[dayIndex];
-  var featuredId = featured.id.videoId;
-  var featuredTitle = featured.snippet.title;
-  var featuredDesc = featured.snippet.description.substring(0,200);
-  var featuredThumb = featured.snippet.thumbnails.high ? featured.snippet.thumbnails.high.url : '';
+  // Grille de vignettes cliquables
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 12px;">';
 
-  html += '<div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0533,#2d0b5e);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);">'
-    + '<div style="padding:10px 14px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR · JEM France</div>'
-    + '<div style="padding:0 14px 6px;font-size:15px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">' + featuredTitle + '</div>'
-    + (featuredDesc ? '<div style="padding:0 14px 10px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.55;font-family:Poppins,sans-serif;">' + featuredDesc + '</div>' : '')
-    + '<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">'
-    + '<iframe src="https://www.youtube.com/embed/' + featuredId + '?playsinline=1" '
-    + 'style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" '
-    + 'allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" '
-    + 'allowfullscreen loading="lazy"></iframe>'
-    + '</div></div>';
+  ytItems.forEach(function(item, idx){
+    var vid = item.id.videoId;
+    var title = item.snippet.title;
+    var thumb = (item.snippet.thumbnails.medium || item.snippet.thumbnails.default || {url:''}).url;
+    var isToday = (idx === dayIndex);
+    html += '<div onclick="openYTPlayer(\'' + vid + '\',\'' + title.replace(/'/g,'') + '\')" '
+      + 'style="background:#fff;border-radius:10px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm);'
+      + (isToday ? 'border:2px solid var(--purple);' : '') + '">'
+      + '<div style="position:relative;">'
+      + '<img src="' + thumb + '" style="width:100%;height:100px;object-fit:cover;display:block;">'
+      + ''
+      + '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">'
+      + '<div style="width:36px;height:36px;background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+      + '<div style="width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:14px solid #fff;margin-left:3px;"></div>'
+      + '</div></div></div>'
+      + '<div style="padding:6px 8px;font-size:11px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.3;height:40px;overflow:hidden;">' + title + '</div>'
+      + '</div>';
+  });
 
-  // Autres vidéos YouTube
-  if(ytItems.length > 1){
-    html += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">TOUTES LES VIDÉOS JEM</div>';
-    ytItems.forEach(function(item, idx){
-      if(idx === dayIndex) return;
-      var vid = item.id.videoId;
-      var title = item.snippet.title;
-      var thumb = item.snippet.thumbnails.medium ? item.snippet.thumbnails.medium.url : '';
-      html += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;" '
-      if(thumb) html += '<img src="' + thumb + '" style="width:100%;height:180px;object-fit:cover;display:block;">';
-      html += '<div style="padding:10px 14px;font-size:13px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;">'
-        + '▶ ' + title + '</div></div>';
-    });
-  }
+  html += '</div>';
 
-  // Vidéos perso depuis Supabase
+  // Vidéos perso Supabase
   if(dbVideos && dbVideos.length){
-    html += '<div style="margin:8px 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
+    html += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
     dbVideos.forEach(function(v){
       html += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
         + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
-        + '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + (v.message||'')+'</div>'
+        + '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + (v.message||'') + '</div>'
         + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
         + '<source src="' + v.url + '" type="video/mp4"></video></div>';
     });
@@ -8396,6 +8388,34 @@ function renderVideosMixed(ytItems, dbVideos){
 
   view.innerHTML = html;
 }
+
+function closeYTPlayer(){
+  var o = document.getElementById('yt-player-overlay');
+  if(o) o.style.display='none';
+}
+function openYTPlayer(videoId, title){
+  // Ouvrir le lecteur YouTube dans une overlay dans l'app
+  var overlay = document.getElementById('yt-player-overlay');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'yt-player-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9500;background:#000;display:flex;flex-direction:column;';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;padding:50px 16px 12px;background:#111;">'
+    + '<div style="font-size:14px;font-weight:600;color:#fff;font-family:Poppins,sans-serif;flex:1;margin-right:10px;line-height:1.3;">' + title + '</div>'
+    + '<button onclick="closeYTPlayer()" '
+    + 'style="background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0;">✕</button>'
+    + '</div>'
+    + '<div style="flex:1;position:relative;">'
+    + '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1&rel=0" '
+    + 'style="position:absolute;inset:0;width:100%;height:100%;border:none;" '
+    + 'allow="autoplay;fullscreen;accelerometer;gyroscope;picture-in-picture" '
+    + 'allowfullscreen playsinline></iframe>'
+    + '</div>';
+  overlay.style.display = 'flex';
+}
+
 
 function renderVideosSupabase(){
   var KEY = 'sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK';
