@@ -8343,40 +8343,56 @@ function playYT(videoId){
 
 function renderVideosMixed(ytItems, dbVideos){
   var view = document.getElementById('view-videos');
-  var dayIndex = ytItems.length ? Math.floor(Date.now()/(1000*60*60*24)) % ytItems.length : 0;
+  if(!ytItems.length){ renderVideosHardcoded(); return; }
+
+  var dayIndex = Math.floor(Date.now()/(1000*60*60*24)) % ytItems.length;
+  var featured = ytItems[dayIndex];
+  var featuredId = featured.id.videoId;
+  var featuredTitle = featured.snippet.title;
+  var featuredThumb = (featured.snippet.thumbnails.high || featured.snippet.thumbnails.medium || {url:''}).url;
 
   var html = '<div class="vid-header">'
     + '<div class="vid-header-title">🎬 Vidéos du Rabbi</div>'
-    + '<div class="vid-header-sub">JEM France · ' + (ytItems.length||0) + ' vidéos</div>'
+    + '<div class="vid-header-sub">JEM France · ' + ytItems.length + ' vidéos</div>'
     + '</div>';
 
-  // Grille de vignettes cliquables
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 12px;">';
+  // ── VIDÉO DU JOUR — grande carte ──
+  html += '<div onclick="openYTPlayer(\'' + featuredId + '\',\'' + featuredTitle.replace(/'/g,'') + '\')" '
+    + 'style="margin:0 16px 16px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;">'
+    + '<div style="position:relative;">'
+    + '<img src="' + featuredThumb + '" style="width:100%;height:200px;object-fit:cover;display:block;">'
+    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.7));"></div>'
+    + '<div style="position:absolute;top:10px;left:10px;background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR</div>'
+    + '<div style="position:absolute;bottom:0;left:0;right:0;padding:12px;color:#fff;font-size:15px;font-weight:700;font-family:Poppins,sans-serif;line-height:1.3;">' + featuredTitle + '</div>'
+    + '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:52px;height:52px;background:rgba(255,255,255,.25);backdrop-filter:blur(4px);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+    + '<div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid #fff;margin-left:4px;"></div>'
+    + '</div></div>'
+    + (featured.snippet.description ? '<div style="padding:12px 14px;font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.6;">' + featured.snippet.description.substring(0,120) + '...</div>' : '')
+    + '</div>';
+
+  // ── AUTRES VIDÉOS — liste verticale ──
+  html += '<div style="margin:0 16px 4px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">TOUTES LES VIDÉOS</div>';
 
   ytItems.forEach(function(item, idx){
+    if(idx === dayIndex) return;
     var vid = item.id.videoId;
     var title = item.snippet.title;
     var thumb = (item.snippet.thumbnails.medium || item.snippet.thumbnails.default || {url:''}).url;
-    var isToday = (idx === dayIndex);
     html += '<div onclick="openYTPlayer(\'' + vid + '\',\'' + title.replace(/'/g,'') + '\')" '
-      + 'style="background:#fff;border-radius:10px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm);'
-      + (isToday ? 'border:2px solid var(--purple);' : '') + '">'
-      + '<div style="position:relative;">'
-      + '<img src="' + thumb + '" style="width:100%;height:100px;object-fit:cover;display:block;">'
-      + ''
+      + 'style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;display:flex;align-items:center;gap:12px;padding:0;">'
+      + '<div style="position:relative;flex-shrink:0;">'
+      + '<img src="' + thumb + '" style="width:110px;height:70px;object-fit:cover;display:block;border-radius:var(--radius) 0 0 var(--radius);">'
       + '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">'
-      + '<div style="width:36px;height:36px;background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
-      + '<div style="width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:14px solid #fff;margin-left:3px;"></div>'
+      + '<div style="width:28px;height:28px;background:rgba(0,0,0,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+      + '<div style="width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:11px solid #fff;margin-left:2px;"></div>'
       + '</div></div></div>'
-      + '<div style="padding:6px 8px;font-size:11px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.3;height:40px;overflow:hidden;">' + title + '</div>'
+      + '<div style="flex:1;padding:8px 12px 8px 0;font-size:13px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.4;">' + title + '</div>'
       + '</div>';
   });
 
-  html += '</div>';
-
   // Vidéos perso Supabase
   if(dbVideos && dbVideos.length){
-    html += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
+    html += '<div style="margin:8px 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
     dbVideos.forEach(function(v){
       html += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
         + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
@@ -8388,6 +8404,7 @@ function renderVideosMixed(ytItems, dbVideos){
 
   view.innerHTML = html;
 }
+
 
 function closeYTPlayer(){
   var o = document.getElementById('yt-player-overlay');
