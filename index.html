@@ -8185,6 +8185,15 @@ function openHistoireDetail(id){
 
   document.getElementById('view-histoire-detail').innerHTML=h;
 
+  // Attacher event listener au slider de taille
+  var histSlider = document.querySelector('#hist-reader input[type=range]');
+  if(histSlider) histSlider.addEventListener('input', function(){ setFontSize('hist-text-content', this.value); });
+  // Attacher events lecteur
+  var histPlayBtn = document.getElementById('hist-reader-btn');
+  if(histPlayBtn) histPlayBtn.addEventListener('click', function(){ readerToggle('hist-text-content','hist-reader'); });
+  var histStopBtn = document.querySelector('#hist-reader .reader-btn.paused');
+  if(histStopBtn) histStopBtn.addEventListener('click', function(){ readerStop('hist-reader'); });
+
   if(typeof recordActivity==='function') recordActivity('histoire',5);
 }
 
@@ -9156,13 +9165,16 @@ function openCours(key){
     if(dx > 80 && viewC && viewC.style.display !== 'none') goHome();
   };
 
-  var rBar = '<div class="reader-bar">'
-    +'<button class="reader-btn" id="cours-rbtn" onclick="readerToggle(\'cours-txt\',\'cours-rb\')" >🔊 Écouter</button>'
-    +'<button class="reader-btn paused" onclick="readerStop(\'cours-rb\')" style="padding:8px 12px;">■</button>'
-    +'<div class="reader-size"><span class="reader-size-label">A</span>'
-    +'<input type="range" min="13" max="22" value="15" oninput="document.getElementById(\'cours-txt\').style.fontSize=this.value+\'px\'" />'
-    +'<span class="reader-size-label" style="font-size:17px;">A</span></div>'
-    +'</div>';
+  var rBar = [
+    '<div class="reader-bar">',
+    '<button class="reader-btn" onclick="readerToggle(' + "'" + 'cours-txt' + "'" + ',' + "'" + 'cours-rb' + "'" + ')">🔊 Écouter</button>',
+    '<button class="reader-btn paused" onclick="readerStop(' + "'" + 'cours-rb' + "'" + ')" style="padding:8px 12px;">■</button>',
+    '<div class="reader-size">',
+    '<span class="reader-size-label">A</span>',
+    '<input type="range" min="13" max="22" value="15">',
+    '<span class="reader-size-label" style="font-size:17px;">A</span>',
+    '</div></div>'
+  ].join('');
 
   view.innerHTML = '<div class="cours-view">'
     + rBar
@@ -9185,6 +9197,10 @@ function openCours(key){
     // Source
     +'<div class="cv-source">📚 '+c.source+(c.sefaria?'&nbsp;&nbsp;<a href="'+c.sefaria+'" target="_blank" style="color:var(--purple);font-weight:600;text-decoration:none">Voir sur Sefaria ↗</a>':'')+'</div>'
     +'</div>';
+
+  // Slider taille texte
+  var sl = document.getElementById('cours-slider');
+  if(sl) sl.addEventListener('input', function(){ setFontSize('cours-txt', this.value); });
 
   // Points
   if(typeof recordActivity==='function') recordActivity('cours', 8);
