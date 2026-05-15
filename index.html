@@ -437,6 +437,20 @@
 
 /* ── Variables ── */
 :root{
+  --font-scale: 1;
+}
+body.text-lg { --font-scale: 1.15; }
+body.text-xl { --font-scale: 1.3; }
+
+/* Appliquer le scale sur tous les textes principaux */
+.cv-titre, .cv-sous-titre, .cv-accroche-titre, .cv-intro,
+.cv-section-text, .cv-verset-heb, .cv-verset-fr,
+.hd-body, .hd-lecon-text, .hd-title, .hd-sub,
+.hayom-text, .recueil-text,
+.admin-card, .vid-title, .vid-meta {
+  font-size: calc(1em * var(--font-scale)) !important;
+}
+:root{
   --purple:#4F46E5;
   --purple-2:#7C3AED;
   --pink:#EC4899;
@@ -1195,7 +1209,26 @@ body{
   </div>
 </div>
 
-    <!-- Bouton admin discret -->
+    <!-- Taille de police -->
+    <div style="background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px;margin:0 16px 12px;">
+      <div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:12px;">📝 Taille du texte</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="setTextSize('normal')" id="ts-normal"
+          style="flex:1;padding:10px;border:2px solid var(--purple);border-radius:var(--radius-sm);
+          background:var(--purple);color:#fff;font-size:13px;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">
+          A — Normal</button>
+        <button onclick="setTextSize('lg')" id="ts-lg"
+          style="flex:1;padding:10px;border:2px solid var(--gray-2);border-radius:var(--radius-sm);
+          background:#fff;color:var(--dark);font-size:15px;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">
+          A — Grand</button>
+        <button onclick="setTextSize('xl')" id="ts-xl"
+          style="flex:1;padding:10px;border:2px solid var(--gray-2);border-radius:var(--radius-sm);
+          background:#fff;color:var(--dark);font-size:17px;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">
+          A — Max</button>
+      </div>
+    </div>
+
+<!-- Bouton admin discret -->
     <div style="text-align:center;margin-top:32px;">
       <button onclick="openAdmin()" style="background:transparent;border:1px solid var(--gray-2);color:var(--gray-4);padding:8px 20px;border-radius:20px;font-size:12px;font-family:Poppins,sans-serif;cursor:pointer;">⚙️</button>
     </div>
@@ -6383,52 +6416,57 @@ var COURS_DATA = {
     "sefaria": "https://www.sefaria.org/Numbers.3.12?lang=bi&with=Rashi&lang2=fr"
   },
   "bamidbar-4": {
-    "titre": "🎊 Erev Chavouot — Jeudi",
-    "sous_titre": "Veille de la fête du Don de la Torah",
-    "accroche": "Cette nuit, Israël ne dort pas.",
-    "fete": true,
-    "chome": true,
-    "fete_nom": "Chavouot",
-    "fete_icone": "📜",
-    "fete_heb": "שָׁבוּעוֹת",
-    "fete_msg": "Ce soir commence Chavouot — la fête du Don de la Torah. L'application se repose comme en Chabbat. Profite de la nuit d'étude — le Tikkoun Leil Chavouot — pour plonger dans la Torah jusqu'à l'aube.",
-    "fete_fin": "vendredi soir après la Havdala",
-    "intro": "",
+    "titre": "Bamidbar — Jeudi",
+    "sous_titre": "Nombres 3:1-4 — Les lévites et leurs fonctions",
+    "accroche": "Pourquoi les Lévites sont-ils comptés séparément du reste d'Israël ?",
+    "intro": "Après le recensement général, D.ieu ordonne un recensement distinct des Lévites. Ils ne seront pas comptés avec les autres — leur mission est différente. Ils sont consacrés au service du Sanctuaire, porteurs de l'Arche et gardiens de la Présence divine.",
     "verset": {
-      "heb": "",
-      "fr": "",
-      "ref": ""
+      "heb": "וְאַתָּה הַפְקֵד אֶת-הַלְוִיִּם עַל-מִשְׁכַּן הָעֵדֻת",
+      "fr": "Toi, place les Lévites en charge du Tabernacle du témoignage",
+      "ref": "Nombres 1:50"
     },
-    "rachi": "",
-    "questions": "",
-    "revelation": "",
-    "message": "",
-    "source": "",
-    "sefaria": ""
+    "rachi": "Les Lévites sont placés autour du Tabernacle pour le protéger — non pas des ennemis, mais de la sainteté elle-même. Quiconque s'approche sans être autorisé risque sa vie. La proximité du divin exige une préparation.",
+    "questions": "Qu'est-ce que cela signifie d'être 'séparé' pour une mission sacrée ? Y a-t-il dans ta vie quelque chose que tu mets à part parce que c'est sacré ?",
+    "revelation": "Le Rabbi enseignait : chaque Juif a une part de Lévi en lui. Il y a en chacun de nous une dimension qui est consacrée à D.ieu — une partie qui n'appartient pas au monde ordinaire. La trouver et la cultiver, c'est accomplir notre mission personnelle.",
+    "message": "Shabbat arrive ce soir. Comme les Lévites gardaient le Tabernacle, tu peux garder le Chabbat — le protéger des intrusions du quotidien. Ce soir, mets de côté le téléphone, les soucis, le bruit. Entre dans le Tabernacle du temps.",
+    "source": "Nombres 1:50-3:4 · Rachi sur Nombres 1:50 · Likoutei Si'hot vol. 13, Bamidbar",
+    "sefaria": "https://www.sefaria.org/Numbers.1.50?lang=bi&lang2=fr"
   },
   "bamidbar-5": {
-    "titre": "🎊 Chavouot — Vendredi",
+    "titre": "Bamidbar — Vendredi",
+    "sous_titre": "Nombres 1:2 — Tu compteras",
+    "accroche": "Pourquoi D.ieu qui connaît tout a-t-il besoin de compter son peuple ?",
+    "intro": "Dans le désert du Sinaï, D.ieu ordonne à Moïse de dénombrer tout Israël. Chaque homme de plus de vingt ans, tribu par tribu. C'est le quatrième recensement depuis la sortie d'Égypte. Pourquoi ce compte répété ? Rachi explique : parce qu'ils Lui sont chers.",
+    "verset": {
+      "heb": "שְׂאוּ אֶת-רֹאשׁ כָּל-עֲדַת בְּנֵי-יִשְׂרָאֵל",
+      "fr": "Dénombrez toute la communauté des enfants d'Israël",
+      "ref": "Nombres 1:2"
+    },
+    "rachi": "Parce qu'ils Lui sont chers, D.ieu les compte à chaque instant. Comme on compte et recompte ce à quoi on tient. Le recensement n'est pas administratif — il est une expression d'amour.",
+    "questions": "Qu'est-ce que cela signifie d'être compté individuellement ? Quand t'es-tu senti véritablement vu et compté par quelqu'un ?",
+    "revelation": "Le Rabbi enseignait : chaque Juif est irremplaçable. Le recensement dit — tu comptes. Pas comme un numéro dans une statistique, mais comme une âme unique dont l'absence ferait manquer quelque chose à l'ensemble. Si tu n'es pas là, quelque chose manque au monde.",
+    "message": "Aujourd'hui — Shabbat approche. Prépare-toi à le recevoir comme la Torah fut reçue au Sinaï : avec joie, avec préparation, avec conscience que ce moment est unique. Allume les bougies. Mets une belle nappe. Tu comptes.",
+    "source": "Nombres 1:1-19 · Rachi sur Nombres 1:1 · Likoutei Si'hot vol. 13, Bamidbar",
+    "sefaria": "https://www.sefaria.org/Numbers.1.1?lang=bi&lang2=fr"
+  },
+  "bamidbar-erev-chavouot": {
+    "titre": "Erev Chavouot — Jeudi 21 mai",
+    "sous_titre": "Ce soir commence le Don de la Torah",
+    "accroche": "Dans quelques heures, D.ieu redonnera la Torah à Son peuple.",
+    "fete": true, "chome": false,
+    "fete_nom": "Erev Chavouot", "fete_icone": "📜", "fete_heb": "עֶרֶב שָׁבוּעוֹת",
+    "fete_msg": "Ce soir commence Chavouot — la fête du Don de la Torah. Allume des bougies de fête après le coucher du soleil. Ce soir, des milliers de Juifs étudient la Torah toute la nuit — le Tikkoun Leil Chavouot. Prépare-toi à recevoir la Torah comme au Sinaï.",
+    "intro": "", "verset": {"heb":"","fr":"","ref":""}, "rachi":"","questions":"","revelation":"","message":"","source":"","sefaria":""
+  },
+  "bamidbar-chavouot-1": {
+    "titre": "🎊 Chavouot — Vendredi 22 mai",
     "sous_titre": "Premier jour — Don de la Torah",
     "accroche": "La Torah a été donnée — pour toi, aujourd'hui.",
-    "fete": true,
-    "chome": true,
-    "fete_nom": "Chavouot",
-    "fete_icone": "📜",
-    "fete_heb": "שָׁבוּעוֹת",
-    "fete_msg": "Aujourd'hui est le premier jour de Chavouot — jour chômé comme Chabbat. La Torah a été donnée sur le mont Sinaï pour chaque âme juive de toutes les générations. L'app se repose. Bonne fête !",
-    "fete_fin": "samedi soir après la Havdala",
-    "intro": "",
-    "verset": {
-      "heb": "",
-      "fr": "",
-      "ref": ""
-    },
-    "rachi": "",
-    "questions": "",
-    "revelation": "",
-    "message": "",
-    "source": "",
-    "sefaria": ""
+    "fete": true, "chome": true,
+    "fete_nom": "Chavouot", "fete_icone": "📜", "fete_heb": "שָׁבוּעוֹת",
+    "fete_msg": "Aujourd'hui est Chavouot — jour chômé comme Chabbat. La Torah a été donnée sur le mont Sinaï pour chaque âme juive. Ce soir commence aussi le Chabbat — double fête ! Allume les bougies avant l'heure de Chabbat. Hag Sameah !",
+    "fete_fin": "samedi 23 mai après la Havdala",
+    "intro": "", "verset": {"heb":"","fr":"","ref":""}, "rachi":"","questions":"","revelation":"","message":"","source":"","sefaria":""
   },
   "nasso-0": {
     "titre": "NASSO — Dimanche",
@@ -8168,9 +8206,7 @@ function openHistoireDetail(id){
   // Tags
   var tags = (s.tags||[]).map(function(t){return '<span class="hd-meta-tag">'+t+'</span>';}).join('');
 
-  var histReaderBar = readerBar('hist-text-content','hist-reader');
   var h='<div style="padding:16px;">'
-    +histReaderBar
     +'<div id="hist-text-content">'
     +'<div class="hd-cat">'+s.categorie+'</div>'
     +'<div class="hd-title">'+s.titre+'</div>'
@@ -8184,15 +8220,6 @@ function openHistoireDetail(id){
     +'</div>';
 
   document.getElementById('view-histoire-detail').innerHTML=h;
-
-  // Attacher event listener au slider de taille
-  var histSlider = document.querySelector('#hist-reader input[type=range]');
-  if(histSlider) histSlider.addEventListener('input', function(){ setFontSize('hist-text-content', this.value); });
-  // Attacher events lecteur
-  var histPlayBtn = document.getElementById('hist-reader-btn');
-  if(histPlayBtn) histPlayBtn.addEventListener('click', function(){ readerToggle('hist-text-content','hist-reader'); });
-  var histStopBtn = document.querySelector('#hist-reader .reader-btn.paused');
-  if(histStopBtn) histStopBtn.addEventListener('click', function(){ readerStop('hist-reader'); });
 
   if(typeof recordActivity==='function') recordActivity('histoire',5);
 }
@@ -8930,6 +8957,34 @@ function adminSaveMsg(){
 }
 
 // ── ACCÈS ADMIN (triple tap sur titre app) ───────────────────
+function setTextSize(size){
+  var body = document.body;
+  body.classList.remove('text-lg','text-xl');
+  if(size==='lg') body.classList.add('text-lg');
+  if(size==='xl') body.classList.add('text-xl');
+  localStorage.setItem('textSize', size);
+  // Mettre à jour les boutons
+  ['normal','lg','xl'].forEach(function(s){
+    var btn = document.getElementById('ts-'+s);
+    if(!btn) return;
+    if(s===size){
+      btn.style.background='var(--purple)';
+      btn.style.color='#fff';
+      btn.style.borderColor='var(--purple)';
+    } else {
+      btn.style.background='#fff';
+      btn.style.color='var(--dark)';
+      btn.style.borderColor='var(--gray-2)';
+    }
+  });
+}
+
+// Appliquer la taille sauvegardée au chargement
+(function(){
+  var saved = localStorage.getItem('textSize');
+  if(saved && saved !== 'normal') document.body.classList.add('text-'+saved);
+})();
+
 function adminTitleTap(){
   _adminTapCount++;
   clearTimeout(_adminTapTimer);
@@ -8963,6 +9018,9 @@ function buildCoursCard(){
   var prefix = null;
   if(m===4 && d>=3  && d<=9)  prefix='behar';
   else if(m===4 && d>=10 && d<=16) prefix='bamidbar';
+  // Erev Chavouot = jeudi 21 mai et Chavouot = vendredi 22 mai
+  if(m===4 && d===21 && courseDay===4) key='bamidbar-erev-chavouot';
+  if(m===4 && d===22 && courseDay===5) key='bamidbar-chavouot-1';
   else if(m===4 && d>=17 && d<=23) prefix='nasso';
   else if(m===4 && d>=24 || (m===5 && d<=6)) prefix='behalotecha';
   else if(m===5 && d>=7  && d<=13) prefix='shelah';
@@ -9144,6 +9202,72 @@ function openCours(key){
   if(checkAndBlockShabbat()) return;
   var c = COURS_DATA[key];
   if(!c) return;
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  var qab=document.getElementById('quick-access-bar');
+  if(qab) qab.style.display='none';
+  document.getElementById('btn-back').style.display='flex';
+  window.scrollTo(0,0);
+  var view = document.getElementById('view-cours');
+  if(!view) return;
+  view.style.display = 'block';
+  window.scrollTo(0,0);
+
+  // Si cours de fête sans contenu — afficher message spécial
+  if(c.fete && (!c.verset || !c.verset.heb)){
+    view.innerHTML = '<div style="padding:30px 20px;text-align:center;">'
+      + '<div style="font-size:60px;margin-bottom:16px;">' + (c.fete_icone||'✨') + '</div>'
+      + '<div style="font-size:22px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">' + c.titre + '</div>'
+      + '<div style="font-size:15px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:20px;">' + c.sous_titre + '</div>'
+      + (c.fete_msg ? '<div style="background:linear-gradient(135deg,var(--purple),var(--purple-2));border-radius:var(--radius);padding:20px;color:#fff;font-size:15px;line-height:1.7;font-family:Poppins,sans-serif;text-align:left;">' + c.fete_msg + '</div>' : '')
+      + '</div>';
+    return;
+  }
+
+  // Navigation semaine
+  var prefix = key.substring(0, key.lastIndexOf('-'));
+  var dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven'];
+  var jsDay = new Date().getDay();
+  var navHtml = '<div class="cv-week-nav">';
+  for(var di=0;di<=5;di++){
+    var k2 = prefix+'-'+di;
+    if(!COURS_DATA[k2]) continue;
+    var isActive = (k2===key);
+    var isPast = (di < jsDay);
+    var isToday = (di === jsDay);
+    var btnStyle = isActive ? 'background:var(--purple);color:#fff;font-weight:700;'
+      : isToday ? 'background:var(--purple-light,#f3e8ff);color:var(--purple);font-weight:600;cursor:pointer;'
+      : isPast ? 'background:#f0f0f0;color:var(--dark);cursor:pointer;'
+      : 'background:#f0f0f0;color:#bbb;cursor:default;';
+    var oc = (!isActive && (isPast||isToday)) ? 'onclick="openCours(\"'+k2+'\")"' : '';
+    navHtml += '<button '+oc+' style="'+btnStyle+'border:none;border-radius:20px;padding:6px 10px;font-size:12px;font-family:Poppins,sans-serif;">'+dayNames[di]+'</button>';
+  }
+  navHtml += '</div>';
+
+  view.innerHTML = '<div class="cours-view">'
+    + navHtml
+    + '<div class="cv-label">📜 Torah · Rachi · Rabbi</div>'
+    + '<div class="cv-titre">'+c.titre+'</div>'
+    + '<div class="cv-sous-titre">'+c.sous_titre+'</div>'
+    + '<div class="cv-accroche-titre">'+c.accroche+'</div>'
+    + (c.intro ? '<div class="cv-intro">'+c.intro+'</div>' : '')
+    + '<div class="cv-section cv-verset"><div class="cv-section-icon">📖</div><div class="cv-section-content"><div class="cv-section-label">Le verset</div><div class="cv-verset-heb">'+c.verset.heb+'</div><div class="cv-verset-fr">'+c.verset.fr+'</div><div class="cv-verset-ref">'+c.verset.ref+'</div></div></div>'
+    + '<div class="cv-section cv-rachi"><div class="cv-section-icon">💬</div><div class="cv-section-content"><div class="cv-section-label">Rachi</div><div class="cv-section-text">'+c.rachi+'</div></div></div>'
+    + '<div class="cv-section cv-questions"><div class="cv-section-icon">🔥</div><div class="cv-section-content"><div class="cv-section-label">Les questions du Rabbi</div><div class="cv-section-text">'+c.questions+'</div></div></div>'
+    + '<div class="cv-section cv-revelation"><div class="cv-section-icon">✨</div><div class="cv-section-content"><div class="cv-section-label">Ce que le Rabbi révèle</div><div class="cv-section-text">'+c.revelation+'</div></div></div>'
+    + '<div class="cv-section cv-message"><div class="cv-section-icon">💡</div><div class="cv-section-content"><div class="cv-section-label">Pour toi, aujourd\'hui</div><div class="cv-section-text cv-message-text">'+c.message+'</div></div></div>'
+    + '<div class="cv-source">📚 '+c.source+(c.sefaria?'&nbsp;&nbsp;<a href="'+c.sefaria+'" target="_blank" style="color:var(--purple);font-weight:600;text-decoration:none">Voir sur Sefaria ↗</a>':'')+'</div>'
+    + '</div>';
+
+  if(typeof recordActivity==='function') recordActivity('cours', 8);
+}
+
+function openCours(key){
+  if(!requireLogin()) return;
+  if(checkAndBlockShabbat()) return;
+  var c = COURS_DATA[key];
+  if(!c) return;
   // Masquer toutes les vues
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -9174,6 +9298,18 @@ function openCours(key){
   rBar += '<input type="range" min="13" max="22" value="15" data-txt="cours-txt" oninput="readerSize(this)">';
   rBar += '<span class="reader-size-label" style="font-size:17px;">A</span></div></div>'
 
+  // Si cours de fête sans contenu — afficher message spécial
+  if(c.fete && !c.verset.heb && !c.rachi){
+    view.innerHTML = '<div style="padding:30px 20px;text-align:center;">'
+      + '<div style="font-size:60px;margin-bottom:16px;">' + (c.fete_icone||'✨') + '</div>'
+      + '<div style="font-size:22px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">' + c.titre + '</div>'
+      + '<div style="font-size:15px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:20px;">' + c.sous_titre + '</div>'
+      + (c.fete_msg ? '<div style="background:linear-gradient(135deg,var(--purple),var(--purple-2));border-radius:var(--radius);padding:20px;color:#fff;font-size:15px;line-height:1.7;font-family:Poppins,sans-serif;text-align:left;">' + c.fete_msg + '</div>' : '')
+      + (c.accroche ? '<div style="margin-top:20px;font-size:16px;font-weight:600;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.5;">' + c.accroche + '</div>' : '')
+      + '</div>';
+    return;
+  }
+
   view.innerHTML = '<div class="cours-view">'
     + rBar
     + '<div id="cours-txt">'
@@ -9195,10 +9331,6 @@ function openCours(key){
     // Source
     +'<div class="cv-source">📚 '+c.source+(c.sefaria?'&nbsp;&nbsp;<a href="'+c.sefaria+'" target="_blank" style="color:var(--purple);font-weight:600;text-decoration:none">Voir sur Sefaria ↗</a>':'')+'</div>'
     +'</div>';
-
-  // Slider taille texte
-  var sl = document.getElementById('cours-slider');
-  if(sl) sl.addEventListener('input', function(){ setFontSize('cours-txt', this.value); });
 
   // Points
   if(typeof recordActivity==='function') recordActivity('cours', 8);
