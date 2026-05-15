@@ -8206,16 +8206,20 @@ var _readerPlaying = false;
 
 function readerBar(textId, barId){
   return '<div class="reader-bar" id="'+barId+'">'
-    + '<button class="reader-btn" onclick="readerToggle(\"'+textId+'\",\"'+barId+'\")">🔊 Écouter</button>'
-    + '<button class="reader-btn paused" onclick="readerStop(\"'+barId+'\")" style="padding:8px 12px;">■</button>'
+    + '<button class="reader-btn" onclick="readerToggle(this)" data-txt="'+textId+'" data-bar="'+barId+'">🔊 Écouter</button>'
+    + '<button class="reader-btn paused" onclick="readerStop(this)" data-bar="'+barId+'" style="padding:8px 12px;">■</button>'
     + '<div class="reader-size">'
     + '<span class="reader-size-label">A</span>'
-    + '<input type="range" min="13" max="22" value="15" oninput="setFontSize(\"'+textId+'\",this.value)">'
+    + '<input type="range" min="13" max="22" value="15" data-txt="'+textId+'" oninput="readerSize(this)">'
     + '<span class="reader-size-label" style="font-size:17px;">A</span>'
     + '</div></div>';
 }
 
-function readerToggle(textId, barId){
+
+function readerToggle(el){
+  var textId = typeof el === 'string' ? el : el.dataset.txt;
+  var barId  = typeof el === 'string' ? arguments[1] : el.dataset.bar;
+  var btn = el.tagName ? el : document.getElementById(barId+'-btn');
   var el = document.getElementById(textId);
   var btn = document.getElementById('cours-rbtn') || document.getElementById('hist-rbtn') || document.getElementById(barId+'-btn');
   if(!el || !window.speechSynthesis) return;
@@ -8287,7 +8291,8 @@ function readerToggle(textId, barId){
   _skipAutoSpeak = false;
 }
 
-function readerStop(barId){
+function readerStop(el){
+  var barId = typeof el === 'string' ? el : el.dataset.bar;
   window.speechSynthesis.cancel();
   _readerPlaying = false;
   var btn = document.getElementById(barId+'-btn');
@@ -8297,6 +8302,11 @@ function readerStop(barId){
 function readerFontSize(textId, size){
   var el = document.getElementById(textId);
   if(el) el.style.fontSize = size+'px';
+}
+function readerSize(input){
+  var textId = input.dataset.txt;
+  var el = document.getElementById(textId);
+  if(el) el.style.fontSize = input.value + 'px';
 }
 function setFontSize(textId, size){
   var el = document.getElementById(textId);
@@ -9156,14 +9166,13 @@ function openCours(key){
     if(dx > 80 && viewC && viewC.style.display !== 'none') goHome();
   };
 
-  var rBar = '<div class="reader-bar">'
-    + '<button class="reader-btn" onclick="readerToggle(&quot;cours-txt&quot;,&quot;cours-rb&quot;)">🔊 Écouter</button>'
-    + '<button class="reader-btn paused" onclick="readerStop(&quot;cours-rb&quot;)" style="padding:8px 12px;">■</button>'
-    + '<div class="reader-size">'
-    + '<span class="reader-size-label">A</span>'
-    + '<input type="range" min="13" max="22" value="15" oninput="setFontSize(&quot;cours-txt&quot;,this.value)">'
-    + '<span class="reader-size-label" style="font-size:17px;">A</span>'
-    + '</div></div>';
+  var rBar = '<div class="reader-bar">';
+  rBar += '<button class="reader-btn" onclick="readerToggle(this)" data-txt="cours-txt" data-bar="cours-rb">🔊 Écouter</button>';
+  rBar += '<button class="reader-btn paused" onclick="readerStop(this)" data-bar="cours-rb" style="padding:8px 12px;">■</button>';
+  rBar += '<div class="reader-size">';
+  rBar += '<span class="reader-size-label">A</span>';
+  rBar += '<input type="range" min="13" max="22" value="15" data-txt="cours-txt" oninput="readerSize(this)">';
+  rBar += '<span class="reader-size-label" style="font-size:17px;">A</span></div></div>'
 
   view.innerHTML = '<div class="cours-view">'
     + rBar
