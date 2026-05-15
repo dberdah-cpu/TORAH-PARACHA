@@ -8205,23 +8205,14 @@ var _skipAutoSpeak = false;
 var _readerPlaying = false;
 
 function readerBar(textId, barId){
-  var el_id = textId;
-  var bar_id = barId;
-  var div = document.createElement('div');
-  div.className = 'reader-bar';
-  div.id = bar_id;
-  div.innerHTML = '<button class="reader-btn" id="'+bar_id+'-btn">🔊 Écouter</button>'
-    + '<button class="reader-btn paused" style="padding:8px 12px;">■</button>'
+  return '<div class="reader-bar" id="'+barId+'">'
+    + '<button class="reader-btn" onclick="readerToggle(\"'+textId+'\",\"'+barId+'\")">🔊 Écouter</button>'
+    + '<button class="reader-btn paused" onclick="readerStop(\"'+barId+'\")" style="padding:8px 12px;">■</button>'
     + '<div class="reader-size">'
     + '<span class="reader-size-label">A</span>'
-    + '<input type="range" min="13" max="22" value="15">'
+    + '<input type="range" min="13" max="22" value="15" oninput="setFontSize(\"'+textId+'\",this.value)">'
     + '<span class="reader-size-label" style="font-size:17px;">A</span>'
-    + '</div>';
-  // Attacher les events après création
-  div.querySelector('.reader-btn').addEventListener('click', function(){ readerToggle(el_id, bar_id); });
-  div.querySelector('.reader-btn.paused').addEventListener('click', function(){ readerStop(bar_id); });
-  div.querySelector('input[type=range]').addEventListener('input', function(){ setFontSize(el_id, this.value); });
-  return div.outerHTML;
+    + '</div></div>';
 }
 
 function readerToggle(textId, barId){
@@ -9165,16 +9156,14 @@ function openCours(key){
     if(dx > 80 && viewC && viewC.style.display !== 'none') goHome();
   };
 
-  var rBar = [
-    '<div class="reader-bar">',
-    '<button class="reader-btn" onclick="readerToggle(' + "'" + 'cours-txt' + "'" + ',' + "'" + 'cours-rb' + "'" + ')">🔊 Écouter</button>',
-    '<button class="reader-btn paused" onclick="readerStop(' + "'" + 'cours-rb' + "'" + ')" style="padding:8px 12px;">■</button>',
-    '<div class="reader-size">',
-    '<span class="reader-size-label">A</span>',
-    '<input type="range" min="13" max="22" value="15">',
-    '<span class="reader-size-label" style="font-size:17px;">A</span>',
-    '</div></div>'
-  ].join('');
+  var rBar = '<div class="reader-bar">'
+    + '<button class="reader-btn" onclick="readerToggle(&quot;cours-txt&quot;,&quot;cours-rb&quot;)">🔊 Écouter</button>'
+    + '<button class="reader-btn paused" onclick="readerStop(&quot;cours-rb&quot;)" style="padding:8px 12px;">■</button>'
+    + '<div class="reader-size">'
+    + '<span class="reader-size-label">A</span>'
+    + '<input type="range" min="13" max="22" value="15" oninput="setFontSize(&quot;cours-txt&quot;,this.value)">'
+    + '<span class="reader-size-label" style="font-size:17px;">A</span>'
+    + '</div></div>';
 
   view.innerHTML = '<div class="cours-view">'
     + rBar
