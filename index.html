@@ -2854,9 +2854,8 @@ function buildHome(){
     +'<div class="hdc-left">'
     +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
     +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
-    +'</div>';
-  // ── CARTE FÊTE (si fête dans les 7 jours) ──────────────────
-  // Wrapper flex pour les 2 cartes côte à côte
+    +'</div></div>';
+  // ── CARTE FÊTE + CHABBAT côte à côte ───────────────────────
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
   if(hasFete || hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
@@ -8716,6 +8715,15 @@ function renderVideos(){
     localVideos = [];
     var view = document.getElementById('view-videos');
     var jem = results[SOURCES[0].id] || [];
+    if(!jem.length && window._ytQuotaExceeded){
+      view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos Torah</div></div>'
+        + '<div style="margin:20px 16px;background:#fff;border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow-sm);">'
+        + '<div style="font-size:32px;margin-bottom:8px;">⏳</div>'
+        + '<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">Quota YouTube atteint</div>'
+        + '<div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.6;">Les vidéos seront disponibles demain matin.<br>Le quota YouTube se renouvelle chaque jour à minuit.</div>'
+        + '</div>';
+      return;
+    }
 
     var h = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos Torah</div>'
       + '<div class="vid-header-sub">JEM · Torah Box · Rav David Ichaï · Rav Shimon Gobert</div></div>';
@@ -8810,7 +8818,11 @@ function renderVideos(){
     fetch(getYTUrl(src))
     .then(function(r){ return r.json(); })
     .then(function(data){
-      if(data.error){ console.error("[Videos] error", src.label, data.error.code); results[src.id] = []; }
+      if(data.error){
+        console.error("[Videos] error", src.label, data.error.code);
+        results[src.id] = [];
+        if(data.error.code === 403) window._ytQuotaExceeded = true;
+      }
       else {
         results[src.id] = normalizeItems(src, data);
         try { localStorage.setItem(cacheKey, JSON.stringify({ts: Date.now(), items: results[src.id]})); } catch(e){}
@@ -8820,7 +8832,7 @@ function renderVideos(){
       if(loaded === SOURCES.length && !_built){ _built=true; onAllLoaded(); }
     })
     .catch(function(){
-      results[src.id] = [];
+      results[src.id] = []; // pas de cache pour les erreurs
       loaded++;
       if(loaded === SOURCES.length && !_built){ _built=true; onAllLoaded(); }
     });
