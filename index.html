@@ -8458,14 +8458,13 @@ function openOmer(){
   var compteJourHeb = jourSemaine > 0 ?
     ' וְ'+OMER_NOMS_HEB[jourSemaine]+(jourSemaine===1?' יוֹם':' יָמִים') : '';
 
-  var comptePhon = omerDay < 7 ?
-    OMER_NOMS_PHON[omerDay]+' yamim laomer' :
-    omerDay === 7 ? "chavou-ahad laomer" :
-    (function(){
-      var s = semaine===2?"chney chavouot":OMER_NOMS_PHON[semaine]+" chavouot";
-            var j = jourSemaine>0?" v-"+OMER_NOMS_PHON[jourSemaine]+(jourSemaine===1?" yom":" yamim"):"";
-      return s+j+" laomer";
-    })();
+  var comptePhon = (function(){
+    if(omerDay < 7) return OMER_NOMS_PHON[omerDay]+' yamim laomer';
+    if(omerDay === 7) return 'chavou echad laomer';
+    var s = semaine===1?'chavou echad':semaine===2?'chney chavouot':OMER_NOMS_PHON[semaine]+' chavouot';
+    var j = jourSemaine>0?' v-'+OMER_NOMS_PHON[jourSemaine]+(jourSemaine===1?' yom':' yamim'):'';
+    return OMER_NOMS_PHON[omerDay]+' yamim shehem '+s+j+' laomer';
+  })()
 
   var omerNuit = (function(){
     var now=new Date(); var h=now.getHours(); var mn=now.getMinutes();
