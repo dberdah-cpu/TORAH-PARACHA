@@ -1600,6 +1600,7 @@ var currentParashaHeb = '';  // nom hébreu
 var candleTime = '';
 var havdalaTime = '';
 var tzeitTime = '';
+var nextFete = null; // {nom, date, candleTime, havdalaTime}
 var userLat = 0;
 var userLng = 0;
 
@@ -1858,6 +1859,26 @@ function loadHebcalAll(lat,lng,cb){
         }
         if(it.category==='candles') candleTime=fmtHebcalTime(it.date);
         if(it.category==='havdalah') havdalaTime=fmtHebcalTime(it.date);
+        // Détecter prochaine fête (holiday avec candles associé)
+        if(it.category==='holiday' && it.date){
+          var feteDate = new Date(it.date);
+          var now = new Date();
+          var diffDays = Math.ceil((feteDate - now) / (1000*60*60*24));
+          // Fête dans les 7 prochains jours (pas Chabbat)
+          var nom = it.title||'';
+          var isChabbat = nom.toLowerCase().indexOf('shabbat')>=0 || nom.toLowerCase().indexOf('chabbat')>=0;
+          if(!isChabbat && diffDays >= 0 && diffDays <= 7){
+            if(!nextFete || feteDate < new Date(nextFete.date)){
+              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', diffDays: diffDays };
+            }
+          }
+        }
+        // Associer les candles/havdala à la fête si c'est le même jour
+        if(it.category==='candles' && nextFete && it.date){
+          var cDate = it.date.split('T')[0];
+          var fDate = nextFete.date ? nextFete.date.split('T')[0] : '';
+          if(cDate === fDate) nextFete.candleTime = fmtHebcalTime(it.date);
+        }
       });
       check();
     }).catch(function(){check();});
@@ -2834,6 +2855,35 @@ function buildHome(){
     +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
     +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
     +'</div>';
+  // ── CARTE FÊTE (si fête dans les 7 jours) ──────────────────
+  if(nextFete){
+    var feteDiff = nextFete.diffDays;
+    var feteLabel = nextFete.nom
+      .replace(/Erev /i,'Erev ')
+      .replace(/Chavou.ot/i,'Chavouot')
+      .replace(/Rosh Hashana/i,'Roch Hachana')
+      .replace(/Yom Kippur/i,'Yom Kippour')
+      .replace(/Sukkot/i,'Souccot')
+      .replace(/Simchat Torah/i,'Sim\u0127at Torah')
+      .replace(/Shemini Atzeret/i,'Chemini Atseret')
+      .replace(/Passover/i,'Pessah')
+      .replace(/Shavuot/i,'Chavouot');
+    var feteJour = feteDiff === 0 ? 'Ce soir' : feteDiff === 1 ? 'Demain' : 'Dans ' + feteDiff + ' jours';
+    // Afficher dans une div flex avec la carte Chabbat
+    h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
+    // Carte Fête
+    h += '<div onclick="openFetePanel()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:12px;padding:10px 12px;cursor:pointer;">';
+    h += '<div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:3px;">✨ FÊTE</div>';
+    h += '<div style="font-size:12px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:4px;">' + feteLabel + '</div>';
+    h += '<div style="font-size:10px;color:rgba(255,255,255,.85);">' + feteJour + '</div>';
+    if(nextFete.candleTime) h += '<div style="font-size:10px;color:rgba(255,255,255,.75);margin-top:2px;">🕯 ' + nextFete.candleTime + '</div>';
+    h += '</div>';
+    h += '<div style="flex:1;">'; // placeholder pour carte Chabbat
+    feteCardOpen = true;
+  } else {
+    feteCardOpen = false;
+  }
+
   if(candleTime||havdalaTime){
     // Calculer date du prochain vendredi
     // Après Havdala (samedi soir) → montrer le Chabbat suivant
