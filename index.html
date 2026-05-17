@@ -1600,6 +1600,8 @@ var currentParashaHeb = '';  // nom hébreu
 var candleTime = '';
 var havdalaTime = '';
 var tzeitTime = '';
+var userLat = 0;
+var userLng = 0;
 
 // Initialiser la paracha depuis le calendrier local — après chargement complet
 window.addEventListener('DOMContentLoaded', function(){
@@ -1864,8 +1866,8 @@ function loadHebcalAll(lat,lng,cb){
   (function(){
     var now2 = new Date();
     var dateStr2 = now2.getFullYear()+'-'+String(now2.getMonth()+1).padStart(2,'0')+'-'+String(now2.getDate()).padStart(2,'0');
-    var lat = (userLat||48.8566).toFixed(4);
-    var lng = (userLng||2.3522).toFixed(4);
+    var lat = (typeof userLat !== 'undefined' && userLat ? userLat : 48.8566).toFixed(4);
+    var lng = (typeof userLng !== 'undefined' && userLng ? userLng : 2.3522).toFixed(4);
     var zmanimUrl = 'https://www.hebcal.com/zmanim?cfg=json&date='+dateStr2+'&latitude='+lat+'&longitude='+lng+'&tzid=Europe/Paris';
     fetch(zmanimUrl)
       .then(function(r){ return r.json(); })
