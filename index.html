@@ -8457,6 +8457,41 @@ var OMER_SEMAINES = [
 var OMER_NOMS_HEB = ['','אֶחָד','שְׁנַיִם','שְׁלֹשָׁה','אַרְבָּעָה','חֲמִשָּׁה','שִׁשָּׁה','שִׁבְעָה','שְׁמוֹנָה','תִּשְׁעָה','עֲשָׂרָה','אַחַד עָשָׂר','שְׁנֵים עָשָׂר','שְׁלֹשָׁה עָשָׂר','אַרְבָּעָה עָשָׂר','חֲמִשָּׁה עָשָׂר','שִׁשָּׁה עָשָׂר','שִׁבְעָה עָשָׂר','שְׁמוֹנָה עָשָׂר','תִּשְׁעָה עָשָׂר','עֶשְׂרִים','עֶשְׂרִים וְאֶחָד','עֶשְׂרִים וּשְׁנַיִם','עֶשְׂרִים וּשְׁלֹשָׁה','עֶשְׂרִים וְאַרְבָּעָה','עֶשְׂרִים וַחֲמִשָּׁה','עֶשְׂרִים וְשִׁשָּׁה','עֶשְׂרִים וְשִׁבְעָה','עֶשְׂרִים וּשְׁמוֹנָה','עֶשְׂרִים וְתִשְׁעָה','שְׁלֹשִׁים','שְׁלֹשִׁים וְאֶחָד','שְׁלֹשִׁים וּשְׁנַיִם','שְׁלֹשִׁים וּשְׁלֹשָׁה','שְׁלֹשִׁים וְאַרְבָּעָה','שְׁלֹשִׁים וַחֲמִשָּׁה','שְׁלֹשִׁים וְשִׁשָּׁה','שְׁלֹשִׁים וְשִׁבְעָה','שְׁלֹשִׁים וּשְׁמוֹנָה','שְׁלֹשִׁים וְתִשְׁעָה','אַרְבָּעִים','אַרְבָּעִים וְאֶחָד','אַרְבָּעִים וּשְׁנַיִם','אַרְבָּעִים וּשְׁלֹשָׁה','אַרְבָּעִים וְאַרְבָּעָה','אַרְבָּעִים וַחֲמִשָּׁה','אַרְבָּעִים וְשִׁשָּׁה','אַרְבָּעִים וְשִׁבְעָה','אַרְבָּעִים וּשְׁמוֹנָה','אַרְבָּעִים וְתִשְׁעָה'];
 var OMER_NOMS_PHON = ["","ehad","chnaim","chlocha","arba","hamisha","chisha","chiva","chmona","ticha","assara","ahad assar","chneïm assar","chlocha assar","arba assar","hamisha assar","chisha assar","chiva assar","chmona assar","ticha assar","essrim","essrim v-ehad","essrim ouchnayim","essrim ouchloca","essrim v-arba","essrim va-hamisha","essrim v-chisha","essrim v-chiva","essrim ouchmona","essrim v-ticha","chlosim","chlosim v-ehad","chlosim ouchnayim","chlosim ouchloca","chlosim v-arba","chlosim va-hamisha","chlosim v-chisha","chlosim v-chiva","chlosim ouchmona","chlosim v-ticha","arbaim","arbaim v-ehad","arbaim ouchnayim","arbaim ouchloca","arbaim v-arba","arbaim va-hamisha","arbaim v-chisha","arbaim v-chiva","arbaim ouchmona","arbaim v-ticha"];
 
+// ═══ LECTEUR YOUTUBE ═══════════════════════════════════════
+var _ytVideos = []; // tableau global des vidéos pour éviter pb apostrophes
+
+function playYTByIndex(idx){
+  var v = _ytVideos[idx];
+  if(!v) return;
+  openYTPlayer(v.id, v.title);
+}
+
+function closeYTPlayer(){
+  var o = document.getElementById('yt-player-overlay');
+  if(o) o.style.display = 'none';
+}
+
+function openYTPlayer(videoId, title){
+  var overlay = document.getElementById('yt-player-overlay');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'yt-player-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9500;background:#000;display:flex;flex-direction:column;';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;padding:50px 16px 12px;background:#111;">'
+    + '<div style="font-size:14px;font-weight:600;color:#fff;font-family:Poppins,sans-serif;flex:1;margin-right:10px;line-height:1.3;">' + (title||'') + '</div>'
+    + '<button onclick="closeYTPlayer()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0;">✕</button>'
+    + '</div>'
+    + '<div style="flex:1;position:relative;">'
+    + '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1&rel=0" '
+    + 'style="position:absolute;inset:0;width:100%;height:100%;border:none;" '
+    + 'allow="autoplay;fullscreen;accelerometer;gyroscope;picture-in-picture" '
+    + 'allowfullscreen playsinline></iframe>'
+    + '</div>';
+  overlay.style.display = 'flex';
+}
+
 function closeOmer(){
   var v=document.getElementById('view-omer');
   if(v) v.style.display='none';
@@ -8598,6 +8633,7 @@ function renderVideos(){
 
   function buildHtml(){
     console.log("[Videos] buildHtml appelée, résultats:", Object.keys(results).length, "chaînes");
+    _ytVideos = []; // reset tableau global
     var h = "<div class=\"vid-header\"><div class=\"vid-header-title\">🎬 Vidéos Torah</div>"
       + "<div class=\"vid-header-sub\">JEM · Torah Box · Rav David Ichaï · Rav Shimon Gobert</div></div>";
     CHANNELS.forEach(function(ch){
@@ -8615,7 +8651,9 @@ function renderVideos(){
         + "<div style=\"flex:1;height:1px;background:var(--gray-2);\"></div>"
         + "<div style=\"font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;\">" + items.length + " vidéos</div></div>";
       // Vedette
-      h += "<div onclick=\"openYTPlayer('" + featId + "','" + featTitle + "')\" style=\"margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;\">"
+      var featIdx = _ytVideos.length;
+      _ytVideos.push({id: featId, title: feat.snippet.title});
+      h += "<div onclick=\"playYTByIndex(" + featIdx + ")\" "        + "style=\"margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;cursor:pointer;\">"
         + "<div style=\"position:relative;\">"
         + "<img src=\"" + featThumb + "\" style=\"width:100%;height:180px;object-fit:cover;display:block;\">"
         + "<div style=\"position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.75));\"></div>"
@@ -8633,7 +8671,9 @@ function renderVideos(){
           var vid = item.id.videoId;
           var t = item.snippet.title.replace(/"/g,"");
           var thumb = (item.snippet.thumbnails.medium || item.snippet.thumbnails.default || {url:""}).url;
-          h += "<div onclick=\"openYTPlayer('" + vid + "','" + t + "')\" style=\"flex-shrink:0;width:150px;cursor:pointer;background:#fff;border-radius:10px;box-shadow:var(--shadow-sm);overflow:hidden;\">"
+          var vIdx = _ytVideos.length;
+          _ytVideos.push({id: vid, title: item.snippet.title});
+          h += "<div onclick=\"playYTByIndex(" + vIdx + ")\" "            + "style=\"flex-shrink:0;width:150px;cursor:pointer;background:#fff;border-radius:10px;box-shadow:var(--shadow-sm);overflow:hidden;\">"
             + "<div style=\"position:relative;\">"
             + "<img src=\"" + thumb + "\" style=\"width:150px;height:90px;object-fit:cover;display:block;\">"
             + "<div style=\"position:absolute;inset:0;display:flex;align-items:center;justify-content:center;\">"
