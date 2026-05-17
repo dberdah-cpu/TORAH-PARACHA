@@ -1376,6 +1376,7 @@ body{
 <div id="view-histoires" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-histoire-detail" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-videos" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
+<div id="view-omer" style="display:none;position:fixed;inset:0;z-index:8000;background:#fff;overflow-y:auto;padding:0 0 80px;"></div>
 
 <!-- HAYOM YOM -->
 <!-- Barre de traduction fixe en bas -->
@@ -1591,6 +1592,7 @@ function getParashaFromCalendar(){
 var currentParashaHeb = '';  // nom hébreu
 var candleTime = '';
 var havdalaTime = '';
+var tzeitTime = ''; // heure de tsét hakochavim (3 étoiles)
 var currentCID = 27;         // ID paracha courante (fallback)
 
 // Correspondance noms Hebcal (anglais) → IDs locaux
@@ -1838,6 +1840,24 @@ function loadHebcalAll(lat,lng,cb){
       check();
     }).catch(function(){check();});
 
+  // Tsét HaKochavim via API Zmanim Hebcal
+  (function(){
+    var now2 = new Date();
+    var dateStr2 = now2.getFullYear()+'-'+String(now2.getMonth()+1).padStart(2,'0')+'-'+String(now2.getDate()).padStart(2,'0');
+    var lat = (userLat||48.8566).toFixed(4);
+    var lng = (userLng||2.3522).toFixed(4);
+    var zmanimUrl = 'https://www.hebcal.com/zmanim?cfg=json&date='+dateStr2+'&latitude='+lat+'&longitude='+lng+'&tzid=Europe/Paris';
+    fetch(zmanimUrl)
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d.times && d.times.tzeit85deg){
+          var t = new Date(d.times.tzeit85deg);
+          tzeitTime = t.getHours()+'h'+String(t.getMinutes()).padStart(2,'0');
+          console.log('[Omer] Tsét HaKochavim:', tzeitTime);
+        }
+      }).catch(function(){});
+  })();
+
   // Hebrew date — Hebcal retourne "3 Iyar 5786" dans hdate et hébreu dans hebrew
   fetch(hdUrl)
     .then(function(r){return r.json();})
@@ -2034,16 +2054,39 @@ var calEvents=[];try{calEvents=JSON.parse(localStorage.getItem('torah_ev')||'[]'
 function saveEv(){try{localStorage.setItem('torah_ev',JSON.stringify(calEvents));}catch(e){}}
 function getTodayEv(){var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear(),hd=g2h(gd,gm,gy);return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 
-function getCitationDuJour(){
+var PIRKE_AVOT_OMER = [{"jour": 1, "mishna": "1:1", "texte": "Moïse reçut la Torah au Sinaï et la transmit à Josué, Josué aux Anciens, les Anciens aux Prophètes, et les Prophètes la transmirent aux hommes de la Grande Assemblée.", "auteur": "Pirké Avot 1:1"}, {"jour": 2, "mishna": "1:2", "texte": "Le monde repose sur trois choses : la Torah, le service divin et les œuvres de bonté.", "auteur": "Shimon HaTsadik · Pirké Avot 1:2"}, {"jour": 3, "mishna": "1:3", "texte": "Ne sois pas comme des serviteurs qui servent le maître pour recevoir une récompense. Sois comme ceux qui servent sans attendre de récompense.", "auteur": "Antigonus de Sokho · Pirké Avot 1:3"}, {"jour": 4, "mishna": "1:4", "texte": "Couvre-toi de la poussière des pieds de tes maîtres et bois leurs paroles avec soif.", "auteur": "Yossé ben Yo'ezer · Pirké Avot 1:4"}, {"jour": 5, "mishna": "1:5", "texte": "Que ta maison soit grande ouverte. Traite les pauvres comme des membres de ta famille.", "auteur": "Yossé ben Yoh'anan · Pirké Avot 1:5"}, {"jour": 6, "mishna": "1:6", "texte": "Fais-toi un maître, acquiers-toi un ami et juge chaque homme favorablement.", "auteur": "Yehochoua ben Pera'hia · Pirké Avot 1:6"}, {"jour": 7, "mishna": "1:14", "texte": "Si je ne suis pas pour moi-même, qui le sera ? Et si je ne suis que pour moi-même, que suis-je ? Et si pas maintenant — quand ?", "auteur": "Hillel · Pirké Avot 1:14"}, {"jour": 8, "mishna": "2:1", "texte": "Quelle est la bonne voie que l'homme doit choisir ? Celle qui est honorable pour lui et qui lui vaut l'estime des autres.", "auteur": "Rabbi · Pirké Avot 2:1"}, {"jour": 9, "mishna": "2:2", "texte": "L'étude de la Torah est belle quand elle s'accompagne d'un métier, car l'effort des deux ensemble fait oublier le péché.", "auteur": "Rabban Gamliel · Pirké Avot 2:2"}, {"jour": 10, "mishna": "2:4", "texte": "Ne te fie pas à toi-même jusqu'au jour de ta mort. Ne juge pas ton prochain avant d'être à sa place.", "auteur": "Hillel · Pirké Avot 2:4"}, {"jour": 11, "mishna": "2:5", "texte": "Un homme grossier ne craint pas le péché. Un ignorant ne peut être pieux. Un timide n'apprend pas. Un homme colérique n'enseigne pas.", "auteur": "Hillel · Pirké Avot 2:5"}, {"jour": 12, "mishna": "2:6", "texte": "En un lieu où il n'y a pas d'hommes, efforce-toi d'être un homme.", "auteur": "Hillel · Pirké Avot 2:6"}, {"jour": 13, "mishna": "2:10", "texte": "Que l'honneur de ton ami te soit aussi cher que le tien propre.", "auteur": "Rabbi Eliezer · Pirké Avot 2:10"}, {"jour": 14, "mishna": "2:13", "texte": "La mauvaise voie dont l'homme doit s'éloigner : un mauvais cœur.", "auteur": "Rabbi Eliezer · Pirké Avot 2:13"}, {"jour": 15, "mishna": "3:1", "texte": "Sache d'où tu viens, où tu vas, et devant Qui tu devras rendre des comptes.", "auteur": "Akavya ben Mahalalel · Pirké Avot 3:1"}, {"jour": 16, "mishna": "3:2", "texte": "Prie pour le bien-être du gouvernement, car sans la crainte qu'il inspire, les hommes s'avaleraient les uns les autres.", "auteur": "Rabbi Hanina · Pirké Avot 3:2"}, {"jour": 17, "mishna": "3:3", "texte": "Si deux personnes sont assises ensemble et échangent des paroles de Torah, la Présence divine repose entre elles.", "auteur": "Rabbi Hanania · Pirké Avot 3:3"}, {"jour": 18, "mishna": "3:9", "texte": "Celui dont la crainte du péché précède sa sagesse — sa sagesse durera. Celui dont la sagesse précède la crainte du péché — sa sagesse ne durera pas.", "auteur": "Rabbi Hanina ben Dossa · Pirké Avot 3:9"}, {"jour": 19, "mishna": "3:14", "texte": "Aimé est l'homme, car il a été créé à l'image de D.ieu. Aimé est Israël, car il est appelé fils de D.ieu.", "auteur": "Rabbi Akiva · Pirké Avot 3:14"}, {"jour": 20, "mishna": "3:17", "texte": "S'il n'y a pas de farine, il n'y a pas de Torah. S'il n'y a pas de Torah, il n'y a pas de farine.", "auteur": "Rabbi Elazar ben Azaria · Pirké Avot 3:17"}, {"jour": 21, "mishna": "3:21", "texte": "La Torah est comme l'eau — elle va toujours vers le bas, vers ceux qui s'humilient pour la recevoir.", "auteur": "Rabbi Akiva · Pirké Avot 3:21"}, {"jour": 22, "mishna": "4:1", "texte": "Qui est fort ? Celui qui maîtrise son penchant. Qui est riche ? Celui qui se réjouit de son lot. Qui est honoré ? Celui qui honore les autres.", "auteur": "Ben Zoma · Pirké Avot 4:1"}, {"jour": 23, "mishna": "4:2", "texte": "Court après la mitsva légère comme après la mitsva importante, car tu ne sais pas quelle récompense t'est réservée.", "auteur": "Ben Azzaï · Pirké Avot 4:2"}, {"jour": 24, "mishna": "4:3", "texte": "Ne méprise personne et ne dédaigne aucune chose — car il n'y a pas d'homme qui n'ait son heure.", "auteur": "Ben Azzaï · Pirké Avot 4:3"}, {"jour": 25, "mishna": "4:5", "texte": "Celui qui apprend afin d'enseigner — on lui accorde de pouvoir apprendre et enseigner. Celui qui apprend afin de pratiquer — on lui accorde d'apprendre, d'enseigner, de garder et de pratiquer.", "auteur": "Rabbi Yishmael · Pirké Avot 4:5"}, {"jour": 26, "mishna": "4:17", "texte": "Mieux vaut une heure de retour et de bonnes actions dans ce monde que toute la vie du monde à venir. Et mieux vaut une heure de sérénité du monde à venir que toute la vie de ce monde.", "auteur": "Rabbi Yaakov · Pirké Avot 4:17"}, {"jour": 27, "mishna": "4:20", "texte": "Celui qui apprend étant jeune — à quoi ressemble-t-il ? À de l'encre écrite sur du papier neuf. Celui qui apprend étant vieux — à de l'encre écrite sur du papier effacé.", "auteur": "Elisha ben Avouya · Pirké Avot 4:20"}, {"jour": 28, "mishna": "4:28", "texte": "La jalousie, la convoitise et la vaine gloire font sortir l'homme du monde.", "auteur": "Rabbi Eliezer HaKappar · Pirké Avot 4:28"}, {"jour": 29, "mishna": "5:1", "texte": "Le monde a été créé par dix paroles. Pour enseigner la valeur de chaque parole — et combien est grave la faute de celui qui la détruit.", "auteur": "Pirké Avot 5:1"}, {"jour": 30, "mishna": "5:3", "texte": "Avraham fut éprouvé dix fois et résista à toutes — pour montrer combien grand était l'amour d'Avraham notre père.", "auteur": "Pirké Avot 5:3"}, {"jour": 31, "mishna": "5:7", "texte": "Sept choses caractérisent le sot et sept le sage. Le sage ne parle pas avant celui qui est plus grand que lui en sagesse.", "auteur": "Pirké Avot 5:7"}, {"jour": 32, "mishna": "5:10", "texte": "Quatre types de caractères : celui qui dit 'le mien est à moi et le tien est à toi' — c'est le caractère ordinaire. Celui qui dit 'le mien est à toi et le tien est à moi' — c'est l'ignorant. Celui qui dit 'le mien est à toi et le tien est aussi à toi' — c'est le pieux.", "auteur": "Pirké Avot 5:10"}, {"jour": 33, "mishna": "5:13", "texte": "Quatre types d'étudiants : celui qui apprend vite et oublie vite — son gain est annulé par sa perte. Celui qui apprend lentement et oublie lentement — sa perte est annulée par son gain. Celui qui apprend vite et oublie lentement — c'est un bon lot.", "auteur": "Pirké Avot 5:13"}, {"jour": 34, "mishna": "5:16", "texte": "Tout amour qui dépend d'une cause — quand la cause disparaît, l'amour disparaît. Mais l'amour qui ne dépend d'aucune cause ne disparaît jamais.", "auteur": "Pirké Avot 5:16"}, {"jour": 35, "mishna": "5:23", "texte": "Sois audacieux comme le léopard, léger comme l'aigle, rapide comme le cerf et fort comme le lion pour accomplir la volonté de ton Père céleste.", "auteur": "Yehouda ben Tema · Pirké Avot 5:23"}, {"jour": 36, "mishna": "6:1", "texte": "Celui qui étudie la Torah lishmah — pour elle-même — mérite beaucoup de choses. On lui révèle les secrets de la Torah.", "auteur": "Rabbi Méïr · Pirké Avot 6:1"}, {"jour": 37, "mishna": "6:2", "texte": "Qui est vraiment libre ? Celui qui se consacre à l'étude de la Torah.", "auteur": "Pirké Avot 6:2"}, {"jour": 38, "mishna": "6:3", "texte": "Celui qui apprend de son prochain une seule lettre doit lui témoigner du respect.", "auteur": "Pirké Avot 6:3"}, {"jour": 39, "mishna": "6:4", "texte": "Telle est la voie de la Torah : tu mangeras du pain avec du sel, tu boiras de l'eau avec mesure, tu dormiras à même le sol — et tu peinerai dans la Torah. Si tu fais ainsi, tu seras heureux.", "auteur": "Pirké Avot 6:4"}, {"jour": 40, "mishna": "6:5", "texte": "Ne cherche pas la grandeur pour toi-même, ne convoite pas plus d'honneur que ta science ne le mérite.", "auteur": "Pirké Avot 6:5"}, {"jour": 41, "mishna": "6:6", "texte": "La Torah est plus grande que la prêtrise et la royauté. La royauté s'acquiert par trente vertus, la prêtrise par vingt-quatre. La Torah — par quarante-huit.", "auteur": "Pirké Avot 6:6"}, {"jour": 42, "mishna": "6:9", "texte": "D.ieu dit à Moïse : les Tables, la Torah, les commandements que j'ai écrits pour les instruire — va enseigne-les aux enfants d'Israël.", "auteur": "Pirké Avot 6:9"}, {"jour": 43, "mishna": "6:10", "texte": "Cinq acquisitions a faites le Saint Béni soit-Il dans Son monde : la Torah, le ciel et la terre, Avraham, Israël et le Temple.", "auteur": "Pirké Avot 6:10"}, {"jour": 44, "mishna": "6:11", "texte": "Tout ce que D.ieu a créé dans Son monde, Il ne l'a créé que pour Sa gloire.", "auteur": "Pirké Avot 6:11"}, {"jour": 45, "mishna": "5:23", "texte": "Sois audacieux comme le léopard, léger comme l'aigle, rapide comme le cerf et fort comme le lion pour accomplir la volonté de ton Père céleste.", "auteur": "Yehouda ben Tema · Pirké Avot 5:23"}, {"jour": 46, "mishna": "1:2", "texte": "Le monde repose sur trois choses : la Torah, le service divin et les œuvres de bonté.", "auteur": "Shimon HaTsadik · Pirké Avot 1:2"}, {"jour": 47, "mishna": "1:14", "texte": "Si je ne suis pas pour moi-même, qui le sera ? Et si je ne suis que pour moi-même, que suis-je ? Et si pas maintenant — quand ?", "auteur": "Hillel · Pirké Avot 1:14"}, {"jour": 48, "mishna": "4:1", "texte": "Qui est fort ? Celui qui maîtrise son penchant. Qui est riche ? Celui qui se réjouit de son lot.", "auteur": "Ben Zoma · Pirké Avot 4:1"}, {"jour": 49, "mishna": "6:2", "texte": "Qui est vraiment libre ? Celui qui se consacre à l'étude de la Torah. Et chaque jour une voix céleste retentit du mont Sinaï et dit : malheur aux créatures qui offensent la Torah.", "auteur": "Pirké Avot 6:2"}];
+
+// Dates Omer 2026 : Pessah 2 avril → Chavouot 22 mai
+var OMER_START_2026 = new Date(2026, 3, 3); // 3 avril (2ème soir de Pessah)
+var OMER_END_2026   = new Date(2026, 4, 22); // 22 mai (Chavouot)
+
+function getOmerDay(){
   var now = new Date();
-  // Jour de l'année (1-365)
+  var start = OMER_START_2026;
+  var diff = Math.floor((now - start) / (1000*60*60*24));
+  if(diff >= 0 && diff < 49) return diff + 1; // jour 1-49
+  return 0; // pas dans la période
+}
+
+function getCitationDuJour(){
+  // Pendant l'Omer → Pirké Avot
+  var omerDay = getOmerDay();
+  if(omerDay > 0){
+    var pa = PIRKE_AVOT_OMER.find(function(x){ return x.jour === omerDay; });
+    if(pa) return {
+      texte: pa.texte,
+      auteur: pa.auteur,
+      source: '📜 Pirké Avot ' + pa.mishna + ' · Jour ' + omerDay + " de l'Omer"
+    };
+  }
+  // Sinon → citation du jour normale
+  var now = new Date();
   var start = new Date(now.getFullYear(), 0, 0);
   var diff = now - start;
   var oneDay = 1000*60*60*24;
   var jour = Math.floor(diff / oneDay);
   if(jour < 1) jour = 1;
   if(jour > 365) jour = 365;
-  // Trouver la citation correspondante
   var c = CITATIONS_365.find(function(x){ return x.jour === jour; });
   if(!c) c = CITATIONS_365[jour % CITATIONS_365.length];
   return c;
@@ -2108,6 +2151,38 @@ function getHomeBanners(){
         +'</div>';
     }
   }
+  // Bannière Omer
+  var omerDay = getOmerDay();
+  if(omerDay > 0){
+    var omerNuit = (function(){
+      var now = new Date();
+      var h = now.getHours(); var mn = now.getMinutes();
+      if(tzeitTime){
+        var tm = tzeitTime.match(/(\d+)h(\d+)/);
+        if(tm) return (h > parseInt(tm[1])) || (h===parseInt(tm[1]) && mn>=parseInt(tm[2]));
+      }
+      return h >= 20 || h < 6; // fallback
+    })();
+    var omerHeb = ['אֶחָד','שְׁנַיִם','שְׁלֹשָׁה','אַרְבָּעָה','חֲמִשָּׁה','שִׁשָּׁה','שִׁבְעָה',
+      'שְׁמוֹנָה','תִּשְׁעָה','עֲשָׂרָה'][Math.min(omerDay-1,9)]||'';
+    html += '<div onclick="openOmer()" style="cursor:pointer;background:linear-gradient(135deg,#f59e0b,#d97706);'
+      + 'margin:0 16px 12px;border-radius:var(--radius);padding:12px 16px;'
+      + 'display:flex;align-items:center;justify-content:space-between;">';
+    html += '<div>';
+    html += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.75);'
+      + 'letter-spacing:1px;font-family:Poppins,sans-serif;">'
+      + (omerNuit ? '🌟 CE SOIR — COMPTE L\'OMER' : '✨ OMER DU JOUR') + '</div>';
+    html += '<div style="font-size:16px;font-weight:800;color:#fff;'
+      + 'font-family:Poppins,sans-serif;">Jour ' + omerDay + ' de l\'Omer</div>';
+    html += '</div>';
+    html += '<div style="text-align:center;">';
+    html += '<div style="font-size:22px;color:#fff;font-weight:700;'
+      + 'font-family:serif;direction:rtl;">' + omerDay + '</div>';
+    html += '<div style="font-size:10px;color:rgba(255,255,255,.8);'
+      + 'font-family:Poppins,sans-serif;">לָעֹמֶר</div>';
+    html += '</div></div>';
+  }
+
   // Chabbat maintenant intégré dans le hero
   return html;
 }
@@ -2739,8 +2814,27 @@ function buildHome(){
     +'</div>';
   if(candleTime||havdalaTime){
     // Calculer date du prochain vendredi
+    // Après Havdala (samedi soir) → montrer le Chabbat suivant
     var nextFri=new Date(t);
-    var daysToFri=(5-t.getDay()+7)%7||7;
+    var jsDay=t.getDay(); // 0=dim, 6=sam
+    var afterHavdalaToday = false;
+    if(jsDay===6 && havdalaTime){
+      var hm=havdalaTime.match(/(\d+)[h:](\d+)/);
+      if(hm){
+        var hv=parseInt(hm[1]); var mv=parseInt(hm[2]);
+        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv<12) hv+=12;
+        afterHavdalaToday=(t.getHours()>hv)||(t.getHours()===hv&&t.getMinutes()>=mv);
+      }
+    }
+    // Si samedi après Havdala → aller au vendredi suivant (+8 jours)
+    // Si vendredi → montrer ce vendredi (0 jours)
+    // Sinon → prochain vendredi
+    var daysToFri;
+    if(afterHavdalaToday){
+      daysToFri = (5-jsDay+7)%7 + 7; // semaine suivante
+    } else {
+      daysToFri = (5-jsDay+7)%7||7;
+    }
     nextFri.setDate(t.getDate()+daysToFri);
     var friLabel=nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
     h+='<div class="hdc-shabbat" onclick="openShabbatPanel()">'
@@ -8331,6 +8425,121 @@ function readerFontSize(textId, size){
   var el = document.getElementById(textId);
   if(el) el.style.fontSize = size+'px';
 }
+// ═══ OMER — PRIÈRE DU COMPTE ═══════════════════════════════
+var OMER_SEMAINES = [
+  ['חֶסֶד','Hessed','Bonté'],['גְּבוּרָה','Guevoura','Force'],
+  ['תִּפְאֶרֶת','Tiferet','Beauté'],['נֶצַח','Nétsah','Victoire'],
+  ['הוֹד','Hod','Splendeur'],['יְסוֹד','Yessod','Fondation'],
+  ['מַלְכוּת','Malkhout','Royauté']
+];
+var OMER_NOMS_HEB = ['','אֶחָד','שְׁנַיִם','שְׁלֹשָׁה','אַרְבָּעָה','חֲמִשָּׁה','שִׁשָּׁה','שִׁבְעָה','שְׁמוֹנָה','תִּשְׁעָה','עֲשָׂרָה','אַחַד עָשָׂר','שְׁנֵים עָשָׂר','שְׁלֹשָׁה עָשָׂר','אַרְבָּעָה עָשָׂר','חֲמִשָּׁה עָשָׂר','שִׁשָּׁה עָשָׂר','שִׁבְעָה עָשָׂר','שְׁמוֹנָה עָשָׂר','תִּשְׁעָה עָשָׂר','עֶשְׂרִים','עֶשְׂרִים וְאֶחָד','עֶשְׂרִים וּשְׁנַיִם','עֶשְׂרִים וּשְׁלֹשָׁה','עֶשְׂרִים וְאַרְבָּעָה','עֶשְׂרִים וַחֲמִשָּׁה','עֶשְׂרִים וְשִׁשָּׁה','עֶשְׂרִים וְשִׁבְעָה','עֶשְׂרִים וּשְׁמוֹנָה','עֶשְׂרִים וְתִשְׁעָה','שְׁלֹשִׁים','שְׁלֹשִׁים וְאֶחָד','שְׁלֹשִׁים וּשְׁנַיִם','שְׁלֹשִׁים וּשְׁלֹשָׁה','שְׁלֹשִׁים וְאַרְבָּעָה','שְׁלֹשִׁים וַחֲמִשָּׁה','שְׁלֹשִׁים וְשִׁשָּׁה','שְׁלֹשִׁים וְשִׁבְעָה','שְׁלֹשִׁים וּשְׁמוֹנָה','שְׁלֹשִׁים וְתִשְׁעָה','אַרְבָּעִים','אַרְבָּעִים וְאֶחָד','אַרְבָּעִים וּשְׁנַיִם','אַרְבָּעִים וּשְׁלֹשָׁה','אַרְבָּעִים וְאַרְבָּעָה','אַרְבָּעִים וַחֲמִשָּׁה','אַרְבָּעִים וְשִׁשָּׁה','אַרְבָּעִים וְשִׁבְעָה','אַרְבָּעִים וּשְׁמוֹנָה','אַרְבָּעִים וְתִשְׁעָה'];
+var OMER_NOMS_PHON = ["","ehad","chnaim","chlocha","arba","hamisha","chisha","chiva","chmona","ticha","assara","ahad assar","chneïm assar","chlocha assar","arba assar","hamisha assar","chisha assar","chiva assar","chmona assar","ticha assar","essrim","essrim v-ehad","essrim ouchnayim","essrim ouchloca","essrim v-arba","essrim va-hamisha","essrim v-chisha","essrim v-chiva","essrim ouchmona","essrim v-ticha","chlosim","chlosim v-ehad","chlosim ouchnayim","chlosim ouchloca","chlosim v-arba","chlosim va-hamisha","chlosim v-chisha","chlosim v-chiva","chlosim ouchmona","chlosim v-ticha","arbaim","arbaim v-ehad","arbaim ouchnayim","arbaim ouchloca","arbaim v-arba","arbaim va-hamisha","arbaim v-chisha","arbaim v-chiva","arbaim ouchmona","arbaim v-ticha"];
+
+function closeOmer(){
+  var v=document.getElementById('view-omer');
+  if(v) v.style.display='none';
+}
+function openOmer(){
+  var omerDay = getOmerDay();
+  if(!omerDay) return;
+  var view = document.getElementById('view-omer');
+  view.style.display = 'block';
+  document.getElementById('btn-back').style.display = 'flex';
+  window.scrollTo(0,0);
+
+  var semaine = Math.ceil(omerDay/7);
+  var jourSemaine = ((omerDay-1)%7)+1;
+  var sem = OMER_SEMAINES[semaine-1] || ['','',''];
+  var josem = OMER_SEMAINES[jourSemaine-1] || ['','',''];
+
+  // Texte du compte en hébreu
+  var compteSemHeb = semaine > 1 ?
+    (semaine===2?'שְׁנֵי שָׁבוּעוֹת':OMER_NOMS_HEB[semaine]+' שָׁבוּעוֹת') : 'שָׁבוּעַ אֶחָד';
+  var compteJourHeb = jourSemaine > 0 ?
+    ' וְ'+OMER_NOMS_HEB[jourSemaine]+(jourSemaine===1?' יוֹם':' יָמִים') : '';
+
+  var comptePhon = omerDay < 7 ?
+    OMER_NOMS_PHON[omerDay]+' yamim laomer' :
+    omerDay === 7 ? "chavou-ahad laomer" :
+    (function(){
+      var s = semaine===2?"chney chavouot":OMER_NOMS_PHON[semaine]+" chavouot";
+            var j = jourSemaine>0?" v-"+OMER_NOMS_PHON[jourSemaine]+(jourSemaine===1?" yom":" yamim"):"";
+      return s+j+" laomer";
+    })();
+
+  var omerNuit = (function(){
+    var now=new Date(); var h=now.getHours(); var mn=now.getMinutes();
+    if(tzeitTime){ var tm=tzeitTime.match(/(\d+)h(\d+)/);
+      if(tm) return (h>parseInt(tm[1]))||(h===parseInt(tm[1])&&mn>=parseInt(tm[2]));
+    }
+    return h>=20||h<6;
+  })();
+
+  view.innerHTML =
+    '<div style="background:linear-gradient(135deg,#f59e0b,#d97706);padding:60px 20px 24px;text-align:center;">'
+    +'<button onclick="closeOmer()" '
+    +'style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);border:none;'
+    +'color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>'
+    +'<div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:2px;margin-bottom:8px;">✨ SEFIRAT HAOMER</div>'
+    +'<div style="font-size:48px;font-weight:900;color:#fff;">'+omerDay+'</div>'
+    +'<div style="font-size:16px;color:rgba(255,255,255,.9);font-family:Poppins,sans-serif;">Jour de l&#39;Omer</div>'
+    +(tzeitTime?'<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:6px;font-family:Poppins,sans-serif;">Tsét HaKochavim : '+tzeitTime+'</div>':'')
+    +'</div>'
+
+
+
+    // Bénédiction
+    +'<div style="padding:20px;">'
+    +'<div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:20px;margin-bottom:16px;">'
+    +'<div style="font-size:11px;font-weight:700;color:#92400e;letter-spacing:1px;margin-bottom:12px;font-family:Poppins,sans-serif;">📖 BÉNÉDICTION</div>'
+
+    // Hébreu bénédiction
+    +'<div style="font-size:20px;line-height:2;color:#1c1c1e;text-align:right;direction:rtl;margin-bottom:8px;font-family:serif;">'
+    +'בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל סְפִירַת הָעֹמֶר.'
+    +'</div>'
+    // Phonétique bénédiction
+    +'<div style="font-size:13px;line-height:1.8;color:#6b7280;font-style:italic;font-family:Georgia,serif;margin-bottom:16px;border-left:3px solid #f59e0b;padding-left:10px;">'
+    +'Baroukh Ata Adonaï Eloheïnou Melekh haolam, acher kidechanou bemitsvotav vetsivanou al sefirat haomer.'
+    +'</div>'
+
+    +'<div style="border-top:1px solid #f3f4f6;padding-top:16px;">'
+    +'<div style="font-size:11px;font-weight:700;color:#92400e;letter-spacing:1px;margin-bottom:10px;font-family:Poppins,sans-serif;">📢 LE COMPTE</div>'
+
+    // Hébreu du compte
+    +'<div style="font-size:20px;line-height:2;color:#1c1c1e;text-align:right;direction:rtl;margin-bottom:8px;font-family:serif;">'
+    +'הַיּוֹם '+OMER_NOMS_HEB[omerDay]+' יוֹם'
+    +(semaine>=1?' שֶׁהֵם '+compteSemHeb+compteJourHeb:'')
+    +' לָעֹמֶר.'
+    +'</div>'
+
+    // Phonétique COMPLÈTE du compte
+    +'<div style="font-size:13px;line-height:1.8;color:#6b7280;font-style:italic;font-family:Georgia,serif;margin-bottom:16px;border-left:3px solid #f59e0b;padding-left:10px;">'
+    +'Hayom '+comptePhon+'.'
+    +'</div>'
+
+    // Harahaman — avant la séfira
+    +'<div style="background:#fff7ed;border-radius:10px;padding:14px 16px;margin-bottom:12px;">'
+    +'<div style="font-size:11px;font-weight:700;color:#92400e;font-family:Poppins,sans-serif;margin-bottom:8px;">🙏 HARAHAMAN</div>'
+    +'<div style="font-size:18px;line-height:2;color:#1c1c1e;text-align:right;direction:rtl;margin-bottom:8px;font-family:serif;">'
+    +'הָרַחֲמָן הוּא יַחֲזִיר לָנוּ אֶת עֲבוֹדַת בֵּית הַמִּקְדָּשׁ לִמְקוֹמָהּ, בִּמְהֵרָה בְיָמֵינוּ אָמֵן סֶלָה.'
+    +'</div>'
+    +"<div style=\"font-size:12px;line-height:1.8;color:#6b7280;font-style:italic;font-family:Georgia,serif;\">"
+    +"Harahaman hou yazir lanou et avodat Beït Hamikdach limkomah, bimhera viyameïnou, amen sela."
+    +'</div></div>'
+
+    // Séfira du jour — après le Harahaman
+    +'<div style="background:linear-gradient(135deg,#f59e0b22,#d9770622);border-radius:10px;padding:12px 16px;">'
+    +'<div style="font-size:12px;font-weight:700;color:#92400e;font-family:Poppins,sans-serif;margin-bottom:4px;">✨ SÉFIRA DU JOUR</div>'
+    +'<div style="font-size:16px;font-weight:700;color:#1c1c1e;font-family:Poppins,sans-serif;">'
+    +josem[0]+' che-be'+sem[0]
+    +'</div>'
+    +'<div style="font-size:13px;color:#6b7280;font-family:Poppins,sans-serif;">'
+    +josem[1]+' shebe'+sem[1]+' — '+josem[2]+' dans la '+sem[2]
+    +'</div>'
+    +'</div>'
+    +'</div>'    +'</div></div></div>';
+}
+
 function readerSize(input){
   var textId = input.dataset.txt;
   var el = document.getElementById(textId);
@@ -8532,7 +8741,7 @@ function getSidraURL(){
 }
 
 function openSidra(){
-  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos'].forEach(function(id){
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail','view-videos','view-omer'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
   });
   if(window.speechSynthesis) window.speechSynthesis.cancel();
