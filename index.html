@@ -1568,31 +1568,49 @@ var PARASHOT_2026 = [
 
 function getParashaFromCalendar(){
   var now = new Date();
-  var best = null;
-  var bestDiff = Infinity;
+  // Du dimanche au samedi inclus → paracha du chabbat de cette semaine
+  // Du dimanche (lendemain havdala) → paracha du chabbat suivant
   for(var i=0;i<PARASHOT_2026.length;i++){
     var p = PARASHOT_2026[i];
     var shabbat = new Date(p[0], p[1], p[2]);
-    // La semaine de cette paracha va du dimanche précédent au vendredi suivant
-    var sunday = new Date(shabbat); sunday.setDate(shabbat.getDate()-6);
-    var friday = new Date(shabbat); friday.setDate(shabbat.getDate()-1);
-    if(now >= sunday && now <= shabbat){
-      return p[3];
-    }
+    shabbat.setHours(23,59,59);
+    var sunday = new Date(shabbat); sunday.setDate(shabbat.getDate()-6); sunday.setHours(0,0,0);
+    if(now >= sunday && now <= shabbat) return p[3];
   }
-  // Fallback : paracha la plus proche
+  // Fallback : prochain chabbat futur
+  var best = null; var bestDiff = Infinity;
   for(var i=0;i<PARASHOT_2026.length;i++){
     var p = PARASHOT_2026[i];
     var shabbat = new Date(p[0], p[1], p[2]);
-    var diff = Math.abs(now - shabbat);
-    if(diff < bestDiff){ bestDiff = diff; best = p[3]; }
+    var diff = shabbat - now;
+    if(diff >= 0 && diff < bestDiff){ bestDiff = diff; best = p[3]; }
+  }
+  // Si rien de futur → dernier passé
+  if(!best){
+    for(var i=0;i<PARASHOT_2026.length;i++){
+      var p = PARASHOT_2026[i];
+      var shabbat = new Date(p[0], p[1], p[2]);
+      var diff = Math.abs(now - shabbat);
+      if(diff < bestDiff){ bestDiff = diff; best = p[3]; }
+    }
   }
   return best;
 }
 var currentParashaHeb = '';  // nom hébreu
 var candleTime = '';
 var havdalaTime = '';
-var tzeitTime = ''; // heure de tsét hakochavim (3 étoiles)
+var tzeitTime = '';
+
+// Initialiser la paracha depuis le calendrier local (avant Hebcal)
+(function(){
+  var calParasha = getParashaFromCalendar();
+  if(calParasha){
+    currentParashaName = calParasha;
+    var mapped = resolveParasha ? resolveParasha(calParasha) : null;
+    if(mapped) currentCID = mapped;
+    console.log('[Torah] Paracha calendrier local:', calParasha, '→ CID', currentCID);
+  }
+})(); // heure de tsét hakochavim (3 étoiles)
 var currentCID = 27;         // ID paracha courante (fallback)
 
 // Correspondance noms Hebcal (anglais) → IDs locaux
