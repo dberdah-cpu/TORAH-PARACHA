@@ -8594,9 +8594,10 @@ function renderVideos(){
     { id: "UCBWj1ekQr6HIVGrq2FoGYUA", label: "✨ Rav David Ichaï",     count: 8,  color: "#1a3320" },
     { id: "UCwk2hU3XF_oinOuuuNqQqrg", label: "🔥 Rav Shimon Gobert",   count: 8,  color: "#3a1a1a" }
   ];
-  var results = {}; var loaded = 0;
+  var results = {}; var loaded = 0; var _built = false;
 
   function buildHtml(){
+    console.log("[Videos] buildHtml appelée, résultats:", Object.keys(results).length, "chaînes");
     var h = "<div class=\"vid-header\"><div class=\"vid-header-title\">🎬 Vidéos Torah</div>"
       + "<div class=\"vid-header-sub\">JEM · Torah Box · Rav David Ichaï · Rav Shimon Gobert</div></div>";
     CHANNELS.forEach(function(ch){
@@ -8662,12 +8663,14 @@ function renderVideos(){
       if(data.error) console.error("[Videos] API error chaîne " + ch.id + ":", JSON.stringify(data.error));
       results[ch.id] = (data.items && data.items.length) ? data.items : [];
       console.log("[Videos]", ch.label, "→", results[ch.id].length, "vidéos");
-      loaded++; if(loaded === CHANNELS.length) onAllLoaded();
+      loaded++;
+      if(loaded === CHANNELS.length && !_built){ _built=true; onAllLoaded(); }
     })
     .catch(function(err){
       console.error("[Videos] Erreur chaîne " + ch.id + ":", err);
       results[ch.id] = [];
-      loaded++; if(loaded === CHANNELS.length) onAllLoaded();
+      loaded++;
+      if(loaded === CHANNELS.length && !_built){ _built=true; onAllLoaded(); }
     });
   });
 }
