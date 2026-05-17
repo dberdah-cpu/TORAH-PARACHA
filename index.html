@@ -8650,7 +8650,26 @@ function renderVideos(){
 
   function onAllLoaded(){
     var h = buildHtml();
-    fetch("https://atsfgzabpwirfhnzpzei.supabase.co/rest/v1/videos_data?actif=eq.true&order=ordre.asc,created_at.desc&select=*",{headers:{"apikey":"sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK","Authorization":"Bearer sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK"}}).catch(function(){ document.getElementById("view-videos").innerHTML = h; });
+    console.log("[Videos] HTML généré:", h.length, "chars");
+    // Afficher immédiatement les vidéos YouTube
+    document.getElementById("view-videos").innerHTML = h;
+    // Puis charger les vidéos Supabase en arrière-plan
+    fetch("https://atsfgzabpwirfhnzpzei.supabase.co/rest/v1/videos_data?actif=eq.true&order=ordre.asc,created_at.desc&select=*",
+      {headers:{"apikey":"sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK","Authorization":"Bearer sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK"}})
+    .then(function(r){ return r.json(); })
+    .then(function(dbVids){
+      if(!Array.isArray(dbVids) || !dbVids.length) return;
+      var extra = "<div style=\"margin:16px 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;\">MES VIDÉOS</div>";
+      dbVids.forEach(function(v){
+        extra += "<div style=\"margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;\">"
+          + "<div style=\"padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;\">" + v.titre + "</div>"
+          + "<div style=\"padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;\">" + (v.message||"") + "</div>"
+          + "<video style=\"width:100%;max-height:220px;background:#000;display:block;\" controls preload=\"metadata\" playsinline>"
+          + "<source src=\"" + v.url + "\" type=\"video/mp4\"></video></div>";
+      });
+      var view = document.getElementById("view-videos");
+      if(view) view.innerHTML = h + extra;
+    }).catch(function(){});
   }
 
   var ytKey = "AIzaSyCLBm_iE-WV3LJFDI8Rxo1MzRwwKQAx2Bg";
