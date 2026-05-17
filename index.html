@@ -1601,16 +1601,18 @@ var candleTime = '';
 var havdalaTime = '';
 var tzeitTime = '';
 
-// Initialiser la paracha depuis le calendrier local (avant Hebcal)
-(function(){
+// Initialiser la paracha depuis le calendrier local — après chargement complet
+window.addEventListener('DOMContentLoaded', function(){
   var calParasha = getParashaFromCalendar();
-  if(calParasha){
+  if(calParasha && !currentParashaName){
     currentParashaName = calParasha;
-    var mapped = resolveParasha ? resolveParasha(calParasha) : null;
-    if(mapped) currentCID = mapped;
+    if(typeof resolveParasha === 'function'){
+      var mapped = resolveParasha(calParasha);
+      if(mapped) currentCID = mapped;
+    }
     console.log('[Torah] Paracha calendrier local:', calParasha, '→ CID', currentCID);
   }
-})(); // heure de tsét hakochavim (3 étoiles)
+}); // heure de tsét hakochavim (3 étoiles)
 var currentCID = 27;         // ID paracha courante (fallback)
 
 // Correspondance noms Hebcal (anglais) → IDs locaux
