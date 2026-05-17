@@ -8721,15 +8721,47 @@ function renderVideos(){
   }
 
   var ytKey = "AIzaSyCLBm_iE-WV3LJFDI8Rxo1MzRwwKQAx2Bg";
+  var today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
   CHANNELS.forEach(function(ch){
+    // Vérifier le cache localStorage (valide 24h)
+    var cacheKey = 'yt_cache_' + ch.id;
+    var cached = null;
+    try {
+      var raw = localStorage.getItem(cacheKey);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        if(parsed.date === today && parsed.items && parsed.items.length){
+          cached = parsed.items;
+          console.log("[Videos] Cache", ch.label, "→", cached.length, "vidéos");
+        }
+      }
+    } catch(e){}
+
+    if(cached){
+      results[ch.id] = cached;
+      loaded++;
+      if(loaded === CHANNELS.length && !_built){ _built=true; onAllLoaded(); }
+      return;
+    }
+
+    // Pas de cache → appel API
     var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=" + ch.id
       + "&maxResults=" + ch.count + "&order=date&type=video&key=" + ytKey;
     fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(data){
-      if(data.error) console.error("[Videos] API error chaîne " + ch.id + ":", JSON.stringify(data.error));
-      results[ch.id] = (data.items && data.items.length) ? data.items : [];
-      console.log("[Videos]", ch.label, "→", results[ch.id].length, "vidéos");
+      if(data.error){
+        console.error("[Videos] API error chaîne " + ch.id + ":", JSON.stringify(data.error));
+        results[ch.id] = [];
+      } else {
+        results[ch.id] = (data.items && data.items.length) ? data.items : [];
+        // Sauvegarder en cache
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({date: today, items: results[ch.id]}));
+        } catch(e){}
+        console.log("[Videos]", ch.label, "→", results[ch.id].length, "vidéos");
+      }
       loaded++;
       if(loaded === CHANNELS.length && !_built){ _built=true; onAllLoaded(); }
     })
