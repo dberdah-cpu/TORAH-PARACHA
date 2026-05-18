@@ -9151,16 +9151,18 @@ var SUPABASE_KEY = 'sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK';
 var _adminTapCount = 0; var _adminTapTimer = null;
 
 function sbFetch(path, method, body){
+  var headers = {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'Prefer': 'return=representation'
+  };
+  if(method === 'PATCH') headers['Prefer'] = 'return=minimal';
   return fetch(SUPABASE_URL + path, {
     method: method || 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Prefer': 'return=representation'
-    },
+    headers: headers,
     body: body ? JSON.stringify(body) : undefined
-  }).then(function(r){ return r.json(); });
+  }).then(function(r){ return r.status === 204 ? {} : r.json(); });
 }
 
 function openAdmin(){
@@ -9279,13 +9281,34 @@ function adminAddVideo(){
   .then(function(data){
     if(data && !data.error){
       adminToast('Vidéo ajoutée !', true);
+      // Reset complet du formulaire
       document.getElementById('adm-vid-url').value = '';
       document.getElementById('adm-vid-titre').value = '';
       document.getElementById('adm-vid-msg').value = '';
+      // Reset zone upload
+      var zone = document.getElementById('adm-upload-zone');
+      if(zone) zone.innerHTML = '<div style="font-size:32px;margin-bottom:8px;">📱</div>'
+        + '<div style="font-size:14px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">Choisir une vidéo</div>'
+        + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Depuis ta pellicule iPhone</div>'
+        + '<input type="file" id="adm-file-input" accept="video/mp4,video/*" style="display:none;" onchange="adminFileSelected(this)">';
+      var prog = document.getElementById('adm-upload-progress');
+      if(prog) prog.style.display = 'none';
       adminLoadVideos();
     } else {
       adminToast('Erreur: ' + (data.message || 'inconnue'));
     }
+  });
+}
+
+function adminEditVideo(id, titre, message){
+  var newTitre = prompt('Titre :', titre);
+  if(newTitre === null) return;
+  var newMsg = prompt('Message :', message);
+  if(newMsg === null) return;
+  sbFetch('/rest/v1/videos_data?id=eq.'+id, 'PATCH', {titre: newTitre, message: newMsg})
+  .then(function(){
+    adminToast('Vidéo modifiée !', true);
+    adminLoadVideos();
   });
 }
 
