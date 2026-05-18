@@ -8716,12 +8716,29 @@ function renderVideos(){
     var view = document.getElementById('view-videos');
     var jem = results[SOURCES[0].id] || [];
     if(!jem.length && window._ytQuotaExceeded){
-      view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos Torah</div></div>'
-        + '<div style="margin:20px 16px;background:#fff;border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow-sm);">'
-        + '<div style="font-size:32px;margin-bottom:8px;">⏳</div>'
-        + '<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">Quota YouTube atteint</div>'
-        + '<div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.6;">Les vidéos seront disponibles demain matin.<br>Le quota YouTube se renouvelle chaque jour à minuit.</div>'
+      var qHtml = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos Torah</div></div>'
+        + '<div style="margin:20px 16px 12px;background:#fff;border-radius:var(--radius);padding:16px;text-align:center;box-shadow:var(--shadow-sm);">'
+        + '<div style="font-size:28px;margin-bottom:6px;">⏳</div>'
+        + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;">Quota YouTube atteint</div>'
+        + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.6;">Disponible demain matin.</div>'
         + '</div>';
+      // Charger quand même les vidéos Supabase
+      fetch("https://atsfgzabpwirfhnzpzei.supabase.co/rest/v1/videos_data?actif=eq.true&order=ordre.asc,created_at.desc&select=*",
+        {headers:{"apikey":"sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK","Authorization":"Bearer sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK"}})
+      .then(function(r){ return r.json(); })
+      .then(function(dbVids){
+        if(Array.isArray(dbVids) && dbVids.length){
+          qHtml += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
+          dbVids.forEach(function(v){
+            qHtml += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
+              + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
+              + '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + (v.message||'') + '</div>'
+              + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
+              + '<source src="' + v.url + '" type="video/mp4"></video></div>';
+          });
+        }
+        view.innerHTML = qHtml;
+      }).catch(function(){ view.innerHTML = qHtml; });
       return;
     }
 
@@ -8795,7 +8812,25 @@ function renderVideos(){
     h += '</div>';
 
     _ytVideos = localVideos.slice();
-    view.innerHTML = h;
+    // Charger aussi les vidéos Supabase
+    fetch("https://atsfgzabpwirfhnzpzei.supabase.co/rest/v1/videos_data?actif=eq.true&order=ordre.asc,created_at.desc&select=*",
+      {headers:{"apikey":"sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK","Authorization":"Bearer sb_publishable_agHlL73FBH9yJA0NshRRVQ_ND4_eDkK"}})
+    .then(function(r){ return r.json(); })
+    .then(function(dbVids){
+      if(Array.isArray(dbVids) && dbVids.length){
+        var extra = '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
+        dbVids.forEach(function(v){
+          extra += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
+            + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
+            + '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + (v.message||'') + '</div>'
+            + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
+            + '<source src="' + v.url + '" type="video/mp4"></video></div>';
+        });
+        view.innerHTML = h + extra;
+      } else {
+        view.innerHTML = h;
+      }
+    }).catch(function(){ view.innerHTML = h; });
   }
 
   SOURCES.forEach(function(src){
@@ -8805,7 +8840,7 @@ function renderVideos(){
       if(raw){
         var parsed = JSON.parse(raw);
         var ageH = (Date.now() - (parsed.ts||0)) / 3600000;
-        if(ageH < 20 && parsed.items && parsed.items.length){
+        if(ageH < 22 && parsed.items && parsed.items.length > 0){
           results[src.id] = parsed.items;
           console.log("[Videos] Cache", src.label, "→", parsed.items.length, "vidéos");
           loaded++;
@@ -8821,7 +8856,11 @@ function renderVideos(){
       if(data.error){
         console.error("[Videos] error", src.label, data.error.code);
         results[src.id] = [];
-        if(data.error.code === 403) window._ytQuotaExceeded = true;
+        if(data.error.code === 403){
+          window._ytQuotaExceeded = true;
+          // Vider le cache pour cette chaîne
+          try { localStorage.removeItem('yt_cache2_' + src.id); } catch(e){}
+        }
       }
       else {
         results[src.id] = normalizeItems(src, data);
@@ -9315,6 +9354,15 @@ function adminLoadStats(){
 }
 
 // ── MESSAGE DU JOUR ────────────────────────────────────────────
+function clearYTCache(){
+  var count = 0;
+  var keys = ['UCqxhJ0eBEcK-OVydaAxo6aw','PLVGiOPy_aH0gPDcECAoc-5qhaV_1X-pmC','UCBWj1ekQr6HIVGrq2FoGYUA','UCwk2hU3XF_oinOuuuNqQqrg'];
+  keys.forEach(function(k){
+    try { localStorage.removeItem('yt_cache2_'+k); count++; } catch(e){}
+  });
+  adminToast('Cache vidé ('+count+' entrées)', true);
+}
+
 function adminSaveMsg(){
   var msg = document.getElementById('adm-msg-jour').value.trim();
   localStorage.setItem('admin_msg_jour', msg);
@@ -9873,6 +9921,11 @@ try {
         <label style="display:flex;align-items:center;gap:10px;padding:8px 0;font-family:Poppins,sans-serif;font-size:14px;"><input type="checkbox" checked id="sec-histoires"> 📖 Histoires Vraies</label>
         <label style="display:flex;align-items:center;gap:10px;padding:8px 0;font-family:Poppins,sans-serif;font-size:14px;"><input type="checkbox" checked id="sec-cours"> 📜 Cours du jour</label>
       </div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-title">🎬 Cache YouTube</div>
+      <div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:10px;">Si les vidéos ne s'affichent pas, vide le cache pour forcer le rechargement.</div>
+      <button class="admin-btn admin-btn-danger" onclick="clearYTCache()" style="width:100%;">🗑 Vider le cache YouTube</button>
     </div>
     <div class="admin-card">
       <div class="admin-card-title">🔑 Infos Admin</div>
