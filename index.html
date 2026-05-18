@@ -1444,7 +1444,6 @@ body{
     <div class="dph-heb" id="d-heb"></div>
     <div class="dph-ref" id="d-ref"></div>
     <div class="dph-hook">📖 Comprendre en profondeur la Torah de la semaine</div>
-    <button id="btn-kriat-p" onclick="openKriatTorah()" style="margin-top:10px;padding:8px 20px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;display:none;">🎵 Écouter la Paracha</button>
   </div>
   <div class="seg-ctrl">
     <button class="seg-btn active" onclick="showTab('bilingual')">Texte</button>
@@ -2937,6 +2936,13 @@ function buildHome(){
       +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
       +'</div>'
       +'</div>';
+    // Bouton WhatsApp sous la carte Chabbat
+    h += '<button onclick="shareShabbatWhatsApp()" '
+      + 'style="display:block;width:calc(100% - 0px);margin:0 0 0;padding:10px;'
+      + 'background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;'
+      + 'border-radius:0 0 12px 12px;font-size:12px;font-weight:600;'
+      + 'font-family:Poppins,sans-serif;cursor:pointer;width:100%;">'
+      + '📲 Partager sur WhatsApp</button>';
   }
   if(hasFete || hasShabbat) h += '</div>'; // fermer flex
   else h+='</div>';
@@ -3076,7 +3082,8 @@ document.addEventListener('touchend', function(e){
     var views = {
       'view-cours': function(){ goHome(); },
       'view-histoire-detail': function(){
-        document.getElementById('view-histoire-detail').style.display='none';
+        var vhd=document.getElementById('view-histoire-detail');
+        if(vhd){vhd.style.display='none'; vhd.innerHTML='';}
         document.getElementById('view-histoires').style.display='block';
         window.scrollTo(0,0);
       },
@@ -3102,9 +3109,19 @@ document.addEventListener('touchend', function(e){
 function goHome(){
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   _readerPlaying = false;
-  // Cacher toutes les vues
+  // Cacher ET vider les vues dynamiques
   ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail'].forEach(function(id){
-    var el=document.getElementById(id); if(el) el.style.display='none';
+    var el=document.getElementById(id);
+    if(el){
+      el.style.display='none';
+      // Vider uniquement les vues à contenu dynamique
+      if(['view-cours','view-hayom','recueil-detail'].indexOf(id)>=0) el.innerHTML='';
+    }
+  });
+  // Vider aussi les vues secondaires
+  ['view-histoires','view-histoire-detail','view-videos','view-omer'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){ el.style.display='none'; el.innerHTML=''; }
   });
   document.getElementById('view-home').style.display='block';
   document.getElementById('btn-back').style.display='none';
@@ -9545,23 +9562,12 @@ function adminSaveMsg(){
 
 // ── ACCÈS ADMIN (triple tap sur titre app) ───────────────────
 function setTextSize(size){
-  var scales = {normal:'1', lg:'1.18', xl:'1.35'};
-  var scale = scales[size] || '1';
-  // Appliquer zoom sur le feed principal et les vues
-  var targets = ['#view-home','#view-detail','#view-cours','#view-histoires',
-    '#view-histoire-detail','#view-hayom','#view-sefer','#view-recueil',
-    '#view-profile','#view-videos','#view-omer'];
-  targets.forEach(function(sel){
-    var el = document.querySelector(sel);
-    if(el){ el.style.fontSize = scale+'rem'; }
-  });
-  // Aussi sur body pour tout couvrir
-  document.body.style.setProperty('--app-font-scale', scale);
-  document.querySelectorAll('.feed, .cv-section-text, .cv-intro, .cv-titre, .hd-body, .hayom-text').forEach(function(el){
-    el.style.fontSize = scale+'rem';
-  });
+  var scales = {'normal': '100%', 'lg': '118%', 'xl': '135%'};
+  var pct = scales[size] || '100%';
+  // Appliquer sur le body — affecte tout via héritage CSS
+  document.documentElement.style.fontSize = pct;
   localStorage.setItem('textSize', size);
-  // Boutons
+  // Mettre à jour boutons
   ['normal','lg','xl'].forEach(function(s){
     var btn = document.getElementById('ts-'+s);
     if(!btn) return;
@@ -9573,19 +9579,7 @@ function setTextSize(size){
   });
 }
 
-// CSS global pour font-scale
-(function(){
-  var style = document.createElement('style');
-  style.textContent = [
-    'body { font-size: var(--app-font-scale, 1rem); }',
-    '.cv-section-text, .cv-intro, .cv-titre, .cv-accroche-titre,',
-    '.hd-body, .hayom-text, .hist-text, .recueil-text,',
-    '.cv-verset-fr, .cv-verset-heb, .cv-message-text { font-size: calc(var(--app-font-scale, 1) * 1em) !important; }'
-  ].join('\n');
-  document.head.appendChild(style);
-})();
-
-// Appliquer la taille sauvegardée au chargement
+// Appliquer au chargement
 (function(){
   var saved = localStorage.getItem('textSize');
   if(saved && saved !== 'normal'){
