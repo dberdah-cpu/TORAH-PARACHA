@@ -385,6 +385,17 @@
 .admin-badge-green{background:#d1fae5;color:#065f46;}
 .admin-badge-red{background:#fee2e2;color:#991b1b;}
 .admin-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;z-index:9999;display:none;}
+.wa-share-btn{
+  position:absolute;top:8px;right:8px;
+  background:rgba(37,211,102,.15);
+  border:none;border-radius:50%;
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;
+  color:#25d366;
+  z-index:2;
+}
+.wa-share-btn:active{background:rgba(37,211,102,.3);}
 .cv-week-nav{
   display:flex;gap:6px;flex-wrap:wrap;
   margin:0 0 16px;padding:12px 16px;
@@ -2188,7 +2199,8 @@ function getHomeBanners(){
     if(cit){
       var auteur = cit.auteur ? '<span style="font-size:11px;color:rgba(255,255,255,0.7);"> — '+cit.auteur+'</span>' : '';
       var source = cit.source ? '<div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:6px;font-family:Poppins,sans-serif;">'+cit.source+'</div>' : '';
-      html += '<div style="background:linear-gradient(135deg,var(--purple),var(--purple-2));border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px;padding:14px 16px;">'
+      html += '<div style="background:linear-gradient(135deg,var(--purple),var(--purple-2));border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px;padding:14px 16px;position:relative;">'
+        +'<button onclick="shareConseilWhatsApp()" class="wa-share-btn" style="color:#fff;background:rgba(255,255,255,.2);" title="Partager">↗</button>'
         +'<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.75);margin-bottom:6px;font-family:Poppins,sans-serif;">✦ CONSEIL DU JOUR</div>'
         +'<div style="font-size:14px;line-height:1.65;font-weight:500;color:#fff;font-family:Poppins,sans-serif;">'+cit.texte+auteur+'</div>'
         +source
@@ -2210,8 +2222,9 @@ function getHomeBanners(){
     var omerHeb = ['אֶחָד','שְׁנַיִם','שְׁלֹשָׁה','אַרְבָּעָה','חֲמִשָּׁה','שִׁשָּׁה','שִׁבְעָה',
       'שְׁמוֹנָה','תִּשְׁעָה','עֲשָׂרָה'][Math.min(omerDay-1,9)]||'';
     html += '<div onclick="openOmer()" style="cursor:pointer;background:linear-gradient(135deg,#f59e0b,#d97706);'
-      + 'margin:0 16px 12px;border-radius:var(--radius);padding:12px 16px;'
+      + 'margin:0 16px 12px;border-radius:var(--radius);padding:12px 16px;position:relative;'
       + 'display:flex;align-items:center;justify-content:space-between;">';
+    html += '<button onclick="event.stopPropagation();shareOmerWhatsApp()" class="wa-share-btn" style="color:#fff;background:rgba(255,255,255,.2);position:absolute;top:6px;right:6px;">↗</button>';
     html += '<div>';
     html += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.75);'
       + 'letter-spacing:1px;font-family:Poppins,sans-serif;">'
@@ -2657,6 +2670,85 @@ function openShabbatPanel(){
   panel.classList.add('open');
   backdrop.classList.add('visible');
   renderShabbatPanel();
+}
+
+// ── PARTAGE WHATSAPP ─────────────────────────────────────────
+var APP_LINK = 'https://dberdah-cpu.github.io/TORAH-PARACHA/';
+var APP_SIG = '\n\n🔗 _Application Kedoshim_\n' + APP_LINK;
+
+function waShare(msg){
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+async function waGenResume(sujet, mots){
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:100,
+        system:'Tu rédiges des résumés très courts pour une app Torah juive. Exactement ' + mots + ' mots, style inspirant et chaleureux. Pas de titre. Juste le texte.',
+        messages:[{role:'user',content:'Résume en exactement ' + mots + ' mots : ' + sujet}]
+      })
+    });
+    var data = await resp.json();
+    return data.content && data.content[0] ? data.content[0].text : '';
+  } catch(e){ return ''; }
+}
+
+async function shareShabbatWhatsApp(){
+  var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
+  var resume = await waGenResume('La paracha ' + paraFr + ' — son message principal', 23);
+  var msg = '🕯 *Chabbat Chalom !*\n\n';
+  msg += '📖 *Paracha ' + paraFr + '*\n';
+  if(resume) msg += '_' + resume + '_\n\n';
+  if(candleTime) msg += '🕯 Allumage : *' + candleTime + '*\n';
+  if(havdalaTime) msg += '✨ Havdala : *' + havdalaTime + '*';
+  msg += APP_SIG;
+  waShare(msg);
+}
+
+async function shareFeteWhatsApp(){
+  if(!nextFete) return;
+  var feteLabel = nextFete.nom
+    .replace(/Chavou.ot/i,'Chavouot')
+    .replace(/Rosh Hashana/i,'Roch Hachana')
+    .replace(/Yom Kippur/i,'Yom Kippour')
+    .replace(/Passover/i,'Pessah')
+    .replace(/Shavuot/i,'Chavouot');
+  var resume = await waGenResume('La fête de ' + feteLabel + ' — son message principal', 23);
+  var msg = '✨ *Hag Sameah !*\n\n';
+  msg += '🎊 *' + feteLabel + '*\n';
+  if(resume) msg += '_' + resume + '_\n\n';
+  if(nextFete.candleTime) msg += '🕯 Allumage : *' + nextFete.candleTime + '*';
+  msg += APP_SIG;
+  waShare(msg);
+}
+
+function shareConseilWhatsApp(){
+  var cit = getCitationDuJour();
+  if(!cit) return;
+  var msg = '💫 *Conseil du jour*\n\n';
+  msg += '_' + cit.texte + '_\n';
+  if(cit.auteur) msg += '— ' + cit.auteur;
+  if(cit.source) msg += '\n📜 ' + cit.source;
+  msg += APP_SIG;
+  waShare(msg);
+}
+
+function shareOmerWhatsApp(){
+  var day = getOmerDay();
+  if(!day) return;
+  var pa = PIRKE_AVOT_OMER.find(function(x){ return x.jour === day; });
+  var msg = '✨ *Jour ' + day + ' de l\'Omer*\n\n';
+  if(pa){
+    msg += '📜 *Pirké Avot ' + pa.mishna + '*\n';
+    msg += '_' + pa.texte + '_\n';
+    if(pa.auteur) msg += '— ' + pa.auteur;
+  }
+  msg += APP_SIG;
+  waShare(msg);
 }
 
 function shareShabbatWhatsApp(){
@@ -8586,6 +8678,94 @@ function openYTPlayer(videoId, title){
 // ══ KRIAT HATORAH — Lecture de la Paracha (rite algérien) ════
 var TB_KRIAT = {"Bereshit": ["berechit-genese", "berechit", "Berechit"], "Noach": ["berechit-genese", "noah", "Noah"], "Lech-Lecha": ["berechit-genese", "lekh-lekha", "Lekh-Lekha"], "Lech Lecha": ["berechit-genese", "lekh-lekha", "Lekh-Lekha"], "Vayera": ["berechit-genese", "vayera", "Vayera"], "Chayei Sara": ["berechit-genese", "haye-sarah", "Haye-Sarah"], "Chayei Sarah": ["berechit-genese", "haye-sarah", "Haye-Sarah"], "Toldot": ["berechit-genese", "toledot", "Toledot"], "Vayetzei": ["berechit-genese", "vayetse", "Vayetse"], "Vayishlach": ["berechit-genese", "vayichlah", "Vayichlah"], "Vayeshev": ["berechit-genese", "vayechev", "Vayechev"], "Miketz": ["berechit-genese", "mikets", "Mikets"], "Vayigash": ["berechit-genese", "vayigach", "Vayigach"], "Vayechi": ["berechit-genese", "vayehi", "Vayehi"], "Shemot": ["chemot-exode", "chemot", "Chemot"], "Vaera": ["chemot-exode", "vaera", "Vaera"], "Bo": ["chemot-exode", "bo", "Bo"], "Beshalach": ["chemot-exode", "bechalah", "Bechalah"], "Yitro": ["chemot-exode", "yitro", "Yitro"], "Mishpatim": ["chemot-exode", "michpatim", "Michpatim"], "Terumah": ["chemot-exode", "terouma", "Terouma"], "Tetzaveh": ["chemot-exode", "tetsave", "Tetsave"], "Ki Tisa": ["chemot-exode", "ki-tissa", "Ki-Tissa"], "Ki-Tisa": ["chemot-exode", "ki-tissa", "Ki-Tissa"], "Vayakhel": ["chemot-exode", "vayakhel", "Vayakhel"], "Pekudei": ["chemot-exode", "pekoude", "Pekoude"], "Vayikra": ["vayikra-levitique", "vayikra", "Vayikra"], "Tzav": ["vayikra-levitique", "tsav", "Tsav"], "Shemini": ["vayikra-levitique", "chemini", "Chemini"], "Tazria": ["vayikra-levitique", "tazria", "Tazria"], "Metzora": ["vayikra-levitique", "metsora", "Metsora"], "Achrei Mot": ["vayikra-levitique", "ahare-mot", "Ahare-Mot"], "Kedoshim": ["vayikra-levitique", "kedochim", "Kedochim"], "Emor": ["vayikra-levitique", "emor", "Emor"], "Behar": ["vayikra-levitique", "behar", "Behar"], "Bechukotai": ["vayikra-levitique", "behoukotai", "Behoukotai"], "Behar-Bechukotai": ["vayikra-levitique", "behar", "Behar"], "Bamidbar": ["bamidbar-nombres", "bamidbar", "Bamidbar"], "Nasso": ["bamidbar-nombres", "nasso", "Nasso"], "Behalotcha": ["bamidbar-nombres", "behaalotekha", "Behaalotekha"], "Shelach": ["bamidbar-nombres", "chelah-lekha", "Chelah-Lekha"], "Korach": ["bamidbar-nombres", "korah", "Korah"], "Chukat": ["bamidbar-nombres", "houkat", "Houkat"], "Balak": ["bamidbar-nombres", "balak", "Balak"], "Chukat-Balak": ["bamidbar-nombres", "houkat", "Houkat"], "Pinchas": ["bamidbar-nombres", "pinhas", "Pinhas"], "Matot": ["bamidbar-nombres", "matot", "Matot"], "Masei": ["bamidbar-nombres", "masse", "Masse"], "Matot-Massei": ["bamidbar-nombres", "matot", "Matot"], "Devarim": ["devarim-deuteronome", "devarim", "Devarim"], "Vaetchanan": ["devarim-deuteronome", "vaethanane", "Vaethanane"], "Eikev": ["devarim-deuteronome", "ekev", "Ekev"], "Reeh": ["devarim-deuteronome", "ree", "Ree"], "Shoftim": ["devarim-deuteronome", "choftim", "Choftim"], "Ki Teitzei": ["devarim-deuteronome", "ki-tetse", "Ki-Tetse"], "Ki Tavo": ["devarim-deuteronome", "ki-tavo", "Ki-Tavo"], "Nitzavim": ["devarim-deuteronome", "nitsavim", "Nitsavim"], "Vayeilech": ["devarim-deuteronome", "vayelekh", "Vayelekh"], "Haazinu": ["devarim-deuteronome", "haazinou", "Haazinou"], "Nitsavim-Vayelech": ["devarim-deuteronome", "nitsavim", "Nitsavim"], "Vezot Haberakhah": ["devarim-deuteronome", "vezot-haberakha", "Vezot-Haberakha"]};
 
+// ══ MINI PLAYER KRIAT TORAH ═════════════════════════════════
+var _kriatAudio = null;
+var _kriatAliyot = [];
+var _kriatIdx = 0;
+var _kriatParaFr = '';
+var _kriatTimer = null;
+
+function kriatLoadAliya(idx){
+  if(idx < 0 || idx >= _kriatAliyot.length) return;
+  _kriatIdx = idx;
+  var al = _kriatAliyot[idx];
+  
+  // Mettre à jour le mini player
+  document.getElementById('kriat-mini-aliya').textContent = al.label;
+  document.getElementById('kriat-mini-title').textContent = '🎵 ' + _kriatParaFr;
+  document.getElementById('kriat-mini-playbtn').textContent = '▶';
+  document.getElementById('kriat-progress-fill').style.width = '0%';
+  
+  // Créer/remplacer l'audio
+  if(_kriatAudio){
+    _kriatAudio.pause();
+    _kriatAudio.src = '';
+  }
+  _kriatAudio = new Audio(al.url);
+  _kriatAudio.preload = 'auto';
+  
+  // Sauter l'intro de 20s
+  _kriatAudio.addEventListener('canplay', function(){
+    if(_kriatAudio.currentTime < 20) _kriatAudio.currentTime = 20;
+    _kriatAudio.play();
+    document.getElementById('kriat-mini-playbtn').textContent = '⏸';
+  }, {once: true});
+  
+  // Progression
+  _kriatAudio.addEventListener('timeupdate', function(){
+    var dur = _kriatAudio.duration;
+    var cur = _kriatAudio.currentTime;
+    if(dur > 0){
+      var pct = Math.max(0, (cur - 20) / (dur - 20) * 100);
+      document.getElementById('kriat-progress-fill').style.width = Math.min(pct,100) + '%';
+    }
+  });
+  
+  // Auto-next
+  _kriatAudio.addEventListener('ended', function(){
+    if(_kriatIdx < _kriatAliyot.length - 1){
+      kriatLoadAliya(_kriatIdx + 1);
+    } else {
+      kriatClose();
+    }
+  });
+  
+  _kriatAudio.load();
+  document.getElementById('kriat-mini-player').style.display = 'block';
+}
+
+function kriatPlayPause(){
+  if(!_kriatAudio) return;
+  if(_kriatAudio.paused){
+    _kriatAudio.play();
+    document.getElementById('kriat-mini-playbtn').textContent = '⏸';
+  } else {
+    _kriatAudio.pause();
+    document.getElementById('kriat-mini-playbtn').textContent = '▶';
+  }
+}
+
+function kriatNext(){
+  if(_kriatIdx < _kriatAliyot.length - 1) kriatLoadAliya(_kriatIdx + 1);
+}
+
+function kriatPrev(){
+  if(_kriatIdx > 0) kriatLoadAliya(_kriatIdx - 1);
+  else if(_kriatAudio) _kriatAudio.currentTime = 20;
+}
+
+function kriatSeek(e){
+  if(!_kriatAudio || !_kriatAudio.duration) return;
+  var bar = document.getElementById('kriat-progress-bar');
+  var pct = e.offsetX / bar.offsetWidth;
+  _kriatAudio.currentTime = 20 + pct * (_kriatAudio.duration - 20);
+}
+
+function kriatClose(){
+  if(_kriatAudio){ _kriatAudio.pause(); _kriatAudio.src = ''; _kriatAudio = null; }
+  document.getElementById('kriat-mini-player').style.display = 'none';
+}
+
 function openKriatTorah(overrideName){
   var parashaName = overrideName || currentParashaName || getParashaFromCalendar() || '';
   var info = TB_KRIAT[parashaName];
@@ -8626,7 +8806,7 @@ function openKriatTorah(overrideName){
   h += '<div>';
   h += '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;margin-bottom:4px;">🎵 KRIAT HATORAH</div>';
   h += '<div style="font-size:20px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;">Paracha ' + paraFr + '</div>';
-  h += '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;">Rite algérien · Torah Box</div>';
+  h += '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;">Torah Box</div>';
   h += '</div>';
   h += '<button onclick="closeKriatTorah()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>';
   h += '</div></div>';
@@ -8636,7 +8816,9 @@ function openKriatTorah(overrideName){
     var url = base + 'Paracha_' + nom + '-' + al.n + 'e-montee_algerien__' + hazzan + '.mp3';
     h += '<div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:14px 16px;margin-bottom:10px;">';
     h += '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">' + al.label + '</div>';
-    h += '<audio style="width:100%;" controls preload="none">';
+    var aid = 'kriat-audio-' + al.n;
+    h += '<audio id="' + aid + '" style="width:100%;" controls preload="none" '
+      + 'onplay="this.currentTime<20?this.currentTime=20:null">';
     h += '<source src="' + url + '" type="audio/mpeg">';
     h += '</audio>';
     h += '</div>';
@@ -8648,6 +8830,95 @@ function openKriatTorah(overrideName){
   document.getElementById('btn-back').style.display = 'flex';
 }
 
+// ══ PARACHA EN 1 MINUTE ══════════════════════════════════════
+var _1minCache = null; // cache des vidéos de la playlist
+
+async function load1MinVideo(parashaName){
+  var ytKey = "AIzaSyCLBm_iE-WV3LJFDI8Rxo1MzRwwKQAx2Bg";
+  var playlistId = "PLVGiOPy_aH0i8Gd-lMeXTbpo4_6iDlIbn";
+  var cacheKey = 'yt_1min_cache';
+
+  // Vérifier cache (24h)
+  if(!_1minCache){
+    try {
+      var raw = localStorage.getItem(cacheKey);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        var ageH = (Date.now() - (parsed.ts||0)) / 3600000;
+        if(ageH < 22 && parsed.items && parsed.items.length) _1minCache = parsed.items;
+      }
+    } catch(e){}
+  }
+
+  // Charger depuis API si pas en cache
+  if(!_1minCache){
+    try {
+      var url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId='
+        + playlistId + '&maxResults=60&key=' + ytKey;
+      var resp = await fetch(url);
+      var data = await resp.json();
+      if(data.items && data.items.length){
+        _1minCache = data.items;
+        try { localStorage.setItem(cacheKey, JSON.stringify({ts: Date.now(), items: _1minCache})); } catch(e){}
+      }
+    } catch(e){ return null; }
+  }
+
+  if(!_1minCache) return null;
+
+  // Chercher la vidéo correspondant à la paracha
+  var search = (PARASHA_FR[parashaName] || parashaName || '').toLowerCase();
+  // Aussi essayer des variantes
+  var variants = [search];
+  if(search === 'lech-lecha' || search === 'lech lecha') variants.push('lekh');
+  if(search === 'chayei sara') variants.push('haye', 'sarah');
+  if(search.indexOf('behalot') >= 0) variants.push('beaalot', 'behaalot');
+
+  var found = null;
+  for(var i=0; i<_1minCache.length; i++){
+    var title = (_1minCache[i].snippet.title || '').toLowerCase();
+    for(var v=0; v<variants.length; v++){
+      if(title.indexOf(variants[v]) >= 0){ found = _1minCache[i]; break; }
+    }
+    if(found) break;
+  }
+  return found;
+}
+
+async function show1MinInDetail(parashaName){
+  var container = document.getElementById('detail-1min-container');
+  if(!container) return;
+  container.innerHTML = '<div style="padding:10px;text-align:center;color:var(--gray-4);font-size:12px;font-family:Poppins,sans-serif;">Chargement...</div>';
+
+  var video = await load1MinVideo(parashaName);
+  if(!video){
+    container.innerHTML = '';
+    return;
+  }
+
+  var vidId = video.snippet.resourceId && video.snippet.resourceId.videoId;
+  if(!vidId){ container.innerHTML = ''; return; }
+
+  var thumb = (video.snippet.thumbnails.high || video.snippet.thumbnails.medium || {url:''}).url;
+  var title = video.snippet.title;
+
+  container.innerHTML =
+    '<div style="margin:0 16px 16px;">'
+    + '<div style="font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;margin-bottom:8px;">📺 LA PARACHA EN 1 MINUTE</div>'
+    + '<div onclick="playYTDirect(' + JSON.stringify(vidId) + ',' + JSON.stringify(title) + ')" '
+    + 'style="position:relative;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.12);">'
+    + '<img src="' + thumb + '" style="width:100%;height:180px;object-fit:cover;display:block;">'
+    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.7));"></div>'
+    + '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;background:rgba(255,255,255,.25);backdrop-filter:blur(4px);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+    + '<div style="width:0;height:0;border-top:11px solid transparent;border-bottom:11px solid transparent;border-left:20px solid #fff;margin-left:4px;"></div>'
+    + '</div>'
+    + '<div style="position:absolute;bottom:0;left:0;right:0;padding:12px;color:#fff;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;line-height:1.3;">' + title + '</div>'
+    + '</div></div>';
+}
+
+function playYTDirect(id, title){
+  openYTPlayer(id, title);
+}
 function closeKriatTorah(){
   document.querySelectorAll('#view-kriat audio').forEach(function(a){ a.pause(); a.src=''; });
   var v = document.getElementById('view-kriat');
