@@ -26,7 +26,7 @@
 .hdc-left{}
 .hdc-dayname{font-size:13px;font-weight:600;color:var(--gray-4);margin-bottom:2px}
 .hdc-heb{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--purple)}
-.hdc-shabbat{display:flex;align-items:center;gap:8px;background:#FFF7ED;border-radius:10px;padding:8px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hdc-shabbat{display:flex;align-items:center;gap:8px;background:#FFF7ED;border-radius:12px;padding:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .hdc-shabbat-times{font-size:11px;color:#92400E;font-weight:600;line-height:1.6}
 
 /* Paracha card — style prototype */
@@ -1444,6 +1444,7 @@ body{
     <div class="dph-heb" id="d-heb"></div>
     <div class="dph-ref" id="d-ref"></div>
     <div class="dph-hook">📖 Comprendre en profondeur la Torah de la semaine</div>
+    <button id="btn-kriat-p" onclick="openKriatTorah()" style="margin-top:10px;padding:8px 20px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la Paracha</button>
   </div>
   <div class="seg-ctrl">
     <button class="seg-btn active" onclick="showTab('bilingual')">Texte</button>
@@ -2936,13 +2937,6 @@ function buildHome(){
       +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
       +'</div>'
       +'</div>';
-    // Bouton WhatsApp sous la carte Chabbat
-    h += '<button onclick="shareShabbatWhatsApp()" '
-      + 'style="display:block;width:calc(100% - 0px);margin:0 0 0;padding:10px;'
-      + 'background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;'
-      + 'border-radius:0 0 12px 12px;font-size:12px;font-weight:600;'
-      + 'font-family:Poppins,sans-serif;cursor:pointer;width:100%;">'
-      + '📲 Partager sur WhatsApp</button>';
   }
   if(hasFete || hasShabbat) h += '</div>'; // fermer flex
   else h+='</div>';
@@ -8589,27 +8583,31 @@ function openYTPlayer(videoId, title){
 }
 
 
-// ══ KRIAT HATORAH — Lecture de la Paracha (rite tunisien) ════
-var TB_SLUGS = {"Bereshit": "berechit", "Noach": "noah", "Lech-Lecha": "lekh-lekha", "Lech Lecha": "lekh-lekha", "Vayera": "vayera", "Chayei Sara": "haye-sarah", "Chayei Sarah": "haye-sarah", "Toldot": "toledot", "Vayetzei": "vayetse", "Vayishlach": "vayichlah", "Vayeshev": "vayechev", "Miketz": "mikets", "Vayigash": "vayigach", "Vayechi": "vayehi", "Shemot": "chemot", "Vaera": "vaera", "Bo": "bo", "Beshalach": "bechalah", "Yitro": "yitro", "Mishpatim": "michpatim", "Terumah": "terouma", "Tetzaveh": "tetsave", "Ki Tisa": "ki-tissa", "Ki-Tisa": "ki-tissa", "Vayakhel": "vayakhel", "Pekudei": "pekoude", "Vayikra": "vayikra", "Tzav": "tsav", "Shemini": "chemini", "Tazria": "tazria", "Metzora": "metsora", "Achrei Mot": "ahare-mot", "Kedoshim": "kedochim", "Emor": "emor", "Behar": "behar", "Bechukotai": "behoukotai", "Behar-Bechukotai": "behar", "Bamidbar": "bamidbar", "Nasso": "nasso", "Behalotcha": "behaalotekha", "Shelach": "chelah-lekha", "Korach": "korah", "Chukat": "houkat", "Chukat-Balak": "houkat", "Balak": "balak", "Pinchas": "pinhas", "Matot": "matot", "Masei": "masse", "Matot-Massei": "matot", "Devarim": "devarim", "Vaetchanan": "vaethanane", "Eikev": "ekev", "Reeh": "ree", "Shoftim": "choftim", "Ki Teitzei": "ki-tetse", "Ki Tavo": "ki-tavo", "Nitzavim": "nitsavim", "Vayeilech": "vayelekh", "Haazinu": "haazinou", "Vezot Haberakhah": "vezot-haberakha", "Nitsavim-Vayelech": "nitsavim", "Nitzavim-Vayeilech": "nitsavim"};
+// ══ KRIAT HATORAH — Lecture de la Paracha (rite algérien) ════
+var TB_KRIAT = {"Bereshit": ["berechit-genese", "berechit", "Berechit"], "Noach": ["berechit-genese", "noah", "Noah"], "Lech-Lecha": ["berechit-genese", "lekh-lekha", "Lekh-Lekha"], "Lech Lecha": ["berechit-genese", "lekh-lekha", "Lekh-Lekha"], "Vayera": ["berechit-genese", "vayera", "Vayera"], "Chayei Sara": ["berechit-genese", "haye-sarah", "Haye-Sarah"], "Chayei Sarah": ["berechit-genese", "haye-sarah", "Haye-Sarah"], "Toldot": ["berechit-genese", "toledot", "Toledot"], "Vayetzei": ["berechit-genese", "vayetse", "Vayetse"], "Vayishlach": ["berechit-genese", "vayichlah", "Vayichlah"], "Vayeshev": ["berechit-genese", "vayechev", "Vayechev"], "Miketz": ["berechit-genese", "mikets", "Mikets"], "Vayigash": ["berechit-genese", "vayigach", "Vayigach"], "Vayechi": ["berechit-genese", "vayehi", "Vayehi"], "Shemot": ["chemot-exode", "chemot", "Chemot"], "Vaera": ["chemot-exode", "vaera", "Vaera"], "Bo": ["chemot-exode", "bo", "Bo"], "Beshalach": ["chemot-exode", "bechalah", "Bechalah"], "Yitro": ["chemot-exode", "yitro", "Yitro"], "Mishpatim": ["chemot-exode", "michpatim", "Michpatim"], "Terumah": ["chemot-exode", "terouma", "Terouma"], "Tetzaveh": ["chemot-exode", "tetsave", "Tetsave"], "Ki Tisa": ["chemot-exode", "ki-tissa", "Ki-Tissa"], "Ki-Tisa": ["chemot-exode", "ki-tissa", "Ki-Tissa"], "Vayakhel": ["chemot-exode", "vayakhel", "Vayakhel"], "Pekudei": ["chemot-exode", "pekoude", "Pekoude"], "Vayikra": ["vayikra-levitique", "vayikra", "Vayikra"], "Tzav": ["vayikra-levitique", "tsav", "Tsav"], "Shemini": ["vayikra-levitique", "chemini", "Chemini"], "Tazria": ["vayikra-levitique", "tazria", "Tazria"], "Metzora": ["vayikra-levitique", "metsora", "Metsora"], "Achrei Mot": ["vayikra-levitique", "ahare-mot", "Ahare-Mot"], "Kedoshim": ["vayikra-levitique", "kedochim", "Kedochim"], "Emor": ["vayikra-levitique", "emor", "Emor"], "Behar": ["vayikra-levitique", "behar", "Behar"], "Bechukotai": ["vayikra-levitique", "behoukotai", "Behoukotai"], "Behar-Bechukotai": ["vayikra-levitique", "behar", "Behar"], "Bamidbar": ["bamidbar-nombres", "bamidbar", "Bamidbar"], "Nasso": ["bamidbar-nombres", "nasso", "Nasso"], "Behalotcha": ["bamidbar-nombres", "behaalotekha", "Behaalotekha"], "Shelach": ["bamidbar-nombres", "chelah-lekha", "Chelah-Lekha"], "Korach": ["bamidbar-nombres", "korah", "Korah"], "Chukat": ["bamidbar-nombres", "houkat", "Houkat"], "Balak": ["bamidbar-nombres", "balak", "Balak"], "Chukat-Balak": ["bamidbar-nombres", "houkat", "Houkat"], "Pinchas": ["bamidbar-nombres", "pinhas", "Pinhas"], "Matot": ["bamidbar-nombres", "matot", "Matot"], "Masei": ["bamidbar-nombres", "masse", "Masse"], "Matot-Massei": ["bamidbar-nombres", "matot", "Matot"], "Devarim": ["devarim-deuteronome", "devarim", "Devarim"], "Vaetchanan": ["devarim-deuteronome", "vaethanane", "Vaethanane"], "Eikev": ["devarim-deuteronome", "ekev", "Ekev"], "Reeh": ["devarim-deuteronome", "ree", "Ree"], "Shoftim": ["devarim-deuteronome", "choftim", "Choftim"], "Ki Teitzei": ["devarim-deuteronome", "ki-tetse", "Ki-Tetse"], "Ki Tavo": ["devarim-deuteronome", "ki-tavo", "Ki-Tavo"], "Nitzavim": ["devarim-deuteronome", "nitsavim", "Nitsavim"], "Vayeilech": ["devarim-deuteronome", "vayelekh", "Vayelekh"], "Haazinu": ["devarim-deuteronome", "haazinou", "Haazinou"], "Nitsavim-Vayelech": ["devarim-deuteronome", "nitsavim", "Nitsavim"], "Vezot Haberakhah": ["devarim-deuteronome", "vezot-haberakha", "Vezot-Haberakha"]};
 
 function openKriatTorah(overrideName){
   var parashaName = overrideName || currentParashaName || getParashaFromCalendar() || '';
-  var slug = TB_SLUGS[parashaName];
-  if(!slug){
-    // Essayer avec les premières lettres
-    for(var k in TB_SLUGS){
+  var info = TB_KRIAT[parashaName];
+  if(!info){
+    for(var k in TB_KRIAT){
       if(parashaName.toLowerCase().indexOf(k.toLowerCase())>=0 || k.toLowerCase().indexOf(parashaName.toLowerCase())>=0){
-        slug = TB_SLUGS[k]; break;
+        info = TB_KRIAT[k]; break;
       }
     }
   }
-  if(!slug){ alert('Lecture non disponible pour cette paracha.'); return; }
+  if(!info){ alert('Lecture non disponible pour cette paracha.'); return; }
+
+  var livre = info[0], slug = info[1], nom = info[2];
+  var base = 'https://broadcast.torah-box.com/media/paracha/' + livre + '/' + slug + '/algerien/';
+  var hazzan = 'Rabbi-Emmanuel-Zaoui';
+  var paraFr = PARASHA_FR[parashaName] || parashaName;
 
   var view = document.getElementById('view-kriat');
   if(!view){
     view = document.createElement('div');
     view.id = 'view-kriat';
-    view.style.cssText = 'position:fixed;inset:0;z-index:9600;background:#fff;overflow-y:auto;padding:0 0 80px;';
+    view.style.cssText = 'position:fixed;inset:0;z-index:9600;background:#f8f8fc;overflow-y:auto;padding:0 0 80px;';
     document.body.appendChild(view);
   }
 
@@ -8621,29 +8619,24 @@ function openKriatTorah(overrideName){
     {n:5, label:'5ème Aliya'},
     {n:6, label:'6ème Aliya'},
     {n:7, label:'7ème Aliya'},
-    {n:'maftir', label:'Maftir'},
   ];
-
-  var base = 'https://download.torah-box.com/paracha/' + slug + '/constantinois/';
-  var paraFr = PARASHA_FR[parashaName] || parashaName;
 
   var h = '<div style="background:linear-gradient(135deg,#1a0533,#2d0b5e);padding:56px 16px 20px;">';
   h += '<div style="display:flex;align-items:center;justify-content:space-between;">';
   h += '<div>';
   h += '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;margin-bottom:4px;">🎵 KRIAT HATORAH</div>';
   h += '<div style="font-size:20px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;">Paracha ' + paraFr + '</div>';
-  h += '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;">Rite tunisien (constantinois) · Torah Box</div>';
+  h += '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;">Rite algérien · Torah Box</div>';
   h += '</div>';
   h += '<button onclick="closeKriatTorah()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>';
   h += '</div></div>';
 
   h += '<div style="padding:16px;">';
   aliyot.forEach(function(al){
-    var url = base + 'aliya-' + al.n + '.mp3';
-    var aid = 'audio-' + al.n;
+    var url = base + 'Paracha_' + nom + '-' + al.n + 'e-montee_algerien__' + hazzan + '.mp3';
     h += '<div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:14px 16px;margin-bottom:10px;">';
     h += '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">' + al.label + '</div>';
-    h += '<audio id="' + aid + '" style="width:100%;height:36px;" controls preload="none">';
+    h += '<audio style="width:100%;" controls preload="none">';
     h += '<source src="' + url + '" type="audio/mpeg">';
     h += '</audio>';
     h += '</div>';
@@ -8656,8 +8649,7 @@ function openKriatTorah(overrideName){
 }
 
 function closeKriatTorah(){
-  // Arrêter tous les audios
-  document.querySelectorAll('#view-kriat audio').forEach(function(a){ a.pause(); });
+  document.querySelectorAll('#view-kriat audio').forEach(function(a){ a.pause(); a.src=''; });
   var v = document.getElementById('view-kriat');
   if(v) v.style.display = 'none';
 }
