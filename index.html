@@ -2197,7 +2197,7 @@ function getHomeBanners(){
   }
 
   // Si toujours pas de fête — afficher la citation du jour
-  if(holidays.length === 0 && html.indexOf('fete-banner') < 0){
+  if(true){ // Toujours afficher le conseil du jour
     var cit = getCitationDuJour();
     if(cit){
       var auteur = cit.auteur ? '<span style="font-size:11px;color:rgba(255,255,255,0.7);"> — '+cit.auteur+'</span>' : '';
@@ -2905,6 +2905,14 @@ function goHome(){
   // Remettre la quick bar
   var qab=document.getElementById('quick-access-bar');
   if(qab) qab.style.display='flex';
+  // Vidéo 1 minute
+  show1MinInDetail(p.name);
+  // Bouton Écouter pour cette paracha spécifique
+  var btnKriat = document.getElementById('btn-kriat-p');
+  if(btnKriat){
+    btnKriat.style.display = 'inline-block';
+    btnKriat.onclick = function(){ openKriatTorah(p.name); };
+  }
   window.scrollTo(0,0);
 }
 
@@ -9616,8 +9624,8 @@ function buildHome(){
       +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
       +'</div>'      +'</div>';
   }
-  if(hasFete || hasShabbat) h += '</div>';
-  else h+='</div>';
+  if(hasFete || hasShabbat) h += '</div>'; // fermer wrapper
+  h+='</div>'; // fin section date
 
   // ── BANNIÈRES ──
   h+=getHomeBanners();
@@ -9728,6 +9736,7 @@ function buildCoursCard(){
 
   var parashaName = currentParashaName || getParashaFromCalendar() || '';
   var key = getCoursKey(parashaName, courseDay);
+  console.log('[CoursCard] jsDay='+jsDay+' courseDay='+courseDay+' parashaName='+parashaName+' key='+key);
 
   var m = now.getMonth(); var d = now.getDate();
   var prefix = null;
@@ -9752,6 +9761,7 @@ function buildCoursCard(){
   else if(m===7 && d>=23 && d<=29) prefix='kitavo';
   else if(m===7 && d>=30 || (m===8 && d<=5)) prefix='nitsavim';
 
+  console.log('[CoursCard] COURS_DATA[key] exists:', !!(COURS_DATA[key]));
   if(!key || !COURS_DATA[key]){
     if(prefix) key = prefix+'-'+courseDay;
     if(!key || !COURS_DATA[key]) return '';
