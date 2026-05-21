@@ -9565,7 +9565,8 @@ function buildHome(){
   // ── CARTE FÊTE + CHABBAT côte à côte ──
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
-  if(hasFete || hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
+  if(hasFete && hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
+  else if(hasFete || hasShabbat) h += '<div style="margin:0 16px 12px;">';
 
   if(nextFete){
     var feteDiff = nextFete.diffDays;
@@ -9582,7 +9583,8 @@ function buildHome(){
     var feteDate = new Date(nextFete.date);
     var FR_MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
     var feteJour = feteDate.getDate() + ' ' + FR_MOIS[feteDate.getMonth()];
-    h += '<div onclick="openFetePanel()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:10px;padding:8px 10px;cursor:pointer;min-width:0;position:relative;">';
+    var feteStyle = hasShabbat ? 'flex:1;' : 'width:100%;';
+    h += '<div onclick="openFetePanel()" style="'+feteStyle+'background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:12px;padding:12px 16px;cursor:pointer;position:relative;">';
     h += '<button onclick="event.stopPropagation();shareFeteWhatsApp()" class="wa-share-btn">↗</button>';
     h += '<div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:2px;white-space:nowrap;">✨ FÊTE · ' + feteJour + '</div>';
     h += '<div style="font-size:11px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + feteLabel + '</div>';
