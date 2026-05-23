@@ -23,6 +23,7 @@
 
 /* Date card compact */
 .home-date-card{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid var(--gray-2)}
+.hdc-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px;padding-left:8px;}
 .hdc-left{}
 .hdc-dayname{font-size:13px;font-weight:600;color:var(--gray-4);margin-bottom:2px}
 .hdc-heb{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--purple)}
@@ -2184,6 +2185,12 @@ function getConseilBanner(){
         +'</div>';
     }
   }
+  // Chabbat maintenant intégré dans le hero
+  return html;
+}
+
+function getOmerBanner(){
+  var html="";
   // Bannière Omer
   var omerDay = getOmerDay();
   if(omerDay > 0){
@@ -2217,13 +2224,7 @@ function getConseilBanner(){
     html += '</div></div>';
   }
 
-  // Chabbat maintenant intégré dans le hero
-  return html;
-}
-
-function getOmerBanner(){
-  var html="";
-
+  
   return html;
 }
 
@@ -9669,8 +9670,7 @@ function buildHome(){
 
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
-  if(hasFete && hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
-  else if(hasFete || hasShabbat) h += '<div style="margin:0 16px 12px;">';
+  if(hasFete) h += '<div style="margin:0 16px 12px;">';
 
   if(nextFete){
     var feteDate2 = new Date(nextFete.date);
@@ -9693,25 +9693,7 @@ function buildHome(){
     h += '</div>';
   }
 
-  if(candleTime||havdalaTime){
-    var nextFri=new Date(t);
-    var jsDay2=t.getDay();
-    var daysToFri=(5-jsDay2+7)%7||7;
-    if(jsDay2===6){
-      var hm2=havdalaTime?havdalaTime.match(/(\d+)[h:](\d+)/):null;
-      if(hm2){var hv2=parseInt(hm2[1]);var mv2=parseInt(hm2[2]);
-        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv2<12)hv2+=12;
-        if((t.getHours()>hv2)||(t.getHours()===hv2&&t.getMinutes()>=mv2))daysToFri=7;
-      }
-    }
-    nextFri.setDate(t.getDate()+daysToFri);
-    var friLabel=nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
-    var shabStyle = hasFete ? 'flex:1;' : 'width:100%;';
-    h+='<div class="hdc-shabbat" onclick="openShabbatPanel()" style="'+shabStyle+'position:relative;">'      +'<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'      +'<span>🕯</span>'      +'<div class="hdc-shabbat-times">'      +'<div style="font-weight:700;font-size:12px;color:#92400E">Chabbat '+friLabel+'</div>'      +(candleTime?'<div>Allumage '+candleTime+'</div>':'')
-      +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
-      +'</div>'      +'</div>';
-  }
-  if(hasFete||hasShabbat) h+='</div>';
+  if(hasFete) h+='</div>';
 
   // ── 2. CONSEIL DU JOUR ─────────────────────────────────────
   h+=getConseilBanner();
