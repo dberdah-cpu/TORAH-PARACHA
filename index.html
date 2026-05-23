@@ -9845,7 +9845,7 @@ function buildCoursCard(){
   var now = new Date();
   var jsDay = now.getDay();
   var courseDay = (jsDay===6) ? -1 : jsDay;
-  if(courseDay < 0) return '';
+  if(courseDay < 0){ console.log('[CoursCard] Chabbat → pas de cours'); return ''; }
 
   var parashaName = currentParashaName || getParashaFromCalendar() || '';
   var key = getCoursKey(parashaName, courseDay);
@@ -9878,8 +9878,10 @@ function buildCoursCard(){
   // Le prefix override la clé calculée par getCoursKey (semaine courante)
   if(prefix){
     var prefixKey = prefix+'-'+courseDay;
+    console.log('[CoursCard] prefix='+prefix+' prefixKey='+prefixKey+' exists='+(!!COURS_DATA[prefixKey]));
     if(COURS_DATA[prefixKey]) key = prefixKey;
   }
+  console.log('[CoursCard] finalKey='+key+' exists='+(!!COURS_DATA[key])+' jsDay='+jsDay+' courseDay='+courseDay);
   if(!key || !COURS_DATA[key]) return '';
   if(!prefix) prefix = key.substring(0, key.lastIndexOf('-'));
 
