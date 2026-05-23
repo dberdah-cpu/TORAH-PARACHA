@@ -9620,15 +9620,8 @@ function adminTitleTap(){
 
 function refreshCoursCard(){
   var card = buildCoursCard();
-  console.log('[Cours] refreshCoursCard card='+(card?'OK':'VIDE')+' container='+(document.getElementById('cours-card-container')?'EXISTS':'MISSING'));
   var el = document.getElementById('cours-card-container');
-  if(el){
-    el.innerHTML = card;
-  }
-  // Toujours tenter aussi via buildHome pour forcer le refresh complet
-  if(!el || !card){
-    try { buildHome(); } catch(e){}
-  }
+  if(el) el.innerHTML = card || '';
 }
 
 function buildStoryBar(){
@@ -9803,7 +9796,7 @@ function buildHome(){
     }
   })();
 
-  setTimeout(function(){ if(typeof refreshCoursCard==='function') refreshCoursCard(); }, 100);
+  // refreshCoursCard appelé par Hebcal quand les données sont prêtes
 }
 
 
@@ -9882,10 +9875,12 @@ function buildCoursCard(){
   else if(m===7 && d>=30 || (m===8 && d<=5)) prefix='nitsavim';
 
   console.log('[CoursCard] COURS_DATA[key] exists:', !!(COURS_DATA[key]));
-  if(!key || !COURS_DATA[key]){
-    if(prefix) key = prefix+'-'+courseDay;
-    if(!key || !COURS_DATA[key]) return '';
+  // Le prefix override la clé calculée par getCoursKey (semaine courante)
+  if(prefix){
+    var prefixKey = prefix+'-'+courseDay;
+    if(COURS_DATA[prefixKey]) key = prefixKey;
   }
+  if(!key || !COURS_DATA[key]) return '';
   if(!prefix) prefix = key.substring(0, key.lastIndexOf('-'));
 
   var c = COURS_DATA[key];
