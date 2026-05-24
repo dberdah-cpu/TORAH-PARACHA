@@ -2743,6 +2743,25 @@ function toggleRecueilCard(id){
 }
 
 // ── SHABBAT PANEL ─────────────────────────────────────────────────────────────
+function generateShabbatAI(parashaName){
+  var el = document.getElementById('sp-ai-content');
+  if(!el) return;
+  fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:120,
+      system:'Tu rédiges un court message de Chabbat Chalom inspirant de 2-3 phrases maximum pour une app Torah juive. Style chaleureux et spirituel.',
+      messages:[{role:'user',content:'Écris un message de Chabbat Chalom lié à la paracha '+parashaName+' en 2-3 phrases.'}]
+    })
+  }).then(function(r){ return r.json(); })
+  .then(function(d){
+    var txt = d.content && d.content[0] ? d.content[0].text : '';
+    if(el && txt) el.textContent = txt;
+  }).catch(function(){ if(el) el.textContent = 'Chabbat Chalom ! ✨'; });
+}
+
 function openShabbatPanel(){
   var panel=document.getElementById('shabbat-panel');
   var backdrop=document.getElementById('shabbat-backdrop');
