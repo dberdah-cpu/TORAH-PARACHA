@@ -2887,16 +2887,6 @@ function renderShabbatPanel(){
   var phrasesCle=comSentences.length>0?comSentences[0]:'';
 
   var html='<div class="sp-handle"></div>'
-        +'<button class="hpc-btn">📖 Lire la paracha →</button>'
-    +'</div>'
-
-  // Cours du jour
-  var _cc = buildCoursCard();
-  console.log('[buildHome] cours-card='+ (_cc?'OK':'VIDE'));
-  h += '<div id="cours-card-container">'+_cc+'</div>';
-
-  // Carte Histoires Vraies
-
 
   if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
 }
@@ -2981,14 +2971,6 @@ function goHome(){
   // Remettre la quick bar
   var qab=document.getElementById('quick-access-bar');
   if(qab) qab.style.display='flex';
-  // Vidéo 1 minute
-  show1MinInDetail(p.name);
-  // Bouton Écouter pour cette paracha spécifique
-  var btnKriat = document.getElementById('btn-kriat-p');
-  if(btnKriat){
-    btnKriat.style.display = 'inline-block';
-    btnKriat.onclick = function(){ openKriatTorah(p.name); };
-  }
   window.scrollTo(0,0);
 }
 
