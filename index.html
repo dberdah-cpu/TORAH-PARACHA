@@ -395,6 +395,10 @@
   color:#25d366;
   z-index:2;
 }
+.text-slider-wrap{display:flex;align-items:center;gap:10px;padding:8px 16px 4px;}
+.text-slider-label{font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;white-space:nowrap;}
+.text-slider{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:2px;background:var(--gray-2);outline:none;}
+.text-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#db2877);cursor:pointer;}
 .wa-share-btn:active{background:rgba(37,211,102,.3);}
 .cv-week-nav{
   display:flex;gap:6px;flex-wrap:wrap;
@@ -1455,6 +1459,12 @@ body{
     <div class="dph-heb" id="d-heb"></div>
     <div class="dph-ref" id="d-ref"></div>
     <div class="dph-hook">📖 Comprendre en profondeur la Torah de la semaine</div>
+    <div class="text-slider-wrap" style="background:rgba(45,11,94,.15);border-radius:8px;margin:8px 16px 0;">
+      <span class="text-slider-label" style="color:rgba(255,255,255,.8);">A</span>
+      <input type="range" min="0" max="100" value="50" class="text-slider" id="slider_view-detail"
+        oninput="applySliderSize('view-detail',this.value)">
+      <span class="text-slider-label" style="font-size:16px;color:rgba(255,255,255,.8);">A</span>
+    </div>
     <button id="btn-kriat-p" onclick="openKriatTorah()" style="margin-top:10px;padding:8px 20px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la Paracha</button>
   </div>
   <div class="seg-ctrl">
@@ -8485,7 +8495,13 @@ function renderHistoires(){
     });
   });
 
-  document.getElementById('view-histoires').innerHTML=h;
+  var sliderH = '<div class="text-slider-wrap" style="margin-bottom:8px;">'
+    + '<span class="text-slider-label">A</span>'
+    + '<input type="range" min="0" max="100" value="50" class="text-slider" id="slider_view-histoires"'
+    + ' oninput="applySliderSize(\'view-histoires\',this.value)">'
+    + '<span class="text-slider-label" style="font-size:16px;">A</span></div>';
+  document.getElementById('view-histoires').innerHTML = sliderH + h;
+  initSlider('view-histoires');
 }
 
 function openHistoireDetail(id){
@@ -9828,6 +9844,21 @@ function adminSaveMsg(){
 }
 
 // ── ACCÈS ADMIN (triple tap sur titre app) ───────────────────
+function applySliderSize(containerId, val){
+  var el = document.getElementById(containerId);
+  if(!el) return;
+  var scale = 0.85 + (val/100)*0.65;
+  el.style.fontSize = scale+'rem';
+  try { localStorage.setItem('slider_'+containerId, val); } catch(e){}
+}
+function initSlider(containerId){
+  var saved = localStorage.getItem('slider_'+containerId);
+  var val = saved ? parseInt(saved) : 50;
+  applySliderSize(containerId, val);
+  var sl = document.getElementById('slider_'+containerId);
+  if(sl) sl.value = val;
+}
+
 function setTextSize(size){
   var scales = {'normal': '100%', 'lg': '118%', 'xl': '135%'};
   var pct = scales[size] || '100%';
