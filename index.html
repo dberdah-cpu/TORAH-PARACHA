@@ -9663,7 +9663,8 @@ function buildHome(){
 
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
-  if(hasFete) h += '<div style="margin:0 16px 12px;">';
+  if(hasFete && hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
+  else if(hasFete) h += '<div style="margin:0 16px 12px;">';
 
   if(nextFete){
     var feteDate2 = new Date(nextFete.date);
@@ -9684,6 +9685,30 @@ function buildHome(){
     if(nextFete.candleTime) h += '<div style="font-size:10px;color:rgba(255,255,255,.75);">🕯 '+nextFete.candleTime+'</div>';
     if(nextFete.havdalaTime) h += '<div style="font-size:10px;color:rgba(255,255,255,.7);">✨ '+nextFete.havdalaTime+'</div>';
     h += '</div>';
+  }
+
+  // ── CARTE CHABBAT ──────────────────────────────────────────
+  if(candleTime||havdalaTime){
+    var nextFri=new Date(t);
+    var jsDay2=t.getDay();
+    var daysToFri=(5-jsDay2+7)%7||7;
+    if(jsDay2===6){
+      var hm2=havdalaTime?havdalaTime.match(/(\d+)[h:](\d+)/):null;
+      if(hm2){var hv2=parseInt(hm2[1]);var mv2=parseInt(hm2[2]);
+        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv2<12)hv2+=12;
+        if((t.getHours()>hv2)||(t.getHours()===hv2&&t.getMinutes()>=mv2))daysToFri=7;
+      }
+    }
+    nextFri.setDate(t.getDate()+daysToFri);
+    var friLabel=nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
+    var shabWrap = hasFete ? '' : '<div style="margin:0 16px 12px;">';
+    var shabClose = hasFete ? '' : '</div>';
+    if(!hasFete) h += shabWrap;
+    var shabFlex = hasFete ? 'flex:1;' : '';
+    h+='<div class="hdc-shabbat" onclick="openShabbatPanel()" style="'+shabFlex+'position:relative;">'      +'<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'      +'<span>🕯</span>'      +'<div class="hdc-shabbat-times">'      +'<div style="font-weight:700;font-size:12px;color:#92400E">Chabbat '+friLabel+'</div>'      +(candleTime?'<div>Allumage '+candleTime+'</div>':'')
+      +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
+      +'</div>'      +'</div>';
+    if(!hasFete) h += shabClose;
   }
 
   if(hasFete) h+='</div>';
