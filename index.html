@@ -1854,6 +1854,7 @@ function loadHebcalAll(lat,lng,cb){
         }
       }
       check();
+      updateShabbatInlineCard();
     }).catch(function(){check();});
 
   // Shabbat
@@ -2782,6 +2783,23 @@ function shareShabbatWhatsApp(){
   window.open(url, '_blank');
 }
 
+function updateShabbatInlineCard(){
+  var card = document.getElementById('shabbat-inline-card');
+  var timesEl = document.getElementById('shabbat-inline-times');
+  if(!card) return;
+  if(candleTime||havdalaTime){
+    card.style.display = 'block';
+    if(timesEl){
+      var html = '';
+      if(candleTime) html += '<div style="font-size:10px;color:#b45309;">🕯 '+candleTime+'</div>';
+      if(havdalaTime) html += '<div style="font-size:10px;color:#b45309;">✨ '+havdalaTime+'</div>';
+      timesEl.innerHTML = html;
+    }
+  } else {
+    card.style.display = 'none';
+  }
+}
+
 function closeShabbatPanel(){
   document.getElementById('shabbat-panel').classList.remove('open');
   document.getElementById('shabbat-backdrop').classList.remove('visible');
@@ -2979,15 +2997,12 @@ function buildHome(){
     +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
     +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
     +'</div>'
-    +(candleTime||havdalaTime
-      ? '<div class="hdc-shabbat-inline" onclick="openShabbatPanel()">'
-        + '<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'
-        + '<div style="font-size:9px;font-weight:700;color:#92400E;letter-spacing:.5px;margin-bottom:3px;">🕯 CHABBAT</div>'
-        + '<div style="font-size:11px;font-weight:700;color:#92400E;">'+nextShabbatLabel+'</div>'
-        + (candleTime ? '<div style="font-size:10px;color:#b45309;">🕯 '+candleTime+'</div>' : '')
-        + (havdalaTime ? '<div style="font-size:10px;color:#b45309;">✨ '+havdalaTime+'</div>' : '')
-        + '</div>'
-      : '')
+    + '<div class="hdc-shabbat-inline" id="shabbat-inline-card" onclick="openShabbatPanel()" style="display:none;">'
+    + '<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'
+    + '<div style="font-size:9px;font-weight:700;color:#92400E;letter-spacing:.5px;margin-bottom:3px;">🕯 CHABBAT</div>'
+    + '<div style="font-size:11px;font-weight:700;color:#92400E;" id="shabbat-inline-date">'+nextShabbatLabel+'</div>'
+    + '<div id="shabbat-inline-times"></div>'
+    + '</div>'
     +'</div>';
   // ── CARTE FÊTE + CHABBAT côte à côte ───────────────────────
   // Calculer la date du prochain Chabbat
@@ -3029,40 +3044,7 @@ function buildHome(){
     h += '</div>';
   }
 
-  if(candleTime||havdalaTime){
-    // Calculer date du prochain vendredi
-    // Après Havdala (samedi soir) → montrer le Chabbat suivant
-    var nextFri=new Date(t);
-    var jsDay=t.getDay(); // 0=dim, 6=sam
-    var afterHavdalaToday = false;
-    if(jsDay===6 && havdalaTime){
-      var hm=havdalaTime.match(/(\d+)[h:](\d+)/);
-      if(hm){
-        var hv=parseInt(hm[1]); var mv=parseInt(hm[2]);
-        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv<12) hv+=12;
-        afterHavdalaToday=(t.getHours()>hv)||(t.getHours()===hv&&t.getMinutes()>=mv);
-      }
-    }
-    // Si samedi après Havdala → aller au vendredi suivant (+8 jours)
-    // Si vendredi → montrer ce vendredi (0 jours)
-    // Sinon → prochain vendredi
-    var daysToFri;
-    if(afterHavdalaToday){
-      daysToFri = (5-jsDay+7)%7 + 7; // semaine suivante
-    } else {
-      daysToFri = (5-jsDay+7)%7||7;
-    }
-    nextFri.setDate(t.getDate()+daysToFri);
-    var friLabel=nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
-    h+='<div class="hdc-shabbat" onclick="openShabbatPanel()" style="flex:1;">'
-      +'<span>🕯</span>'
-      +'<div class="hdc-shabbat-times">'
-      +'<div style="font-weight:700;font-size:12px;color:#92400E">Chabbat '+friLabel+'</div>'
-      +(candleTime?'<div>Allumage '+candleTime+'</div>':'')
-      +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
-      +'</div>'
-      +'</div>';
-  }
+  
   if(hasFete || hasShabbat) h += '</div>'; // fermer flex
   else h+='</div>';
 
@@ -3089,7 +3071,7 @@ function buildHome(){
     +(briefText?'<div class="hpc-brief-inline">'+briefText+'</div>':'')
     +'<button class="hpc-btn">Lire la paracha →</button>'
     +'</div>'
-    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la lecture (rite tunisien)</button>'
+    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la lecture ()</button>'
     +'</div>';
 
   // Cours du jour
@@ -3105,6 +3087,22 @@ function buildHome(){
   h += '<div style="flex:1;">';
   h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Vidéos du Rabbi</div>';
   h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Archives JEM France</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
+  // ── HAYOM YOM ──
+  h += '<div onclick="openHayomYom()" style="margin:0 16px 12px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">☀️</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Hayom Yom</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">La pensée du jour du Rabbi</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
+  // ── SEFER HAMITSVOT ──
+  h += '<div onclick="openSefer()" style="margin:0 16px 12px;background:linear-gradient(135deg,#d97706,#b45309);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">📋</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Sefer HaMitsvot</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Mitsva du jour</div>';
   h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
 
   h += '<div onclick="openHistoires()" style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
