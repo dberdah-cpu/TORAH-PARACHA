@@ -47,7 +47,7 @@
 
 /* Quick access bar — fixe juste au-dessus de la nav */
 #quick-access-bar{
-  position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:200;
+  position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:199;
   background:rgba(255,255,255,0.97);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--gray-2);
@@ -523,7 +523,7 @@ body{
 
 /* ── Bottom Nav ── */
 #bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  position:fixed;bottom:0;left:0;right:0;z-index:600;
   background:rgba(255,255,255,0.96);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--gray-2);
@@ -2768,6 +2768,9 @@ function openShabbatPanel(){
   panel.classList.add('open');
   backdrop.classList.add('visible');
   renderShabbatPanel();
+  // S'assurer que la nav reste visible
+  var nav = document.getElementById('bottom-nav');
+  if(nav) nav.style.zIndex = '600';
 }
 
 // ── PARTAGE WHATSAPP ─────────────────────────────────────────
