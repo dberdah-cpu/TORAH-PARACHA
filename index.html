@@ -26,6 +26,7 @@
 .hdc-left{}
 .hdc-dayname{font-size:13px;font-weight:600;color:var(--gray-4);margin-bottom:2px}
 .hdc-heb{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--purple)}
+.hdc-shabbat-inline{flex:1;background:#FFF7ED;border-radius:10px;padding:8px 10px;cursor:pointer;position:relative;min-width:0;}
 .hdc-shabbat{display:flex;align-items:center;gap:8px;background:#FFF7ED;border-radius:12px;padding:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .hdc-shabbat-times{font-size:11px;color:#92400E;font-weight:600;line-height:1.6}
 
@@ -2977,8 +2978,30 @@ function buildHome(){
     +'<div class="hdc-left">'
     +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
     +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
-    +'</div></div>';
+    +'</div>'
+    +(candleTime||havdalaTime
+      ? '<div class="hdc-shabbat-inline" onclick="openShabbatPanel()">'
+        + '<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'
+        + '<div style="font-size:9px;font-weight:700;color:#92400E;letter-spacing:.5px;margin-bottom:3px;">🕯 CHABBAT</div>'
+        + '<div style="font-size:11px;font-weight:700;color:#92400E;">'+nextShabbatLabel+'</div>'
+        + (candleTime ? '<div style="font-size:10px;color:#b45309;">🕯 '+candleTime+'</div>' : '')
+        + (havdalaTime ? '<div style="font-size:10px;color:#b45309;">✨ '+havdalaTime+'</div>' : '')
+        + '</div>'
+      : '')
+    +'</div>';
   // ── CARTE FÊTE + CHABBAT côte à côte ───────────────────────
+  // Calculer la date du prochain Chabbat
+  var nextFri = new Date(t);
+  var jsDay0 = t.getDay();
+  var daysToFri = (5-jsDay0+7)%7||7;
+  if(jsDay0===6){
+    var hm0=havdalaTime?havdalaTime.match(/(\d+)[h:](\d+)/):null;
+    if(hm0){var hv0=parseInt(hm0[1]);if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv0<12)hv0+=12;
+      if(t.getHours()>hv0||(t.getHours()===hv0&&t.getMinutes()>=parseInt(hm0[2])))daysToFri=7;}
+  }
+  nextFri.setDate(t.getDate()+daysToFri);
+  var nextShabbatLabel = nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
+
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
   if(hasFete || hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
@@ -8695,7 +8718,7 @@ function openYTPlayer(videoId, title){
 }
 
 
-// ══ KRIAT HATORAH — Lecture de la Paracha (rite algérien) ════
+// ══ KRIAT HATORAH — Lecture de la Paracha () ════
 var TB_KRIAT = {"Bereshit": ["berechit-genese", "berechit", "Berechit"], "Noach": ["berechit-genese", "noah", "Noah"], "Lech-Lecha": ["berechit-genese", "lekh-lekha", "Lekh-Lekha"], "Lech Lecha": ["berechit-genese", "lekh-lekha", "Lekh-Lekha"], "Vayera": ["berechit-genese", "vayera", "Vayera"], "Chayei Sara": ["berechit-genese", "haye-sarah", "Haye-Sarah"], "Chayei Sarah": ["berechit-genese", "haye-sarah", "Haye-Sarah"], "Toldot": ["berechit-genese", "toledot", "Toledot"], "Vayetzei": ["berechit-genese", "vayetse", "Vayetse"], "Vayishlach": ["berechit-genese", "vayichlah", "Vayichlah"], "Vayeshev": ["berechit-genese", "vayechev", "Vayechev"], "Miketz": ["berechit-genese", "mikets", "Mikets"], "Vayigash": ["berechit-genese", "vayigach", "Vayigach"], "Vayechi": ["berechit-genese", "vayehi", "Vayehi"], "Shemot": ["chemot-exode", "chemot", "Chemot"], "Vaera": ["chemot-exode", "vaera", "Vaera"], "Bo": ["chemot-exode", "bo", "Bo"], "Beshalach": ["chemot-exode", "bechalah", "Bechalah"], "Yitro": ["chemot-exode", "yitro", "Yitro"], "Mishpatim": ["chemot-exode", "michpatim", "Michpatim"], "Terumah": ["chemot-exode", "terouma", "Terouma"], "Tetzaveh": ["chemot-exode", "tetsave", "Tetsave"], "Ki Tisa": ["chemot-exode", "ki-tissa", "Ki-Tissa"], "Ki-Tisa": ["chemot-exode", "ki-tissa", "Ki-Tissa"], "Vayakhel": ["chemot-exode", "vayakhel", "Vayakhel"], "Pekudei": ["chemot-exode", "pekoude", "Pekoude"], "Vayikra": ["vayikra-levitique", "vayikra", "Vayikra"], "Tzav": ["vayikra-levitique", "tsav", "Tsav"], "Shemini": ["vayikra-levitique", "chemini", "Chemini"], "Tazria": ["vayikra-levitique", "tazria", "Tazria"], "Metzora": ["vayikra-levitique", "metsora", "Metsora"], "Achrei Mot": ["vayikra-levitique", "ahare-mot", "Ahare-Mot"], "Kedoshim": ["vayikra-levitique", "kedochim", "Kedochim"], "Emor": ["vayikra-levitique", "emor", "Emor"], "Behar": ["vayikra-levitique", "behar", "Behar"], "Bechukotai": ["vayikra-levitique", "behoukotai", "Behoukotai"], "Behar-Bechukotai": ["vayikra-levitique", "behar", "Behar"], "Bamidbar": ["bamidbar-nombres", "bamidbar", "Bamidbar"], "Nasso": ["bamidbar-nombres", "nasso", "Nasso"], "Behalotcha": ["bamidbar-nombres", "behaalotekha", "Behaalotekha"], "Shelach": ["bamidbar-nombres", "chelah-lekha", "Chelah-Lekha"], "Korach": ["bamidbar-nombres", "korah", "Korah"], "Chukat": ["bamidbar-nombres", "houkat", "Houkat"], "Balak": ["bamidbar-nombres", "balak", "Balak"], "Chukat-Balak": ["bamidbar-nombres", "houkat", "Houkat"], "Pinchas": ["bamidbar-nombres", "pinhas", "Pinhas"], "Matot": ["bamidbar-nombres", "matot", "Matot"], "Masei": ["bamidbar-nombres", "masse", "Masse"], "Matot-Massei": ["bamidbar-nombres", "matot", "Matot"], "Devarim": ["devarim-deuteronome", "devarim", "Devarim"], "Vaetchanan": ["devarim-deuteronome", "vaethanane", "Vaethanane"], "Eikev": ["devarim-deuteronome", "ekev", "Ekev"], "Reeh": ["devarim-deuteronome", "ree", "Ree"], "Shoftim": ["devarim-deuteronome", "choftim", "Choftim"], "Ki Teitzei": ["devarim-deuteronome", "ki-tetse", "Ki-Tetse"], "Ki Tavo": ["devarim-deuteronome", "ki-tavo", "Ki-Tavo"], "Nitzavim": ["devarim-deuteronome", "nitsavim", "Nitsavim"], "Vayeilech": ["devarim-deuteronome", "vayelekh", "Vayelekh"], "Haazinu": ["devarim-deuteronome", "haazinou", "Haazinou"], "Nitsavim-Vayelech": ["devarim-deuteronome", "nitsavim", "Nitsavim"], "Vezot Haberakhah": ["devarim-deuteronome", "vezot-haberakha", "Vezot-Haberakha"]};
 
 // ══ MINI PLAYER KRIAT TORAH ═════════════════════════════════
