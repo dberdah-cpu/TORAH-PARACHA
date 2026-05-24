@@ -2711,9 +2711,16 @@ async function waGenResume(sujet, mots){
 
 async function shareShabbatWhatsApp(){
   var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
-  var resume = await waGenResume('La paracha ' + paraFr + ' — son message principal', 23);
-  var msg = '🕯 *Chabbat Chalom !*\n\n';
-  msg += '📖 *Paracha ' + paraFr + '*\n';
+  var paraHeb = currentParashaHeb || '';
+  var resume = await waGenResume('La paracha ' + paraFr + ' — son enseignement principal en une phrase', 23);
+  var now = new Date();
+  var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var dateStr = now.getDate() + ' ' + FR_MOIS[now.getMonth()] + ' ' + now.getFullYear();
+  var msg = '🕯 *Chabbat Chalom !*\n';
+  msg += '_' + dateStr + '_\n\n';
+  msg += '📖 *Paracha ' + paraFr;
+  if(paraHeb) msg += ' · ' + paraHeb;
+  msg += '*\n';
   if(resume) msg += '_' + resume + '_\n\n';
   if(candleTime) msg += '🕯 Allumage : *' + candleTime + '*\n';
   if(havdalaTime) msg += '✨ Havdala : *' + havdalaTime + '*';
@@ -2997,12 +3004,6 @@ function buildHome(){
     +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
     +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
     +'</div>'
-    + '<div class="hdc-shabbat-inline" id="shabbat-inline-card" onclick="openShabbatPanel()" style="display:none;">'
-    + '<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'
-    + '<div style="font-size:9px;font-weight:700;color:#92400E;letter-spacing:.5px;margin-bottom:3px;">🕯 CHABBAT</div>'
-    + '<div style="font-size:11px;font-weight:700;color:#92400E;" id="shabbat-inline-date">'+nextShabbatLabel+'</div>'
-    + '<div id="shabbat-inline-times"></div>'
-    + '</div>'
     +'</div>';
   // ── CARTE FÊTE + CHABBAT côte à côte ───────────────────────
   // Calculer la date du prochain Chabbat
@@ -3016,6 +3017,20 @@ function buildHome(){
   }
   nextFri.setDate(t.getDate()+daysToFri);
   var nextShabbatLabel = nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
+
+  // ── CARTE CHABBAT INDÉPENDANTE ──────────────────────────
+  if(candleTime||havdalaTime){
+    h += '<div onclick="openShabbatPanel()" style="margin:0 16px 12px;background:#FFF7ED;border-radius:var(--radius);padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;position:relative;border:1px solid #FDE68A;">'
+      + '<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn" style="color:#92400E;background:rgba(146,64,14,.1);">↗</button>'
+      + '<span style="font-size:24px;">🕯</span>'
+      + '<div style="flex:1;">'
+      + '<div style="font-size:10px;font-weight:700;color:#92400E;letter-spacing:.5px;margin-bottom:2px;">CHABBAT · '+nextShabbatLabel+'</div>'
+      + (candleTime ? '<div style="font-size:12px;color:#b45309;">🕯 Allumage : <strong>'+candleTime+'</strong></div>' : '')
+      + (havdalaTime ? '<div style="font-size:12px;color:#b45309;">✨ Havdala : <strong>'+havdalaTime+'</strong></div>' : '')
+      + '</div>'
+      + '<span style="color:#92400E;font-size:18px;">›</span>'
+      + '</div>';
+  }
 
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
