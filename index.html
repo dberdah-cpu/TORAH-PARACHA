@@ -23,7 +23,6 @@
 
 /* Date card compact */
 .home-date-card{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#fff;border-bottom:1px solid var(--gray-2)}
-.hdc-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px;padding-left:8px;}
 .hdc-left{}
 .hdc-dayname{font-size:13px;font-weight:600;color:var(--gray-4);margin-bottom:2px}
 .hdc-heb{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--purple)}
@@ -47,7 +46,7 @@
 
 /* Quick access bar — fixe juste au-dessus de la nav */
 #quick-access-bar{
-  position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:199;
+  position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:200;
   background:rgba(255,255,255,0.97);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--gray-2);
@@ -387,24 +386,16 @@
 .admin-badge-red{background:#fee2e2;color:#991b1b;}
 .admin-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;z-index:9999;display:none;}
 .wa-share-btn{
-  position:absolute;top:6px;right:6px;
-  background:rgba(255,255,255,.25);
+  position:absolute;top:8px;right:8px;
+  background:rgba(37,211,102,.15);
   border:none;border-radius:50%;
-  width:26px;height:26px;
+  width:28px;height:28px;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:13px;
-  color:#fff;
-  z-index:10;
-  line-height:1;
-  padding:0;
+  cursor:pointer;font-size:14px;
+  color:#25d366;
+  z-index:2;
 }
-.wa-share-btn:active{background:rgba(255,255,255,.4);}
-
-/* Curseur taille texte */
-.text-slider-wrap{display:flex;align-items:center;gap:10px;padding:10px 16px 4px;background:rgba(255,255,255,.05);}
-.text-slider-label{font-size:11px;color:rgba(255,255,255,.7);font-family:Poppins,sans-serif;white-space:nowrap;}
-.text-slider{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.3);outline:none;}
-.text-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#db2877);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+.wa-share-btn:active{background:rgba(37,211,102,.3);}
 .cv-week-nav{
   display:flex;gap:6px;flex-wrap:wrap;
   margin:0 0 16px;padding:12px 16px;
@@ -523,7 +514,7 @@ body{
 
 /* ── Bottom Nav ── */
 #bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:600;
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
   background:rgba(255,255,255,0.96);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--gray-2);
@@ -1464,12 +1455,6 @@ body{
     <div class="dph-heb" id="d-heb"></div>
     <div class="dph-ref" id="d-ref"></div>
     <div class="dph-hook">📖 Comprendre en profondeur la Torah de la semaine</div>
-    <div class="text-slider-wrap" style="border-radius:0;background:rgba(45,11,94,.3);">
-      <span class="text-slider-label">A</span>
-      <input type="range" min="0" max="100" value="50" class="text-slider" id="slider_view-detail"
-        oninput="applySliderSize('view-detail',this.value)">
-      <span class="text-slider-label" style="font-size:15px;">A</span>
-    </div>
     <button id="btn-kriat-p" onclick="openKriatTorah()" style="margin-top:10px;padding:8px 20px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la Paracha</button>
   </div>
   <div class="seg-ctrl">
@@ -1483,8 +1468,7 @@ body{
     </div>
     <div class="sefaria-credit">Texte massorétique · Sefaria · Traduction via Claude AI</div>
   </div>
-  <div id="tab-sum" class="tab-panel"><div class="sumblock" <div id="detail-1min-container"></div>
-  <div id="d-summary"v></div>
+  <div id="tab-sum" class="tab-panel"><div class="sumblock" id="d-summary"></div></div>
   <div id="tab-com" class="tab-panel"><div class="comblock" id="d-commentary"></div></div>
 </div>
 <script>
@@ -1897,7 +1881,7 @@ function loadHebcalAll(lat,lng,cb){
           var isChabbat = nom.toLowerCase().indexOf('shabbat')>=0 || nom.toLowerCase().indexOf('chabbat')>=0;
           if(!isChabbat && diffDays >= 0 && diffDays <= 7){
             if(!nextFete || feteDate < new Date(nextFete.date)){
-              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', diffDays: diffDays, dateObj: feteDate };
+              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', diffDays: diffDays };
             }
           }
         }
@@ -1906,9 +1890,6 @@ function loadHebcalAll(lat,lng,cb){
           var cDate = it.date.split('T')[0];
           var fDate = nextFete.date ? nextFete.date.split('T')[0] : '';
           if(cDate === fDate) nextFete.candleTime = fmtHebcalTime(it.date);
-        }
-        if(it.category==='havdalah' && nextFete && it.date){
-          nextFete.havdalaTime = fmtHebcalTime(it.date);
         }
       });
       check();
@@ -2168,66 +2149,6 @@ function getCitationDuJour(){
 
 var CITATIONS_365 = [{"jour": 1, "texte": "Le commencement est toujours possible. D.ieu a créé le monde avec la lettre Bet — la deuxième lettre — pour enseigner qu'il n'est jamais trop tard pour recommencer.", "source": "Likoutei Si'hot vol. 1, Béréchit", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 2, "texte": "Chaque âme juive est une lettre dans le Sefer Torah du peuple juif. Si une seule lettre manque, le Sefer Torah entier est invalide.", "source": "Torat Mena'hem 5711, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 3, "texte": "L'homme qui croit qu'hier était meilleur qu'aujourd'hui manque de foi. Chaque jour qui passe nous rapproche de la Rédemption.", "source": "Séfer HaSi'hot 5752, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 4, "texte": "Si tu vois ce qui manque dans l'autre, c'est parce que ça manque en toi. Apprends à voir la lumière avant l'obscurité.", "source": "Keter Shem Tov § 93", "auteur": "Baal Shem Tov"}, {"jour": 5, "texte": "Dans chaque chose matérielle se trouve une étincelle divine qui attend d'être libérée. C'est la mission de l'homme.", "source": "Tanya, Likoutei Amarim ch. 37", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 6, "texte": "Qui est fort ? Celui qui maîtrise ses penchants.", "source": "Pirké Avot 4:1", "auteur": "Ben Zoma"}, {"jour": 7, "texte": "Le monde entier a été créé pour moi — chaque personne est obligée de dire ces mots. Non par orgueil, mais pour comprendre sa responsabilité absolue.", "source": "Talmud, Sanhédrin 37a", "auteur": ""}, {"jour": 8, "texte": "La joie n'est pas une récompense du service divin — c'en est une partie intégrante et essentielle.", "source": "Torat Mena'hem 5714, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 9, "texte": "Dieu ne demande pas l'impossible. Il demande ce qui est juste au-dessus de tes capacités — pour que tu grandisses en l'accomplissant.", "source": "Likoutei Si'hot vol. 6, Mishpatim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 10, "texte": "L'homme ressemble à un arbre des champs. Comme l'arbre, sa vie dépend de ses racines. Tes racines sont tes ancêtres et la Torah.", "source": "Talmud, Ta'anit 7a (adapté)", "auteur": ""}, {"jour": 11, "texte": "Ne regarde jamais de haut quelqu'un qui tombe — tu ne sais pas le poids qu'il porte.", "source": "Igrot Kodesh vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 12, "texte": "L'essentiel n'est pas la grandeur du geste, mais la sincérité du cœur qui l'accomplit.", "source": "Keter Shem Tov § 44", "auteur": "Baal Shem Tov"}, {"jour": 13, "texte": "Toute descente est pour le but d'une montée plus haute encore. Ne crains pas de tomber — crains de ne pas te relever.", "source": "Likoutei Si'hot vol. 2, Vayigash", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 14, "texte": "Un homme qui ne cesse de grandir — même d'un millimètre par jour — est un homme vivant. Stagnation, c'est la mort de l'âme.", "source": "Torat Mena'hem 5713, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 15, "texte": "Là où se trouve la pensée d'un homme, là se trouve l'homme entier.", "source": "Tanya, Igeret HaKodesh § 31", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 16, "texte": "La prière n'est pas une demande à D.ieu d'intervenir dans le monde. C'est l'homme qui s'élève pour rencontrer D.ieu.", "source": "Séfer HaSi'hot 5748, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 17, "texte": "Si tu aides une seule âme à se rapprocher de D.ieu, c'est comme si tu avais créé un monde entier.", "source": "Talmud, Sanhédrin 37a", "auteur": ""}, {"jour": 18, "texte": "Ton visage est un livre ouvert. Apprends à y écrire de la bonté.", "source": "Keter Shem Tov § 112", "auteur": "Baal Shem Tov"}, {"jour": 19, "texte": "L'humilité véritable n'est pas de se croire petit. C'est de savoir que ses capacités viennent de D.ieu et non de soi.", "source": "Tanya, Likoutei Amarim ch. 30", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 20, "texte": "Chaque matin tu reçois une âme neuve. Utilise-la comme si c'était la première et la dernière fois.", "source": "Torat Mena'hem 5744, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 21, "texte": "Le chemin le plus court vers D.ieu passe par le cœur de l'autre.", "source": "Noam Élimélekh, Lekh Lekha", "auteur": "Rabbi Élimélekh de Lizhensk"}, {"jour": 22, "texte": "Chaque heure qui passe sans qu'on ait accompli quelque chose de bien est une heure perdue pour toujours.", "source": "Igrot Kodesh vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 23, "texte": "La foi n'est pas aveugle. Elle est une vision plus profonde que celle des yeux.", "source": "Or HaTorah, Béréchit", "auteur": "Rabbi Mena'hem Mendel de Lubavitch"}, {"jour": 24, "texte": "Sois toujours parmi les persécutés et non parmi les persécuteurs.", "source": "Talmud, Bava Kama 93a", "auteur": ""}, {"jour": 25, "texte": "L'obscurité la plus profonde est chassée par une seule petite lumière. Sois cette lumière.", "source": "Torat Mena'hem 5752, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 26, "texte": "Le silence a de la valeur, mais la parole qui aide l'autre en a encore plus.", "source": "Pirké Avot 1:17 (commentaire)", "auteur": "Rabban Shimon ben Gamliel"}, {"jour": 27, "texte": "Là où un ba'al téchouva se tient, même le parfaitement juste ne peut pas se tenir.", "source": "Talmud, Brakhot 34b", "auteur": ""}, {"jour": 28, "texte": "Tu n'as pas à changer le monde entier. Tu as à changer le monde d'une seule personne — et ainsi tu changes tout.", "source": "Likoutei Si'hot vol. 15", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 29, "texte": "La vraie liberté n'est pas de faire ce qu'on veut. C'est de vouloir ce qui est juste.", "source": "Messilat Yesharim, ch. 1", "auteur": "Rabbi Moshe Haïm Luzzatto"}, {"jour": 30, "texte": "Ne dis pas : je verrai et alors je croirai. Dis : je crois, et alors je verrai.", "source": "Igrot Kodesh vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 31, "texte": "L'amour de D.ieu et l'amour des hommes ne sont pas deux amours différents. Ils sont les deux faces d'un seul amour.", "source": "Tanya, Likoutei Amarim ch. 32", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 32, "texte": "La Téchouva précède la création du monde. La capacité de recommencer est plus ancienne que l'existence elle-même.", "source": "Talmud, Nédarine 39b", "auteur": ""}, {"jour": 33, "texte": "Qui est riche ? Celui qui se réjouit de ce qu'il a.", "source": "Pirké Avot 4:1", "auteur": "Ben Zoma"}, {"jour": 34, "texte": "Une petite lumière repousse beaucoup d'obscurité. Imagine ce que fait une grande lumière.", "source": "Keter Shem Tov § 63", "auteur": "Baal Shem Tov"}, {"jour": 35, "texte": "Il n'est jamais trop tard pour faire le bien. Même à la dernière seconde, une action peut changer l'éternité.", "source": "Torat Mena'hem 5745, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 36, "texte": "L'homme est le seul être créé pour lequel D.ieu a soufflé de Sa propre bouche. Rappelle-toi d'où tu viens.", "source": "Béréchit 2:7, commentaire", "auteur": "Sforno"}, {"jour": 37, "texte": "Chaque parole de Torah que tu étudies illumine le monde — même si tu ne le vois pas.", "source": "Tanya, Igeret HaKodesh § 26", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 38, "texte": "La meilleure façon de connaître D.ieu est à travers Ses œuvres. Chaque créature est une lettre dans Son nom.", "source": "More Névoukhim 1:34", "auteur": "Rambam"}, {"jour": 39, "texte": "Un homme sage apprend de chaque être humain. Un homme vraiment sage apprend aussi de ses erreurs.", "source": "Pirké Avot 4:1", "auteur": "Ben Zoma"}, {"jour": 40, "texte": "La prière du pauvre — même brisée, même imparfaite — monte plus vite que toute autre.", "source": "Zohar II, 195b", "auteur": ""}, {"jour": 41, "texte": "Ne fais pas à autrui ce que tu haïrais qu'on te fasse. C'est toute la Torah — le reste est commentaire.", "source": "Talmud, Chabbat 31a", "auteur": "Hillel"}, {"jour": 42, "texte": "L'âme est toujours pure. C'est le corps qui salit. Quand l'âme parle — écoute-la.", "source": "Tanya, Likoutei Amarim ch. 2", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 43, "texte": "Même lorsque le fil semble rompu entre toi et D.ieu, sache qu'Il tient l'autre bout.", "source": "Likoutei Moharan I, § 6", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 44, "texte": "La bonté gratuite — 'hessed shel emet' — est la plus grande. Car elle ne peut jamais être remboursée.", "source": "Talmud, Sotah 14a", "auteur": ""}, {"jour": 45, "texte": "Étudie comme si ta vie en dépendait — parce que c'est le cas.", "source": "Igrot Kodesh vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 46, "texte": "Ne te juge pas seulement sur ce que tu as accompli — juge-toi sur ce que tu as essayé.", "source": "Torat Mena'hem 5711, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 47, "texte": "Le Maharal enseigne : la vérité est toujours solitaire. Le mensonge a besoin de complices.", "source": "Netivot Olam, Netiv HaEmet ch. 1", "auteur": "Maharal de Prague"}, {"jour": 48, "texte": "Quand tu allumes une bougie pour l'autre, tu ne perds pas de lumière — tu en crées davantage.", "source": "Séfer HaSi'hot 5750, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 49, "texte": "Qui est honoré ? Celui qui honore les autres.", "source": "Pirké Avot 4:1", "auteur": "Ben Zoma"}, {"jour": 50, "texte": "La joie brise toutes les barrières. C'est pour ça que la tristesse est l'ennemi de l'âme.", "source": "Likoutei Moharan I, § 169", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 51, "texte": "D.ieu parle dans le silence. Si tu n'entends pas — c'est peut-être parce que tu ne te tais pas assez.", "source": "Keter Shem Tov § 27", "auteur": "Baal Shem Tov"}, {"jour": 52, "texte": "La générosité n'est pas de donner ce qu'on n'utilise plus. C'est de donner ce dont on a besoin.", "source": "Likoutei Si'hot vol. 4, Teruma", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 53, "texte": "Même si tu es tombé dans les profondeurs les plus sombres, D.ieu peut te rejoindre là où tu es.", "source": "Tanya, Igeret HaTéchouva ch. 11", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 54, "texte": "Deux personnes qui étudient la Torah ensemble — la Présence divine est entre elles.", "source": "Pirké Avot 3:3", "auteur": "Rabbi Hanina ben Teradyon"}, {"jour": 55, "texte": "L'optimisme n'est pas une naïveté. C'est une décision — celle de voir D.ieu dans toute chose.", "source": "Igrot Kodesh vol. 10", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 56, "texte": "L'homme qui ne fait que recevoir sans donner est comme une mer morte.", "source": "Séfer HaSi'hot 5749, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 57, "texte": "Quand les mots manquent pour prier, laisse le cœur parler. D.ieu comprend toutes les langues.", "source": "Likoutei Moharan II, § 84", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 58, "texte": "La santé de l'âme est plus précieuse que celle du corps. Soigne les deux avec la même attention.", "source": "More Névoukhim 3:27", "auteur": "Rambam"}, {"jour": 59, "texte": "Chaque enfant qui naît est la preuve que D.ieu n'a pas encore abandonné le monde.", "source": "Torat Mena'hem 5752, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 60, "texte": "La Torah n'a pas été donnée aux anges. Elle a été donnée à des êtres humains — imparfaits, luttants, vivants.", "source": "Talmud, Brakhot 25b (adapté)", "auteur": ""}, {"jour": 61, "texte": "Commence là où tu es. Utilise ce que tu as. Fais ce que tu peux.", "source": "Igrot Kodesh vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 62, "texte": "La lumière de Pourim illumine les jours les plus sombres. Le miracle est caché — mais il est réel.", "source": "Likoutei Si'hot vol. 16, Pourim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 63, "texte": "L'amour véritable ne demande pas à l'autre d'être parfait. Il aide l'autre à le devenir.", "source": "Keter Shem Tov § 78", "auteur": "Baal Shem Tov"}, {"jour": 64, "texte": "Chaque mitsva que tu accomplis laisse une empreinte permanente dans le tissu de la réalité.", "source": "Tanya, Likoutei Amarim ch. 37", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 65, "texte": "La Téchouva ne signifie pas regretter le passé — elle signifie transformer le passé en force pour l'avenir.", "source": "Torat Mena'hem 5746, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 66, "texte": "Sois humble comme Hillel et non tranchant comme Chammaï — et pourtant, sois ferme dans tes convictions.", "source": "Talmud, Érouvin 13b (adapté)", "auteur": ""}, {"jour": 67, "texte": "Le chemin vers la vérité passe souvent par la reconnaissance de son erreur.", "source": "Netivot Olam, Netiv HaTéchouva ch. 1", "auteur": "Maharal de Prague"}, {"jour": 68, "texte": "Même dans l'obscurité totale, une étincelle divine brûle en toi. Elle ne peut jamais s'éteindre complètement.", "source": "Tanya, Likoutei Amarim ch. 19", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 69, "texte": "Qui fuit la responsabilité la retrouve toujours sur son chemin.", "source": "Igrot Kodesh vol. 8", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 70, "texte": "La paix dans la maison — shalom bayit — est le fondement de toute la Torah.", "source": "Talmud, Chabbat 23b (adapté)", "auteur": ""}, {"jour": 71, "texte": "Ne dis pas demain. L'hébreu n'a pas de mot pour 'plus tard'. Il a seulement 'maintenant' ou 'jamais'.", "source": "Likoutei Si'hot vol. 21, Vayakhel", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 72, "texte": "La musique est la plume de l'âme. Quand les mots échouent, chante.", "source": "Keter Shem Tov § 149", "auteur": "Baal Shem Tov"}, {"jour": 73, "texte": "Chaque personne que tu rencontres est une opportunité de faire descendre la lumière divine dans le monde.", "source": "Séfer HaSi'hot 5751, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 74, "texte": "La foi sans action est comme une âme sans corps — belle mais inutile dans ce monde.", "source": "Messilat Yesharim ch. 2", "auteur": "Rabbi Moshe Haïm Luzzatto"}, {"jour": 75, "texte": "Enseigne à ton enfant la voie qu'il doit suivre — et quand il sera vieux, il ne s'en détournera pas.", "source": "Proverbes 22:6", "auteur": ""}, {"jour": 76, "texte": "Chaque fois que tu surmontes une épreuve, tu montes d'un niveau que tu ne peux pas atteindre autrement.", "source": "Likoutei Si'hot vol. 10, Mishpatim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 77, "texte": "L'homme qui ne rit jamais n'est pas un homme sage — il manque de joie, et la joie est divine.", "source": "Torat Mena'hem 5715, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 78, "texte": "Le plus grand miracle est de voir le miracle dans l'ordinaire.", "source": "Keter Shem Tov § 56", "auteur": "Baal Shem Tov"}, {"jour": 79, "texte": "Rien de ce qui est accompli avec amour n'est petit.", "source": "Igrot Kodesh vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 80, "texte": "Les portes de la prière ne se ferment jamais. Même à minuit, elles sont ouvertes.", "source": "Talmud, Brakhot 32b (adapté)", "auteur": ""}, {"jour": 81, "texte": "Un homme qui ne connaît pas sa propre valeur ne peut pas vraiment valoriser l'autre.", "source": "Likoutei Moharan I, § 4", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 82, "texte": "La Torah parle dans le langage des hommes pour que les hommes puissent l'entendre.", "source": "Talmud, Brakhot 31b", "auteur": ""}, {"jour": 83, "texte": "Le vrai courage n'est pas l'absence de peur. C'est agir malgré elle, au nom de ce qui est juste.", "source": "Likoutei Si'hot vol. 9, Chéla'h", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 84, "texte": "Tout ce que D.ieu fait — Il le fait pour le bien. Même ce qu'on ne comprend pas encore.", "source": "Talmud, Brakhot 60b", "auteur": "Nah'oum Ish Gamzou"}, {"jour": 85, "texte": "La prière du matin ouvre les portes du jour. Ne pars jamais sans l'avoir récitée.", "source": "Séfer HaSi'hot 5748, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 86, "texte": "L'homme qui donne de la joie aux autres reçoit dix fois plus en retour.", "source": "Keter Shem Tov § 83", "auteur": "Baal Shem Tov"}, {"jour": 87, "texte": "Même si tu es seul dans ton observance, souviens-toi que D.ieu compte avec toi.", "source": "Igrot Kodesh vol. 9", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 88, "texte": "La grandeur de l'homme se mesure non pas à ce qu'il possède, mais à ce qu'il donne.", "source": "Torat Mena'hem 5713, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 89, "texte": "Le monde a été créé pour la Torah et pour Israël. Quand tu étudies, tu justifies l'existence du monde.", "source": "Rachi sur Béréchit 1:1", "auteur": "Rachi"}, {"jour": 90, "texte": "Chaque jour est une nouvelle création. Aborde-le avec des yeux neufs.", "source": "Likoutei Si'hot vol. 1, Chémot", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 91, "texte": "À Pessah, D.ieu n'a pas attendu qu'Israël mérite la délivrance. Il l'a délivrée par amour pur.", "source": "Likoutei Si'hot vol. 3, Pessah", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 92, "texte": "La liberté extérieure ne vaut rien sans la liberté intérieure. Sors de ton Égypte personnelle.", "source": "Torat Mena'hem 5711, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 93, "texte": "Chaque génération a son Pharaon et son Exode. À toi d'identifier les deux dans ta vie.", "source": "Keter Shem Tov § 117", "auteur": "Baal Shem Tov"}, {"jour": 94, "texte": "La nuit du Séder est la nuit où toutes les portes du Ciel sont ouvertes. Demande.", "source": "Séfer HaSi'hot 5750, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 95, "texte": "Manger du pain azyme, c'est reconnaître qu'on a parfois besoin de recommencer sans levain — sans l'ego.", "source": "Likoutei Si'hot vol. 12, Bo", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 96, "texte": "Les quatre fils du Séder sont en chacun de nous. Même le fils qui ne sait pas demander mérite une réponse.", "source": "Torat Mena'hem 5714, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 97, "texte": "La Hagadah commence par l'humiliation et se termine par la gloire. C'est le chemin de toute vraie croissance.", "source": "Talmud, Pessah'im 116a", "auteur": ""}, {"jour": 98, "texte": "L'esclavage le plus dangereux est celui auquel on s'est habitué au point de ne plus le voir.", "source": "Likoutei Si'hot vol. 6, Bo", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 99, "texte": "Dieu a dit à Moïse : retire tes sandales. Là où tu te tiens est une terre sainte. Là où tu es maintenant est sacré.", "source": "Exode 3:5 (commentaire)", "auteur": "Or HaHaïm"}, {"jour": 100, "texte": "Il n'y a pas de demi-mesure dans l'amour. Soit on aime, soit on ne fait que prétendre.", "source": "Tanya, Likoutei Amarim ch. 44", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 101, "texte": "Même le plus petit geste de bonté fait pendant les jours de l'Omer laisse une trace éternelle.", "source": "Séfer HaSi'hot 5749, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 102, "texte": "Compte l'Omer comme tu comptes les jours avant une rencontre avec quelqu'un que tu aimes.", "source": "Torat Mena'hem 5712, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 103, "texte": "L'étude de la Torah pour elle-même — lishmah — transforme l'étudiant en lumière.", "source": "Talmud, Taanit 7a", "auteur": "Rabbi Hanina"}, {"jour": 104, "texte": "Chaque nuit de l'Omer est une occasion de travailler sur une qualité de l'âme différente.", "source": "Likoutei Si'hot vol. 7, Emor", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 105, "texte": "La patience est une forme de foi. Croire que le bon moment viendra — même si ce n'est pas maintenant.", "source": "Igrot Kodesh vol. 11", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 106, "texte": "Là où il y a de la vérité, D.ieu est présent. La vérité est le sceau de D.ieu.", "source": "Talmud, Chabbat 55a", "auteur": ""}, {"jour": 107, "texte": "L'humilité de Moïse ne l'a pas empêché d'être le plus grand prophète. L'humilité et la grandeur ne s'excluent pas.", "source": "Likoutei Si'hot vol. 18, Beha'alotecha", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 108, "texte": "Enseigne à un enfant à aimer — et tu lui auras appris tout le reste.", "source": "Keter Shem Tov § 138", "auteur": "Baal Shem Tov"}, {"jour": 109, "texte": "Le secret de la paix intérieure : comprendre que D.ieu gère le monde, pas toi.", "source": "Likoutei Moharan I, § 52", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 110, "texte": "La charité sauve de la mort. Non pas métaphoriquement — littéralement.", "source": "Talmud, Bava Batra 10a", "auteur": ""}, {"jour": 111, "texte": "Chaque morceau de pain que tu donnes au pauvre est un morceau de toi-même que tu offres à D.ieu.", "source": "Séfer HaSi'hot 5751, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 112, "texte": "Un maître qui n'apprend pas de ses élèves n'est pas un vrai maître.", "source": "Talmud, Taanit 7a", "auteur": "Rabbi Hanina"}, {"jour": 113, "texte": "La Torah est un arbre de vie pour ceux qui s'y accrochent. Accroche-toi — même quand c'est difficile.", "source": "Proverbes 3:18", "auteur": ""}, {"jour": 114, "texte": "Le plus grand service que tu peux rendre à D.ieu est de traiter Son peuple avec dignité.", "source": "Torat Mena'hem 5748, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 115, "texte": "Chaque larme versée pour une mitsva manquée est plus précieuse que bien des réussites.", "source": "Keter Shem Tov § 19", "auteur": "Baal Shem Tov"}, {"jour": 116, "texte": "Ne demande pas à D.ieu pourquoi tu as cette épreuve. Demande-Lui ce qu'Il veut que tu y trouves.", "source": "Igrot Kodesh vol. 14", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 117, "texte": "La véritable générosité commence quand donner te coûte quelque chose.", "source": "Netivot Olam, Netiv HaTsedaka ch. 2", "auteur": "Maharal de Prague"}, {"jour": 118, "texte": "Les bénédictions arrivent toujours — parfois en avance, parfois en retard, mais jamais en erreur.", "source": "Séfer HaSi'hot 5752, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 119, "texte": "Qui est vraiment libre ? Celui qui étudie la Torah.", "source": "Pirké Avot 6:2", "auteur": ""}, {"jour": 120, "texte": "Tout ce que tu fais pour D.ieu — même ce que personne ne voit — D.ieu le voit. Et ça compte.", "source": "Likoutei Si'hot vol. 7, Kedoshim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 121, "texte": "Lag BaOmer nous enseigne : même après une tragédie, la lumière peut revenir plus forte qu'avant.", "source": "Likoutei Si'hot vol. 17, Lag BaOmer", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 122, "texte": "Rabbi Chimon bar Yochaï a dit : si j'avais vécu à l'époque du don de la Torah, j'aurais demandé deux bouches — une pour la Torah et une pour le reste.", "source": "Talmud, Chabbat 33b", "auteur": "Rabbi Shimon bar Yochai"}, {"jour": 123, "texte": "L'étude de la Torah protège non seulement celui qui étudie, mais toute sa famille et toute sa génération.", "source": "Talmud, Sotah 21a", "auteur": ""}, {"jour": 124, "texte": "La vérité peut se taire un moment — elle ne peut jamais disparaître.", "source": "Netivot Olam, Netiv HaEmet ch. 4", "auteur": "Maharal de Prague"}, {"jour": 125, "texte": "Ce que tu commences avec enthousiasme mais abandonnes — c'est pire que de ne pas avoir commencé.", "source": "Igrot Kodesh vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 126, "texte": "Chavouot est le mariage entre D.ieu et Israël. La Torah est la ketoubbah — le contrat de mariage.", "source": "Likoutei Si'hot vol. 8, Bamidbar", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 127, "texte": "Cette nuit — la nuit de Chavouot — toute la Torah est accessible à celui qui veut l'accueillir.", "source": "Torat Mena'hem 5715, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 128, "texte": "Étudier la Torah toute la nuit de Chavouot c'est réparer la faute du peuple qui dormait au Sinaï.", "source": "Zohar III, 98a", "auteur": ""}, {"jour": 129, "texte": "La Torah a été donnée dans le désert — un lieu qui n'appartient à personne — pour enseigner qu'elle appartient à tous.", "source": "Talmud, Nédarim 55a", "auteur": ""}, {"jour": 130, "texte": "Recevoir la Torah c'est bien. La vivre — c'est mieux.", "source": "Torat Mena'hem 5712, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 131, "texte": "La bonté sans limite est le fondement du monde — 'olam 'hessed yibaneh — le monde est construit sur la bonté.", "source": "Psaumes 89:3", "auteur": ""}, {"jour": 132, "texte": "Ne compte pas ce que les autres ont. Compte ce que tu as — et remercie D.ieu pour chacune de ces choses.", "source": "Igrot Kodesh vol. 12", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 133, "texte": "Quand un sage parle — écoute deux fois avant de répondre.", "source": "Pirké Avot 5:7 (adapté)", "auteur": ""}, {"jour": 134, "texte": "Ton âme connaît la vérité même quand ton esprit doute. Apprends à lui faire confiance.", "source": "Tanya, Likoutei Amarim ch. 18", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 135, "texte": "La prière avec concentration vaut mille prières sans elle.", "source": "Keter Shem Tov § 33", "auteur": "Baal Shem Tov"}, {"jour": 136, "texte": "Il n'existe pas de mauvaise question. Il n'existe que des questions auxquelles on n'a pas encore trouvé la réponse.", "source": "Séfer HaSi'hot 5750, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 137, "texte": "Aimer D.ieu de tout son cœur — cela signifie aussi avec les désirs naturels et les besoins humains. Rien n'est exclu.", "source": "Tanya, Likoutei Amarim ch. 9", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 138, "texte": "Ne recherche pas la grandeur pour toi-même. La grandeur qui te cherche est la seule vraie.", "source": "Pirké Avot 1:10 (commentaire)", "auteur": "Shmaïa"}, {"jour": 139, "texte": "Même dans la chute la plus profonde, rappelle-toi : D.ieu t'a créé pour la lumière, pas pour l'obscurité.", "source": "Likoutei Moharan II, § 12", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 140, "texte": "La paix est si grande qu'elle est le nom de D.ieu — 'Chalom' est l'un des noms divins.", "source": "Talmud, Chabbat 10b", "auteur": ""}, {"jour": 141, "texte": "Chaque fois que tu choisis le bien quand le mal serait plus facile, tu sanctifies le Nom de D.ieu.", "source": "Torat Mena'hem 5716, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 142, "texte": "Le Hafets Haïm enseignait : la langue est un feu. Elle peut réchauffer ou brûler — à toi de choisir.", "source": "Hafets Haïm, introduction", "auteur": "Rabbi Yisrael Meïr Kagan"}, {"jour": 143, "texte": "Réponds toujours au mal par le bien. Non par faiblesse — par stratégie divine.", "source": "Igrot Kodesh vol. 13", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 144, "texte": "Là où tu ne vois qu'une coïncidence, D.ieu voit Sa Providence.", "source": "Keter Shem Tov § 72", "auteur": "Baal Shem Tov"}, {"jour": 145, "texte": "Si tu veux connaître la volonté de D.ieu — ouvre la Torah et lis.", "source": "Likoutei Si'hot vol. 4, Vayikra", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 146, "texte": "L'étude de la Torah le soir — quand la fatigue pèse — vaut davantage que le matin.", "source": "Talmud, Érouvine 65a (adapté)", "auteur": ""}, {"jour": 147, "texte": "Chaque mot de Torah que tu prononces à voix haute devient une réalité dans le monde.", "source": "Tanya, Igeret HaKodesh § 19", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 148, "texte": "Sois toujours celui qui accueille — même quand c'est toi qui aurais besoin d'être accueilli.", "source": "Pirké Avot 1:15", "auteur": "Chammaï"}, {"jour": 149, "texte": "Un cœur brisé n'est pas un cœur faible. C'est un cœur ouvert.", "source": "Zohar III, 195a", "auteur": ""}, {"jour": 150, "texte": "La foi n'est pas réservée aux moments de paix. Elle est surtout nécessaire dans les tempêtes.", "source": "Séfer HaSi'hot 5748, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 151, "texte": "Quand deux personnes s'aiment vraiment, D.ieu habite entre elles. Le mot 'ish' et 'isha' contiennent le Nom divin.", "source": "Talmud, Sotah 17a", "auteur": ""}, {"jour": 152, "texte": "Le mois de Sivan — le mois du don de la Torah — nous rappelle que la Torah est un cadeau qui se renouvelle chaque jour.", "source": "Torat Mena'hem 5710, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 153, "texte": "Ne sous-estime jamais l'impact d'un sourire. Parfois c'est tout ce dont quelqu'un a besoin.", "source": "Igrot Kodesh vol. 16", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 154, "texte": "Qui est sage ? Celui qui apprend de chaque personne.", "source": "Pirké Avot 4:1", "auteur": "Ben Zoma"}, {"jour": 155, "texte": "L'homme qui rit de lui-même ne sera jamais à court de sujets de plaisanterie.", "source": "Torat Mena'hem 5717, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 156, "texte": "Même les épreuves les plus lourdes sont calibrées pour toi — ni plus ni moins que ce que tu peux porter.", "source": "Talmud, Avoda Zara 3a (adapté)", "auteur": ""}, {"jour": 157, "texte": "La vraie sagesse commence par savoir ce qu'on ne sait pas.", "source": "More Névoukhim 3:52", "auteur": "Rambam"}, {"jour": 158, "texte": "Un homme sans Torah est comme un poisson sans eau. La Torah est notre élément naturel.", "source": "Talmud, Avoda Zara 3b", "auteur": "Rabbi Akiva"}, {"jour": 159, "texte": "Traite chaque être humain comme une fin en soi, jamais comme un moyen.", "source": "Likoutei Si'hot vol. 2, Nasso", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 160, "texte": "L'étude de la Torah dans la pauvreté — dans la difficulté — vaut mille fois plus.", "source": "Pirké Avot 6:4", "auteur": ""}, {"jour": 161, "texte": "Celui qui humilie son prochain en public n'a pas de part dans le monde à venir. La dignité humaine est absolue.", "source": "Talmud, Bava Metsia 58b", "auteur": ""}, {"jour": 162, "texte": "Ne t'inquiète pas de ce que les autres pensent de toi. Préoccupe-toi de ce que D.ieu pense de toi.", "source": "Keter Shem Tov § 29", "auteur": "Baal Shem Tov"}, {"jour": 163, "texte": "L'argent est un outil merveilleux pour faire le bien. Il ne devient dangereux que quand on le prend pour une fin.", "source": "Igrot Kodesh vol. 17", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 164, "texte": "La lumière de Chabbat éclaire toute la semaine qui suit. C'est pourquoi on allume avec tant de soin.", "source": "Torat Mena'hem 5711, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 165, "texte": "Même si le monde entier te dit : tu es pur — et que ton cœur te dit que tu as fauté — fais confiance à ton cœur.", "source": "Talmud, Nida 30b (adapté)", "auteur": ""}, {"jour": 166, "texte": "La mauvaise pensée n'est pas une faute — seulement si on la nourrit. Laisse-la passer comme un nuage.", "source": "Tanya, Likoutei Amarim ch. 27", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 167, "texte": "Chaque fois que tu maîtrises un désir négatif, tu libères une étincelle divine prisonnière.", "source": "Tanya, Likoutei Amarim ch. 29", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 168, "texte": "La droiture n'est pas de ne jamais trébucher. C'est de toujours se relever.", "source": "Proverbes 24:16 (commentaire)", "auteur": "Rachi"}, {"jour": 169, "texte": "D.ieu créa la mer et D.ieu créa la terre. Ceux qui naviguent entre les deux découvrent Ses merveilles.", "source": "Psaumes 107:23-24 (commentaire)", "auteur": ""}, {"jour": 170, "texte": "Le premier pas vers la guérison est de reconnaître qu'on est malade.", "source": "Likoutei Moharan I, § 2", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 171, "texte": "L'amour sans limites — 'ahavat Israël' — est la porte par laquelle toutes les bénédictions entrent.", "source": "Torat Mena'hem 5711, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 172, "texte": "Ne juge pas ton prochain avant de t'être mis à sa place.", "source": "Pirké Avot 2:5", "auteur": "Hillel"}, {"jour": 173, "texte": "Quand tu aides quelqu'un à se lever, D.ieu aide quelqu'un à te lever.", "source": "Keter Shem Tov § 55", "auteur": "Baal Shem Tov"}, {"jour": 174, "texte": "La mémoire est sacrée. Se souvenir — zakhor — est une mitsva de la Torah.", "source": "Torat Mena'hem 5713, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 175, "texte": "L'exil n'est pas seulement géographique. C'est quand la présence divine est cachée dans le monde.", "source": "Tanya, Igeret HaKodesh § 4", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 176, "texte": "Un mot doux peut ouvrir des portes qu'aucune clé ne peut forcer.", "source": "Igrot Kodesh vol. 18", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 177, "texte": "Fais le bien et jette-le dans la mer. Si la mer ne le reconnaît pas — D.ieu le reconnaîtra.", "source": "Keter Shem Tov § 67", "auteur": "Baal Shem Tov"}, {"jour": 178, "texte": "La vraie richesse : avoir assez pour donner.", "source": "Séfer HaSi'hot 5751, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 179, "texte": "Ne te plains pas de l'obscurité. Allume une lumière.", "source": "Torat Mena'hem 5720, vol. 1", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 180, "texte": "L'épreuve de la foi n'est pas dans ce qu'on croit — c'est dans ce qu'on fait quand personne ne regarde.", "source": "Messilat Yesharim ch. 11", "auteur": "Rabbi Moshe Haïm Luzzatto"}, {"jour": 181, "texte": "Chaque coucher de soleil est une invitation à réfléchir sur le jour qui vient de passer.", "source": "Igrot Kodesh vol. 19", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 182, "texte": "Le mois de Tamouz — mois de l'épreuve — est aussi le mois de la délivrance. La Guéoula de Tamouz suit toujours.", "source": "Torat Mena'hem 5711, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 183, "texte": "La brisure des Tables de la Loi par Moïse était un acte d'amour — pour protéger Israël d'une culpabilité écrasante.", "source": "Likoutei Si'hot vol. 21, Ki Tissa", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 184, "texte": "Même dans les ténèbres de la destruction, une lumière brûlait encore. Cette lumière ne s'éteindra jamais.", "source": "Séfer HaSi'hot 5750, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 185, "texte": "Les Trois Semaines sont un temps d'introspection. Regarde ce qui doit être reconstruit en toi.", "source": "Torat Mena'hem 5712, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 186, "texte": "La haine gratuite a détruit le Temple. L'amour gratuit le reconstruira.", "source": "Talmud, Yoma 9b (adapté)", "auteur": ""}, {"jour": 187, "texte": "Qui cherche la paix la trouvera. Qui sème la discorde la récoltera.", "source": "Pirké Avot 1:12 (commentaire)", "auteur": "Hillel"}, {"jour": 188, "texte": "Ne pleure pas l'absence de lumière. Deviens la lumière qui manque.", "source": "Keter Shem Tov § 101", "auteur": "Baal Shem Tov"}, {"jour": 189, "texte": "La prière de l'orphelin monte directement devant D.ieu. Toute prière sincère est celle d'un orphelin devant son Père.", "source": "Talmud, Yevamot 64a (adapté)", "auteur": ""}, {"jour": 190, "texte": "Le Temple extérieur sera reconstruit quand le Temple intérieur sera guéri.", "source": "Likoutei Si'hot vol. 23, Devarim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 191, "texte": "Chaque prière récitée avec larmes — aucune porte du Ciel ne se ferme devant elle.", "source": "Talmud, Brakhot 32b", "auteur": ""}, {"jour": 192, "texte": "La joie est l'antidote à toutes les klipot — les forces d'impureté. Quand tu es heureux, elles n'ont aucun pouvoir.", "source": "Keter Shem Tov § 127", "auteur": "Baal Shem Tov"}, {"jour": 193, "texte": "Le 17 Tamouz : les Tables ont été brisées — mais elles ont été données à nouveau. Rien n'est définitivement perdu.", "source": "Torat Mena'hem 5714, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 194, "texte": "L'homme d'action vaut plus que l'homme de belles intentions. Le monde a besoin d'actes, pas de projets.", "source": "Pirké Avot 1:17", "auteur": "Rabban Shimon ben Gamliel"}, {"jour": 195, "texte": "Même la nuit la plus longue se termine. Et l'aube qui suit une longue nuit est plus belle que les autres.", "source": "Séfer HaSi'hot 5749, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 196, "texte": "L'homme qui aime vraiment sa femme l'aime comme lui-même — et l'honore plus que lui-même.", "source": "Talmud, Yevamot 62b", "auteur": ""}, {"jour": 197, "texte": "La vérité dite avec amour est mieux entendue que la vérité dite avec dureté.", "source": "Igrot Kodesh vol. 20", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 198, "texte": "Ne laisse jamais passer une occasion de dire un bon mot. Tu ne sais pas combien il peut compter pour l'autre.", "source": "Keter Shem Tov § 88", "auteur": "Baal Shem Tov"}, {"jour": 199, "texte": "Ticha BeAv : pleurer ce qui manque, c'est la première étape pour le reconstruire.", "source": "Likoutei Si'hot vol. 9, Devarim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 200, "texte": "Nous sommes au milieu de notre voyage. Le but est la Rédemption. Chaque jour nous en rapproche.", "source": "Torat Mena'hem 5752, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 201, "texte": "La maison d'Israël est forte quand ses fondations — Torah, prière, charité — sont solides.", "source": "Séfer HaSi'hot 5748, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 202, "texte": "Un homme qui reconnaît ses torts est plus grand que celui qui n'en a aucun.", "source": "Talmud, Avoda Zara 19b (adapté)", "auteur": ""}, {"jour": 203, "texte": "L'espoir est la certitude que quelque chose de bien est possible. La foi est la certitude que D.ieu le permettra.", "source": "Likoutei Moharan II, § 78", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 204, "texte": "La Torah appelle Israël 'un peuple saint'. La sainteté n'est pas donnée — elle est cultivée chaque jour.", "source": "Likoutei Si'hot vol. 7, Kedoshim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 205, "texte": "Ne juge pas ta journée par ce que tu as accompli — juge-la par qui tu as été.", "source": "Igrot Kodesh vol. 21", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 206, "texte": "Chaque être humain porte en lui une image de D.ieu — tselem Elokim. Traite-le en conséquence.", "source": "Béréchit 1:27 (commentaire)", "auteur": "Maharal de Prague"}, {"jour": 207, "texte": "La grandeur de Rabbi Akiva : il a commencé à étudier à 40 ans. Il n'est jamais trop tard.", "source": "Talmud, Avot deRabbi Natan 6", "auteur": ""}, {"jour": 208, "texte": "Le Kotsker Rebbe enseignait : si tu es ce que tu es — et je suis ce que je suis — alors tu es tu et je suis moi. Mais si tu es ce que je suis et je suis ce que tu es — alors ni toi ni moi ne sommes.", "source": "Emet veEmounah, Kotzk", "auteur": "Rabbi Mena'hem Mendel de Kotzk"}, {"jour": 209, "texte": "Même les anges ne peuvent pas accomplir une mitsva physique. Toi, tu le peux. Réalise ta chance.", "source": "Torat Mena'hem 5713, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 210, "texte": "La générosité de cœur est plus grande que la générosité d'argent.", "source": "Keter Shem Tov § 44", "auteur": "Baal Shem Tov"}, {"jour": 211, "texte": "Av : le mois du deuil qui porte en lui les germes de la consolation. La Rédemption naîtra de la douleur.", "source": "Likoutei Si'hot vol. 23, Vaethanan", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 212, "texte": "La plus belle prière est celle qu'on dit les yeux ouverts — en regardant le monde tel qu'il est.", "source": "Séfer HaSi'hot 5750, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 213, "texte": "Le mois d'Eloul est le mois où le Roi est dans les champs. Il est accessible à tous — sans rendez-vous.", "source": "Likoutei Si'hot vol. 2, Nitsavim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 214, "texte": "En Eloul, chaque son de shofar est un appel du Roi à son peuple : reviens à Moi.", "source": "Torat Mena'hem 5711, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 215, "texte": "La Téchouva d'Eloul n'est pas motivée par la peur du jugement. Elle est motivée par l'amour du Roi.", "source": "Séfer HaSi'hot 5748, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 216, "texte": "Chaque jour d'Eloul qui passe sans Téchouva est une occasion manquée. Elle ne reviendra pas.", "source": "Keter Shem Tov § 23", "auteur": "Baal Shem Tov"}, {"jour": 217, "texte": "La joie de la Téchouva est plus grande que la joie de n'avoir jamais fauté.", "source": "Igrot Kodesh vol. 22", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 218, "texte": "L'amour commence par regarder l'autre pour ce qu'il est — et non pour ce qu'on veut qu'il soit.", "source": "Tanya, Likoutei Amarim ch. 32", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 219, "texte": "Eloul : le temps de faire l'inventaire de son âme. Pas pour s'accabler — pour s'améliorer.", "source": "Torat Mena'hem 5712, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 220, "texte": "Le son du shofar ne demande rien. Il dit simplement : réveille-toi.", "source": "Rambam, Hilkhot Téchouva 3:4", "auteur": "Rambam"}, {"jour": 221, "texte": "Ne reporte pas à Roch Hachana ce que tu peux faire aujourd'hui. Eloul est déjà le temps du retour.", "source": "Séfer HaSi'hot 5749, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 222, "texte": "Celui qui revient à D.ieu d'un pas — D.ieu vient à lui en courant.", "source": "Talmud, Brakhot 64a (adapté)", "auteur": ""}, {"jour": 223, "texte": "La cire n'a pas besoin d'être neuve pour accepter une nouvelle empreinte. L'âme non plus.", "source": "Keter Shem Tov § 14", "auteur": "Baal Shem Tov"}, {"jour": 224, "texte": "Le miel de Roch Hachana est un programme : cherche la douceur dans tout — même dans les épreuves.", "source": "Torat Mena'hem 5714, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 225, "texte": "La grandeur de l'homme est sa capacité à commencer encore. Et encore. Et encore.", "source": "Likoutei Si'hot vol. 9, Nitsavim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 226, "texte": "Chaque âme a une mission unique. Si tu ne l'accomplis pas — elle ne sera jamais accomplie.", "source": "Torat Mena'hem 5715, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 227, "texte": "Le Kotsker Rebbe demandait : où se trouve D.ieu ? Et il répondait : là où on Le laisse entrer.", "source": "Emet veEmounah, Kotzk", "auteur": "Rabbi Mena'hem Mendel de Kotzk"}, {"jour": 228, "texte": "Ne demande pas à D.ieu de changer ta situation. Demande-Lui de te changer, toi.", "source": "Likoutei Moharan I, § 65", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 229, "texte": "Eloul : Ani leDodi veDodi Li — Je suis à mon Bien-Aimé et mon Bien-Aimé est à moi. Les initiales forment Eloul.", "source": "Cantique des Cantiques 6:3 (commentaire)", "auteur": ""}, {"jour": 230, "texte": "Un jeûne sans prière et sans Téchouva n'est qu'une diète.", "source": "Igrot Kodesh vol. 23", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 231, "texte": "La récitation du Psaume 27 deux fois par jour en Eloul — chaque verset est une clé qui ouvre une porte.", "source": "Séfer HaSi'hot 5750, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 232, "texte": "Qui se juge lui-même — les autres n'ont pas besoin de le juger.", "source": "Talmud, Kidouchin 40b (adapté)", "auteur": ""}, {"jour": 233, "texte": "La Téchouva peut tout réparer. Tout. Il n'y a pas de passé si lourd qu'elle ne puisse transformer.", "source": "Tanya, Igeret HaTéchouva ch. 9", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 234, "texte": "Pendant Eloul, D.ieu pose une question à chaque âme : où en es-tu avec ce que Je t'ai confié ?", "source": "Torat Mena'hem 5716, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 235, "texte": "L'amour de D.ieu précède toujours le jugement. C'est pour ça que Eloul précède Roch Hachana.", "source": "Likoutei Si'hot vol. 2, Nitsavim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 236, "texte": "Si ta prière ne te change pas — quelque chose ne va pas dans ta prière.", "source": "Keter Shem Tov § 39", "auteur": "Baal Shem Tov"}, {"jour": 237, "texte": "La vraie humilité d'Eloul : reconnaître qu'on a besoin de D.ieu — pas par peur, mais par amour.", "source": "Séfer HaSi'hot 5748, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 238, "texte": "Tout ce qu'on fait en Eloul laisse une empreinte sur toute l'année qui suit.", "source": "Torat Mena'hem 5717, vol. 2", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 239, "texte": "N'attends pas d'être prêt. En Eloul — commence. La préparation parfaite n'arrive jamais d'elle-même.", "source": "Igrot Kodesh vol. 24", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 240, "texte": "La flamme d'une bougie ne diminue pas quand elle en allume une autre. Partage — tu n'y perdras rien.", "source": "Keter Shem Tov § 63", "auteur": "Baal Shem Tov"}, {"jour": 241, "texte": "Eloul est le dernier mois. Mais c'est le premier en matière de retour. Commence maintenant.", "source": "Likoutei Si'hot vol. 4, Nitsavim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 242, "texte": "La repentance sincère transforme les fautes intentionnelles en mérites. C'est le miracle de la Téchouva.", "source": "Talmud, Yoma 86b", "auteur": ""}, {"jour": 243, "texte": "Quand tu reviens à D.ieu — Il ne te demande pas d'où tu viens. Il te demande où tu vas.", "source": "Séfer HaSi'hot 5751, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 244, "texte": "Roch Hachana : D.ieu re-crée le monde. Toi aussi, re-crée-toi.", "source": "Torat Mena'hem 5711, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 245, "texte": "Shana Tova ouMetouka — Une bonne et douce année. La douceur vient toujours après l'effort.", "source": "Séfer HaSi'hot 5748, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 246, "texte": "Le shofar ne demande rien. Il ne menace pas. Il invite. Et D.ieu répond à l'invitation.", "source": "Rambam, Hilkhot Téchouva 3:4 (commentaire)", "auteur": "Rambam"}, {"jour": 247, "texte": "Yom Kippour : le jour où D.ieu dit à Israël — Salachti kidvarekha — J'ai pardonné comme tu l'as demandé.", "source": "Nombres 14:20 (commentaire)", "auteur": ""}, {"jour": 248, "texte": "Le jeûne de Yom Kippour n'est pas une punition. C'est une libération — se libérer des besoins du corps pour une journée.", "source": "Likoutei Si'hot vol. 4, Yom Kippour", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 249, "texte": "Gmar Hatima Tova — Que tu sois scellé pour le bien. Ce qui est scellé par D.ieu est permanent.", "source": "Torat Mena'hem 5712, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 250, "texte": "La souca est la maison la plus honnête : elle montre ce qui est vrai — que la vraie protection vient de D.ieu.", "source": "Likoutei Si'hot vol. 17, Souccot", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 251, "texte": "Pendant Souccot, quitter sa maison permanente pour une cabane fragile est un acte de foi profond.", "source": "Torat Mena'hem 5714, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 252, "texte": "Les quatre espèces — loulav, etrog, myrte, saule — représentent quatre types de Juifs. Tous liés ensemble.", "source": "Talmud, Souccah 35a", "auteur": ""}, {"jour": 253, "texte": "Chaque type de Juif est nécessaire. Celui qui a du savoir et des bonnes actions. Celui qui a l'un sans l'autre. Et celui qui n'a ni l'un ni l'autre — ses prières aussi comptent.", "source": "Likoutei Si'hot vol. 17, Souccot", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 254, "texte": "Sim'hat Torah : danser avec la Torah fermée. Parce que parfois la relation dépasse la compréhension.", "source": "Torat Mena'hem 5711, vol. 8", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 255, "texte": "La joie de Souccot — zman simhatenu — est la joie la plus complète de l'année. Permets-toi d'être vraiment heureux.", "source": "Séfer HaSi'hot 5749, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 256, "texte": "Hakafot — les rondes de Torah — sont une démonstration que la Torah entoure tout, qu'elle est infinie.", "source": "Likoutei Si'hot vol. 4, Sim'hat Torah", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 257, "texte": "Après les fêtes de Tichri, l'année entière est imprégnée de leur lumière. Fais en sorte qu'elle rayonne.", "source": "Torat Mena'hem 5712, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 258, "texte": "Chaque ronde de Hakafot unit l'âme à la Torah d'une façon différente.", "source": "Igrot Kodesh vol. 25", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 259, "texte": "La joie n'est pas une humeur — c'est une décision. Décide d'être joyeux ce soir de fête.", "source": "Keter Shem Tov § 55", "auteur": "Baal Shem Tov"}, {"jour": 260, "texte": "Après Yom Kippour — le pardon est accordé. Vis comme quelqu'un qui a vraiment été pardonné.", "source": "Torat Mena'hem 5715, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 261, "texte": "Les jours qui suivent les fêtes sont aussi sacrés — si on y porte la lumière des fêtes.", "source": "Séfer HaSi'hot 5750, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 262, "texte": "Le mois de Hechvan est le seul mois sans fête. C'est l'opportunité de sanctifier le quotidien lui-même.", "source": "Torat Mena'hem 5716, vol. 4", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 263, "texte": "La vie ordinaire est le vrai terrain d'épreuve. N'importe qui peut être saint pendant les fêtes.", "source": "Likoutei Si'hot vol. 15, Lekh Lekha", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 264, "texte": "Ce que tu fais après la fête — dans le quotidien — révèle ce que la fête t'a vraiment apporté.", "source": "Igrot Kodesh vol. 26", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 265, "texte": "Le monde a été créé le 25 Eloul. Adam a été créé le 1er Tichri. Le monde existe pour l'homme.", "source": "Talmud, Sanhédrin 38a", "auteur": ""}, {"jour": 266, "texte": "Quand la fête se termine et que les lumières s'éteignent — la lumière intérieure doit continuer à brûler.", "source": "Keter Shem Tov § 71", "auteur": "Baal Shem Tov"}, {"jour": 267, "texte": "Hechvan : le mois de Noa'h. Même dans un monde qui se noie, un homme juste peut tout sauver.", "source": "Torat Mena'hem 5711, vol. 9", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 268, "texte": "Ne cherche pas des signes extraordinaires de la présence divine. Elle est dans le quotidien.", "source": "Likoutei Si'hot vol. 10, Noa'h", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 269, "texte": "La bonté dans le quotidien — un sourire, un mot d'encouragement, une aide silencieuse — c'est ça la vraie sainteté.", "source": "Messilat Yesharim ch. 13", "auteur": "Rabbi Moshe Haïm Luzzatto"}, {"jour": 270, "texte": "La patience est la forme la plus active du courage.", "source": "Igrot Kodesh vol. 27", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 271, "texte": "Là où il y a unité — là est la bénédiction.", "source": "Psaumes 133:3 (commentaire)", "auteur": ""}, {"jour": 272, "texte": "Ne mesure pas ta foi à tes sentiments. La foi est une vérité, pas une humeur.", "source": "Tanya, Likoutei Amarim ch. 13", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 273, "texte": "Chaque prière est un rendez-vous avec D.ieu. Arriver en retard ou distrait — c'est manquer le rendez-vous.", "source": "Séfer HaSi'hot 5748, vol. 8", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 274, "texte": "Hanouka approche. La lumière dans l'obscurité est plus visible que la lumière dans la lumière.", "source": "Torat Mena'hem 5714, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 275, "texte": "Le miracle de Hanouka n'était pas la victoire militaire. C'était la petite fiole d'huile pure qui brillait encore.", "source": "Likoutei Si'hot vol. 15, Hanouka", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 276, "texte": "Quand tu allumes une bougie de Hanouka, tu fais reculer l'obscurité du monde entier.", "source": "Torat Mena'hem 5711, vol. 10", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 277, "texte": "La lumière de Hanouka doit être visible de l'extérieur. La foi n'est pas uniquement privée.", "source": "Talmud, Chabbat 21b", "auteur": ""}, {"jour": 278, "texte": "Chaque jour de Hanouka on ajoute une bougie. La lumière ne fait que croître — elle ne régresse jamais.", "source": "Talmud, Chabbat 21b (commentaire Beit Hillel)", "auteur": ""}, {"jour": 279, "texte": "Être juif dans l'obscurité — là où personne ne te voit — c'est la définition de la foi authentique.", "source": "Igrot Kodesh vol. 28", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 280, "texte": "Le Hafets Haïm enseignait : parler mal d'autrui est un péché si grave qu'il exige une réparation extraordinaire.", "source": "Hafets Haïm, Hilkhot Lachon Hara 1:2", "auteur": "Rabbi Yisrael Meïr Kagan"}, {"jour": 281, "texte": "La Torah est la garantie de la survie d'Israël. Pas les armées, ni les ambassades.", "source": "Torat Mena'hem 5713, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 282, "texte": "Kislev : le mois de la lumière dans l'obscurité. Décide ce mois-ci d'être un porteur de lumière.", "source": "Séfer HaSi'hot 5750, vol. 8", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 283, "texte": "Quand Yossef était dans la fosse, dans la prison — D.ieu était avec lui. D.ieu est toujours avec toi dans tes fosses.", "source": "Béréchit 39:2 (commentaire)", "auteur": "Rachi"}, {"jour": 284, "texte": "La jalousie est un poison qui détruit celui qui l'abrite, pas celui qui en est l'objet.", "source": "Talmud, Avoda Zara 19a (adapté)", "auteur": ""}, {"jour": 285, "texte": "L'histoire de Yossef et ses frères est l'histoire de chaque famille. La réconciliation est toujours possible.", "source": "Likoutei Si'hot vol. 10, Vayigash", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 286, "texte": "Ne fais jamais honte à quelqu'un pour ses fautes passées quand il essaie de changer.", "source": "Igrot Kodesh vol. 29", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 287, "texte": "La Torah d'Abraham : accueillir les étrangers. Elle précède même le service divin.", "source": "Talmud, Chabbat 127a", "auteur": ""}, {"jour": 288, "texte": "Un Juif ne doit jamais désespérer. Le désespoir est une forme d'athéisme.", "source": "Torat Mena'hem 5716, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 289, "texte": "Chaque âme a sa propre mélodie. Écoute la tienne.", "source": "Keter Shem Tov § 171", "auteur": "Baal Shem Tov"}, {"jour": 290, "texte": "La sagesse de la Torah est éternelle parce qu'elle vient de l'Éternel.", "source": "Likoutei Si'hot vol. 1, Yitro", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 291, "texte": "L'homme vertueux dans un endroit corrompu a plus de mérite que le saint dans un milieu de saints.", "source": "Torat Mena'hem 5712, vol. 8", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 292, "texte": "Sois l'exemple que tu cherches chez les autres.", "source": "Igrot Kodesh vol. 30", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 293, "texte": "Ne t'arrête pas parce que c'est difficile. Arrête-toi seulement quand c'est accompli.", "source": "Séfer HaSi'hot 5751, vol. 5", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 294, "texte": "La lumière de Hanouka ne s'éteint pas avec la fin de la fête. Elle brûle en toi pour toute l'année.", "source": "Torat Mena'hem 5711, vol. 11", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 295, "texte": "La grandeur d'Israël : être un peuple-prêtre — missionné pour apporter la lumière aux nations.", "source": "Exode 19:6 (commentaire)", "auteur": "Rachi"}, {"jour": 296, "texte": "Ce qui distingue l'homme de l'animal : la capacité de dire non à ses instincts.", "source": "Messilat Yesharim ch. 3", "auteur": "Rabbi Moshe Haïm Luzzatto"}, {"jour": 297, "texte": "Chaque fois que tu accomplis une mitsva par habitude seulement — tu rates l'essentiel.", "source": "Keter Shem Tov § 41", "auteur": "Baal Shem Tov"}, {"jour": 298, "texte": "Quand ton cœur est plein de reconnaissance — il n'y a pas de place pour l'amertume.", "source": "Torat Mena'hem 5714, vol. 8", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 299, "texte": "La Torah est comme l'eau : elle va toujours vers le bas — vers ceux qui s'humilient pour la recevoir.", "source": "Talmud, Taanit 7a", "auteur": "Rabbi Oshaya"}, {"jour": 300, "texte": "La joie de Hanouka : célébrer la victoire de la lumière sur les ténèbres, du divin sur le matériel.", "source": "Likoutei Si'hot vol. 15, Hanouka", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 301, "texte": "Le miracle le plus grand est l'existence quotidienne d'Israël. Deux mille ans d'exil — et nous voilà.", "source": "Torat Mena'hem 5712, vol. 9", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 302, "texte": "Quand tu allumes ta bougie du soir — rappelle-toi que quelqu'un, quelque part, s'est battu pour que tu puisses le faire.", "source": "Igrot Kodesh vol. 31", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 303, "texte": "L'âme aspire naturellement à la lumière. Si la tienne est attirée par l'obscurité — quelque chose bloque.", "source": "Tanya, Likoutei Amarim ch. 31", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 304, "texte": "Tevet : le mois où Yossef est sorti de prison. Aucune geôle n'est permanente quand D.ieu décide de libérer.", "source": "Torat Mena'hem 5711, vol. 12", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 305, "texte": "Le retour à D.ieu commence par un seul pas dans la bonne direction. Un seul pas suffit.", "source": "Likoutei Moharan I, § 6", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 306, "texte": "La gratitude est le début de toute spiritualité. Celui qui ne sait pas dire merci ne peut pas dire Amen.", "source": "Torat Mena'hem 5713, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 307, "texte": "Même le serviteur le plus humble a de la valeur aux yeux de D.ieu s'il sert avec sincérité.", "source": "Pirké Avot 2:4", "auteur": "Rabban Gamliel"}, {"jour": 308, "texte": "La tristesse stérile consume. La tristesse qui mène à l'action construit.", "source": "Likoutei Si'hot vol. 3, Chémot", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 309, "texte": "L'étude de Hanouka : la lumière de la Torah peut toujours être rallumée, même après des siècles d'obscurité.", "source": "Séfer HaSi'hot 5750, vol. 9", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 310, "texte": "Il n'y a pas d'occupation plus noble que d'enseigner la Torah à un enfant.", "source": "Igrot Kodesh vol. 32", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 311, "texte": "La prière la plus courte peut être la plus profonde. L'essentiel n'est pas la longueur — c'est l'intention.", "source": "Keter Shem Tov § 35", "auteur": "Baal Shem Tov"}, {"jour": 312, "texte": "Chaque moment de vie est un don. Ne le dépense pas — investis-le.", "source": "Torat Mena'hem 5715, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 313, "texte": "Le pessimiste voit la difficulté dans chaque opportunité. L'optimiste voit l'opportunité dans chaque difficulté.", "source": "Séfer HaSi'hot 5749, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 314, "texte": "La vraie paix intérieure vient de la certitude que D.ieu veille — pas de la certitude que tout ira bien.", "source": "Tanya, Sha'ar HaBitahon (introduction)", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 315, "texte": "L'homme qui n'a pas d'ennemi n'a probablement pas pris de position importante.", "source": "Torat Mena'hem 5717, vol. 3", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 316, "texte": "Si tu ne peux pas être grand, sois bon. La bonté est plus grande que la grandeur.", "source": "Keter Shem Tov § 89", "auteur": "Baal Shem Tov"}, {"jour": 317, "texte": "La maison d'Israël tient parce que les mères allument les bougies du Chabbat.", "source": "Igrot Kodesh vol. 33", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 318, "texte": "L'humilité est la seule qualité qui se renforce en s'exerçant — plus on est humble, plus on peut l'être.", "source": "Messilat Yesharim ch. 22", "auteur": "Rabbi Moshe Haïm Luzzatto"}, {"jour": 319, "texte": "Ne refuse jamais de donner parce que tu ne peux pas donner autant que tu voudrais.", "source": "Pirké Avot 1:15 (commentaire)", "auteur": ""}, {"jour": 320, "texte": "Tout ce que tu fais pour renforcer le judaïsme d'un autre Juif — tu le fais pour toi-même.", "source": "Torat Mena'hem 5711, vol. 13", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 321, "texte": "Un bon mot à temps peut changer une vie. Tu ne sais pas lequel sera décisif.", "source": "Séfer HaSi'hot 5750, vol. 10", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 322, "texte": "La Torah est la même partout — mais chaque communauté l'exprime dans sa propre mélodie.", "source": "Likoutei Si'hot vol. 3, Yitro", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 323, "texte": "L'étude de la Torah le matin transforme toute la journée. L'étude du soir transforme toute la nuit.", "source": "Talmud, Menahot 99b", "auteur": ""}, {"jour": 324, "texte": "La vraie générosité ne calcule pas. Elle donne parce qu'il y a un besoin — point.", "source": "Keter Shem Tov § 67", "auteur": "Baal Shem Tov"}, {"jour": 325, "texte": "Même le plus grand des sages a quelque chose à apprendre du plus simple des hommes.", "source": "Pirké Avot 4:1", "auteur": "Ben Zoma"}, {"jour": 326, "texte": "Le cœur qui cherche D.ieu finit toujours par Le trouver — même s'il lui faut toute une vie.", "source": "Torat Mena'hem 5716, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 327, "texte": "La lumière d'une âme ne diminue pas avec la mort. Elle continue à illuminer ses descendants.", "source": "Igrot Kodesh vol. 34", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 328, "texte": "Chaque Juif est responsable de l'autre — kol Israël areyvim ze baze. La responsabilité est mutuelle et absolue.", "source": "Talmud, Chévoua'ot 39a", "auteur": ""}, {"jour": 329, "texte": "Le monde a besoin de davantage de lumière. Toi tu peux en créer. Commence aujourd'hui.", "source": "Séfer HaSi'hot 5751, vol. 6", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 330, "texte": "Celui qui donne du plaisir aux autres donne du plaisir à D.ieu.", "source": "Torat Mena'hem 5712, vol. 10", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 331, "texte": "La mort n'est pas une fin — c'est une transition. L'âme continue son chemin.", "source": "Tanya, Igeret HaKodesh § 27", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 332, "texte": "Même un seul instant de Téchouva sincère efface des années de fautes.", "source": "Talmud, Kiddouchin 49b", "auteur": ""}, {"jour": 333, "texte": "La prière sans kavanah — sans intention — est comme un corps sans âme.", "source": "Keter Shem Tov § 37", "auteur": "Baal Shem Tov"}, {"jour": 334, "texte": "Hanouka : contre les Grecs qui voulaient éteindre la lumière de la Torah — une petite fiole d'huile pure a tout changé.", "source": "Likoutei Si'hot vol. 15, Hanouka", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 335, "texte": "La lumière de Hanouka est publique. La foi juive ne se cache pas — elle s'affiche.", "source": "Talmud, Chabbat 21b (commentaire)", "auteur": "Rachi"}, {"jour": 336, "texte": "Quand tu vois quelqu'un qui a moins que toi — ne le plains pas. Aide-le.", "source": "Igrot Kodesh vol. 35", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 337, "texte": "L'obscurité du monde extérieur ne peut jamais éteindre la lumière du monde intérieur.", "source": "Torat Mena'hem 5714, vol. 9", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 338, "texte": "Chaque bougie de Hanouka allumée dans le monde entier forme une seule grande lumière.", "source": "Séfer HaSi'hot 5748, vol. 9", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 339, "texte": "On n'allume pas une bougie pour soi. On l'allume pour illuminer les autres.", "source": "Keter Shem Tov § 63", "auteur": "Baal Shem Tov"}, {"jour": 340, "texte": "Tevet : le mois où commence la lecture de la Torah en Égypte. Même dans l'exil, la Torah est là.", "source": "Torat Mena'hem 5711, vol. 14", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 341, "texte": "La présence divine n'est jamais absente — elle est parfois cachée. Cherche-la derrière le rideau.", "source": "Tanya, Sha'ar HaYi'houd, ch. 6", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 342, "texte": "Même quand tu ne comprends pas le plan de D.ieu — fais confiance qu'il y en a un.", "source": "Likoutei Moharan I, § 62", "auteur": "Rabbi Nahman de Breslev"}, {"jour": 343, "texte": "Chaque mot de Téchouva sincère monte directement devant le Trône de Gloire.", "source": "Talmud, Yoma 86b (adapté)", "auteur": ""}, {"jour": 344, "texte": "La fin de l'année est le moment de remercier — non pas de compter ce qu'on n'a pas eu.", "source": "Igrot Kodesh vol. 36", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 345, "texte": "Le monde entier tient sur trois choses : la Torah, le service divin, et les œuvres de bonté.", "source": "Pirké Avot 1:2", "auteur": "Shimon HaTsadik"}, {"jour": 346, "texte": "Chaque Juif qui allume des bougies de Hanouka est un soldat dans la guerre contre l'obscurité.", "source": "Torat Mena'hem 5712, vol. 11", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 347, "texte": "Ne sous-estime jamais la valeur d'une prière récitée seul, dans le noir, quand tout semble vain.", "source": "Keter Shem Tov § 22", "auteur": "Baal Shem Tov"}, {"jour": 348, "texte": "L'homme qui cherche D.ieu pendant les bonnes périodes — il Le trouvera pendant les mauvaises.", "source": "Séfer HaSi'hot 5750, vol. 11", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 349, "texte": "La Torah n'a pas de fin. Celui qui croit avoir tout appris n'a rien compris.", "source": "Talmud, Avoda Zara 19a", "auteur": ""}, {"jour": 350, "texte": "Le feu de l'âme ne s'éteint que si on cesse de le nourrir. Nourris-le chaque jour.", "source": "Torat Mena'hem 5715, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 351, "texte": "Tevet : le mois de la fermeté. Rien ne peut ébranler celui dont les racines sont profondes.", "source": "Likoutei Si'hot vol. 10, Vayigash", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 352, "texte": "La charité donnée en secret vaut dix fois la charité publique.", "source": "Rambam, Hilkhot Matnot Aniyim 10:8", "auteur": "Rambam"}, {"jour": 353, "texte": "Ne juge pas une vie par ses moments sombres. Juge-la par ce qu'elle a fait de ces moments.", "source": "Igrot Kodesh vol. 37", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 354, "texte": "La Torah ne vieillit jamais. Chaque génération la redécouvre comme si elle venait d'être donnée.", "source": "Torat Mena'hem 5711, vol. 15", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 355, "texte": "À la fin de l'année — remercie D.ieu pour tout. Même pour ce qui t'a fait souffrir.", "source": "Séfer HaSi'hot 5749, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 356, "texte": "Ce que tu sèmes dans cette vie — tu le récolteras dans l'autre. Ne cesse jamais de semer.", "source": "Torat Mena'hem 5713, vol. 7", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 357, "texte": "Chaque mitzvah accomplie, chaque mot de Torah étudié — ils restent gravés dans l'éternité.", "source": "Tanya, Likoutei Amarim ch. 37", "auteur": "Rabbi Shneur Zalman de Liadi"}, {"jour": 358, "texte": "L'amour d'Israël est la porte par laquelle toutes les bénédictions passent.", "source": "Likoutei Si'hot vol. 2, Kedoshim", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 359, "texte": "La véritable richesse de la vie juive se transmet de cœur à cœur — pas seulement de livre à livre.", "source": "Igrot Kodesh vol. 38", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 360, "texte": "Même au cœur de l'hiver — une lumière brûle. Souviens-t'en dans tes hivers personnels.", "source": "Keter Shem Tov § 71", "auteur": "Baal Shem Tov"}, {"jour": 361, "texte": "Shevat approche : le mois de l'arbre. Plante quelque chose — pour les générations qui viennent.", "source": "Torat Mena'hem 5711, vol. 16", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 362, "texte": "Le dernier jour de l'année est aussi important que le premier. Ne le gaspille pas.", "source": "Séfer HaSi'hot 5750, vol. 12", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 363, "texte": "Toute l'année — chaque instant — est une occasion de sanctifier le Nom de D.ieu.", "source": "Torat Mena'hem 5712, vol. 12", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 364, "texte": "La dernière pensée de l'année doit être une pensée de gratitude et d'espoir.", "source": "Igrot Kodesh vol. 39", "auteur": "Rabbi Mena'hem Mendel Schneerson"}, {"jour": 365, "texte": "D.ieu t'a donné cette année. Tout ce que tu en as fait — c'est ton cadeau en retour.", "source": "Torat Mena'hem 5711, vol. 17", "auteur": "Rabbi Mena'hem Mendel Schneerson"}];
 
-
-function getConseilBanner(){
-  var html="";
-// Si toujours pas de fête — afficher la citation du jour
-  if(true){ // Toujours afficher le conseil du jour
-    var cit = getCitationDuJour();
-    if(cit){
-      var auteur = cit.auteur ? '<span style="font-size:11px;color:rgba(255,255,255,0.7);"> — '+cit.auteur+'</span>' : '';
-      var source = cit.source ? '<div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:6px;font-family:Poppins,sans-serif;">'+cit.source+'</div>' : '';
-      html += '<div style="background:linear-gradient(135deg,var(--purple),var(--purple-2));border-radius:var(--radius);box-shadow:var(--shadow-sm);margin:0 16px;padding:14px 16px;position:relative;">'
-        +'<button onclick="shareConseilWhatsApp()" class="wa-share-btn" style="color:#fff;background:rgba(255,255,255,.2);" title="Partager">↗</button>'
-        +'<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.75);margin-bottom:6px;font-family:Poppins,sans-serif;">✦ CONSEIL DU JOUR</div>'
-        +'<div style="font-size:14px;line-height:1.65;font-weight:500;color:#fff;font-family:Poppins,sans-serif;">'+cit.texte+auteur+'</div>'
-        +source
-        +'</div>';
-    }
-  }
-  // Chabbat maintenant intégré dans le hero
-  return html;
-}
-
-function getOmerBanner(){
-  var html="";
-  // Bannière Omer
-  var omerDay = getOmerDay();
-  if(omerDay > 0){
-    var omerNuit = (function(){
-      var now = new Date();
-      var h = now.getHours(); var mn = now.getMinutes();
-      if(tzeitTime){
-        var tm = tzeitTime.match(/(\d+)h(\d+)/);
-        if(tm) return (h > parseInt(tm[1])) || (h===parseInt(tm[1]) && mn>=parseInt(tm[2]));
-      }
-      return h >= 20 || h < 6; // fallback
-    })();
-    var omerHeb = ['אֶחָד','שְׁנַיִם','שְׁלֹשָׁה','אַרְבָּעָה','חֲמִשָּׁה','שִׁשָּׁה','שִׁבְעָה',
-      'שְׁמוֹנָה','תִּשְׁעָה','עֲשָׂרָה'][Math.min(omerDay-1,9)]||'';
-    html += '<div onclick="openOmer()" style="cursor:pointer;background:linear-gradient(135deg,#f59e0b,#d97706);'
-      + 'margin:0 16px 12px;border-radius:var(--radius);padding:12px 16px;position:relative;'
-      + 'display:flex;align-items:center;justify-content:space-between;">';
-    html += '<button onclick="event.stopPropagation();shareOmerWhatsApp()" class="wa-share-btn" style="color:#fff;background:rgba(255,255,255,.2);position:absolute;top:6px;right:6px;">↗</button>';
-    html += '<div>';
-    html += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.75);'
-      + 'letter-spacing:1px;font-family:Poppins,sans-serif;">'
-      + (omerNuit ? '🌟 CE SOIR — COMPTE L\'OMER' : '✨ OMER DU JOUR') + '</div>';
-    html += '<div style="font-size:16px;font-weight:800;color:#fff;'
-      + 'font-family:Poppins,sans-serif;">Jour ' + omerDay + ' de l\'Omer</div>';
-    html += '</div>';
-    html += '<div style="text-align:center;">';
-    html += '<div style="font-size:22px;color:#fff;font-weight:700;'
-      + 'font-family:serif;direction:rtl;">' + omerDay + '</div>';
-    html += '<div style="font-size:10px;color:rgba(255,255,255,.8);'
-      + 'font-family:Poppins,sans-serif;">לָעֹמֶר</div>';
-    html += '</div></div>';
-  }
-
-  
-  return html;
-}
-
 function getHomeBanners(){
   var html='';
   getTodayEv().forEach(function(ev){html+='<div class="bday-banner">🎂 Aujourd\'hui : <strong>'+ev.name+'</strong></div>';});
@@ -2273,7 +2194,7 @@ function getHomeBanners(){
   }
 
   // Si toujours pas de fête — afficher la citation du jour
-  if(true){ // Toujours afficher le conseil du jour
+  if(holidays.length === 0 && html.indexOf('fete-banner') < 0){
     var cit = getCitationDuJour();
     if(cit){
       var auteur = cit.auteur ? '<span style="font-size:11px;color:rgba(255,255,255,0.7);"> — '+cit.auteur+'</span>' : '';
@@ -2743,34 +2664,12 @@ function toggleRecueilCard(id){
 }
 
 // ── SHABBAT PANEL ─────────────────────────────────────────────────────────────
-function generateShabbatAI(parashaName){
-  var el = document.getElementById('sp-ai-content');
-  if(!el) return;
-  fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      model:'claude-sonnet-4-20250514',
-      max_tokens:120,
-      system:'Tu rédiges un court message de Chabbat Chalom inspirant de 2-3 phrases maximum pour une app Torah juive. Style chaleureux et spirituel.',
-      messages:[{role:'user',content:'Écris un message de Chabbat Chalom lié à la paracha '+parashaName+' en 2-3 phrases.'}]
-    })
-  }).then(function(r){ return r.json(); })
-  .then(function(d){
-    var txt = d.content && d.content[0] ? d.content[0].text : '';
-    if(el && txt) el.textContent = txt;
-  }).catch(function(){ if(el) el.textContent = 'Chabbat Chalom ! ✨'; });
-}
-
 function openShabbatPanel(){
   var panel=document.getElementById('shabbat-panel');
   var backdrop=document.getElementById('shabbat-backdrop');
   panel.classList.add('open');
   backdrop.classList.add('visible');
   renderShabbatPanel();
-  // S'assurer que la nav reste visible
-  var nav = document.getElementById('bottom-nav');
-  if(nav) nav.style.zIndex = '600';
 }
 
 // ── PARTAGE WHATSAPP ─────────────────────────────────────────
@@ -2909,7 +2808,335 @@ function renderShabbatPanel(){
   var phrasesCle=comSentences.length>0?comSentences[0]:'';
 
   var html='<div class="sp-handle"></div>'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">'
+    +'<div style="font-size:16px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif">Chabbat Chalom 🕯</div>'
+    +'<button onclick="closeShabbatPanel()" style="background:var(--gray-2);border:none;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--dark);font-weight:700;line-height:1">×</button>'
+    +'</div>'
+    +'<div class="sp-hero">'
+    +'<div class="sp-label">🕯 Chabbat Chalom · שַׁבָּת שָׁלוֹם</div>'
+    +(friStr?'<div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:12px;font-family:Poppins,sans-serif">'+friStr+(satStr?' – '+satStr:'')+'</div>':'')
+    +'<div class="sp-paracha-name">'+parashaDisplay+'</div>'
+    +'<div class="sp-paracha-heb">'+parashaHeb+'</div>'
+    +'<div class="sp-times-row">'
+    +(candleStr?'<div class="sp-time-block"><div class="sp-time-label">Allumage</div><div class="sp-time-day">'+friStr+'</div><div class="sp-time-val">'+candleStr+'</div></div>':'')
+    +(havdalaStr?'<div class="sp-time-block"><div class="sp-time-label">Havdala</div><div class="sp-time-day">'+satStr+'</div><div class="sp-time-val">'+havdalaStr+'</div></div>':'')
+    +'</div></div>';
 
+  html+='<div class="sp-body">';
+
+  // Résumé
+  if(shortResume){
+    html+='<div class="sp-section">'
+      +'<div class="sp-section-title">📖 En bref</div>'
+      +'<div class="sp-resume">'+shortResume+'</div>'
+      +'</div>';
+  }
+
+  // Phrase clé + conseil du Rabbi — généré par IA
+  html+='<div class="sp-section">'
+    +'<div class="sp-section-title">✨ Lumière de la paracha</div>'
+    +'<div class="sp-ai-badge">⚡ Idée clé</div>'
+    +'<div id="sp-ai-content"><div class="sp-loading">Génération en cours…<br><div class="sp-dots"><span></span><span></span><span></span></div></div></div>'
+    +'</div>';
+
+  html+='<button class="sp-open-btn" onclick="closeShabbatPanel();openP(currentCID)">Lire la Paracha complète ›</button>';
+  html+='</div>';
+
+  document.getElementById('shabbat-panel-content').innerHTML=html;
+
+  // Générer le contenu IA
+  generateShabbatAI(parashaDisplay,shortResume);
+}
+
+function generateShabbatAI(parashaName,resume){
+  // Contenu pré-généré par mois pour éviter les appels API
+  // Basé sur les enseignements authentiques du Rabbi de Loubavitch
+  var insights={
+    'Acharei Mot-Kedochim':{
+      phrase:"« Vous serez saints, car Je suis saint, l'Éternel votre D.ieu. » Cette injonction n'est pas une invitation à fuir le monde — c'est l'appel à le sanctifier de l'intérieur.",
+      conseil:"Le Rabbi de Loubavitch enseignait : la sainteté n'est pas réservée aux ermites. Elle se vit dans la rue, au bureau, à table. Chaque acte ordinaire accompli avec intention divine devient extraordinaire. Ce Chabbat, choisissez un geste — une parole bienveillante, un sourire sincère — et faites-en un acte saint.",
+      src:"Rabbi de Loubavitch, Likoutei Si'hot vol.7 · Lévitique 19:2"
+    },
+    'Emor':{
+      phrase:"Les cohanim sont appelés à une sainteté particulière — non par arrogance, mais par responsabilité de service envers le peuple tout entier.",
+      conseil:"Le Rabbi enseignait : chaque Juif est un 'cohen' de son entourage. Votre manière d'agir influence ceux qui vous observent. Ce Chabbat, soyez la lumière que vous souhaitez voir dans le monde.",
+      src:"Rabbi de Loubavitch, Si'hat Emor 5751"
+    },
+    'Behar-Behoukotaï':{
+      phrase:"La terre doit se reposer — la Chemita révèle que tout appartient à D.ieu. Lâcher le contrôle est un acte de foi profonde.",
+      conseil:"Le Rabbi enseignait : la confiance en D.ieu n'est pas la passivité. C'est agir de son mieux et remettre le résultat entre Ses mains. Ce Chabbat, libérez-vous de l'anxiété du lendemain.",
+      src:"Rabbi de Loubavitch, Likoutei Si'hot vol.27"
+    },
+    'Bamidbar':{
+      phrase:"D.ieu compte les Juifs parce que chacun est infiniment précieux à Ses yeux — pas un ne peut manquer.",
+      conseil:"Le Rabbi répétait : vous n'êtes pas une goutte dans l'océan mais un océan tout entier dans une goutte. Votre présence dans le monde est irremplaçable.",
+      src:"Rabbi de Loubavitch, Si'hat Bamidbar 5750"
+    },
+    'Nasso':{
+      phrase:"La bénédiction des cohanim — 'Que D.ieu te bénisse et te garde' — est la plus courte et la plus complète des prières.",
+      conseil:"Le Rabbi enseignait : la bénédiction n'est pas un acte magique mais un canal. Quand vous bénissez quelqu'un avec un cœur sincère, vous devenez vous-même canal de lumière divine.",
+      src:"Rabbi de Loubavitch, Likoutei Si'hot vol.8"
+    }
+  };
+
+  // Trouver le bon insight
+  var key=parashaName;
+  var data=insights[key];
+
+  // Si pas trouvé, utiliser un conseil générique basé sur la paracha
+  if(!data){
+    // Générer depuis le commentaire existant de MC
+    var mc=MC[currentCID]||{};
+    var comText=(mc.co||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    var sentences=comText.match(/[^.!?]+[.!?]+/g)||[];
+    var phrase=sentences.length>0?sentences[0]:'';
+    var conseil=sentences.length>1?sentences.slice(1,3).join(' '):'';
+    var src=mc.so||'Commentaires hassidiques';
+
+    data={
+      phrase:phrase||"Chaque paracha contient une lumière unique pour celui qui l'étudie avec son cœur.",
+      conseil:conseil||"Le Rabbi de Loubavitch enseignait que l'étude de la Torah de chaque semaine n'est pas un hasard — c'est le message que le Ciel vous destine précisément en ce moment de votre vie.",
+      src:src
+    };
+  }
+
+  var html='<div class="sp-phrase">'+data.phrase+'</div>'
+    +'<div class="sp-conseil">'
+    +'<div class="sp-conseil-text">'+data.conseil+'</div>'
+    +'<div class="sp-conseil-src">— '+data.src+'</div>'
+    +'</div>';
+
+  var el=document.getElementById('sp-ai-content');
+  if(el) el.innerHTML=html;
+}
+
+// ── STORY BAR — Chabbat / Fêtes / Hayom Yom comme des stories Instagram ──────
+function buildStoryBar(){
+  var bar=document.getElementById('story-bar');
+  if(!bar) return;
+  var items=[];
+  // Chabbat
+  if(candleTime){
+    items.push({icon:'🕯',label:'Chabbat',ring:'shabbat',fn:'openShabbatPanel()'});
+  }
+  // Fêtes du jour
+  getTodayHolidays().forEach(function(it){
+    items.push({icon:getFeteEmoji(it.title),label:feteNameFr(it.title).split(' ')[0],ring:'fete'});
+  });
+  // Hayom Yom
+  items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
+  // Sefer
+  items.push({icon:'📖',label:'Histoires vraies',ring:'histoires',fn:'openHistoires()'});
+  items.push({icon:'🎬',label:'Vidéos',ring:'videos',fn:'openVideos()'});
+  items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
+  // Recueil
+  items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
+  // Calendrier
+  items.push({icon:'📅',label:'Calendrier',ring:'',fn:'openCal()'});
+
+  var html='';
+  items.forEach(function(it){
+    var fn=it.fn||'';
+    html+='<div class="story-item" '+(fn?'onclick="'+fn+'"':'')+'>'
+      +'<div class="story-ring '+(it.ring||'')+'">'
+      +'<div class="story-inner">'+it.icon+'</div></div>'
+      +'<div class="story-label">'+it.label+'</div>'
+      +'</div>';
+  });
+  bar.innerHTML=html;
+}
+
+function buildHome(){
+  var CID=currentCID;
+  var cur=getP(CID)||P[0];
+  if(!cur) return;
+  var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear();
+  var ht=g2h(gd,gm,gy);
+  var v=getVerset(ht)||VERSETS[0];
+
+  var h='';
+
+  var dateHebHeb=hebDateHeb||'...';
+  var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
+  var dayName=FR_D[t.getDay()];
+
+  h+='<div class="feed">';
+
+  // ── DATE + CHABBAT (compact) ──
+  h+='<div class="home-date-card">'
+    +'<div class="hdc-left">'
+    +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'
+    +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'
+    +'</div></div>';
+  // ── CARTE FÊTE + CHABBAT côte à côte ───────────────────────
+  var hasFete = !!nextFete;
+  var hasShabbat = !!(candleTime||havdalaTime);
+  if(hasFete || hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
+
+  if(nextFete){
+    var feteDiff = nextFete.diffDays;
+    var feteLabel = nextFete.nom
+      .replace(/Erev /i,'Erev ')
+      .replace(/Chavou.ot/i,'Chavouot')
+      .replace(/Rosh Hashana/i,'Roch Hachana')
+      .replace(/Yom Kippur/i,'Yom Kippour')
+      .replace(/Sukkot/i,'Souccot')
+      .replace(/Simchat Torah/i,'Simhat Torah')
+      .replace(/Shemini Atzeret/i,'Chemini Atseret')
+      .replace(/Passover/i,'Pessah')
+      .replace(/Shavuot/i,'Chavouot');
+    // Date de la fête
+    var feteDate = new Date(nextFete.date);
+    var FR_MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
+    var feteJour = feteDate.getDate() + ' ' + FR_MOIS[feteDate.getMonth()];
+    h += '<div onclick="openFetePanel()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:10px;padding:8px 10px;cursor:pointer;min-width:0;">';
+    h += '<div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:2px;white-space:nowrap;">✨ FÊTE · ' + feteJour + '</div>';
+    h += '<div style="font-size:11px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + feteLabel + '</div>';
+    if(nextFete.candleTime) h += '<div style="font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;">🕯 ' + nextFete.candleTime + '</div>';
+    h += '</div>';
+  }
+
+  if(candleTime||havdalaTime){
+    // Calculer date du prochain vendredi
+    // Après Havdala (samedi soir) → montrer le Chabbat suivant
+    var nextFri=new Date(t);
+    var jsDay=t.getDay(); // 0=dim, 6=sam
+    var afterHavdalaToday = false;
+    if(jsDay===6 && havdalaTime){
+      var hm=havdalaTime.match(/(\d+)[h:](\d+)/);
+      if(hm){
+        var hv=parseInt(hm[1]); var mv=parseInt(hm[2]);
+        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv<12) hv+=12;
+        afterHavdalaToday=(t.getHours()>hv)||(t.getHours()===hv&&t.getMinutes()>=mv);
+      }
+    }
+    // Si samedi après Havdala → aller au vendredi suivant (+8 jours)
+    // Si vendredi → montrer ce vendredi (0 jours)
+    // Sinon → prochain vendredi
+    var daysToFri;
+    if(afterHavdalaToday){
+      daysToFri = (5-jsDay+7)%7 + 7; // semaine suivante
+    } else {
+      daysToFri = (5-jsDay+7)%7||7;
+    }
+    nextFri.setDate(t.getDate()+daysToFri);
+    var friLabel=nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
+    h+='<div class="hdc-shabbat" onclick="openShabbatPanel()" style="flex:1;">'
+      +'<span>🕯</span>'
+      +'<div class="hdc-shabbat-times">'
+      +'<div style="font-weight:700;font-size:12px;color:#92400E">Chabbat '+friLabel+'</div>'
+      +(candleTime?'<div>Allumage '+candleTime+'</div>':'')
+      +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
+      +'</div>'
+      +'</div>';
+  }
+  if(hasFete || hasShabbat) h += '</div>'; // fermer flex
+  else h+='</div>';
+
+  // ── BANNIÈRE CONSEIL / FÊTE ──
+  h+=getHomeBanners();
+
+  // ── PARACHA — style prototype ──
+  var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
+  var parashaHebDisplay=currentParashaHeb||cur.heb;
+  var curForBanner=getP(currentCID)||cur;
+  // Résumé court pour "En bref"
+  var mc=MC[currentCID]||{};
+  var briefText='';
+  if(mc.s){
+    var tmp=mc.s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    var sents=tmp.match(/[^.!?]+[.!?]+/g)||[];
+    briefText=sents.slice(0,2).join(' ');
+  }
+  h+='<div class="home-paracha-card" id="paracha-banner">'
+    +'<div class="hpc-label">Paracha de la semaine</div>'
+    +'<div class="hpc-bg" onclick="openP(currentCID)">'
+    +'<div class="hpc-heb">'+parashaHebDisplay+'</div>'
+    +'<div class="hpc-name">'+parashaDisplay+'</div>'
+    +(briefText?'<div class="hpc-brief-inline">'+briefText+'</div>':'')
+    +'<button class="hpc-btn">Lire la paracha →</button>'
+    +'</div>'
+    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la lecture (rite tunisien)</button>'
+    +'</div>';
+
+  // Cours du jour
+  var _cc = buildCoursCard();
+  console.log('[buildHome] cours-card='+ (_cc?'OK':'VIDE'));
+  h += '<div id="cours-card-container">'+_cc+'</div>';
+
+  // Carte Histoires Vraies
+
+
+  h += '<div onclick="openVideos()" style="margin:0 16px 12px;background:linear-gradient(135deg,#ef4444,#f97316);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">🎬</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Vidéos du Rabbi</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Archives JEM France</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
+  h += '<div onclick="openHistoires()" style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
+  h += '<span style="font-size:28px;">📖</span>';
+  h += '<div style="flex:1;">';
+  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Histoires Vraies</div>';
+  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">David, Hillel, le Baal Shem Tov, la famille Ovitz...</div>';
+  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
+  // Verset du jour
+  h+='<div class="card-verset">'
+    +'<div class="card-verset-top">'
+    +'<div class="cv-label">✦ Verset du jour</div>'
+    +'<div class="cv-heb">'+v.heb+'</div>'
+    +'</div>'
+    +'<div class="card-verset-bot">'
+    +'<div class="cv-fr">« '+v.fr+' »</div>'
+    +'<div class="cv-ref">— '+v.ref+'</div>'
+    +'</div></div>';
+
+  // Prochaines fêtes retirées de la home
+
+
+  // ── LISTE DES 54 PARASHOT ──
+  h+='<div class="card-paralist">'
+    +'<div class="pl-header" onclick="togglePS()">'
+    +'<div class="pl-title">📖 Les 54 Parashot</div>'
+    +'<div style="display:flex;align-items:center;gap:8px"><div class="pl-count">54 parashot</div><div class="pl-arrow">›</div></div>'
+    +'</div>'
+    +'<div class="pl-body" id="pl-body-main">';
+
+  var BOOKS=[
+    {name:'Berechit',heb:'בְּרֵאשִׁית',ids:[1,2,3,4,5,6,7,8,9,10,11,12]},
+    {name:'Chemot',heb:'שְׁמוֹת',ids:[13,14,15,16,17,18,19,20,21,22,23]},
+    {name:'Vayikra',heb:'וַיִּקְרָא',ids:[24,25,26,27,28,29,30,31,32,33]},
+    {name:'Bamidbar',heb:'בְּמִדְבַּר',ids:[34,35,36,37,38,39,40,41,42,43]},
+    {name:'Devarim',heb:'דְּבָרִים',ids:[44,45,46,47,48,49,50,51,52,53,54]}
+  ];
+
+  BOOKS.forEach(function(book){
+    h+='<div class="pbook-name">'+book.name+' <span class="pbook-heb">'+book.heb+'</span></div>';
+    h+='<div class="pgrid">';
+    book.ids.forEach(function(id){
+      var p=getP(id);
+      if(!p) return;
+      var isCur=(id===currentCID);
+      h+='<div class="pcard'+(isCur?' cur':'')+'" onclick="openP('+id+')">'
+        +'<div class="pnum">'+id+'</div>'
+        +'<div class="pname">'+(PARASHA_FR[p.name]||p.name)+'</div>'
+        +'<div class="pheb">'+p.heb+'</div>'
+        +'</div>';
+    });
+    h+='</div>';
+  });
+
+  h+='</div></div>';
+
+  // Parachiot retirées de l'accueil (onglet dédié)
+  h+='</div>'; // end .feed
+  document.getElementById('view-home').innerHTML=h;
+}
+
+function scrollToVerset(){
+  var el=document.querySelector(".card-verset");
+  if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
 function togglePS(){
@@ -5116,15 +5343,14 @@ function openP(id){
       }
     });
   });
-    // Vidéo 1 minute + bouton écouter
   show1MinInDetail(p.name);
   var btnKriat = document.getElementById("btn-kriat-p");
-  if(btnKriat){
-    btnKriat.style.display = "inline-block";
-    (function(pname){ btnKriat.onclick = function(){ openKriatTorah(pname); }; })(p.name);
-  }
+  if(btnKriat){ btnKriat.style.display="inline-block"; (function(pn){ btnKriat.onclick=function(){ openKriatTorah(pn); }; })(p.name); }
+  var old1min = document.getElementById("btn-1min-p"); if(old1min) old1min.remove();
   window.scrollTo(0,0);
-}function fetchSef(ref,lang,cb){
+}
+
+function fetchSef(ref,lang,cb){
   var url='https://www.sefaria.org/api/texts/'+encodeURIComponent(ref)+'?lang='+lang+'&context=0&pad=0&commentary=0';
   fetch(url)
     .then(function(r){return r.json();})
@@ -8219,7 +8445,6 @@ function getCoursKey(paracha, day){
 // ══════════════════════════════════════════════════════════════
 
 function openHistoires(){
-  // initSlider appelé après rendu
   if(!requireLogin()) return;
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoire-detail'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -8260,15 +8485,7 @@ function renderHistoires(){
     });
   });
 
-  // Curseur taille texte
-  var sliderHist = '<div class="text-slider-wrap" style="margin-bottom:8px;">'
-    + '<span class="text-slider-label">A</span>'
-    + '<input type="range" min="0" max="100" value="50" class="text-slider" id="slider_view-histoires"'
-    + ' oninput="applySliderSize(\'view-histoires\',this.value)">'
-    + '<span class="text-slider-label" style="font-size:15px;">A</span>'
-    + '</div>';
-  document.getElementById('view-histoires').innerHTML = sliderHist + h;
-  initSlider('view-histoires');
+  document.getElementById('view-histoires').innerHTML=h;
 }
 
 function openHistoireDetail(id){
@@ -8570,16 +8787,51 @@ function openKriatTorah(overrideName){
   var hazzan = 'Rabbi-Emmanuel-Zaoui';
   var paraFr = PARASHA_FR[parashaName] || parashaName;
 
-  var alLabels = ['1ère Aliya','2ème Aliya','3ème Aliya','4ème Aliya','5ème Aliya','6ème Aliya','7ème Aliya'];
-  _kriatParaFr = PARASHA_FR[parashaName] || parashaName;
-  _kriatAliyot = [1,2,3,4,5,6,7].map(function(n, i){
-    return {
-      n: n,
-      label: alLabels[i],
-      url: base + 'Paracha_' + nom + '-' + n + 'e-montee_algerien__' + hazzan + '.mp3'
-    };
+  var view = document.getElementById('view-kriat');
+  if(!view){
+    view = document.createElement('div');
+    view.id = 'view-kriat';
+    view.style.cssText = 'position:fixed;inset:0;z-index:9600;background:#f8f8fc;overflow-y:auto;padding:0 0 80px;';
+    document.body.appendChild(view);
+  }
+
+  var aliyot = [
+    {n:1, label:'1ère Aliya'},
+    {n:2, label:'2ème Aliya'},
+    {n:3, label:'3ème Aliya'},
+    {n:4, label:'4ème Aliya'},
+    {n:5, label:'5ème Aliya'},
+    {n:6, label:'6ème Aliya'},
+    {n:7, label:'7ème Aliya'},
+  ];
+
+  var h = '<div style="background:linear-gradient(135deg,#1a0533,#2d0b5e);padding:56px 16px 20px;">';
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;">';
+  h += '<div>';
+  h += '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;margin-bottom:4px;">🎵 KRIAT HATORAH</div>';
+  h += '<div style="font-size:20px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;">Paracha ' + paraFr + '</div>';
+  h += '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;">Torah Box</div>';
+  h += '</div>';
+  h += '<button onclick="closeKriatTorah()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>';
+  h += '</div></div>';
+
+  h += '<div style="padding:16px;">';
+  aliyot.forEach(function(al){
+    var url = base + 'Paracha_' + nom + '-' + al.n + 'e-montee_algerien__' + hazzan + '.mp3';
+    h += '<div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:14px 16px;margin-bottom:10px;">';
+    h += '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:8px;">' + al.label + '</div>';
+    var aid = 'kriat-audio-' + al.n;
+    h += '<audio id="' + aid + '" style="width:100%;" controls preload="none" '
+      + 'onplay="this.currentTime<20?this.currentTime=20:null">';
+    h += '<source src="' + url + '" type="audio/mpeg">';
+    h += '</audio>';
+    h += '</div>';
   });
-  kriatLoadAliya(0);
+  h += '</div>';
+
+  view.innerHTML = h;
+  view.style.display = 'block';
+  document.getElementById('btn-back').style.display = 'flex';
 }
 
 // ══ PARACHA EN 1 MINUTE ══════════════════════════════════════
@@ -8640,29 +8892,32 @@ async function load1MinVideo(parashaName){
 async function show1MinInDetail(parashaName){
   var container = document.getElementById('detail-1min-container');
   if(!container) return;
-  container.innerHTML = '';
+  container.innerHTML = '<div style="padding:10px;text-align:center;color:var(--gray-4);font-size:12px;font-family:Poppins,sans-serif;">Chargement...</div>';
+
   var video = await load1MinVideo(parashaName);
-  if(!video) return;
-  var vidId = video.snippet.resourceId && video.snippet.resourceId.videoId;
-  if(!vidId) return;
-  var title = video.snippet.title;
-  // Afficher bouton dans les actions du header
-  var btnKriat = document.getElementById('btn-kriat-p');
-  if(btnKriat){
-    // Ajouter bouton vidéo à côté
-    var existing = document.getElementById('btn-1min-p');
-    if(!existing){
-      var btn1min = document.createElement('button');
-      btn1min.id = 'btn-1min-p';
-      btn1min.textContent = '📺 La paracha en 1 min';
-      btn1min.style.cssText = 'margin-top:6px;padding:7px 18px;background:linear-gradient(135deg,#db2877,#f97316);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;display:block;width:calc(100% - 32px);margin-left:16px;';
-      btn1min.onclick = function(){ playYTDirect(vidId, title); };
-      btnKriat.parentNode.insertBefore(btn1min, btnKriat.nextSibling);
-    } else {
-      existing.onclick = function(){ playYTDirect(vidId, title); };
-      existing.style.display = 'block';
-    }
+  if(!video){
+    container.innerHTML = '';
+    return;
   }
+
+  var vidId = video.snippet.resourceId && video.snippet.resourceId.videoId;
+  if(!vidId){ container.innerHTML = ''; return; }
+
+  var thumb = (video.snippet.thumbnails.high || video.snippet.thumbnails.medium || {url:''}).url;
+  var title = video.snippet.title;
+
+  container.innerHTML =
+    '<div style="margin:0 16px 16px;">'
+    + '<div style="font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;margin-bottom:8px;">📺 LA PARACHA EN 1 MINUTE</div>'
+    + '<div onclick="playYTDirect(' + JSON.stringify(vidId) + ',' + JSON.stringify(title) + ')" '
+    + 'style="position:relative;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.12);">'
+    + '<img src="' + thumb + '" style="width:100%;height:180px;object-fit:cover;display:block;">'
+    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.7));"></div>'
+    + '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;background:rgba(255,255,255,.25);backdrop-filter:blur(4px);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+    + '<div style="width:0;height:0;border-top:11px solid transparent;border-bottom:11px solid transparent;border-left:20px solid #fff;margin-left:4px;"></div>'
+    + '</div>'
+    + '<div style="position:absolute;bottom:0;left:0;right:0;padding:12px;color:#fff;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;line-height:1.3;">' + title + '</div>'
+    + '</div></div>';
 }
 
 function playYTDirect(id, title){
@@ -9573,21 +9828,6 @@ function adminSaveMsg(){
 }
 
 // ── ACCÈS ADMIN (triple tap sur titre app) ───────────────────
-function applySliderSize(containerId, size){
-  var el = document.getElementById(containerId);
-  if(!el) return;
-  var scale = 0.85 + (size / 100) * 0.65; // 0.85 à 1.5rem
-  el.style.fontSize = scale + 'rem';
-  localStorage.setItem('slider_'+containerId, size);
-}
-function initSlider(containerId){
-  var saved = localStorage.getItem('slider_'+containerId);
-  var val = saved ? parseInt(saved) : 50;
-  applySliderSize(containerId, val);
-  var sl = document.getElementById('slider_'+containerId);
-  if(sl) sl.value = val;
-}
-
 function setTextSize(size){
   var scales = {'normal': '100%', 'lg': '118%', 'xl': '135%'};
   var pct = scales[size] || '100%';
@@ -9623,261 +9863,25 @@ function adminTitleTap(){
 
 function refreshCoursCard(){
   var card = buildCoursCard();
+  console.log('[Cours] refreshCoursCard card='+(card?'OK':'VIDE')+' container='+(document.getElementById('cours-card-container')?'EXISTS':'MISSING'));
   var el = document.getElementById('cours-card-container');
-  if(el) el.innerHTML = card || '';
-}
-
-function buildStoryBar(){
-  var bar=document.getElementById('story-bar');
-  if(!bar) return;
-  var items=[];
-  if(candleTime){
-    items.push({icon:'🕯',label:'Chabbat',ring:'shabbat',fn:'openShabbatPanel()'});
+  if(el){
+    el.innerHTML = card;
   }
-  getTodayHolidays().forEach(function(it){
-    items.push({icon:getFeteEmoji(it.title),label:feteNameFr(it.title).split(' ')[0],ring:'fete'});
-  });
-  items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
-  items.push({icon:'📖',label:'Histoires vraies',ring:'histoires',fn:'openHistoires()'});
-  items.push({icon:'🎬',label:'Vidéos',ring:'videos',fn:'openVideos()'});
-  items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
-  items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
-  items.push({icon:'📅',label:'Calendrier',ring:'',fn:'openCal()'});
-  var html='';
-  items.forEach(function(it){
-    var fn=it.fn||'';
-    html+='<div class="story-item" '+(fn?'onclick="'+fn+'"':'')+'>'      +'<div class="story-ring '+(it.ring||'')+'">'      +'<div class="story-inner">'+it.icon+'</div></div>'      +'<div class="story-label">'+it.label+'</div>'      +'</div>';
-  });
-  bar.innerHTML=html;
-}
-
-function buildHome(){
-  var CID=currentCID;
-  var cur=getP(CID)||P[0];
-  if(!cur) return;
-  var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear();
-  var ht=g2h(gd,gm,gy);
-  var dateHebFrDisplay=hebDateFr||fmtHebFr(ht);
-  var dayName=FR_D[t.getDay()];
-  var h='<div class="feed">';
-
-  // ── 1. DATE + CHABBAT ──────────────────────────────────────
-  h+='<div class="home-date-card">'    +'<div class="hdc-left">'    +'<div class="hdc-dayname">'+dayName+' '+gd+' '+FR_M[gm]+' '+gy+'</div>'    +'<div class="hdc-heb">'+dateHebFrDisplay+'</div>'    +'</div></div>';
-
-  var hasFete = !!nextFete;
-  var hasShabbat = !!(candleTime||havdalaTime);
-  if(hasFete && hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
-  else if(hasFete) h += '<div style="margin:0 16px 12px;">';
-
-  if(nextFete){
-    var feteDate2 = new Date(nextFete.date);
-    var FR_MOIS2 = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
-    var feteJour2 = feteDate2.getDate()+' '+FR_MOIS2[feteDate2.getMonth()];
-    var feteLabel2 = nextFete.nom
-      .replace(/Erev /i,'Erev ').replace(/Chavou.ot/i,'Chavouot')
-      .replace(/Rosh Hashana/i,'Roch Hachana').replace(/Yom Kippur/i,'Yom Kippour')
-      .replace(/Sukkot/i,'Souccot').replace(/Simchat Torah/i,'Simhat Torah')
-      .replace(/Shemini Atzeret/i,'Chemini Atseret')
-      .replace(/Passover/i,'Pessah').replace(/Shavuot/i,'Chavouot');
-    var fs = hasShabbat ? 'flex:1;min-width:0;' : 'width:100%;';
-    h += '<div onclick="openFetePanel()" style="'+fs+'background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:12px;padding:10px 12px;cursor:pointer;position:relative;box-sizing:border-box;">';
-    h += '<button onclick="event.stopPropagation();shareFeteWhatsApp()" class="wa-share-btn">↗</button>';
-    h += '<div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;margin-bottom:2px;">✨ FÊTE</div>';
-    h += '<div style="font-size:13px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+feteLabel2+'</div>';
-    h += '<div style="font-size:10px;color:rgba(255,255,255,.8);">📅 '+feteJour2+'</div>';
-    if(nextFete.candleTime) h += '<div style="font-size:10px;color:rgba(255,255,255,.75);">🕯 '+nextFete.candleTime+'</div>';
-    if(nextFete.havdalaTime) h += '<div style="font-size:10px;color:rgba(255,255,255,.7);">✨ '+nextFete.havdalaTime+'</div>';
-    h += '</div>';
+  // Toujours tenter aussi via buildHome pour forcer le refresh complet
+  if(!el || !card){
+    try { buildHome(); } catch(e){}
   }
-
-  // ── CARTE CHABBAT ──────────────────────────────────────────
-  if(candleTime||havdalaTime){
-    var nextFri=new Date(t);
-    var jsDay2=t.getDay();
-    var daysToFri=(5-jsDay2+7)%7||7;
-    if(jsDay2===6){
-      var hm2=havdalaTime?havdalaTime.match(/(\d+)[h:](\d+)/):null;
-      if(hm2){var hv2=parseInt(hm2[1]);var mv2=parseInt(hm2[2]);
-        if(havdalaTime.toLowerCase().indexOf('pm')>=0&&hv2<12)hv2+=12;
-        if((t.getHours()>hv2)||(t.getHours()===hv2&&t.getMinutes()>=mv2))daysToFri=7;
-      }
-    }
-    nextFri.setDate(t.getDate()+daysToFri);
-    var friLabel=nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
-    var shabWrap = hasFete ? '' : '<div style="margin:0 16px 12px;">';
-    var shabClose = hasFete ? '' : '</div>';
-    if(!hasFete) h += shabWrap;
-    var shabFlex = hasFete ? 'flex:1;' : '';
-    h+='<div class="hdc-shabbat" onclick="openShabbatPanel()" style="'+shabFlex+'position:relative;">'      +'<button onclick="event.stopPropagation();shareShabbatWhatsApp()" class="wa-share-btn">↗</button>'      +'<span>🕯</span>'      +'<div class="hdc-shabbat-times">'      +'<div style="font-weight:700;font-size:12px;color:#92400E">Chabbat '+friLabel+'</div>'      +(candleTime?'<div>Allumage '+candleTime+'</div>':'')
-      +(havdalaTime?'<div>Havdala '+havdalaTime+'</div>':'')
-      +'</div>'      +'</div>';
-    if(!hasFete) h += shabClose;
-  }
-
-  if(hasFete) h+='</div>';
-
-  // ── 2. CONSEIL DU JOUR ─────────────────────────────────────
-  h+=getConseilBanner();
-
-  // ── 3. OMER ────────────────────────────────────────────────
-  h+=getOmerBanner();
-
-  // ── 4. PARACHA DE LA SEMAINE ───────────────────────────────
-  var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
-  var parashaHebDisplay=currentParashaHeb||cur.heb;
-  var mc=MC[currentCID]||{};
-  var briefText='';
-  if(mc.s){
-    var tmp=mc.s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-    var sents=tmp.match(/[^.!?]+[.!?]+/g)||[];
-    briefText=sents.slice(0,2).join(' ');
-  }
-  h+='<div class="home-paracha-card" id="paracha-banner">'    +'<div class="hpc-label">Paracha de la semaine</div>'    +'<div class="hpc-bg" onclick="openP(currentCID)">'    +'<div class="hpc-heb">'+parashaHebDisplay+'</div>'    +'<div class="hpc-name">'+parashaDisplay+'</div>'    +(briefText?'<div class="hpc-brief-inline">'+briefText+'</div>':'')
-    +'<div style="display:flex;gap:8px;margin-top:10px;">'    +'<button class="hpc-btn" style="flex:1;" onclick="event.stopPropagation();openP(currentCID)">📖 Lire</button>'    +'<button onclick="event.stopPropagation();openKriatTorah()" style="flex:1;padding:8px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter</button>'    +'</div>'    +'</div>'    +'</div>';
-  // Vidéo 1 minute chargée dynamiquement dans la carte
-
-  // ── 5. COURS DU JOUR ───────────────────────────────────────
-  var _cc = buildCoursCard();
-  console.log("[buildHome] cours-card="+(_cc?"OK":"VIDE"));
-  h += '<div id="cours-card-container">'+(_cc||'')+'</div>';
-
-  // ── 6. VERSET + VIDÉOS + HISTOIRES + 54 PARASHOT ──────────
-  var v = getVerset(ht) || VERSETS[0];
-  
-
-  // ── 6. VERSET + VIDÉOS + HISTOIRES + 54 PARASHOT ──────────────────────
-  var v = getVerset(ht) || VERSETS[0];
-  h += '<div onclick="openVideos()" style="margin:0 16px 12px;background:linear-gradient(135deg,#ef4444,#f97316);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
-  h += '<span style="font-size:28px;">🎬</span>';
-  h += '<div style="flex:1;">';
-  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Vidéos du Rabbi</div>';
-  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Archives JEM France</div>';
-  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
-
-  h += '<div onclick="openHistoires()" style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">';
-  h += '<span style="font-size:28px;">📖</span>';
-  h += '<div style="flex:1;">';
-  h += '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Histoires Vraies</div>';
-  h += '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">David, Hillel, le Baal Shem Tov, la famille Ovitz...</div>';
-  h += '</div><span style="color:#fff;font-size:18px;">›</span></div>';
-
-  // Verset du jour
-  h+='<div class="card-verset">'
-    +'<div class="card-verset-top">'
-    +'<div class="cv-label">✦ Verset du jour</div>'
-    +'<div class="cv-heb">'+v.heb+'</div>'
-    +'</div>'
-    +'<div class="card-verset-bot">'
-    +'<div class="cv-fr">« '+v.fr+' »</div>'
-    +'<div class="cv-ref">— '+v.ref+'</div>'
-    +'</div></div>';
-
-  // Prochaines fêtes retirées de la home
-
-
-  // ── LISTE DES 54 PARASHOT ──
-  h+='<div class="card-paralist">'
-    +'<div class="pl-header" onclick="togglePS()">'
-    +'<div class="pl-title">📖 Les 54 Parashot</div>'
-    +'<div style="display:flex;align-items:center;gap:8px"><div class="pl-count">54 parashot</div><div class="pl-arrow">›</div></div>'
-    +'</div>'
-    +'<div class="pl-body" id="pl-body-main">';
-
-  var BOOKS=[
-    {name:'Berechit',heb:'בְּרֵאשִׁית',ids:[1,2,3,4,5,6,7,8,9,10,11,12]},
-    {name:'Chemot',heb:'שְׁמוֹת',ids:[13,14,15,16,17,18,19,20,21,22,23]},
-    {name:'Vayikra',heb:'וַיִּקְרָא',ids:[24,25,26,27,28,29,30,31,32,33]},
-    {name:'Bamidbar',heb:'בְּמִדְבַּר',ids:[34,35,36,37,38,39,40,41,42,43]},
-    {name:'Devarim',heb:'דְּבָרִים',ids:[44,45,46,47,48,49,50,51,52,53,54]}
-  ];
-
-  BOOKS.forEach(function(book){
-    h+='<div class="pbook-name">'+book.name+' <span class="pbook-heb">'+book.heb+'</span></div>';
-    h+='<div class="pgrid">';
-    book.ids.forEach(function(id){
-      var p=getP(id);
-      if(!p) return;
-      var isCur=(id===currentCID);
-      h+='<div class="pcard'+(isCur?' cur':'')+'" onclick="openP('+id+')">'
-        +'<div class="pnum">'+id+'</div>'
-        +'<div class="pname">'+(PARASHA_FR[p.name]||p.name)+'</div>'
-        +'<div class="pheb">'+p.heb+'</div>'
-        +'</div>';
-    });
-    h+='</div>';
-  });
-
-  h+='</div></div>';
-
-  document.getElementById('view-home').innerHTML = h;
-  buildStoryBar();
-
-  // Charger vidéo 1 min paracha semaine
-  (async function(){
-    var vid = await load1MinVideo(currentParashaName);
-    var c2 = document.getElementById('btn-home-1min');
-    if(vid && c2){
-      var vidId = vid.snippet.resourceId && vid.snippet.resourceId.videoId;
-      var title = vid.snippet.title;
-      c2.style.display = 'block';
-      c2.onclick = function(){ playYTDirect(vidId, title); };
-    }
-  })();
-
-  // refreshCoursCard appelé par Hebcal quand les données sont prêtes
 }
-
-
-function buildStoryBar(){
-  var bar=document.getElementById('story-bar');
-  if(!bar) return;
-  var items=[];
-  if(candleTime){
-    items.push({icon:'🕯',label:'Chabbat',ring:'shabbat',fn:'openShabbatPanel()'});
-  }
-  getTodayHolidays().forEach(function(it){
-    items.push({icon:getFeteEmoji(it.title),label:feteNameFr(it.title).split(' ')[0],ring:'fete'});
-  });
-  items.push({icon:'☀️',label:'Hayom Yom',ring:'',fn:'openHayomYom()'});
-  items.push({icon:'📖',label:'Histoires vraies',ring:'histoires',fn:'openHistoires()'});
-  items.push({icon:'🎬',label:'Vidéos',ring:'videos',fn:'openVideos()'});
-  items.push({icon:'📋',label:'Sefer HaMitsvot',ring:'',fn:'openSefer()'});
-  items.push({icon:'📚',label:'Recueil',ring:'recueil',fn:'showRecueilView()'});
-  items.push({icon:'📅',label:'Calendrier',ring:'',fn:'openCal()'});
-  var html='';
-  items.forEach(function(it){
-    var fn=it.fn||'';
-    html+='<div class="story-item" '+(fn?'onclick="'+fn+'"':'')+'>'      +'<div class="story-ring '+(it.ring||'')+'">'      +'<div class="story-inner">'+it.icon+'</div></div>'      +'<div class="story-label">'+it.label+'</div>'      +'</div>';
-  });
-  bar.innerHTML=html;
-}
-
-
-function scrollToVerset(){
-  var el=document.querySelector(".card-verset");
-
-  // ── COURS DU JOUR ──
-  var _cc = buildCoursCard();
-  console.log('[buildHome] cours-card='+ (_cc?'OK':'VIDE'));
-  h += '<div id="cours-card-container">' + (_cc||'') + '</div>';
-
-  h+='</div>'; // end feed
-
-  document.getElementById('view-home').innerHTML = h;
-  buildStoryBar();
-  setTimeout(function(){ if(typeof refreshCoursCard==='function') refreshCoursCard(); }, 100);
-}
-
 
 function buildCoursCard(){
   var now = new Date();
   var jsDay = now.getDay();
   var courseDay = (jsDay===6) ? -1 : jsDay;
-  if(courseDay < 0){ console.log('[CoursCard] Chabbat → pas de cours'); return ''; }
+  if(courseDay < 0) return '';
 
   var parashaName = currentParashaName || getParashaFromCalendar() || '';
   var key = getCoursKey(parashaName, courseDay);
-  console.log('[CoursCard] jsDay='+jsDay+' courseDay='+courseDay+' parashaName='+parashaName+' key='+key);
 
   var m = now.getMonth(); var d = now.getDate();
   var prefix = null;
@@ -9902,21 +9906,14 @@ function buildCoursCard(){
   else if(m===7 && d>=23 && d<=29) prefix='kitavo';
   else if(m===7 && d>=30 || (m===8 && d<=5)) prefix='nitsavim';
 
-  console.log('[CoursCard] COURS_DATA[key] exists:', !!(COURS_DATA[key]));
-  // Le prefix override la clé calculée par getCoursKey (semaine courante)
-  if(prefix){
-    var prefixKey = prefix+'-'+courseDay;
-    console.log('[CoursCard] prefix='+prefix+' prefixKey='+prefixKey+' exists='+(!!COURS_DATA[prefixKey]));
-    if(COURS_DATA[prefixKey]) key = prefixKey;
+  if(!key || !COURS_DATA[key]){
+    if(prefix) key = prefix+'-'+courseDay;
+    if(!key || !COURS_DATA[key]) return '';
   }
-  console.log('[CoursCard] finalKey='+key+' exists='+(!!COURS_DATA[key])+' jsDay='+jsDay+' courseDay='+courseDay);
-  if(!key || !COURS_DATA[key]) return '';
   if(!prefix) prefix = key.substring(0, key.lastIndexOf('-'));
 
   var c = COURS_DATA[key];
   var dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven'];
-  // Appliquer taille sauvegardée
-  setTimeout(function(){ initSlider('cours-card-container'); }, 50);
 
   // Liste des jours (cachée par défaut)
   var listItems = '';
@@ -9956,13 +9953,6 @@ function buildCoursCard(){
   html += '<div class="semaine-list" style="display:none;background:#fff;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">' + listItems + '</div>';
   html += '</div>';
 
-  // Curseur taille texte
-  html = '<div class="text-slider-wrap">'
-    + '<span class="text-slider-label">A</span>'
-    + '<input type="range" min="0" max="100" value="50" class="text-slider" id="slider_cours-card-container"'
-    + ' oninput="applySliderSize(\'cours-card-container\',this.value)" onchange="applySliderSize(\'cours-card-container\',this.value)">'
-    + '<span class="text-slider-label" style="font-size:15px;">A</span>'
-    + '</div>' + html;
   return html;
 }
 
