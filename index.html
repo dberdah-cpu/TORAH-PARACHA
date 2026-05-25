@@ -2724,9 +2724,11 @@ async function waGenResume(sujet, mots){
 function shareShabbatWhatsApp(){
   var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
   var paraHeb = currentParashaHeb || '';
-  var mc = MC[currentCID] || {};
+  var mc = MC[currentCID] || COURS_DATA[getCoursKey(currentParashaName,0)] || {};
   var versetCle = '';
   if(mc.accroche) versetCle = mc.accroche.replace(/<[^>]+>/g,'').substring(0,150);
+  else if(mc.intro) versetCle = mc.intro.replace(/<[^>]+>/g,'').substring(0,150);
+  else if(mc.s) versetCle = mc.s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().substring(0,150);
   var now = new Date();
   var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   var dateStr = now.getDate() + ' ' + FR_MOIS[now.getMonth()] + ' ' + now.getFullYear();
