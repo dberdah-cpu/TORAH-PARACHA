@@ -2721,32 +2721,30 @@ async function waGenResume(sujet, mots){
   } catch(e){ return ''; }
 }
 
-async function shareShabbatWhatsApp(){
+function shareShabbatWhatsApp(){
   var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
   var paraHeb = currentParashaHeb || '';
-  // Récupérer le verset clé et le fond de la paracha
   var mc = MC[currentCID] || {};
   var versetCle = '';
   if(mc.accroche) versetCle = mc.accroche.replace(/<[^>]+>/g,'').substring(0,150);
-  else if(mc.v && mc.v[0]) versetCle = (mc.v[0].fr||'').substring(0,120);
-  var resume = await waGenResume('En 2-3 phrases courtes : le message principal et l enseignement spirituel de la paracha ' + paraFr, 40);
   var now = new Date();
   var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   var dateStr = now.getDate() + ' ' + FR_MOIS[now.getMonth()] + ' ' + now.getFullYear();
+  // Construire le message de base (synchrone)
   var msg = '🕯 *Chabbat Chalom !*\n';
   msg += '_' + dateStr + '_\n\n';
   msg += '📖 *Paracha ' + paraFr;
   if(paraHeb) msg += ' · ' + paraHeb;
   msg += '*\n';
   if(versetCle) msg += '✦ _' + versetCle + '..._\n\n';
-  if(resume) msg += resume + '\n\n';
   if(candleTime) msg += '🕯 Allumage : *' + candleTime + '*\n';
   if(havdalaTime) msg += '✨ Havdala : *' + havdalaTime + '*';
   msg += APP_SIG;
+  // Ouvrir WhatsApp immédiatement (synchrone pour éviter blocage Safari)
   waShare(msg);
 }
 
-async function shareFeteWhatsApp(){
+function shareFeteWhatsApp(){
   if(!nextFete) return;
   var feteLabel = nextFete.nom
     .replace(/Chavou.ot/i,'Chavouot')
@@ -2754,11 +2752,14 @@ async function shareFeteWhatsApp(){
     .replace(/Yom Kippur/i,'Yom Kippour')
     .replace(/Passover/i,'Pessah')
     .replace(/Shavuot/i,'Chavouot');
-  var resume = await waGenResume('La fête de ' + feteLabel + ' — son message principal', 23);
-  var msg = '✨ *Hag Sameah !*\n\n';
+  var now = new Date();
+  var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var dateStr = now.getDate() + ' ' + FR_MOIS[now.getMonth()] + ' ' + now.getFullYear();
+  var msg = '✨ *Hag Sameah !*\n';
+  msg += '_' + dateStr + '_\n\n';
   msg += '🎊 *' + feteLabel + '*\n';
-  if(resume) msg += '_' + resume + '_\n\n';
-  if(nextFete.candleTime) msg += '🕯 Allumage : *' + nextFete.candleTime + '*';
+  if(nextFete.candleTime) msg += '🕯 Allumage : *' + nextFete.candleTime + '*\n';
+  if(nextFete.havdalaTime) msg += '✨ Havdala : *' + nextFete.havdalaTime + '*';
   msg += APP_SIG;
   waShare(msg);
 }
