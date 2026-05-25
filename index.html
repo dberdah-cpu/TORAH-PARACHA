@@ -2712,7 +2712,11 @@ async function waGenResume(sujet, mots){
 async function shareShabbatWhatsApp(){
   var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
   var paraHeb = currentParashaHeb || '';
-  var resume = await waGenResume('La paracha ' + paraFr + ' — son enseignement principal en une phrase', 23);
+  // Récupérer le verset clé et le fond de la paracha
+  var mc = MC[currentCID] || {};
+  var versetCle = '';
+  if(mc.v && mc.v[0]) versetCle = (mc.v[0].fr||'').substring(0,120);
+  var resume = await waGenResume('En 2-3 phrases courtes : le message principal et l enseignement spirituel de la paracha ' + paraFr, 40);
   var now = new Date();
   var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   var dateStr = now.getDate() + ' ' + FR_MOIS[now.getMonth()] + ' ' + now.getFullYear();
@@ -2721,7 +2725,8 @@ async function shareShabbatWhatsApp(){
   msg += '📖 *Paracha ' + paraFr;
   if(paraHeb) msg += ' · ' + paraHeb;
   msg += '*\n';
-  if(resume) msg += '_' + resume + '_\n\n';
+  if(versetCle) msg += '✦ _' + versetCle + '..._\n\n';
+  if(resume) msg += resume + '\n\n';
   if(candleTime) msg += '🕯 Allumage : *' + candleTime + '*\n';
   if(havdalaTime) msg += '✨ Havdala : *' + havdalaTime + '*';
   msg += APP_SIG;
@@ -3104,7 +3109,7 @@ function buildHome(){
     +(briefText?'<div class="hpc-brief-inline">'+briefText+'</div>':'')
     +'<button class="hpc-btn">Lire la paracha →</button>'
     +'</div>'
-    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la lecture ()</button>'
+    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter</button>'
     +'</div>';
 
   // Cours du jour
@@ -5418,6 +5423,8 @@ function openP(id){
   var btnKriat = document.getElementById("btn-kriat-p");
   if(btnKriat){ btnKriat.style.display="inline-block"; (function(pn){ btnKriat.onclick=function(){ openKriatTorah(pn); }; })(p.name); }
   var old1min = document.getElementById("btn-1min-p"); if(old1min) old1min.remove();
+  // Initialiser le curseur de taille
+  setTimeout(function(){ initSlider("view-detail"); }, 100);
   window.scrollTo(0,0);
 }
 
