@@ -2724,25 +2724,39 @@ async function waGenResume(sujet, mots){
 function shareShabbatWhatsApp(){
   var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
   var paraHeb = currentParashaHeb || '';
-  var mc = MC[currentCID] || COURS_DATA[getCoursKey(currentParashaName,0)] || {};
-  var versetCle = '';
-  if(mc.accroche) versetCle = mc.accroche.replace(/<[^>]+>/g,'').substring(0,150);
-  else if(mc.intro) versetCle = mc.intro.replace(/<[^>]+>/g,'').substring(0,150);
-  else if(mc.s) versetCle = mc.s.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().substring(0,150);
   var now = new Date();
   var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   var dateStr = now.getDate() + ' ' + FR_MOIS[now.getMonth()] + ' ' + now.getFullYear();
-  // Construire le message de base (synchrone)
+
+  // Récupérer le contenu IA du panneau Chabbat (même source que la carte)
+  var spAI = document.getElementById('sp-ai-content');
+  var phrase = '', conseil = '';
+  if(spAI){
+    var phraseEl = spAI.querySelector('.sp-phrase');
+    var conseilEl = spAI.querySelector('.sp-conseil-text');
+    if(phraseEl) phrase = phraseEl.textContent.trim();
+    if(conseilEl) conseil = conseilEl.textContent.trim();
+  }
+  // Fallback depuis generateShabbatAI data
+  if(!phrase){
+    var insights = {
+      'Nasso':{ phrase:"La bénédiction des cohanim — 'Que D.ieu te bénisse et te garde' — est la plus courte et la plus complète des prières.", conseil:"Le Rabbi enseignait : la bénédiction n'est pas un acte magique mais un canal. Quand vous bénissez quelqu'un avec un cœur sincère, vous devenez vous-même canal de lumière divine." },
+      'Bamidbar':{ phrase:"D.ieu compte les Juifs parce que chacun est infiniment précieux à Ses yeux — pas un ne peut manquer.", conseil:"Le Rabbi répétait : vous n'êtes pas une goutte dans l'océan mais un océan tout entier dans une goutte. Votre présence dans le monde est irremplaçable." }
+    };
+    var d = insights[currentParashaName] || insights[paraFr];
+    if(d){ phrase = d.phrase; conseil = d.conseil; }
+  }
+
   var msg = '🕯 *Chabbat Chalom !*\n';
   msg += '_' + dateStr + '_\n\n';
   msg += '📖 *Paracha ' + paraFr;
   if(paraHeb) msg += ' · ' + paraHeb;
-  msg += '*\n';
-  if(versetCle) msg += '✦ _' + versetCle + '..._\n\n';
+  msg += '*\n\n';
+  if(phrase) msg += '✦ _' + phrase + '_\n\n';
+  if(conseil) msg += conseil + '\n\n';
   if(candleTime) msg += '🕯 Allumage : *' + candleTime + '*\n';
   if(havdalaTime) msg += '✨ Havdala : *' + havdalaTime + '*';
   msg += APP_SIG;
-  // Ouvrir WhatsApp immédiatement (synchrone pour éviter blocage Safari)
   waShare(msg);
 }
 
