@@ -2788,25 +2788,6 @@ function shareOmerWhatsApp(){
   waShare(msg);
 }
 
-function shareShabbatWhatsApp(){
-  var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
-  var msg = '🕯 *Chabbat Chalom !*\n\n';
-  msg += '📖 *Paracha ' + paraFr + '*\n\n';
-  if(candleTime) msg += '🕯 Allumage des bougies : *' + candleTime + '*\n';
-  if(havdalaTime) msg += '✨ Havdala : *' + havdalaTime + '*\n';
-  msg += '\n';
-  // Ajouter la citation du jour
-  var cit = getCitationDuJour();
-  if(cit && cit.texte){
-    msg += '💫 _' + cit.texte + '_\n';
-    if(cit.auteur) msg += '— ' + cit.auteur + '\n';
-    msg += '\n';
-  }
-  msg += '🔗 Application Kedoshim\nhttps://dberdah-cpu.github.io/TORAH-PARACHA/\n';
-  msg += '\n_Bésouyata Dichmaïa_ 🙏';
-  var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
-  window.open(url, '_blank');
-}
 
 function updateShabbatInlineCard(){
   var card = document.getElementById('shabbat-inline-card');
