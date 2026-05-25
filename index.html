@@ -1329,7 +1329,6 @@ body{
     <div id="cal-month-heb"></div>
    </div>
    <div id="cal-hdr-right">
-    <button class="cal-nav-btn" onclick="closeCalOverlay()" style="font-size:16px;margin-right:4px;">✕</button>
     <button class="cal-nav-btn" onclick="calMove(-1)">‹</button>
     <button class="cal-nav-btn" onclick="calMove(1)">›</button>
     <button id="cal-close" onclick="closeCal()">✕</button>
@@ -2324,7 +2323,7 @@ function openCal(){
 
 function closeCal(){
   document.getElementById('cal-overlay').classList.remove('open');
-  closeDaySheet();
+  try { closeDaySheet(); } catch(e){}
 }
 function closeDaySheet(){
   var sheet=document.getElementById('cal-day-sheet');
@@ -2444,8 +2443,13 @@ function showDaySheet(d,hd,fts,evs){
   var dateStr=FR_D[new Date(calY,calM,d).getDay()]+' '+d+' '+FR_M[calM]+' '+calY;
   var hebStr=fmtHebFr(hd);
   var html='<div class="cds-handle"></div>'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;">'
+    +'<div>'
     +'<div class="cds-date">'+dateStr+'</div>'
-    +'<div class="cds-heb">'+hebStr+'</div>';
+    +'<div class="cds-heb">'+hebStr+'</div>'
+    +'</div>'
+    +'<button onclick="closeDaySheet()" style="background:var(--gray-2);border:none;color:var(--dark);width:32px;height:32px;font-size:16px;cursor:pointer;border-radius:50%;flex-shrink:0;margin-top:4px;">✕</button>'
+    +'</div>';
   if(fts.length||evs.length){
     html+='<div class="cds-section-title">Événements</div>';
     fts.forEach(function(f){
@@ -3118,7 +3122,7 @@ function buildHome(){
     +(briefText?'<div class="hpc-brief-inline">'+briefText+'</div>':'')
     +'<button class="hpc-btn">Lire la paracha →</button>'
     +'</div>'
-    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter</button>'
+    +'<button onclick="openKriatTorah()" style="margin:8px 16px 0;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter la paracha</button>'
     +'</div>';
 
   // Cours du jour
@@ -3636,16 +3640,20 @@ function openHayomYom(){
       var data={fr:txt,src:'Hayom Yom · '+dateFrDisplay,url:loubUrl};
       HY_CACHE[key]=data;renderHayomYom(data);return;
     }
-    // 3. Fetch loubavitch.fr via corsproxy
+    // 3. Fetch loubavitch.fr via corsproxy avec timeout 5s
     var proxy='https://corsproxy.io/?url='+encodeURIComponent(loubUrl);
+    var _hyTimeout = setTimeout(function(){
+      renderHayomYomFallback(dateFrDisplay,loubUrl);
+    }, 5000);
     fetch(proxy)
       .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
       .then(function(html){
+        clearTimeout(_hyTimeout);
         var data=parseLoubavitchHayomYom(html,dateFrDisplay,loubUrl);
         if(data){HY_CACHE[key]=data;renderHayomYom(data);}
         else renderHayomYomFallback(dateFrDisplay,loubUrl);
       })
-      .catch(function(){renderHayomYomFallback(dateFrDisplay,loubUrl);});
+      .catch(function(){clearTimeout(_hyTimeout);renderHayomYomFallback(dateFrDisplay,loubUrl);});
   });
 }
 
