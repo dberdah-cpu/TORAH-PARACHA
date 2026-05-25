@@ -869,8 +869,8 @@ body{
 .cds-add-btn{width:100%;margin-top:16px;padding:14px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif}
 
 /* ── CALENDRIER ── */
-#cal-overlay{display:none;position:fixed;inset:0;z-index:300;overflow-y:auto;background:var(--gray-1)}
-#cal-overlay.open{display:block}
+#cal-overlay{display:none;position:fixed;inset:0;z-index:700;overflow-y:auto;background:var(--gray-1)}
+#cal-overlay.open{display:block;padding-bottom:80px;}
 #cal-sticky-hdr{
   position:sticky;top:0;z-index:10;
   background:rgba(241,245,249,0.94);
@@ -1329,6 +1329,7 @@ body{
     <div id="cal-month-heb"></div>
    </div>
    <div id="cal-hdr-right">
+    <button class="cal-nav-btn" onclick="closeCalOverlay()" style="font-size:16px;margin-right:4px;">✕</button>
     <button class="cal-nav-btn" onclick="calMove(-1)">‹</button>
     <button class="cal-nav-btn" onclick="calMove(1)">›</button>
     <button id="cal-close" onclick="closeCal()">✕</button>
@@ -2298,6 +2299,13 @@ function scheduleHavdalaReload(){
 
 // CALENDAR UI
 var calY,calM,calSel=null,calEvType='greg';
+function closeCalOverlay(){
+  var o = document.getElementById('cal-overlay');
+  if(o) o.style.display = 'none';
+  var nav = document.getElementById('bottom-nav');
+  if(nav) nav.style.display = 'flex';
+}
+
 function openCal(){
   if(!requireLogin()) return;
   var t=new Date();
@@ -2715,7 +2723,8 @@ async function shareShabbatWhatsApp(){
   // Récupérer le verset clé et le fond de la paracha
   var mc = MC[currentCID] || {};
   var versetCle = '';
-  if(mc.v && mc.v[0]) versetCle = (mc.v[0].fr||'').substring(0,120);
+  if(mc.accroche) versetCle = mc.accroche.replace(/<[^>]+>/g,'').substring(0,150);
+  else if(mc.v && mc.v[0]) versetCle = (mc.v[0].fr||'').substring(0,120);
   var resume = await waGenResume('En 2-3 phrases courtes : le message principal et l enseignement spirituel de la paracha ' + paraFr, 40);
   var now = new Date();
   var FR_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
