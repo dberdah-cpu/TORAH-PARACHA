@@ -10241,6 +10241,19 @@ function buildCoursCard(){
   html += '<div class="semaine-list" style="display:none;background:#fff;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">' + listItems + '</div>';
   html += '</div>';
 
+  // Dédicace locale
+  var ded = getDedicaceLocale();
+  if(ded){
+    var dedIcon = ded.type==='ame' ? '🕯' : ded.type==='refoua' ? '🏥' : '⭐';
+    var dedLabel = ded.type==='ame' ? 'Élévation de l\'âme de' : ded.type==='refoua' ? 'Refoua Chelema de' : 'Réussite de';
+    html = '<div style="background:#F8F4FF;border-radius:10px;padding:10px 14px;margin:0 16px 8px;display:flex;align-items:center;gap:10px;">'
+      + '<span style="font-size:20px;">'+dedIcon+'</span>'
+      + '<div><div style="font-size:10px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+dedLabel+'</div>'
+      + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div></div>'
+      + '</div>' + html;
+  }
+  html = '<button onclick="openDedicacePanel()" style="display:block;width:calc(100% - 32px);margin:0 16px 10px;padding:9px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>'
+    + html;
   return html;
 }
 
