@@ -1466,6 +1466,7 @@ body{
         oninput="applySliderSize('view-detail',this.value)">
       <span class="text-slider-label" style="font-size:15px;color:rgba(255,255,255,.9);font-weight:700;">A</span>
     </div>
+    <a href="https://paypal.me/KedoshimApp?country.x=FR&locale.x=fr_FR" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#003087,#009cde);color:#fff;padding:9px 16px;border-radius:20px;font-size:11px;font-weight:700;font-family:Poppins,sans-serif;text-decoration:none;margin:8px 16px 0;">💙 Soutenir</a>
     <button id="btn-kriat-p" onclick="openKriatTorah()" style="margin-top:10px;padding:8px 20px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">🎵 Écouter</button>
   </div>
   <div class="seg-ctrl">
@@ -2891,6 +2892,7 @@ function renderShabbatPanel(){
     +'<div id="sp-ai-content"><div class="sp-loading">Génération en cours…<br><div class="sp-dots"><span></span><span></span><span></span></div></div></div>'
     +'</div>';
 
+  html+='<a href="https://paypal.me/KedoshimApp?country.x=FR&locale.x=fr_FR" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#003087,#009cde);color:#fff;padding:12px 16px;border-radius:var(--radius);font-size:13px;font-weight:700;font-family:Poppins,sans-serif;text-decoration:none;margin:12px 16px 4px;">💙 Soutenir l\'application</a><div style="font-size:10px;color:var(--gray-4);text-align:center;margin-bottom:8px;font-family:Poppins,sans-serif;">CB · Apple Pay · PayPal</div>';
   html+='<button class="sp-open-btn" onclick="closeShabbatPanel();openP(currentCID)">Lire la Paracha complète ›</button>';
   html+='</div>';
 
@@ -5637,6 +5639,7 @@ var currentTheme='all';
 var expandedCards={};
 
 function showRecueilView(){
+  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour accéder aux Lumières de Torah.'); return; }
   ['view-home','view-detail','view-hayom','view-sefer','view-profile','view-recueil'].forEach(function(id){
     var el=document.getElementById(id);
     if(el) el.style.display='none';
@@ -6058,6 +6061,18 @@ function authSignOut(){
   });
 }
 
+function uploadProfilePhoto(input){
+  var file = input.files[0];
+  if(!file || !currentUser) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var dataUrl = e.target.result;
+    localStorage.setItem('profile_photo_' + currentUser.id, dataUrl);
+    updateProfileUI();
+  };
+  reader.readAsDataURL(file);
+}
+
 function updateProfileUI(){
   var fb=document.getElementById('auth-form-block');
   var cb=document.getElementById('profile-connected-block');
@@ -6074,8 +6089,30 @@ function updateProfileUI(){
     var dn=fname||currentUser.email.split('@')[0];
     if(nm)nm.textContent='Bonjour, '+dn+' 👋';
     if(em)em.textContent=currentUser.email;
-    if(av){av.textContent=dn[0].toUpperCase();av.style.background='rgba(255,255,255,0.25)';av.style.fontSize='28px';av.style.fontFamily='Poppins,sans-serif';av.style.fontWeight='700';av.style.color='#fff';}
-    if(inf)inf.innerHTML='📧 '+currentUser.email+'<br>🕐 Membre depuis '+new Date(currentUser.created_at).toLocaleDateString('fr-FR');
+    if(av){
+      // Récupérer photo Google ou photo uploadée
+      var photoUrl = (currentUser.user_metadata && (currentUser.user_metadata.avatar_url || currentUser.user_metadata.picture)) || null;
+      // Chercher aussi dans localStorage (photo uploadée)
+      var localPhoto = localStorage.getItem('profile_photo_' + currentUser.id);
+      if(localPhoto) photoUrl = localPhoto;
+      if(photoUrl){
+        av.innerHTML = '<img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.textContent=\''+dn[0].toUpperCase()+'\'">';
+        av.style.background = 'transparent';
+        av.style.fontSize = '0';
+      } else {
+        av.textContent = dn[0].toUpperCase();
+        av.style.background = 'rgba(255,255,255,0.25)';
+        av.style.fontSize = '28px';
+        av.style.fontFamily = 'Poppins,sans-serif';
+        av.style.fontWeight = '700';
+        av.style.color = '#fff';
+      }
+    }
+    if(inf){
+      inf.innerHTML='📧 '+currentUser.email+'<br>🕐 Membre depuis '+new Date(currentUser.created_at).toLocaleDateString('fr-FR');
+      // Bouton changer photo
+      inf.innerHTML += '<div style="margin-top:10px;"><label style="display:inline-block;padding:6px 14px;background:rgba(255,255,255,.2);color:#fff;border-radius:20px;font-size:11px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">📷 Changer ma photo<input type="file" accept="image/*" style="display:none" onchange="uploadProfilePhoto(this)"></label></div>';
+    }
     if(ntc)ntc.style.display='none';
   } else {
     fb.style.display='block';
@@ -6498,6 +6535,31 @@ function showShabbatBlock(){
   if(el&&havdalaTime) el.textContent='samedi soir après '+havdalaTime;
 }
 
+// ── GESTION DES ACCÈS ─────────────────────────────────────
+// Accès libre (sans login)
+function freeAccess(fn){
+  fn();
+}
+// Accès réservé aux membres connectés
+function premiumAccess(fn){
+  if(currentUser){ fn(); return; }
+  showAuthForm('Pour accéder à cette section, connectez-vous gratuitement.');
+}
+
+function showAuthForm(msg){
+  // Aller sur la page profil qui contient le formulaire
+  showProfileView();
+  if(msg){
+    var el = document.getElementById('auth-msg');
+    if(el){
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.style.background = '#EDE9FE';
+      el.style.color = '#5B21B6';
+    }
+  }
+}
+
 function checkAndBlockShabbat(){
   if(typeof isShabbatNow==='function'&&isShabbatNow()){
     showShabbatBlock();
@@ -6616,7 +6678,14 @@ function showToast(msg){
 
 
 function requireLogin(){
-  return true; // Login désactivé temporairement
+  if(currentUser) return true;
+  // Afficher le formulaire de login
+  showAuthForm();
+  return false;
+}
+
+function isLoggedIn(){
+  return !!currentUser;
 }
 
 function openRecueilSearch(){
@@ -8538,6 +8607,7 @@ function getCoursKey(paracha, day){
 // ══════════════════════════════════════════════════════════════
 
 function openHistoires(){
+  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour accéder aux histoires vraies.'); return; }
   if(!requireLogin()) return;
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoire-detail'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -8583,7 +8653,8 @@ function renderHistoires(){
     + '<input type="range" min="0" max="100" value="50" class="text-slider" id="slider_view-histoires"'
     + ' oninput="applySliderSize(\'view-histoires\',this.value)">'
     + '<span class="text-slider-label" style="font-size:16px;">A</span></div>';
-  document.getElementById('view-histoires').innerHTML = sliderH + h;
+  var ppHist = '<a href="https://paypal.me/KedoshimApp?country.x=FR&locale.x=fr_FR" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#003087,#009cde);color:#fff;padding:9px 16px;border-radius:20px;font-size:11px;font-weight:700;font-family:Poppins,sans-serif;text-decoration:none;margin:12px 16px 4px;">💙 Soutenir</a>';
+  document.getElementById('view-histoires').innerHTML = sliderH + h + ppHist;
   initSlider('view-histoires');
 }
 
@@ -8870,6 +8941,7 @@ function kriatClose(){
 }
 
 function openKriatTorah(overrideName){
+  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour écouter la lecture de la Paracha.'); return; }
   var parashaName = overrideName || currentParashaName || getParashaFromCalendar() || '';
   var info = TB_KRIAT[parashaName];
   if(!info){
@@ -8931,6 +9003,7 @@ async function load1MinVideo(parashaName){
 async function show1MinInDetail(parashaName){
   var old = document.getElementById('btn-1min-p');
   if(old) old.remove();
+  if(!isLoggedIn()) return; // Pas d'accès sans login
   var video = await load1MinVideo(parashaName);
   if(!video) return;
   var vidId = video.snippet.resourceId && video.snippet.resourceId.videoId;
@@ -9067,6 +9140,7 @@ function setFontSize(textId, size){
 
 // VIDEOS
 function openVideos(){
+  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour accéder aux vidéos du Rabbi.'); return; }
   if(!requireLogin()) return;
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile','view-cours','view-histoires','view-histoire-detail'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -9614,7 +9688,10 @@ function adminLoadVideos(){
         + '<span class="admin-badge ' + (v.actif ? 'admin-badge-green' : 'admin-badge-red') + '">'
         + (v.actif ? 'En ligne' : 'Masquée') + '</span>'
         + '</div>'
-        + '<button onclick="adminDeleteVideo(\'' + v.id + '\')" class="admin-btn admin-btn-danger" style="padding:6px 12px;font-size:12px;">✕</button>'
+        + '<div style="display:flex;flex-direction:column;gap:6px;">'
+        + '<button onclick="adminEditVideoById(\\\'' + v.id + '\\\',\\\'' + (v.titre||'').replace(/\'/g,'') + '\\\',\\\'' + (v.message||'').replace(/\'/g,'').substring(0,200) + '\\\')" class="admin-btn admin-btn-secondary" style="padding:5px 10px;font-size:11px;">✏️</button>'
+        + '<button onclick="adminDeleteVideo(\\\'' + v.id + '\\\')" class="admin-btn admin-btn-danger" style="padding:5px 10px;font-size:11px;">✕</button>'
+        + '</div>'
         + '</div>';
     });
     document.getElementById('adm-vid-list').innerHTML = html || '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo.</div>';
@@ -9702,6 +9779,9 @@ function adminAddVideo(){
   });
 }
 
+function adminEditVideoById(id, titre, message){
+  adminEditVideo(id, titre, message);
+}
 function adminEditVideo(id, titre, message){
   // Formulaire inline dans un overlay
   var overlay = document.createElement('div');
@@ -10324,30 +10404,11 @@ try {
     </div>
     <span class="nav-label">Recherche</span>
   </div>
-  <div class="nav-item" onclick="setActiveNav(this)">
+  <div class="nav-item" onclick="window.open('https://paypal.me/KedoshimApp?country.x=FR&locale.x=fr_FR','_blank');setActiveNav(this)">
     <div class="nav-icon">
-      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <svg viewBox="0 0 24 24" fill="#009cde"><path d="M7 2h11a2 2 0 0 1 2 2v1a5 5 0 0 1-5 5H9L7 18H4L2 6H1M7 2l-2 16m12-7a3 3 0 0 1-3 3h-4"/></svg>
     </div>
-    <span class="nav-label">Favoris</span>
-  </div>
-  <div class="nav-item" onclick="showProfileView();setActiveNav(this)">
-    <div class="nav-icon">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </div>
-    <span class="nav-label">Profil</span>
-  </div>
-</nav>
-
-<!-- ADMIN PANEL -->
-<div id="view-admin">
-  <div class="admin-header">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
-      <div>
-        <div class="admin-title">⚙️ Dashboard Admin</div>
-        <div class="admin-sub">Kedoshim · Torah App</div>
-      </div>
-      <button onclick="closeAdmin()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">✕ Fermer</button>
-    </div>
+    <span class="nav-label">Soutenir</span>
   </div>
   <div class="admin-tabs">
     <button class="admin-tab active" onclick="adminTab('videos')">🎬 Vidéos</button>
@@ -10424,6 +10485,18 @@ try {
       <div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:10px;">Si les vidéos ne s'affichent pas, vide le cache pour forcer le rechargement.</div>
       <button class="admin-btn admin-btn-danger" onclick="clearYTCache()" style="width:100%;">🗑 Vider le cache YouTube</button>
     </div>
+    <div class="admin-card" style="background:linear-gradient(135deg,#003087,#009cde);border:none;">
+      <div class="admin-card-title" style="color:#fff;">💙 Soutenir l'application</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.85);font-family:Poppins,sans-serif;margin-bottom:12px;line-height:1.6;">
+        Kedoshim est une app gratuite. Si elle vous apporte de la valeur, vous pouvez nous soutenir par un don libre.
+      </div>
+      <a href="https://www.paypal.com/donate" target="_blank"
+        style="display:block;background:#fff;color:#003087;text-align:center;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:14px;font-family:Poppins,sans-serif;text-decoration:none;">
+        💙 Faire un don via PayPal
+      </a>
+      <div style="font-size:11px;color:rgba(255,255,255,.6);text-align:center;margin-top:8px;font-family:Poppins,sans-serif;">CB, Apple Pay, PayPal acceptés</div>
+    </div>
+
     <div class="admin-card">
       <div class="admin-card-title">🔑 Infos Admin</div>
       <div class="admin-stat"><span class="admin-stat-label">Version app</span><span class="admin-stat-val">1.0</span></div>
