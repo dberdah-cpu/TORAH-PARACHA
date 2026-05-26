@@ -10241,19 +10241,6 @@ function buildCoursCard(){
   html += '<div class="semaine-list" style="display:none;background:#fff;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">' + listItems + '</div>';
   html += '</div>';
 
-  // Dédicace locale
-  var ded = getDedicaceLocale();
-  if(ded){
-    var dedIcon = ded.type==='ame' ? '🕯' : ded.type==='refoua' ? '🏥' : '⭐';
-    var dedLabel = ded.type==='ame' ? 'Élévation de l\'âme de' : ded.type==='refoua' ? 'Refoua Chelema de' : 'Réussite de';
-    html = '<div style="background:#F8F4FF;border-radius:10px;padding:10px 14px;margin:0 16px 8px;display:flex;align-items:center;gap:10px;">'
-      + '<span style="font-size:20px;">'+dedIcon+'</span>'
-      + '<div><div style="font-size:10px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+dedLabel+'</div>'
-      + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div></div>'
-      + '</div>' + html;
-  }
-  html = '<button onclick="openDedicacePanel()" style="display:block;width:calc(100% - 32px);margin:0 16px 10px;padding:9px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>'
-    + html;
   return html;
 }
 
@@ -10502,6 +10489,20 @@ function openCours(key){
     +'<div class="cv-source">📚 '+c.source+(c.sefaria?'&nbsp;&nbsp;<a href="'+c.sefaria+'" target="_blank" style="color:var(--purple);font-weight:600;text-decoration:none">Voir sur Sefaria ↗</a>':'')+'</div>'
     +'</div>';
 
+  // Bouton dédier
+  var ded = getDedicaceLocale();
+  var dedBtn = '<button onclick="openDedicacePanel()" style="display:block;width:calc(100% - 32px);margin:12px 16px 0;padding:10px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>';
+  if(ded){
+    var dedIcon2 = ded.type==='ame' ? '🕯' : ded.type==='refoua' ? '🏥' : '⭐';
+    var dedLabel2 = ded.type==='ame' ? 'Élévation de l\'âme de' : ded.type==='refoua' ? 'Refoua Chelema de' : 'Réussite de';
+    dedBtn += '<div style="background:#F8F4FF;border-radius:10px;padding:10px 14px;margin:8px 16px 0;display:flex;align-items:center;gap:10px;">'
+      + '<span style="font-size:20px;">'+dedIcon2+'</span>'
+      + '<div><div style="font-size:10px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+dedLabel2+'</div>'
+      + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div></div>'
+      + '</div>';
+  }
+  view.innerHTML += dedBtn;
+
   // Points
   if(typeof recordActivity==='function') recordActivity('cours', 8);
 }
@@ -10616,6 +10617,13 @@ try {
     <div id="kriat-progress-bar" style="height:3px;background:rgba(255,255,255,.2);border-radius:2px;cursor:pointer;" onclick="kriatSeek(event)">
       <div id="kriat-progress-fill" style="height:100%;background:#f59e0b;border-radius:2px;width:0%;transition:width .3s;"></div>
     </div>
+  </div>
+</div>
+
+<!-- Panneau dédicace -->
+<div id="dedicace-panel" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.5);">
+  <div style="background:#fff;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;padding:20px;max-height:90vh;overflow-y:auto;">
+    <div id="dedicace-content"></div>
   </div>
 </div>
 </body></html>
