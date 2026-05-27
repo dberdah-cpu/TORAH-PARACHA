@@ -9074,7 +9074,7 @@ function openDedicacePanel(){
       html += '<div style="font-size:11px;color:#f59e0b;font-family:Poppins,sans-serif;margin-bottom:12px;">⏳ Liste d\'attente — pré-commande possible</div>';
     }
     html += '<div style="display:flex;gap:8px;margin-bottom:12px;">';
-    [{j:7,p:18},{j:14,p:26},{j:30,p:36}].forEach(function(opt){
+    [{j:7,p:7},{j:14,p:13},{j:30,p:26}].forEach(function(opt){
       html += '<button onclick="selectDedicaceDuree('+opt.j+','+opt.p+')" id="ded-dur-'+opt.j+'" ';
       html += 'style="flex:1;padding:8px;background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.2);border-radius:10px;font-size:11px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">';
       html += opt.j+'j<br><span style="font-size:13px;">'+opt.p+'€</span></button>';
@@ -9112,7 +9112,8 @@ function saveDedicaceLocale(){
   var type = document.getElementById('ded-type').value;
   var nom = (document.getElementById('ded-nom').value||'').trim();
   if(!nom){ alert('Veuillez saisir un nom.'); return; }
-  _dedicaceLocale = {type:type, nom:nom};
+  var expiry = Date.now() + 7*24*3600*1000; // 7 jours
+  _dedicaceLocale = {type:type, nom:nom, expiry:expiry};
   try { localStorage.setItem('dedicace_locale', JSON.stringify(_dedicaceLocale)); } catch(e){}
   
   // Proposer la campagne payante
@@ -9129,7 +9130,7 @@ function saveDedicaceLocale(){
     + '<button onclick="closeDedicaceToast(this);openDedicacePanel()" style="flex:1;padding:9px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">✨ Lancer une campagne</button>'
     + '</div>';
   document.body.appendChild(msg);
-  setTimeout(function(){ if(msg.parentNode) msg.remove(); }, 8000);
+  // Pas de fermeture automatique — l'utilisateur doit choisir
 }
 
 function lancerCampagneDedicace(){
@@ -9181,10 +9182,24 @@ function loadDedicacesActives(cb){
 }
 
 function getDedicaceLocale(){
-  if(_dedicaceLocale) return _dedicaceLocale;
+  if(_dedicaceLocale){
+    if(_dedicaceLocale.expiry && Date.now() > _dedicaceLocale.expiry){
+      _dedicaceLocale = null;
+      try { localStorage.removeItem('dedicace_locale'); } catch(e){}
+      return null;
+    }
+    return _dedicaceLocale;
+  }
   try {
     var raw = localStorage.getItem('dedicace_locale');
-    if(raw) _dedicaceLocale = JSON.parse(raw);
+    if(raw){
+      var parsed = JSON.parse(raw);
+      if(parsed.expiry && Date.now() > parsed.expiry){
+        localStorage.removeItem('dedicace_locale');
+        return null;
+      }
+      _dedicaceLocale = parsed;
+    }
   } catch(e){}
   return _dedicaceLocale;
 }
