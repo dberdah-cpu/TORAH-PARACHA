@@ -10462,17 +10462,7 @@ function openCours(key){
     if(dx > 80 && viewC && viewC.style.display !== 'none') goHome();
   };
 
-  var rBar = '<div class="reader-bar">';
-  rBar += '<button class="reader-btn" onclick="readerToggle(this)" data-txt="cours-txt" data-bar="cours-rb">🔊 Écouter</button>';
-  rBar += '<button class="reader-btn paused" onclick="readerStop(this)" data-bar="cours-rb" style="padding:8px 12px;">■</button>';
-  rBar += '<div class="reader-size">';
-  rBar += '<span class="reader-size-label">A</span>';
-  rBar += '<input type="range" min="13" max="22" value="15" data-txt="cours-txt" oninput="readerSize(this)">';
-  rBar += '<span class="reader-size-label" style="font-size:17px;">A</span></div></div>'
-
-  // Si cours de fête sans contenu — afficher message spécial
-  if(c.fete && !c.verset.heb && !c.rachi){
-      // Dédicace en haut
+  // Dédicace en haut
   var ded = getDedicaceLocale();
   var dedTopHtml = '';
   if(ded){
@@ -10484,7 +10474,18 @@ function openCours(key){
       +'<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
       +'</div>';
   }
-  dedTopHtml += '<button onclick="openDedicacePanel()" style="display:block;width:100%;margin-bottom:16px;padding:10px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>';
+  dedTopHtml += '<button onclick="openDedicacePanel()" style="display:block;width:calc(100% - 32px);margin:0 16px 16px;padding:10px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>';
+
+  var rBar = '<div class="reader-bar">';
+  rBar += '<button class="reader-btn" onclick="readerToggle(this)" data-txt="cours-txt" data-bar="cours-rb">🔊 Écouter</button>';
+  rBar += '<button class="reader-btn paused" onclick="readerStop(this)" data-bar="cours-rb" style="padding:8px 12px;">■</button>';
+  rBar += '<div class="reader-size">';
+  rBar += '<span class="reader-size-label">A</span>';
+  rBar += '<input type="range" min="13" max="22" value="15" data-txt="cours-txt" oninput="readerSize(this)">';
+  rBar += '<span class="reader-size-label" style="font-size:17px;">A</span></div></div>'
+
+  // Si cours de fête sans contenu — afficher message spécial
+  if(c.fete && !c.verset.heb && !c.rachi){
 
 view.innerHTML = dedTopHtml + '<div style="padding:30px 20px;text-align:center;">'
       + '<div style="font-size:60px;margin-bottom:16px;">' + (c.fete_icone||'✨') + '</div>'
@@ -10496,7 +10497,7 @@ view.innerHTML = dedTopHtml + '<div style="padding:30px 20px;text-align:center;"
     return;
   }
 
-  view.innerHTML = '<div class="cours-view">'
+  view.innerHTML = dedTopHtml + '<div class="cours-view">'
     + rBar
     + '<div id="cours-txt">'
     + '<div class="cv-label">📜 Torah · Rachi · Rabbi</div>'
