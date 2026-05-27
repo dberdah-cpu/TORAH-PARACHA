@@ -10434,10 +10434,12 @@ function openCours(key){
 }
 
 function openCours(key){
-  if(!requireLogin()) return;
-  if(checkAndBlockShabbat()) return;
+  console.log('[openCours] key='+key+' loggedIn='+isLoggedIn()+' c='+!!(COURS_DATA[key]));
+  if(!requireLogin()){ console.log('[openCours] requireLogin failed'); return; }
+  if(checkAndBlockShabbat()){ console.log('[openCours] Shabbat blocked'); return; }
   var c = COURS_DATA[key];
-  if(!c) return;
+  if(!c){ console.log('[openCours] COURS_DATA['+key+'] not found'); return; }
+  console.log('[openCours] proceeding with cours');
   // Masquer toutes les vues
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-profile'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
