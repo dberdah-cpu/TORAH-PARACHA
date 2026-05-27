@@ -9175,8 +9175,12 @@ function lancerCampagneDedicace(){
 }
 
 function closeDedicaceToast(btn){
-  var toast = btn.closest ? btn.closest('div') : btn.parentNode.parentNode;
-  if(toast && toast.parentNode) toast.parentNode.removeChild(toast);
+  var el = btn;
+  // Remonter jusqu'au toast (div avec id ou position:fixed)
+  while(el && el.parentNode && el.parentNode !== document.body){
+    el = el.parentNode;
+  }
+  if(el && el.parentNode === document.body) el.parentNode.removeChild(el);
 }
 function closeDedicacePanel(){
   document.getElementById('dedicace-panel').style.display = 'none';
