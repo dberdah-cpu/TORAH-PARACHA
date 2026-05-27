@@ -3131,6 +3131,18 @@ function buildHome(){
   // Cours du jour
   var _cc = buildCoursCard();
   console.log('[buildHome] cours-card='+ (_cc?'OK':'VIDE'));
+  // Carte dédicace sur l'accueil
+  var _ded = getDedicaceLocale();
+  if(_ded){
+    var _dedIcon = _ded.type==='ame'?'🕯':_ded.type==='refoua'?'🏥':'⭐';
+    var _dedLabel = _ded.type==='ame'?'Élévation de l\'âme de':_ded.type==='refoua'?'Refoua Chelema de':'Réussite de';
+    var _daysLeft = _ded.expiry ? Math.ceil((_ded.expiry - Date.now())/(1000*3600*24)) : 7;
+    h += '<div onclick="openDedicacePanel()" style="margin:0 16px 8px;background:linear-gradient(135deg,#F8F4FF,#EDE9FE);border-radius:12px;padding:10px 14px;cursor:pointer;border-left:4px solid #7c3aed;">'
+      +'<div style="font-size:9px;font-weight:700;color:#7c3aed;letter-spacing:.5px;margin-bottom:3px;">🕯 COURS DÉDIÉ · '+_daysLeft+'j restants</div>'
+      +'<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+_dedIcon+' '+_dedLabel+'</div>'
+      +'<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+_ded.nom+'</div>'
+      +'</div>';
+  }
   h += '<div id="cours-card-container">'+_cc+'</div>';
 
   // Carte Histoires Vraies
