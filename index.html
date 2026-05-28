@@ -1254,6 +1254,15 @@ body{
     <div id="profile-connected-block" style="display:none;background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
       <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;font-family:Poppins,sans-serif">Mon compte</div>
       <div id="profile-info" style="font-size:14px;color:var(--gray-4);margin-bottom:20px;line-height:1.6"></div>
+      <div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:8px;">📲 Inviter un ami</div>
+        <button onclick="inviterWhatsApp()" style="width:100%;background:#fff;color:#128C7E;border:none;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">📲 Inviter via WhatsApp</button>
+      </div>
+      <div style="background:linear-gradient(135deg,#003087,#009cde);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:8px;">💙 Soutenir Kedoshim</div>
+        <a href="https://donate.stripe.com/14A14p67K0X10gv87RdQQ00" target="_blank" style="display:block;background:#fff;color:#003087;text-align:center;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;text-decoration:none;">💙 Faire un don</a>
+        <div style="font-size:10px;color:rgba(255,255,255,.7);text-align:center;margin-top:6px;font-family:Poppins,sans-serif;">CB · Apple Pay · Google Pay</div>
+      </div>
       <button onclick="authSignOut()"
         style="width:100%;padding:13px;background:transparent;color:#EF4444;border:1.5px solid #FEE2E2;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif">
         Se déconnecter
@@ -3083,6 +3092,14 @@ function buildHome(){
       + '</div>';
   }
 
+  // ── RECETTES CHABBAT ──
+  h += '<div onclick="openRecettes()" style="margin:0 16px 12px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">'
+    + '<span style="font-size:28px;">🍽</span>'
+    + '<div style="flex:1;">'
+    + '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Recettes de Chabbat</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Partagez vos recettes avec la communauté</div>'
+    + '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
   var hasFete = !!nextFete;
   var hasShabbat = !!(candleTime||havdalaTime);
   if(hasFete || hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
@@ -3149,13 +3166,7 @@ function buildHome(){
   // Carte Histoires Vraies
 
 
-  // ── RECETTES CHABBAT ──
-  h += '<div onclick="openRecettes()" style="margin:0 16px 12px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">'
-    + '<span style="font-size:28px;">🍽</span>'
-    + '<div style="flex:1;">'
-    + '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Recettes de Chabbat</div>'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Partagez vos recettes avec la communauté</div>'
-    + '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
 
   // ── HAYOM YOM + SEFER côte à côte ──
   h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
@@ -11125,4 +11136,76 @@ try {
     <div id="dedicace-content"></div>
   </div>
 </div>
+
+<!-- Dashboard Admin -->
+<div id="view-admin" style="display:none;position:fixed;inset:0;z-index:8000;background:var(--gray-1);overflow-y:auto;padding:0 0 80px;">
+  <div style="background:#fff;padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--gray-2);position:sticky;top:0;z-index:10;">
+    <button onclick="closeAdmin()" style="background:var(--gray-2);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">✕</button>
+    <div style="font-size:16px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">⚙️ Dashboard Admin</div>
+  </div>
+  <div style="display:flex;gap:8px;padding:12px 16px;overflow-x:auto;">
+    <button class="admin-tab active" onclick="adminTab('videos')">🎬 Vidéos</button>
+    <button class="admin-tab" onclick="adminTab('tarifs')">💰 Tarifs</button>
+    <button class="admin-tab" onclick="adminTab('boutique')">🛍 Boutique</button>
+    <button class="admin-tab" onclick="adminTab('users')">👥 Utilisateurs</button>
+    <button class="admin-tab" onclick="adminTab('stats')">📊 Stats</button>
+  </div>
+
+  <!-- Section Vidéos -->
+  <div id="admin-section-videos" class="admin-section active" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">🎬 Ajouter une vidéo</div>
+      <input type="file" accept="video/*" id="adm-file" style="display:none" onchange="adminFileSelected(this)">
+      <label for="adm-file" class="admin-btn admin-btn-primary" style="display:block;text-align:center;margin-bottom:12px;cursor:pointer;">📱 Choisir une vidéo</label>
+      <div id="adm-upload-progress" style="display:none;margin-bottom:8px;">
+        <div style="background:var(--gray-2);border-radius:4px;height:6px;"><div id="adm-progress-bar" style="background:#7c3aed;height:6px;border-radius:4px;width:0%;transition:width .3s;"></div></div>
+        <div id="adm-upload-txt" style="font-size:11px;color:var(--gray-4);margin-top:4px;font-family:Poppins,sans-serif;"></div>
+      </div>
+      <input id="adm-titre" class="admin-input" placeholder="Titre de la vidéo" style="margin-bottom:8px;">
+      <textarea id="adm-message" class="admin-input" placeholder="Message / description" style="min-height:60px;resize:vertical;margin-bottom:8px;"></textarea>
+      <button onclick="adminAddVideo()" class="admin-btn admin-btn-primary" style="width:100%;">✅ Publier la vidéo</button>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-title">📋 Vidéos publiées</div>
+      <div id="adm-vid-list"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
+    </div>
+  </div>
+
+  <!-- Section Tarifs -->
+  <div id="admin-section-tarifs" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">💰 Gestion des tarifs</div>
+      <div id="adm-tarifs-list"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
+      <button onclick="adminAddTarif()" class="admin-btn admin-btn-primary" style="margin-top:12px;width:100%;">+ Ajouter un tarif</button>
+    </div>
+  </div>
+
+  <!-- Section Boutique -->
+  <div id="admin-section-boutique" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">🛍 Boutique partenaires</div>
+      <div style="background:#FFF7ED;border-radius:10px;padding:14px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:4px;">⏳ Bientôt disponible</div>
+        <div style="font-size:12px;color:#b45309;">La boutique sera activée dès les premiers accords partenaires.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Utilisateurs -->
+  <div id="admin-section-users" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">👥 Utilisateurs récents</div>
+      <div id="adm-users-list"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
+    </div>
+  </div>
+
+  <!-- Section Stats -->
+  <div id="admin-section-stats" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">📊 Statistiques</div>
+      <div id="adm-stats-content"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
+    </div>
+  </div>
+</div>
+
 </body></html>
