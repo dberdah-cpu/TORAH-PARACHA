@@ -1680,8 +1680,8 @@ var PARASHA_FR = {
   'Bereshit':'Beréchit','Noach':'Noach','Lech-Lecha':'Lekh Lekha','Lech Lecha':'Lekh Lekha',
   'Vayera':'Vayéra','Chayei Sara':'Chayei Sarah','Chayei Sarah':'Chayei Sarah',
   'Toldot':'Toldot','Vayetzei':'Vayétsé','Vayishlach':'Vayichlah','Vayeshev':'Vayéchev',
-  'Miketz':'Mikets','Vayigash':'Vayigach','Vayechi':"Vayé'hi",
-  'Shemot':'Chemot',"Va'era":"Va'era",'Bo':'Bo','Beshalach':'Bechalah',
+  'Miketz':'Mikets','Vayigash':'Vayigach','Vayechi':'Vayéhi','Vayechi':"Vayé'hi",
+  'Shemot':'Chemot',"Va'era":"Va'era",'Vaera':'Vaéra','Bo':'Bo','Beshalach':'Bechalah',
   'Yitro':'Yitro','Mishpatim':'Michpatim','Terumah':'Terouma','Tetzaveh':'Tetsavé',
   'Ki Tisa':'Ki Tissa','Ki Tissa':'Ki Tissa',
   'Vayakhel':'Vayakhel','Pekudei':'Pekoudei','Vayakhel-Pekudei':'Vayakhel-Pekoudei',
@@ -1692,7 +1692,7 @@ var PARASHA_FR = {
   'Acharei Mot':'Acharei Mot','Acharei Mot-Kedoshim':'Acharei Mot-Kedochim',
   'Emor':'Emor','Behar':'Behar','Bechukotai':'Behoukotaï','Behar-Bechukotai':'Behar-Behoukotaï',
   'Bamidbar':'Bamidbar','Nasso':'Nasso',
-  "Beha'alotcha":'Behaalotekha','Shelach':'Chelah','Korach':'Koraḥ',
+  "Beha'alotcha":'Behaalotekha','Behalotcha':'Behalotecha','Shelach':'Chelah','Korach':'Koraḥ',
   'Chukat':'Houkat','Balak':'Balak','Chukat-Balak':'Houkat-Balak','Pinchas':'Pinhas',
   'Matot':'Matot','Masei':'Masseï','Matot-Masei':'Matot-Masseï',
   'Devarim':'Devarim',"Va'etchanan":'Vaethanan','Vaetchanan':'Vaethanan',
@@ -6099,10 +6099,22 @@ function updateProfileUI(){
       // Chercher aussi dans localStorage (photo uploadée)
       var localPhoto = localStorage.getItem('profile_photo_' + currentUser.id);
       if(localPhoto) photoUrl = localPhoto;
+      // Rendre l'avatar cliquable
+      av.style.cursor = 'pointer';
+      av.title = 'Changer ma photo';
+      av.onclick = function(){
+        var inp = document.createElement('input');
+        inp.type = 'file'; inp.accept = 'image/*';
+        inp.onchange = function(){ uploadProfilePhoto(inp); };
+        inp.click();
+      };
       if(photoUrl){
         av.innerHTML = '<img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.textContent=\''+dn[0].toUpperCase()+'\'">';
         av.style.background = 'transparent';
         av.style.fontSize = '0';
+        // Indicateur de modification
+        av.innerHTML += '<div style="position:absolute;bottom:0;right:0;background:#7c3aed;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;">📷</div>';
+        av.style.position = 'relative';
       } else {
         av.textContent = dn[0].toUpperCase();
         av.style.background = 'rgba(255,255,255,0.25)';
@@ -6115,7 +6127,6 @@ function updateProfileUI(){
     if(inf){
       inf.innerHTML='📧 '+currentUser.email+'<br>🕐 Membre depuis '+new Date(currentUser.created_at).toLocaleDateString('fr-FR');
       // Bouton changer photo
-      inf.innerHTML += '<div style="margin-top:10px;"><label style="display:inline-block;padding:6px 14px;background:rgba(255,255,255,.2);color:#fff;border-radius:20px;font-size:11px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">📷 Changer ma photo<input type="file" accept="image/*" style="display:none" onchange="uploadProfilePhoto(this)"></label></div>';
     }
     if(ntc)ntc.style.display='none';
   } else {
@@ -9121,17 +9132,18 @@ function saveDedicaceLocale(){
   var icon = type==='ame' ? '🕯' : type==='refoua' ? '🏥' : '⭐';
   var label = type==='ame' ? 'Élévation de l\'âme de' : type==='refoua' ? 'Refoua Chelema de' : 'Réussite de';
   
+  // Afficher toast simple
   var msg = document.createElement('div');
+  msg.id = 'dedicace-toast';
   msg.style.cssText = 'position:fixed;bottom:80px;left:16px;right:16px;z-index:9600;background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 30px rgba(0,0,0,.2);';
-  msg.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;">'+icon+' Dédicace enregistrée !</div>'
-    + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:12px;">'+label+' <strong>'+nom+'</strong> est visible uniquement par vous.</div>'
-    + '<div style="font-size:12px;color:var(--purple);font-weight:600;font-family:Poppins,sans-serif;margin-bottom:10px;">Souhaitez-vous la rendre visible par toute la communauté ?</div>'
+  msg.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:6px;">'+icon+' Dédicace enregistrée</div>'
+    + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:12px;">'+label+' <strong>'+nom+'</strong></div>'
+    + '<div style="font-size:12px;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:12px;">Souhaitez-vous qu\'elle soit vue par toute la communauté Kedoshim ?</div>'
     + '<div style="display:flex;gap:8px;">'
     + '<button onclick="closeDedicaceToast(this)" style="flex:1;padding:9px;background:var(--gray-2);color:var(--dark);border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">Non merci</button>'
-    + '<button onclick="closeDedicaceToast(this);openDedicacePanel()" style="flex:1;padding:9px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">✨ Lancer une campagne</button>'
+    + '<button onclick="showDedicaceTarifs(this)" style="flex:1;padding:9px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;cursor:pointer;">Oui, partager</button>'
     + '</div>';
   document.body.appendChild(msg);
-  // Pas de fermeture automatique — l'utilisateur doit choisir
 }
 
 function lancerCampagneDedicace(){
@@ -9171,11 +9183,74 @@ function updateDedicaceHome(){
   var di = ded.type==='ame'?'🕯':ded.type==='refoua'?'🏥':'⭐';
   var dl = ded.type==='ame'?'Élévation de l\'âme de':ded.type==='refoua'?'Refoua Chelema de':'Réussite de';
   var dd = ded.expiry ? Math.ceil((ded.expiry - Date.now())/(1000*3600*24)) : 7;
-  el.innerHTML = '<div onclick="openDedicacePanel()" style="margin:0 16px 8px;background:linear-gradient(135deg,#F8F4FF,#EDE9FE);border-radius:12px;padding:10px 14px;cursor:pointer;border-left:4px solid #7c3aed;">'
-    + '<div style="font-size:9px;font-weight:700;color:#7c3aed;letter-spacing:.5px;margin-bottom:3px;">🕯 COURS DÉDIÉ · '+dd+'j restants</div>'
-    + '<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+di+' '+dl+'</div>'
-    + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+  el.innerHTML = '<div onclick="openDedicacePanel()" style="margin:0 16px 8px;background:linear-gradient(135deg,#78350f,#b45309);border-radius:12px;padding:12px 16px;cursor:pointer;position:relative;box-shadow:0 2px 12px rgba(180,83,9,.3);">'
+    + '<div style="display:flex;align-items:center;gap:10px;">'
+    + '<span style="font-size:24px;">🕯</span>'
+    + '<div style="flex:1;">'
+    + '<div style="font-size:9px;font-weight:700;color:rgba(255,215,0,.8);letter-spacing:1px;margin-bottom:2px;">COURS DÉDIÉ · '+dd+'j restants</div>'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.75);font-family:Poppins,sans-serif;">'+di+' '+dl+'</div>'
+    + '<div style="font-size:14px;font-weight:700;color:#FFD700;font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+    + '</div>'
+    + '<span style="color:rgba(255,215,0,.6);font-size:16px;">›</span>'
+    + '</div>'
     + '</div>';
+}
+
+function showDedicaceTarifs(btn){
+  // Remplacer le contenu du toast par les tarifs
+  var toast = btn;
+  while(toast && toast.parentNode !== document.body) toast = toast.parentNode;
+  if(!toast) return;
+  toast.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'
+    + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">Choisir la durée</div>'
+    + '<button onclick="closeDedicaceToast(this)" style="background:var(--gray-2);border:none;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;">✕</button>'
+    + '</div>'
+    + '<div style="display:flex;gap:8px;margin-bottom:12px;">'
+    + '<div id="tarifs-loading" style="text-align:center;padding:10px;color:var(--gray-4);font-size:12px;">Chargement...</div>'
+    + '</div>';
+  // Charger les tarifs depuis Supabase
+  if(supabase){
+    supabase.from('tarifs').select('*').eq('actif',true).order('ordre').then(function(res){
+      var tarifs = res.data || [{nom:'7 jours',duree_jours:7,prix:7},{nom:'14 jours',duree_jours:14,prix:13},{nom:'30 jours',duree_jours:30,prix:26}];
+      var container = toast.querySelector('#tarifs-loading');
+      if(!container) return;
+      var btns = '';
+      tarifs.forEach(function(t){
+        btns += '<button onclick="selectAndPay('+t.duree_jours+','+t.prix+',this)" style="flex:1;padding:10px 4px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:12px;cursor:pointer;font-family:Poppins,sans-serif;">'
+          + '<div style="font-size:12px;font-weight:700;color:var(--dark);">'+t.nom+'</div>'
+          + '<div style="font-size:14px;font-weight:800;color:#7c3aed;">'+t.prix+'€</div></button>';
+      });
+      container.outerHTML = '<div style="display:flex;gap:8px;margin-bottom:12px;">'+btns+'</div>';
+    });
+  } else {
+    var container2 = toast.querySelector('#tarifs-loading');
+    if(container2) container2.outerHTML = '<div style="display:flex;gap:8px;margin-bottom:12px;">'
+      + '<button onclick="selectAndPay(7,7,this)" style="flex:1;padding:10px 4px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:12px;cursor:pointer;"><div style="font-size:12px;font-weight:700;">7 jours</div><div style="font-size:14px;font-weight:800;color:#7c3aed;">7€</div></button>'
+      + '<button onclick="selectAndPay(14,13,this)" style="flex:1;padding:10px 4px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:12px;cursor:pointer;"><div style="font-size:12px;font-weight:700;">14 jours</div><div style="font-size:14px;font-weight:800;color:#7c3aed;">13€</div></button>'
+      + '<button onclick="selectAndPay(30,26,this)" style="flex:1;padding:10px 4px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:12px;cursor:pointer;"><div style="font-size:12px;font-weight:700;">30 jours</div><div style="font-size:14px;font-weight:800;color:#7c3aed;">26€</div></button>'
+      + '</div>';
+  }
+}
+
+function selectAndPay(jours, prix, btn){
+  var type = _dedicaceLocale ? _dedicaceLocale.type : 'reussite';
+  var nom = _dedicaceLocale ? _dedicaceLocale.nom : '';
+  _dedicaceDureeSelected = {j:jours, p:prix};
+  // Sauvegarder dans Supabase et ouvrir Stripe
+  if(supabase && currentUser){
+    supabase.from('dedicaces').insert({
+      type: type, nom: nom, duree: jours, prix: prix,
+      statut: 'attente_paiement',
+      user_id: currentUser.id,
+      user_email: currentUser.email
+    }).then(function(){
+      window.open('https://donate.stripe.com/14A14p67K0X10gv87RdQQ00', '_blank');
+      closeDedicaceToast(btn);
+    });
+  } else {
+    window.open('https://donate.stripe.com/14A14p67K0X10gv87RdQQ00', '_blank');
+    closeDedicaceToast(btn);
+  }
 }
 
 function closeDedicaceToast(btn){
@@ -9861,6 +9936,95 @@ function closeAdmin(){
   document.getElementById('view-admin').style.display = 'none';
 }
 
+// ── GESTION TARIFS ──────────────────────────────────────────
+var _tarifsCache = null;
+
+function adminLoadTarifs(){
+  if(!supabase) return;
+  supabase.from('tarifs').select('*').order('ordre').then(function(res){
+    _tarifsCache = res.data || [];
+    var list = document.getElementById('adm-tarifs-list');
+    if(!list) return;
+    if(!_tarifsCache.length){
+      list.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Aucun tarif.</div>';
+      return;
+    }
+    var h = '';
+    _tarifsCache.forEach(function(t){
+      h += '<div style="background:var(--gray-1);border-radius:10px;padding:12px;margin-bottom:8px;">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:center;">';
+      h += '<div>';
+      h += '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+t.nom+'</div>';
+      h += '<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;">';
+      if(t.duree_jours) h += t.duree_jours+' jours · ';
+      h += '<strong>'+t.prix+'€</strong>';
+      h += ' · '+(t.actif?'<span style="color:#16a34a;">✓ Actif</span>':'<span style="color:#ef4444;">✗ Inactif</span>');
+      h += '</div></div>';
+      h += '<div style="display:flex;gap:6px;">';
+      h += '<button onclick="adminEditTarifById(\'' + t.id + '\')" class="admin-btn admin-btn-secondary" style="padding:5px 10px;font-size:11px;">✏️</button>';
+      h += '<button onclick="adminDeleteTarif(\'' + t.id + '\')" class="admin-btn admin-btn-danger" style="padding:5px 10px;font-size:11px;">✕</button>';
+      h += '</div></div></div>';
+    });
+    list.innerHTML = h;
+  });
+}
+
+function adminAddTarif(){
+  adminEditTarif(null,'',30,0,true);
+}
+
+function adminEditTarifById(id){
+  if(!_tarifsCache) return;
+  var t = _tarifsCache.find(function(x){ return x.id === id; });
+  if(t) adminEditTarif(t.id, t.nom, t.duree_jours, t.prix, t.actif);
+}
+
+function adminEditTarif(id, nom, duree, prix, actif){
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9800;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;';
+  overlay.innerHTML = '<div style="background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-height:80vh;overflow-y:auto;">'
+    + '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:16px;">'+(id?'Modifier':'Ajouter')+' un tarif</div>'
+    + '<input id="edit-tarif-id" type="hidden" value="'+(id||'')+'">'
+    + '<input id="edit-tarif-nom" class="admin-input" placeholder="Nom (ex: Dédicace 7 jours)" value="'+nom+'" style="margin-bottom:10px;">'
+    + '<input id="edit-tarif-desc" class="admin-input" placeholder="Description" style="margin-bottom:10px;">'
+    + '<div style="display:flex;gap:10px;margin-bottom:10px;">'
+    + '<input id="edit-tarif-duree" type="number" class="admin-input" placeholder="Durée (jours)" value="'+duree+'" style="flex:1;">'
+    + '<input id="edit-tarif-prix" type="number" class="admin-input" placeholder="Prix (€)" value="'+prix+'" style="flex:1;">'
+    + '</div>'
+    + '<label style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px;font-family:Poppins,sans-serif;">'
+    + '<input id="edit-tarif-actif" type="checkbox" '+(actif?'checked':'')+'>Actif</label>'
+    + '<div style="display:flex;gap:10px;">'
+    + '<button onclick="closeDedicaceToast(this)" class="admin-btn" style="flex:1;">Annuler</button>'
+    + '<button onclick="adminSaveTarif(document.getElementById(\'edit-tarif-id\').value)" class="admin-btn admin-btn-primary" style="flex:1;">Enregistrer</button>'
+    + '</div></div>';
+  document.body.appendChild(overlay);
+}
+
+function adminSaveTarif(id){
+  if(!id) id = document.getElementById('edit-tarif-id') ? document.getElementById('edit-tarif-id').value : null;
+  var nom = document.getElementById('edit-tarif-nom').value.trim();
+  var duree = parseInt(document.getElementById('edit-tarif-duree').value)||0;
+  var prix = parseFloat(document.getElementById('edit-tarif-prix').value)||0;
+  var actif = document.getElementById('edit-tarif-actif').checked;
+  if(!nom){ alert('Nom requis'); return; }
+  var data = {nom:nom, duree_jours:duree, prix:prix, actif:actif};
+  var p = id && id!=='null' ? supabase.from('tarifs').update(data).eq('id',id) : supabase.from('tarifs').insert(data);
+  p.then(function(){
+    document.querySelectorAll('div[style*="inset:0"]').forEach(function(el){ el.remove(); });
+    adminLoadTarifs();
+    showToast('Tarif enregistré !');
+  });
+}
+
+function adminDeleteTarif(id){
+  if(!confirm('Supprimer ce tarif ?')) return;
+  supabase.from('tarifs').delete().eq('id',id).then(function(){ adminLoadTarifs(); });
+}
+
+function adminAddPartenaire(){
+  showToast('Bientôt disponible');
+}
+
 function adminTab(tab){
   document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('active'); });
   document.querySelectorAll('.admin-section').forEach(function(s){ s.classList.remove('active'); });
@@ -10503,10 +10667,15 @@ function openCours(key){
   if(ded){
     var dedIcon2 = ded.type==='ame'?'🕯':ded.type==='refoua'?'🏥':'⭐';
     var dedLabel2 = ded.type==='ame'?'Élévation de l\'âme de':ded.type==='refoua'?'Refoua Chelema de':'Réussite de';
-    dedTopHtml = '<div style="background:linear-gradient(135deg,#F8F4FF,#EDE9FE);border-radius:12px;padding:12px 16px;margin:0 0 16px;border-left:4px solid #7c3aed;">'
-      +'<div style="font-size:10px;font-weight:700;color:#7c3aed;letter-spacing:.5px;margin-bottom:4px;">🕯 COURS DÉDIÉ</div>'
-      +'<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+dedIcon2+' '+dedLabel2+'</div>'
-      +'<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+    dedTopHtml = '<div style="background:linear-gradient(135deg,#78350f,#b45309);border-radius:12px;padding:12px 16px;margin:0 0 16px;box-shadow:0 2px 12px rgba(180,83,9,.3);">'
+      +'<div style="display:flex;align-items:center;gap:10px;">'
+      +'<span style="font-size:24px;">🕯</span>'
+      +'<div>'
+      +'<div style="font-size:9px;font-weight:700;color:rgba(255,215,0,.8);letter-spacing:1px;margin-bottom:2px;">COURS DÉDIÉ</div>'
+      +'<div style="font-size:11px;color:rgba(255,255,255,.75);font-family:Poppins,sans-serif;">'+dedIcon2+' '+dedLabel2+'</div>'
+      +'<div style="font-size:14px;font-weight:700;color:#FFD700;font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+      +'</div>'
+      +'</div>'
       +'</div>';
   }
   dedTopHtml += '<button onclick="openDedicacePanel()" style="display:block;width:calc(100% - 32px);margin:0 16px 16px;padding:10px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>';
