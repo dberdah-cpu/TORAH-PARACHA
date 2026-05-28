@@ -1389,6 +1389,7 @@ body{
 </div>
 <div id="view-home"></div>
 <div id="view-cours" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
+<div id="view-recettes" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;overflow-y:auto;"></div>
 <div id="view-histoires" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-histoire-detail" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
 <div id="view-videos" style="display:none;max-width:600px;margin:0 auto;padding:72px 0 160px;"></div>
@@ -2725,6 +2726,17 @@ async function waGenResume(sujet, mots){
   } catch(e){ return ''; }
 }
 
+function inviterWhatsApp(){
+  var nom = currentUser && currentUser.user_metadata ? (currentUser.user_metadata.full_name || currentUser.user_metadata.name || '') : '';
+  var msg = '🕍 *Kedoshim* — La Torah au quotidien\n\n';
+  if(nom) msg += nom + ' vous invite sur Kedoshim !\n\n';
+  msg += '📖 Paracha · Cours du jour · Hayom Yom\n';
+  msg += '🕯 Horaires Chabbat · Calendrier hébraïque\n';
+  msg += '🍽 Recettes de Chabbat et bien plus...\n\n';
+  msg += '👉 ' + APP_LINK;
+  waShare(msg);
+}
+
 function shareShabbatWhatsApp(){
   var paraFr = PARASHA_FR[currentParashaName] || currentParashaName || '';
   var paraHeb = currentParashaHeb || '';
@@ -3137,6 +3149,14 @@ function buildHome(){
   // Carte Histoires Vraies
 
 
+  // ── RECETTES CHABBAT ──
+  h += '<div onclick="openRecettes()" style="margin:0 16px 12px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;">'
+    + '<span style="font-size:28px;">🍽</span>'
+    + '<div style="flex:1;">'
+    + '<div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Recettes de Chabbat</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.8);font-family:Poppins,sans-serif;">Partagez vos recettes avec la communauté</div>'
+    + '</div><span style="color:#fff;font-size:18px;">›</span></div>';
+
   // ── HAYOM YOM + SEFER côte à côte ──
   h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
   h += '<div onclick="openHayomYom()" style="flex:1;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:var(--radius);padding:12px;cursor:pointer;text-align:center;">'
@@ -3289,7 +3309,7 @@ function goHome(){
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   _readerPlaying = false;
   // Cacher ET vider les vues dynamiques
-  ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail'].forEach(function(id){
+  ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail','view-recettes'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){
       el.style.display='none';
@@ -6692,10 +6712,22 @@ function showToast(msg){
 
 
 
-function requireLogin(){
+function requireLogin(retryFn){
   if(currentUser) return true;
-  // Afficher le formulaire de login
-  showAuthForm();
+  // Supabase pas encore initialisé - attendre
+  if(!supabase){
+    if(retryFn) setTimeout(retryFn, 500);
+    return false;
+  }
+  // Vérifier la session async
+  supabase.auth.getSession().then(function(r){
+    if(r.data && r.data.session){
+      currentUser = r.data.session.user;
+      if(retryFn) retryFn();
+    } else {
+      showAuthForm();
+    }
+  });
   return false;
 }
 
@@ -9297,6 +9329,253 @@ function getDedicaceLocale(){
     }
   } catch(e){}
   return _dedicaceLocale;
+}
+
+
+// ══ RECETTES CHABBAT ═════════════════════════════════════════
+var _recettesData = [];
+var _userLikes = [];
+
+function openRecettes(){
+  if(checkAndBlockShabbat()) return;
+  document.querySelectorAll('#view-home,#view-detail,#view-hayom,#view-sefer,#view-recueil,#view-profile,#view-cours,#view-histoires,#view-histoire-detail,#view-videos').forEach(function(el){ el.style.display='none'; });
+  var v = document.getElementById('view-recettes');
+  if(v) v.style.display = 'block';
+  document.getElementById('btn-back').style.display = 'flex';
+  window.scrollTo(0,0);
+  renderRecettes();
+}
+
+function renderRecettes(){
+  var v = document.getElementById('view-recettes');
+  if(!v) return;
+  v.innerHTML = '<div style="padding:16px 16px 8px;display:flex;justify-content:space-between;align-items:center;">'
+    + '<div style="font-size:18px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">🍽 Recettes de Chabbat</div>'
+    + (isLoggedIn() ? '<button onclick="openAddRecette()" style="padding:8px 16px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">+ Ajouter</button>' : '')
+    + '</div>'
+    + '<div id="recettes-list" style="padding:0 16px;"></div>';
+  loadRecettes();
+}
+
+function loadRecettes(){
+  if(!supabase){
+    document.getElementById('recettes-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;text-align:center;padding:20px;">Chargement...</div>';
+    return;
+  }
+  // Charger les likes de l'utilisateur
+  if(currentUser){
+    supabase.from('recettes_likes').select('recette_id').eq('user_id',currentUser.id)
+      .then(function(r){ _userLikes = (r.data||[]).map(function(x){return x.recette_id;}); });
+  }
+  supabase.from('recettes').select('*').order('created_at',{ascending:false})
+    .then(function(res){
+      _recettesData = res.data || [];
+      displayRecettes();
+    }).catch(function(){
+      document.getElementById('recettes-list').innerHTML = '<div style="color:#ef4444;font-size:13px;text-align:center;padding:20px;">Erreur de chargement</div>';
+    });
+}
+
+function displayRecettes(){
+  var list = document.getElementById('recettes-list');
+  if(!list) return;
+  if(!_recettesData.length){
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;">'
+      + '<div style="font-size:40px;margin-bottom:12px;">🍽</div>'
+      + '<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">Aucune recette pour l\'instant</div>'
+      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:6px;">Soyez le premier à partager une recette !</div>'
+      + (isLoggedIn() ? '<button onclick="openAddRecette()" style="margin-top:16px;padding:10px 24px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">+ Ajouter une recette</button>' : '')
+      + '</div>';
+    return;
+  }
+  var h = '';
+  _recettesData.forEach(function(r){
+    var typeColor = r.type==='lait' ? '#3b82f6' : r.type==='viande' ? '#ef4444' : '#16a34a';
+    var typeLabel = r.type==='lait' ? '🥛 Lait' : r.type==='viande' ? '🥩 Viande' : '🌿 Parvé';
+    var liked = _userLikes.indexOf(r.id) >= 0;
+    h += '<div style="background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-bottom:16px;overflow:hidden;">';
+    // Header
+    h += '<div style="padding:12px 14px 8px;display:flex;align-items:center;gap:10px;">';
+    if(r.user_photo){
+      h += '<img src="'+r.user_photo+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" onerror="this.style.display=\'none\'">';
+    } else {
+      h += '<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">'+(r.user_nom?r.user_nom[0].toUpperCase():'?')+'</div>';
+    }
+    h += '<div style="flex:1;">';
+    h += '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+r.user_nom+'</div>';
+    h += '<div style="font-size:10px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+new Date(r.created_at).toLocaleDateString("fr-FR")+'</div>';
+    h += '</div>';
+    h += '<span style="background:'+typeColor+';color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;font-family:Poppins,sans-serif;">'+typeLabel+'</span>';
+    h += '</div>';
+    // Titre
+    h += '<div style="padding:0 14px 10px;font-size:15px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">'+r.titre+'</div>';
+    // Média scrollable
+    if(r.photo_url || r.video_url){
+      h += '<div style="overflow-x:auto;white-space:nowrap;padding:0 14px 10px;-webkit-overflow-scrolling:touch;">';
+      if(r.photo_url){
+        h += '<img src="'+r.photo_url+'" style="display:inline-block;width:200px;height:150px;object-fit:cover;border-radius:10px;margin-right:8px;vertical-align:top;">';
+      }
+      if(r.video_url){
+        h += '<video style="display:inline-block;width:200px;height:150px;object-fit:cover;border-radius:10px;vertical-align:top;" controls playsinline preload="metadata">'
+          + '<source src="'+r.video_url+'" type="video/mp4"></video>';
+      }
+      h += '</div>';
+    }
+    // Texte recette
+    if(r.texte){
+      h += '<div style="padding:0 14px 10px;font-size:13px;color:var(--dark);font-family:Poppins,sans-serif;line-height:1.6;white-space:pre-wrap;">'+r.texte+'</div>';
+    }
+    // Footer likes
+    h += '<div style="padding:8px 14px 12px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--gray-1);">';
+    h += '<div style="padding:8px 14px 12px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--gray-1);">'
+      + '<button onclick="toggleLike(\'' + r.id + '\')" style="background:none;border:none;cursor:pointer;font-size:20px;">'
+      + (liked ? '❤️' : '🤍')
+      + '</button><span style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;" id="likes-' + r.id + '">' + r.likes + '</span>'
+      + (currentUser && r.user_id === currentUser.id ? '<button onclick="deleteRecette(\'' + r.id + '\')" style="background:none;border:none;cursor:pointer;font-size:12px;color:#ef4444;font-family:Poppins,sans-serif;margin-left:auto;">🗑 Supprimer</button>' : '')
+      + '</div></div>';
+    if(currentUser && r.user_id === currentUser.id){
+    }
+    h += '</div></div>';
+  });
+  list.innerHTML = h;
+}
+
+function toggleLike(recetteId){
+  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour liker une recette.'); return; }
+  var liked = _userLikes.indexOf(recetteId) >= 0;
+  if(liked){
+    supabase.from('recettes_likes').delete().eq('recette_id',recetteId).eq('user_id',currentUser.id)
+      .then(function(){
+        _userLikes = _userLikes.filter(function(x){return x!==recetteId;});
+        var r = _recettesData.find(function(x){return x.id===recetteId;});
+        if(r){ r.likes = Math.max(0, r.likes-1); supabase.from('recettes').update({likes:r.likes}).eq('id',recetteId).then(function(){}); }
+        displayRecettes();
+      });
+  } else {
+    supabase.from('recettes_likes').insert({recette_id:recetteId, user_id:currentUser.id})
+      .then(function(){
+        _userLikes.push(recetteId);
+        var r = _recettesData.find(function(x){return x.id===recetteId;});
+        if(r){ r.likes = (r.likes||0)+1; supabase.from('recettes').update({likes:r.likes}).eq('id',recetteId).then(function(){}); }
+        displayRecettes();
+      });
+  }
+}
+
+function deleteRecette(id){
+  if(!confirm('Supprimer cette recette ?')) return;
+  supabase.from('recettes').delete().eq('id',id).then(function(){
+    _recettesData = _recettesData.filter(function(r){return r.id!==id;});
+    displayRecettes();
+    showToast('Recette supprimée');
+  });
+}
+
+function openAddRecette(){
+  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour ajouter une recette.'); return; }
+  var overlay = document.createElement('div');
+  overlay.id = 'add-recette-overlay';
+  var formHTML = [];
+  formHTML.push('<div style="background:#fff;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;padding:20px;max-height:92vh;overflow-y:auto;">');
+  formHTML.push('<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">');
+  formHTML.push('<div style="font-size:16px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">🍽 Nouvelle recette</div>');
+  formHTML.push('<button onclick="closeAddRecette()" style="background:var(--gray-2);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">✕</button>');
+  formHTML.push('</div>');
+  formHTML.push('<input id="rec-titre" class="admin-input" placeholder="Titre de la recette *" style="margin-bottom:10px;">');
+  formHTML.push('<div style="display:flex;gap:8px;margin-bottom:12px;">');
+  formHTML.push('<button onclick="setRecType(\x27lait\x27,this)" class="rec-type-btn" style="flex:1;padding:9px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">🥛 Lait</button>');
+  formHTML.push('<button onclick="setRecType(\x27viande\x27,this)" class="rec-type-btn" style="flex:1;padding:9px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">🥩 Viande</button>');
+  formHTML.push('<button onclick="setRecType(\x27parve\x27,this)" class="rec-type-btn" style="flex:1;padding:9px;background:var(--gray-1);border:2px solid var(--gray-2);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">🌿 Parvé</button>');
+  formHTML.push('</div>');
+  formHTML.push('<textarea id="rec-texte" placeholder="Ingrédients et préparation..." style="width:100%;padding:12px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:13px;font-family:Poppins,sans-serif;min-height:120px;box-sizing:border-box;resize:vertical;margin-bottom:10px;"></textarea>');
+  formHTML.push('<div style="display:flex;gap:8px;margin-bottom:12px;">');
+  formHTML.push('<label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:var(--gray-1);border:1.5px dashed var(--gray-3);border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;">📷 Photo<input type="file" accept="image/*" style="display:none" onchange="previewRecMedia(this,\x27photo\x27)"></label>');
+  formHTML.push('<label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:var(--gray-1);border:1.5px dashed var(--gray-3);border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;font-family:Poppins,sans-serif;">🎥 Vidéo<input type="file" accept="video/*" style="display:none" onchange="previewRecMedia(this,\x27video\x27)"></label>');
+  formHTML.push('</div>');
+  formHTML.push('<div id="rec-preview" style="display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch;min-height:0;"></div>');
+  formHTML.push('<button onclick="submitRecette()" style="width:100%;padding:12px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:20px;font-size:14px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">Publier la recette</button>');
+  formHTML.push('</div>');
+  overlay.innerHTML = formHTML.join('');
+  document.body.appendChild(overlay);
+  window._recType = null;
+  window._recPhotoFile = null;
+  window._recVideoFile = null;
+}
+
+function closeAddRecette(){
+  var o = document.getElementById('add-recette-overlay');
+  if(o) o.remove();
+}
+
+function setRecType(type, btn){
+  window._recType = type;
+  document.querySelectorAll('.rec-type-btn').forEach(function(b){ b.style.border='2px solid var(--gray-2)'; b.style.background='var(--gray-1)'; });
+  btn.style.border = '2px solid #f59e0b';
+  btn.style.background = '#FFF7ED';
+}
+
+function previewRecMedia(input, type){
+  var file = input.files[0];
+  if(!file) return;
+  if(type==='photo') window._recPhotoFile = file;
+  else window._recVideoFile = file;
+  var preview = document.getElementById('rec-preview');
+  if(!preview) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var el = type==='photo'
+      ? '<img src="'+e.target.result+'" style="width:120px;height:100px;object-fit:cover;border-radius:10px;flex-shrink:0;">'
+      : '<video src="'+e.target.result+'" style="width:120px;height:100px;object-fit:cover;border-radius:10px;flex-shrink:0;" controls playsinline></video>';
+    preview.innerHTML += el;
+    preview.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitRecette(){
+  var titre = document.getElementById('rec-titre').value.trim();
+  var texte = document.getElementById('rec-texte').value.trim();
+  if(!titre){ alert('Le titre est obligatoire.'); return; }
+  if(!window._recType){ alert('Choisissez Lait, Viande ou Parvé.'); return; }
+  var btn = document.querySelector('#add-recette-overlay button:last-child');
+  if(btn){ btn.textContent = 'Publication...'; btn.disabled = true; }
+  var photoUrl = null, videoUrl = null;
+  // Upload photo
+  if(window._recPhotoFile && supabase){
+    var pName = 'recettes/'+Date.now()+'_photo.jpg';
+    var pRes = await supabase.storage.from('videos').upload(pName, window._recPhotoFile, {contentType: window._recPhotoFile.type});
+    if(!pRes.error){
+      var pPub = supabase.storage.from('videos').getPublicUrl(pName);
+      photoUrl = pPub.data.publicUrl;
+    }
+  }
+  // Upload vidéo
+  if(window._recVideoFile && supabase){
+    var vName = 'recettes/'+Date.now()+'_video.mp4';
+    var vRes = await supabase.storage.from('videos').upload(vName, window._recVideoFile, {contentType: window._recVideoFile.type});
+    if(!vRes.error){
+      var vPub = supabase.storage.from('videos').getPublicUrl(vName);
+      videoUrl = vPub.data.publicUrl;
+    }
+  }
+  var userNom = currentUser.user_metadata && (currentUser.user_metadata.full_name || currentUser.user_metadata.name) || currentUser.email.split('@')[0];
+  var userPhoto = currentUser.user_metadata && (currentUser.user_metadata.avatar_url || currentUser.user_metadata.picture) || null;
+  supabase.from('recettes').insert({
+    user_id: currentUser.id,
+    user_nom: userNom,
+    user_photo: userPhoto,
+    titre: titre,
+    type: window._recType,
+    texte: texte || null,
+    photo_url: photoUrl,
+    video_url: videoUrl,
+    likes: 0
+  }).then(function(){
+    var o = document.getElementById('add-recette-overlay');
+    if(o) o.remove();
+    showToast('Recette publiée ! 🎉');
+    loadRecettes();
+  });
 }
 
 function closeKriatTorah(){
