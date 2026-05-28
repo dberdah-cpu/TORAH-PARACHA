@@ -9171,10 +9171,16 @@ function updateDedicaceHome(){
   var di = ded.type==='ame'?'🕯':ded.type==='refoua'?'🏥':'⭐';
   var dl = ded.type==='ame'?'Élévation de l\'âme de':ded.type==='refoua'?'Refoua Chelema de':'Réussite de';
   var dd = ded.expiry ? Math.ceil((ded.expiry - Date.now())/(1000*3600*24)) : 7;
-  el.innerHTML = '<div onclick="openDedicacePanel()" style="margin:0 16px 8px;background:linear-gradient(135deg,#F8F4FF,#EDE9FE);border-radius:12px;padding:10px 14px;cursor:pointer;border-left:4px solid #7c3aed;">'
-    + '<div style="font-size:9px;font-weight:700;color:#7c3aed;letter-spacing:.5px;margin-bottom:3px;">🕯 COURS DÉDIÉ · '+dd+'j restants</div>'
-    + '<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+di+' '+dl+'</div>'
-    + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+  el.innerHTML = '<div onclick="openDedicacePanel()" style="margin:0 16px 8px;background:linear-gradient(135deg,#78350f,#b45309);border-radius:12px;padding:12px 16px;cursor:pointer;position:relative;box-shadow:0 2px 12px rgba(180,83,9,.3);">'
+    + '<div style="display:flex;align-items:center;gap:10px;">'
+    + '<span style="font-size:24px;">🕯</span>'
+    + '<div style="flex:1;">'
+    + '<div style="font-size:9px;font-weight:700;color:rgba(255,215,0,.8);letter-spacing:1px;margin-bottom:2px;">COURS DÉDIÉ · '+dd+'j restants</div>'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.75);font-family:Poppins,sans-serif;">'+di+' '+dl+'</div>'
+    + '<div style="font-size:14px;font-weight:700;color:#FFD700;font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+    + '</div>'
+    + '<span style="color:rgba(255,215,0,.6);font-size:16px;">›</span>'
+    + '</div>'
     + '</div>';
 }
 
@@ -10503,10 +10509,15 @@ function openCours(key){
   if(ded){
     var dedIcon2 = ded.type==='ame'?'🕯':ded.type==='refoua'?'🏥':'⭐';
     var dedLabel2 = ded.type==='ame'?'Élévation de l\'âme de':ded.type==='refoua'?'Refoua Chelema de':'Réussite de';
-    dedTopHtml = '<div style="background:linear-gradient(135deg,#F8F4FF,#EDE9FE);border-radius:12px;padding:12px 16px;margin:0 0 16px;border-left:4px solid #7c3aed;">'
-      +'<div style="font-size:10px;font-weight:700;color:#7c3aed;letter-spacing:.5px;margin-bottom:4px;">🕯 COURS DÉDIÉ</div>'
-      +'<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;">'+dedIcon2+' '+dedLabel2+'</div>'
-      +'<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+    dedTopHtml = '<div style="background:linear-gradient(135deg,#78350f,#b45309);border-radius:12px;padding:12px 16px;margin:0 0 16px;box-shadow:0 2px 12px rgba(180,83,9,.3);">'
+      +'<div style="display:flex;align-items:center;gap:10px;">'
+      +'<span style="font-size:24px;">🕯</span>'
+      +'<div>'
+      +'<div style="font-size:9px;font-weight:700;color:rgba(255,215,0,.8);letter-spacing:1px;margin-bottom:2px;">COURS DÉDIÉ</div>'
+      +'<div style="font-size:11px;color:rgba(255,255,255,.75);font-family:Poppins,sans-serif;">'+dedIcon2+' '+dedLabel2+'</div>'
+      +'<div style="font-size:14px;font-weight:700;color:#FFD700;font-family:Poppins,sans-serif;">'+ded.nom+'</div>'
+      +'</div>'
+      +'</div>'
       +'</div>';
   }
   dedTopHtml += '<button onclick="openDedicacePanel()" style="display:block;width:calc(100% - 32px);margin:0 16px 16px;padding:10px;background:linear-gradient(135deg,#7c3aed,#db2877);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;">🕯 Dédier ce cours</button>';
