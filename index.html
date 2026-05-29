@@ -10321,25 +10321,45 @@ function adminToast(msg, ok){
 function adminLoadVideos(){
   sbFetch('/rest/v1/videos_data?order=ordre.asc,created_at.desc&select=*')
   .then(function(data){
-    if(!Array.isArray(data)){ 
-      document.getElementById('adm-vid-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo enregistrée.</div>';
+    var list = document.getElementById('adm-vid-list');
+    if(!Array.isArray(data)){
+      list.innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo enregistrée.</div>';
       return;
     }
-    var html = '';
+    list.innerHTML = '';
     data.forEach(function(v){
-      html += '<div class="admin-vid-item">'
-        + '<div class="admin-vid-info">'
-        + '<div class="admin-vid-titre">' + v.titre + '</div>'
-        + '<div class="admin-vid-msg">' + (v.message||'').substring(0,80) + '...</div>'
-        + '<span class="admin-badge ' + (v.actif ? 'admin-badge-green' : 'admin-badge-red') + '">'
-        + (v.actif ? 'En ligne' : 'Masquée') + '</span>'
-        + '</div>' + '<div style="display:flex;flex-direction:column;gap:6px;">'
-        + '<button onclick="adminDeleteVideo(\'' + v.id + '\')" class="admin-btn admin-btn-danger" style="padding:6px 12px;font-size:12px;">🗑 Suppr</button>'
-        + '</div>'
-        + '</div>';
+      var item = document.createElement('div');
+      item.className = 'admin-vid-item';
+      item.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;padding:10px;background:#fff;border-radius:var(--radius-sm);margin-bottom:8px;box-shadow:var(--shadow-sm);gap:8px;';
+      var badge = v.actif
+        ? '<span class="admin-badge admin-badge-green">En ligne</span>'
+        : '<span class="admin-badge admin-badge-red">Masquée</span>';
+      var info = document.createElement('div');
+      info.style.flex = '1';
+      info.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:3px;">' + v.titre + '</div>'
+        + '<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:4px;">' + (v.message||'').substring(0,80) + '</div>'
+        + badge;
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;flex-direction:column;gap:6px;flex-shrink:0;';
+      // Bouton modifier
+      var btnEdit = document.createElement('button');
+      btnEdit.className = 'admin-btn admin-btn-secondary';
+      btnEdit.style.cssText = 'padding:6px 10px;font-size:12px;';
+      btnEdit.textContent = '✏️ Modifier';
+      btnEdit.onclick = function(){ adminEditVideoById(v.id, v.titre, v.message||'', v.url||''); };
+      // Bouton supprimer
+      var btnDel = document.createElement('button');
+      btnDel.className = 'admin-btn admin-btn-danger';
+      btnDel.style.cssText = 'padding:6px 10px;font-size:12px;';
+      btnDel.textContent = '🗑 Suppr';
+      btnDel.onclick = function(){ adminDeleteVideo(v.id); };
+      btns.appendChild(btnEdit);
+      btns.appendChild(btnDel);
+      item.appendChild(info);
+      item.appendChild(btns);
+      list.appendChild(item);
     });
-    document.getElementById('adm-vid-list').innerHTML = html || '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo.</div>';
-    // Mettre à jour aussi la section vidéos de l'app
+    if(!data.length) list.innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune vidéo.</div>';
     if(data.length) syncVideosFromDB(data);
   })
   .catch(function(){
