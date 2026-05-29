@@ -10351,11 +10351,15 @@ function adminLoadVideos(){
 
 function adminFileSelected(input){
   var file = input.files[0]; if(!file) return;
-  document.getElementById('adm-upload-zone').innerHTML = '<div style="font-size:20px;">🎬</div>'
+  // Mettre à jour la zone visuelle
+  var zone = document.getElementById('adm-upload-zone');
+  if(zone) zone.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">🎬</div>'
     + '<div style="font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">' + file.name + '</div>'
-    + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;">' + (file.size/1024/1024).toFixed(1) + ' Mo</div>';
-  var titre = document.getElementById('adm-vid-titre');
-  if(!titre.value) titre.value = file.name.replace(/\.mp4$/i,'').replace(/[-_]/g,' ');
+    + '<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:2px;">' + (file.size/1024/1024).toFixed(1) + ' Mo</div>';
+  // Pré-remplir le titre si vide
+  var titre = document.getElementById('adm-titre');
+  if(titre && !titre.value) titre.value = file.name.replace(/\.mp4$/i,'').replace(/[-_]/g,' ');
+  // Lancer l'upload
   adminUploadFile(file);
 }
 
@@ -10363,9 +10367,9 @@ function adminUploadFile(file){
   var progress = document.getElementById('adm-upload-progress');
   var bar = document.getElementById('adm-progress-bar');
   var txt = document.getElementById('adm-progress-text');
-  progress.style.display = 'block';
-  bar.style.width = '0%';
-  txt.textContent = 'Upload en cours...';
+  if(progress) progress.style.display = 'block';
+  if(bar) bar.style.width = '0%';
+  if(txt) txt.textContent = 'Upload en cours...';
   var xhr = new XMLHttpRequest();
   var uploadUrl = 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/videos/' + encodeURIComponent(file.name);
   xhr.open('POST', uploadUrl, true);
@@ -10376,29 +10380,28 @@ function adminUploadFile(file){
   xhr.upload.onprogress = function(e){
     if(e.lengthComputable){
       var pct = Math.round(e.loaded/e.total*100);
-      bar.style.width = pct+'%';
-      txt.textContent = pct+'% uploadé...';
+      if(bar) bar.style.width = pct+'%';
+      if(txt) txt.textContent = pct+'% uploadé...';
     }
   };
   xhr.onload = function(){
     if(xhr.status===200||xhr.status===201){
       var pubUrl = 'https://atsfgzabpwirfhnzpzei.supabase.co/storage/v1/object/public/videos/' + encodeURIComponent(file.name);
       document.getElementById('adm-vid-url').value = pubUrl;
-      bar.style.width = '100%';
-      bar.style.background = '#10bb81';
-      txt.textContent = '✅ Upload terminé !';
+      if(bar){ bar.style.width = '100%'; bar.style.background = '#10bb81'; }
+      if(txt) txt.textContent = '✅ Upload terminé — appuyez sur Publier';
       adminToast('Vidéo uploadée !', true);
     } else {
-      txt.textContent = '❌ Erreur '+xhr.status;
+      if(txt) txt.textContent = '❌ Erreur '+xhr.status;
       adminToast('Erreur upload');
     }
   };
-  xhr.onerror = function(){ txt.textContent='❌ Erreur réseau'; adminToast('Erreur réseau'); };
+  xhr.onerror = function(){ if(txt) txt.textContent='❌ Erreur réseau'; adminToast('Erreur réseau'); };
   xhr.send(file);
 }
 
 function adminAddVideo(){
-  var url = document.getElementById('adm-vid-url') ? document.getElementById('adm-vid-url').value.trim() : '';
+  var url = (document.getElementById('adm-vid-url') || {value:''}).value.trim();
   var titre = (document.getElementById('adm-titre') || document.getElementById('adm-vid-titre') || {value:''}).value.trim();
   var msg = (document.getElementById('adm-message') || document.getElementById('adm-vid-msg') || {value:''}).value.trim();
   if(!titre){ adminToast('Titre obligatoire'); return; }
@@ -11141,15 +11144,26 @@ try {
   <div id="admin-section-videos" class="admin-section active" style="padding:0 16px;">
     <div class="admin-card">
       <div class="admin-card-title">🎬 Ajouter une vidéo</div>
-      <input type="file" accept="video/*" id="adm-file" style="display:none" onchange="adminFileSelected(this)">
-      <label for="adm-file" class="admin-btn admin-btn-primary" style="display:block;text-align:center;margin-bottom:12px;cursor:pointer;">📱 Choisir une vidéo</label>
-      <div id="adm-upload-progress" style="display:none;margin-bottom:8px;">
-        <div style="background:var(--gray-2);border-radius:4px;height:6px;"><div id="adm-progress-bar" style="background:#7c3aed;height:6px;border-radius:4px;width:0%;transition:width .3s;"></div></div>
-        <div id="adm-upload-txt" style="font-size:11px;color:var(--gray-4);margin-top:4px;font-family:Poppins,sans-serif;"></div>
+      <!-- Zone sélection fichier -->
+      <div id="adm-upload-zone" onclick="document.getElementById('adm-file').click()" style="border:2px dashed var(--purple);border-radius:10px;padding:20px;text-align:center;cursor:pointer;margin-bottom:12px;background:#faf5ff;">
+        <div style="font-size:32px;margin-bottom:6px;">📱</div>
+        <div style="font-size:14px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">Choisir une vidéo</div>
+        <div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Depuis ta pellicule</div>
       </div>
-      <input id="adm-titre" class="admin-input" placeholder="Titre de la vidéo" style="margin-bottom:8px;">
-      <textarea id="adm-message" class="admin-input" placeholder="Message / description" style="min-height:60px;resize:vertical;margin-bottom:8px;"></textarea>
-      <button onclick="adminAddVideo()" class="admin-btn admin-btn-primary" style="width:100%;">✅ Publier la vidéo</button>
+      <input type="file" accept="video/*" id="adm-file" style="display:none" onchange="adminFileSelected(this)">
+      <!-- Barre de progression -->
+      <div id="adm-upload-progress" style="display:none;margin-bottom:12px;">
+        <div style="background:var(--gray-2);border-radius:4px;height:8px;overflow:hidden;">
+          <div id="adm-progress-bar" style="background:#7c3aed;height:8px;border-radius:4px;width:0%;transition:width .3s;"></div>
+        </div>
+        <div id="adm-progress-text" style="font-size:11px;color:var(--gray-4);margin-top:4px;font-family:Poppins,sans-serif;text-align:center;"></div>
+      </div>
+      <!-- URL résultante (cachée, remplie auto après upload) -->
+      <input type="hidden" id="adm-vid-url" value="">
+      <!-- Titre et description -->
+      <input id="adm-titre" class="admin-input" placeholder="Titre de la vidéo *" style="margin-bottom:8px;">
+      <textarea id="adm-message" class="admin-input" placeholder="Message / description (optionnel)" style="min-height:60px;resize:vertical;margin-bottom:12px;"></textarea>
+      <button onclick="adminAddVideo()" class="admin-btn admin-btn-primary" style="width:100%;padding:13px;font-size:14px;">✅ Publier la vidéo</button>
     </div>
     <div class="admin-card">
       <div class="admin-card-title">📋 Vidéos publiées</div>
