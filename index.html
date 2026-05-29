@@ -1235,15 +1235,7 @@ body{
     <div id="profile-connected-block" style="display:none;background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
       <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;font-family:Poppins,sans-serif">Mon compte</div>
       <div id="profile-info" style="font-size:14px;color:var(--gray-4);margin-bottom:20px;line-height:1.6"></div>
-      <button onclick="authSignOut()"
-        style="width:100%;padding:13px;background:transparent;color:#EF4444;border:1.5px solid #FEE2E2;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif">
-        Se déconnecter
-      </button>
-    </div>
-
-    <!-- Config notice -->
-    <div id="supabase-notice" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
-            <div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
+      <div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;">
         <div style="font-size:13px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:8px;">📲 Inviter un ami</div>
         <button onclick="inviterWhatsApp()" style="width:100%;background:#fff;color:#128C7E;border:none;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">📲 Inviter via WhatsApp</button>
       </div>
@@ -1252,6 +1244,15 @@ body{
         <a href="https://donate.stripe.com/14A14p67K0X10gv87RdQQ00" target="_blank" style="display:block;background:#fff;color:#003087;text-align:center;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;text-decoration:none;">💙 Faire un don</a>
         <div style="font-size:10px;color:rgba(255,255,255,.7);text-align:center;margin-top:6px;font-family:Poppins,sans-serif;">CB · Apple Pay · Google Pay</div>
       </div>
+      <button onclick="authSignOut()"
+        style="width:100%;padding:13px;background:transparent;color:#EF4444;border:1.5px solid #FEE2E2;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif">
+        Se déconnecter
+      </button>
+    </div>
+
+    <!-- Config notice -->
+    <div id="supabase-notice" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
+      
 
       <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px;font-family:Poppins,sans-serif">⚙️ Configuration requise</div>
       <div style="font-size:12px;color:var(--gray-4);line-height:1.7">Pour activer l'authentification, remplace <code style="background:var(--gray-2);padding:1px 6px;border-radius:4px;font-size:11px">SUPABASE_URL</code> et <code style="background:var(--gray-2);padding:1px 6px;border-radius:4px;font-size:11px">SUPABASE_ANON_KEY</code> dans le code avec tes vraies clés Supabase.</div>
@@ -10397,18 +10398,18 @@ function adminUploadFile(file){
 }
 
 function adminAddVideo(){
-  var url = document.getElementById('adm-vid-url').value.trim();
-  var titre = document.getElementById('adm-vid-titre').value.trim();
-  var msg = document.getElementById('adm-vid-msg').value.trim();
-  if(!url || !titre){ adminToast('URL et titre obligatoires'); return; }
+  var url = document.getElementById('adm-vid-url') ? document.getElementById('adm-vid-url').value.trim() : '';
+  var titre = (document.getElementById('adm-titre') || document.getElementById('adm-vid-titre') || {value:''}).value.trim();
+  var msg = (document.getElementById('adm-message') || document.getElementById('adm-vid-msg') || {value:''}).value.trim();
+  if(!titre){ adminToast('Titre obligatoire'); return; }
   sbFetch('/rest/v1/videos_data', 'POST', {url:url, titre:titre, message:msg, actif:true, ordre:0})
   .then(function(data){
     if(data && !data.error){
       adminToast('Vidéo ajoutée !', true);
       // Reset complet du formulaire
-      document.getElementById('adm-vid-url').value = '';
-      document.getElementById('adm-vid-titre').value = '';
-      document.getElementById('adm-vid-msg').value = '';
+      var _u=document.getElementById('adm-vid-url'); if(_u)_u.value='';
+      var _t=document.getElementById('adm-titre')||document.getElementById('adm-vid-titre'); if(_t)_t.value='';
+      var _m=document.getElementById('adm-message')||document.getElementById('adm-vid-msg'); if(_m)_m.value='';
       // Reset zone upload
       var zone = document.getElementById('adm-upload-zone');
       if(zone) zone.innerHTML = '<div style="font-size:32px;margin-bottom:8px;">📱</div>'
@@ -10476,7 +10477,7 @@ function adminLoadUsers(){
   sbFetch('/rest/v1/profiles?order=created_at.desc&select=*')
   .then(function(data){
     if(!Array.isArray(data) || !data.length){
-      document.getElementById('adm-user-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucun utilisateur inscrit.</div>';
+      document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucun utilisateur inscrit.</div>';
       return;
     }
     var html = '';
@@ -10492,10 +10493,10 @@ function adminLoadUsers(){
         + (u.role==='admin' ? '<span class="admin-badge" style="background:#ede9fe;color:#5b21b6;">Admin</span>' : '')
         + '</div>';
     });
-    document.getElementById('adm-user-list').innerHTML = html;
+    document.getElementById('adm-users-list').innerHTML = html;
   })
   .catch(function(){
-    document.getElementById('adm-user-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Connexion à la DB utilisateurs impossible.</div>';
+    document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Connexion à la DB utilisateurs impossible.</div>';
   });
 }
 
