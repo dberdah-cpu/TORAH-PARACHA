@@ -9505,8 +9505,9 @@ function openAddRecette(){
   if(!isLoggedIn()){ showAuthForm('Connectez-vous pour ajouter une recette.'); return; }
   var overlay = document.createElement('div');
   overlay.id = 'add-recette-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.5);overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:flex-end;';
   var formHTML = [];
-  formHTML.push('<div style="background:#fff;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;padding:20px;max-height:92vh;overflow-y:auto;">');
+  formHTML.push('<div style="background:#fff;border-radius:16px 16px 0 0;width:100%;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;">');
   formHTML.push('<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">');
   formHTML.push('<div style="font-size:16px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">🍽 Nouvelle recette</div>');
   formHTML.push('<button onclick="closeAddRecette()" style="background:var(--gray-2);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">✕</button>');
@@ -11574,11 +11575,11 @@ try {
 
 
 <!-- Panneau Notifications -->
-<div id="notif-panel" style="display:none;position:fixed;inset:0;z-index:7000;">
+<div id="notif-panel" style="display:none;position:fixed;inset:0;z-index:9800;">
   <!-- Overlay fond -->
   <div onclick="closeNotifPanel()" style="position:absolute;inset:0;background:rgba(0,0,0,.4);"></div>
   <!-- Panneau contenu — au-dessus de l'overlay -->
-  <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;z-index:1;">
+  <div style="position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;z-index:2;">
     <!-- Header -->
     <div style="padding:16px 16px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gray-1);flex-shrink:0;">
       <div style="font-size:16px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">🔔 Notifications</div>
@@ -11588,7 +11589,7 @@ try {
       </div>
     </div>
     <!-- Liste scrollable -->
-    <div id="notif-list" style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;">
+    <div id="notif-list" style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;position:relative;z-index:3;">
       <div style="padding:24px;text-align:center;color:var(--gray-4);font-size:13px;">Chargement...</div>
     </div>
   </div>
