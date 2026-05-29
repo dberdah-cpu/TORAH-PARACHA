@@ -6091,6 +6091,34 @@ function uploadProfilePhoto(input){
   reader.readAsDataURL(file);
 }
 
+function updateHdrAvatar(){
+  var av = document.getElementById('hdr-avatar');
+  var initEl = document.getElementById('hdr-avatar-initials');
+  if(!av || !initEl) return;
+  if(!currentUser){
+    av.style.background = 'var(--gray-2)';
+    initEl.innerHTML = '👤';
+    return;
+  }
+  // Photo
+  var photo = localStorage.getItem('profile_photo_' + currentUser.id)
+    || (currentUser.user_metadata && (currentUser.user_metadata.avatar_url || currentUser.user_metadata.picture));
+  if(photo){
+    av.style.background = 'transparent';
+    initEl.innerHTML = '<img src="' + photo + '" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">';
+    return;
+  }
+  // Initiales
+  var nom = (currentUser.user_metadata && (currentUser.user_metadata.full_name || currentUser.user_metadata.name))
+    || currentUser.email || '';
+  var parts = nom.trim().split(/\s+/);
+  var initiales = parts.length >= 2
+    ? (parts[0][0] + parts[parts.length-1][0]).toUpperCase()
+    : nom.slice(0,2).toUpperCase();
+  av.style.background = 'var(--grad-main)';
+  initEl.innerHTML = initiales || '👤';
+}
+
 function updateProfileUI(){
   var fb=document.getElementById('auth-form-block');
   var cb=document.getElementById('profile-connected-block');
@@ -6220,6 +6248,8 @@ var shabbatOverlayShown = false;
 // ── INITIALISATION ──
 
 // Drag scroll souris sur la barre de thèmes
+  updateHdrAvatar();
+
 function initThemesDragScroll(){
   var bar = document.getElementById('recueil-themes-bar');
   if(!bar) return;
