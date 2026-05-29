@@ -1017,10 +1017,11 @@ body{
       </div>
       <span style="font-size:10px;color:rgba(255,255,255,0.7);margin-left:2px">›</span>
     </div>
-    <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
+    <div onclick="toggleNotifPanel()" style="position:relative;cursor:pointer;padding:4px;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    </button>
-    <div id="hdr-avatar" onclick="openProfile()" style="width:34px;height:34px;border-radius:50%;background:var(--grad-main);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;border:2px solid rgba(124,58,237,0.15);">
+      <span id="notif-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;font-family:Poppins,sans-serif;width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;border:1.5px solid #fff;">0</span>
+    </div>
+    <div id="hdr-avatar" onclick="showProfileView()" style="width:34px;height:34px;border-radius:50%;background:var(--grad-main);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;border:2px solid rgba(124,58,237,0.15);">
       <span id="hdr-avatar-initials" style="font-size:12px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;line-height:1;">👤</span>
     </div>
   </div>
@@ -5821,6 +5822,7 @@ function initSupabase(){
     supabase.auth.onAuthStateChange(function(event,session){
       currentUser=session?session.user:null;
       updateProfileUI();
+      checkAutoNotifs();
       if(event==='SIGNED_IN'&&window.location.hash.includes('access_token')){
         window.history.replaceState({},'',window.location.pathname);
         showProfileView();
@@ -9603,7 +9605,258 @@ async function submitRecette(){
     if(o) o.remove();
     showToast('Recette publiée ! 🎉');
     loadRecettes();
+    if(currentUser) createNotifAll('recette', '🍽 Nouvelle recette !', titre + ' vient d\'être partagée', 'recettes');
   });
+}
+
+
+// ══ SYSTÈME DE NOTIFICATIONS ═════════════════════════════════
+var _notifUnread = 0;
+var _notifList = [];
+var _notifPrefs = JSON.parse(localStorage.getItem('notif_prefs') || '{"cours":false,"hayom":false,"sefer":false}');
+
+// ── Créer une notification en base ───────────────────────────
+async function createNotif(userId, type, titre, message, lien){
+  if(!supabase) return;
+  try {
+    await supabase.from('notifications').insert({
+      user_id: userId,
+      type: type,
+      titre: titre,
+      message: message,
+      lien: lien || null,
+      lu: false
+    });
+  } catch(e){ console.log('createNotif err', e); }
+}
+
+// ── Créer une notif pour TOUS les utilisateurs ───────────────
+async function createNotifAll(type, titre, message, lien){
+  if(!supabase) return;
+  try {
+    var res = await supabase.from('profiles').select('id');
+    if(!res.data) return;
+    var inserts = res.data.map(function(u){
+      return { user_id: u.id, type: type, titre: titre, message: message, lien: lien||null, lu: false };
+    });
+    if(inserts.length) await supabase.from('notifications').insert(inserts);
+  } catch(e){ console.log('createNotifAll err', e); }
+}
+
+// ── Charger les notifs de l'utilisateur ──────────────────────
+async function loadNotifs(){
+  if(!supabase || !currentUser) return;
+  try {
+    var res = await supabase.from('notifications')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', {ascending: false})
+      .limit(50);
+    _notifList = res.data || [];
+    _notifUnread = _notifList.filter(function(n){ return !n.lu; }).length;
+    updateNotifBadge();
+  } catch(e){ console.log('loadNotifs err', e); }
+}
+
+// ── Marquer comme lue ─────────────────────────────────────────
+async function markNotifRead(id){
+  if(!supabase || !currentUser) return;
+  try {
+    await supabase.from('notifications').update({lu: true}).eq('id', id);
+    _notifList = _notifList.map(function(n){ return n.id===id ? Object.assign({},n,{lu:true}) : n; });
+    _notifUnread = _notifList.filter(function(n){ return !n.lu; }).length;
+    updateNotifBadge();
+  } catch(e){}
+}
+
+// ── Marquer tout comme lu ─────────────────────────────────────
+async function markAllNotifsRead(){
+  if(!supabase || !currentUser) return;
+  try {
+    await supabase.from('notifications').update({lu: true})
+      .eq('user_id', currentUser.id).eq('lu', false);
+    _notifList = _notifList.map(function(n){ return Object.assign({},n,{lu:true}); });
+    _notifUnread = 0;
+    updateNotifBadge();
+    renderNotifPanel();
+  } catch(e){}
+}
+
+// ── Badge sur la cloche ───────────────────────────────────────
+function updateNotifBadge(){
+  var badge = document.getElementById('notif-badge');
+  if(!badge) return;
+  if(_notifUnread > 0){
+    badge.style.display = 'flex';
+    badge.textContent = _notifUnread > 9 ? '9+' : _notifUnread;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ── Ouvrir/fermer le panneau notifications ───────────────────
+function toggleNotifPanel(){
+  var panel = document.getElementById('notif-panel');
+  if(!panel) return;
+  if(panel.style.display === 'none' || !panel.style.display){
+    panel.style.display = 'flex';
+    loadNotifs().then(renderNotifPanel);
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function closeNotifPanel(){
+  var panel = document.getElementById('notif-panel');
+  if(panel) panel.style.display = 'none';
+}
+
+// ── Rendu du panneau ──────────────────────────────────────────
+function renderNotifPanel(){
+  var list = document.getElementById('notif-list');
+  if(!list) return;
+
+  // Section préférences
+  var prefsHTML = '<div style="padding:12px 16px;border-bottom:1px solid var(--gray-1);">'
+    + '<div style="font-size:12px;font-weight:700;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Rappels optionnels</div>'
+    + '<div style="display:flex;flex-direction:column;gap:6px;">'
+    + renderNotifToggle('cours', '📖 Cours du jour')
+    + renderNotifToggle('hayom', '☀️ Hayom Yom')
+    + renderNotifToggle('sefer', '📋 Sefer HaMitsvot')
+    + '</div></div>';
+
+  if(!currentUser){
+    list.innerHTML = prefsHTML + '<div style="padding:24px;text-align:center;color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Connectez-vous pour voir vos notifications</div>';
+    return;
+  }
+
+  if(!_notifList.length){
+    list.innerHTML = prefsHTML + '<div style="padding:32px 16px;text-align:center;">'
+      + '<div style="font-size:36px;margin-bottom:8px;">🔔</div>'
+      + '<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">Aucune notification</div>'
+      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Vous serez notifié des nouveaux contenus</div>'
+      + '</div>';
+    return;
+  }
+
+  var notifHTML = '';
+  _notifList.forEach(function(n){
+    var icon = n.type==='shabbat' ? '🕯' : n.type==='recette' ? '🍽' : n.type==='video' ? '🎬' : n.type==='evenement' ? '📅' : n.type==='cours' ? '📖' : n.type==='hayom' ? '☀️' : '🔔';
+    var bg = n.lu ? '#fff' : '#f5f3ff';
+    var dot = n.lu ? '' : '<span style="width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:3px;"></span>';
+    var date = new Date(n.created_at).toLocaleDateString('fr-FR', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    notifHTML += '<div onclick="clickNotif(\x22' + n.id + '\x22,\x22' + (n.lien||'') + '\x22)" style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;background:'+bg+';border-bottom:1px solid var(--gray-1);cursor:pointer;">'
+      + '<span style="font-size:22px;flex-shrink:0;">' + icon + '</span>'
+      + '<div style="flex:1;min-width:0;">'
+      + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + n.titre + '</div>'
+      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:2px;line-height:1.4;">' + n.message + '</div>'
+      + '<div style="font-size:10px;color:var(--gray-3);font-family:Poppins,sans-serif;margin-top:4px;">' + date + '</div>'
+      + '</div>' + dot + '</div>';
+  });
+
+  list.innerHTML = prefsHTML + notifHTML;
+}
+
+function renderNotifToggle(key, label){
+  var checked = _notifPrefs[key];
+  var el = document.createElement("div");
+  el.style.cssText = "display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;";
+  var lbl = document.createElement("span");
+  lbl.style.cssText = "font-size:13px;font-family:Poppins,sans-serif;color:var(--dark);";
+  lbl.textContent = label;
+  var tog = document.createElement("div");
+  tog.id = "toggle-" + key;
+  tog.style.cssText = "width:40px;height:22px;border-radius:11px;background:" + (checked?"var(--purple)":"var(--gray-2)") + ";position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;";
+  tog.onclick = function(){ toggleNotifPref(key); };
+  var dot = document.createElement("div");
+  dot.id = "toggle-dot-" + key;
+  dot.style.cssText = "position:absolute;top:3px;left:" + (checked?"21px":"3px") + ";width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;";
+  tog.appendChild(dot);
+  el.appendChild(lbl);
+  el.appendChild(tog);
+  return el.outerHTML;
+}
+
+function toggleNotifPref(key){
+  _notifPrefs[key] = !_notifPrefs[key];
+  localStorage.setItem('notif_prefs', JSON.stringify(_notifPrefs));
+  // Animer le toggle
+  var tog = document.getElementById('toggle-' + key);
+  var dot = document.getElementById('toggle-dot-' + key);
+  if(tog) tog.style.background = _notifPrefs[key] ? 'var(--purple)' : 'var(--gray-2)';
+  if(dot) dot.style.left = _notifPrefs[key] ? '21px' : '3px';
+  showToast(_notifPrefs[key] ? 'Rappel activé ✓' : 'Rappel désactivé');
+}
+
+function clickNotif(id, lien){
+  markNotifRead(id);
+  closeNotifPanel();
+  if(lien === 'recettes') openRecettes();
+  else if(lien === 'videos') openVideos ? openVideos() : null;
+  else if(lien === 'shabbat') openShabbatPanel ? openShabbatPanel() : null;
+  else if(lien === 'cours') openCours ? openCours() : null;
+}
+
+// ── Vérifications automatiques au démarrage ──────────────────
+async function checkAutoNotifs(){
+  if(!supabase || !currentUser) return;
+  var now = new Date();
+  var day = now.getDay(); // 5 = vendredi
+  var hour = now.getHours();
+  var today = now.toDateString();
+
+  // Chabbat — vendredi entre 10h et 14h, une seule fois par jour
+  var lastShab = localStorage.getItem('notif_shabbat_last');
+  if(day === 5 && hour >= 10 && hour < 14 && lastShab !== today){
+    var shabbatTime = document.getElementById('shab-candle-time') ? document.getElementById('shab-candle-time').textContent : '';
+    var msg = shabbatTime ? 'Chabbat entre ce soir à ' + shabbatTime : 'Chabbat commence ce soir';
+    await createNotif(currentUser.id, 'shabbat', '🕯 Chabbat Chalom !', msg, 'shabbat');
+    localStorage.setItem('notif_shabbat_last', today);
+  }
+
+  // Rappels optionnels — une fois par jour le matin
+  var lastDaily = localStorage.getItem('notif_daily_last');
+  if(lastDaily !== today && hour >= 7){
+    if(_notifPrefs.cours){
+      await createNotif(currentUser.id, 'cours', '📖 Cours du jour', 'Votre cours du jour vous attend', 'cours');
+    }
+    if(_notifPrefs.hayom){
+      await createNotif(currentUser.id, 'hayom', '☀️ Hayom Yom', 'Lisez la pensée du ' + now.toLocaleDateString('fr-FR'), 'hayom');
+    }
+    if(_notifPrefs.sefer){
+      await createNotif(currentUser.id, 'sefer', '📋 Sefer HaMitsvot', 'La mitsva du jour vous attend', 'sefer');
+    }
+    if(_notifPrefs.cours || _notifPrefs.hayom || _notifPrefs.sefer){
+      localStorage.setItem('notif_daily_last', today);
+    }
+  }
+
+  // Événements personnels — check les events du calendrier du jour
+  checkCalendarEventsNotifs(today);
+
+  // Charger le badge
+  loadNotifs();
+}
+
+async function checkCalendarEventsNotifs(today){
+  if(!supabase || !currentUser) return;
+  try {
+    var todayStr = new Date().toISOString().split('T')[0];
+    var lastEvt = localStorage.getItem('notif_events_last');
+    if(lastEvt === today) return;
+    var res = await supabase.from('events')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .gte('date', todayStr + 'T00:00:00')
+      .lte('date', todayStr + 'T23:59:59');
+    if(res.data && res.data.length){
+      for(var i=0; i<res.data.length; i++){
+        var ev = res.data[i];
+        await createNotif(currentUser.id, 'evenement', '📅 ' + ev.titre, "Aujourd\'hui : " + ev.titre, 'cal');
+      }
+      localStorage.setItem('notif_events_last', today);
+    }
+  } catch(e){}
 }
 
 function closeKriatTorah(){
@@ -11094,6 +11347,7 @@ try {
   buildHome();
   // Mettre à jour l'avatar dans le header si déjà connecté
   setTimeout(updateHdrAvatar, 800);
+  setTimeout(checkAutoNotifs, 2000);
 } catch(e) {
   document.getElementById('view-home').innerHTML =
     '<div style="padding:40px 20px;font-family:sans-serif">'
@@ -11284,6 +11538,28 @@ try {
     <div class="admin-card">
       <div class="admin-card-title">📊 Statistiques</div>
       <div id="adm-stats-content"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Panneau Notifications -->
+<div id="notif-panel" style="display:none;position:fixed;inset:0;z-index:7000;flex-direction:column;">
+  <!-- Overlay -->
+  <div onclick="closeNotifPanel()" style="flex:1;background:rgba(0,0,0,.4);"></div>
+  <!-- Panneau -->
+  <div style="background:#fff;border-radius:20px 20px 0 0;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;">
+    <!-- Header -->
+    <div style="padding:16px 16px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gray-1);">
+      <div style="font-size:16px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">🔔 Notifications</div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button onclick="markAllNotifsRead()" style="font-size:12px;color:var(--purple);background:none;border:none;font-family:Poppins,sans-serif;font-weight:600;cursor:pointer;">Tout lire</button>
+        <button onclick="closeNotifPanel()" style="background:var(--gray-2);border:none;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;">✕</button>
+      </div>
+    </div>
+    <!-- Liste -->
+    <div id="notif-list" style="overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;">
+      <div style="padding:24px;text-align:center;color:var(--gray-4);font-size:13px;">Chargement...</div>
     </div>
   </div>
 </div>
