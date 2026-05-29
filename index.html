@@ -9605,7 +9605,7 @@ async function submitRecette(){
     if(o) o.remove();
     showToast('Recette publiée ! 🎉');
     loadRecettes();
-    if(currentUser) createNotifAll('recette', '🍽 Nouvelle recette !', titre + ' vient d\'être partagée', 'recettes');
+    if(currentUser) try { createNotifAll('recette', '🍽 Nouvelle recette !', titre + ' vient d\'être partagée', 'recettes'); } catch(e){}
   });
 }
 
@@ -9632,14 +9632,13 @@ async function createNotif(userId, type, titre, message, lien){
 
 // ── Créer une notif pour TOUS les utilisateurs ───────────────
 async function createNotifAll(type, titre, message, lien){
-  if(!supabase) return;
+  if(!supabase || !currentUser) return;
   try {
-    var res = await supabase.from('profiles').select('id');
-    if(!res.data) return;
-    var inserts = res.data.map(function(u){
-      return { user_id: u.id, type: type, titre: titre, message: message, lien: lien||null, lu: false };
+    // Envoyer uniquement à l'utilisateur courant pour l'instant
+    await supabase.from('notifications').insert({
+      user_id: currentUser.id, type: type,
+      titre: titre, message: message, lien: lien||null, lu: false
     });
-    if(inserts.length) await supabase.from('notifications').insert(inserts);
   } catch(e){ console.log('createNotifAll err', e); }
 }
 
