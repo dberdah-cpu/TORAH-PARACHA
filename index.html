@@ -9716,46 +9716,86 @@ function renderNotifPanel(){
   var list = document.getElementById('notif-list');
   if(!list) return;
 
-  // Section préférences
-  var prefsHTML = '<div style="padding:12px 16px;border-bottom:1px solid var(--gray-1);">'
-    + '<div style="font-size:12px;font-weight:700;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Rappels optionnels</div>'
-    + '<div style="display:flex;flex-direction:column;gap:6px;">'
-    + renderNotifToggle('cours', '📖 Cours du jour')
-    + renderNotifToggle('hayom', '☀️ Hayom Yom')
-    + renderNotifToggle('sefer', '📋 Sefer HaMitsvot')
-    + '</div></div>';
+  // Vider et reconstruire avec createElement
+  list.innerHTML = '';
 
+  // ── Section préférences ──────────────────────────────────
+  var prefsDiv = document.createElement('div');
+  prefsDiv.style.cssText = 'padding:12px 16px;border-bottom:1px solid var(--gray-1);';
+  var prefsTitle = document.createElement('div');
+  prefsTitle.style.cssText = 'font-size:12px;font-weight:700;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;';
+  prefsTitle.textContent = 'Rappels optionnels';
+  prefsDiv.appendChild(prefsTitle);
+
+  [['cours','📖 Cours du jour'],['hayom','☀️ Hayom Yom'],['sefer','📋 Sefer HaMitsvot']].forEach(function(pair){
+    var key = pair[0]; var label = pair[1];
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;';
+    var lbl = document.createElement('span');
+    lbl.style.cssText = 'font-size:13px;font-family:Poppins,sans-serif;color:var(--dark);';
+    lbl.textContent = label;
+    var tog = document.createElement('div');
+    tog.id = 'toggle-' + key;
+    var checked = _notifPrefs[key];
+    tog.style.cssText = 'width:44px;height:24px;border-radius:12px;background:' + (checked?'var(--purple)':'var(--gray-2)') + ';position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;';
+    var dot = document.createElement('div');
+    dot.id = 'toggle-dot-' + key;
+    dot.style.cssText = 'position:absolute;top:3px;left:' + (checked?'23px':'3px') + ';width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);';
+    tog.appendChild(dot);
+    tog.addEventListener('click', function(){ toggleNotifPref(key); });
+    row.appendChild(lbl);
+    row.appendChild(tog);
+    prefsDiv.appendChild(row);
+  });
+  list.appendChild(prefsDiv);
+
+  // ── Contenu notifications ────────────────────────────────
   if(!currentUser){
-    list.innerHTML = prefsHTML + '<div style="padding:24px;text-align:center;color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Connectez-vous pour voir vos notifications</div>';
+    var nc = document.createElement('div');
+    nc.style.cssText = 'padding:24px;text-align:center;color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;';
+    nc.textContent = 'Connectez-vous pour voir vos notifications';
+    list.appendChild(nc);
     return;
   }
 
   if(!_notifList.length){
-    list.innerHTML = prefsHTML + '<div style="padding:32px 16px;text-align:center;">'
-      + '<div style="font-size:36px;margin-bottom:8px;">🔔</div>'
+    var empty = document.createElement('div');
+    empty.style.cssText = 'padding:32px 16px;text-align:center;';
+    empty.innerHTML = '<div style="font-size:36px;margin-bottom:8px;">🔔</div>'
       + '<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">Aucune notification</div>'
-      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Vous serez notifié des nouveaux contenus</div>'
-      + '</div>';
+      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Vous serez notifié des nouveaux contenus</div>';
+    list.appendChild(empty);
     return;
   }
 
-  var notifHTML = '';
   _notifList.forEach(function(n){
-    var icon = n.type==='shabbat' ? '🕯' : n.type==='recette' ? '🍽' : n.type==='video' ? '🎬' : n.type==='evenement' ? '📅' : n.type==='cours' ? '📖' : n.type==='hayom' ? '☀️' : '🔔';
-    var bg = n.lu ? '#fff' : '#f5f3ff';
-    var dot = n.lu ? '' : '<span style="width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:3px;"></span>';
-    var date = new Date(n.created_at).toLocaleDateString('fr-FR', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-    notifHTML += '<div onclick="clickNotif(\x22' + n.id + '\x22,\x22' + (n.lien||'') + '\x22)" style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;background:'+bg+';border-bottom:1px solid var(--gray-1);cursor:pointer;">'
-      + '<span style="font-size:22px;flex-shrink:0;">' + icon + '</span>'
-      + '<div style="flex:1;min-width:0;">'
-      + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + n.titre + '</div>'
-      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:2px;line-height:1.4;">' + n.message + '</div>'
-      + '<div style="font-size:10px;color:var(--gray-3);font-family:Poppins,sans-serif;margin-top:4px;">' + date + '</div>'
-      + '</div>' + dot + '</div>';
+    var icon = n.type==='shabbat'?'🕯':n.type==='recette'?'🍽':n.type==='video'?'🎬':n.type==='evenement'?'📅':n.type==='cours'?'📖':n.type==='hayom'?'☀️':'🔔';
+    var item = document.createElement('div');
+    item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;padding:12px 16px;background:' + (n.lu?'#fff':'#f5f3ff') + ';border-bottom:1px solid var(--gray-1);cursor:pointer;';
+    var iconEl = document.createElement('span');
+    iconEl.style.cssText = 'font-size:22px;flex-shrink:0;';
+    iconEl.textContent = icon;
+    var textDiv = document.createElement('div');
+    textDiv.style.flex = '1';
+    var date = new Date(n.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    textDiv.innerHTML = '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + n.titre + '</div>'
+      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:2px;line-height:1.4;">' + (n.message||'') + '</div>'
+      + '<div style="font-size:10px;color:var(--gray-3);font-family:Poppins,sans-serif;margin-top:4px;">' + date + '</div>';
+    if(!n.lu){
+      var dot = document.createElement('span');
+      dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;margin-top:3px;';
+      item.appendChild(iconEl);
+      item.appendChild(textDiv);
+      item.appendChild(dot);
+    } else {
+      item.appendChild(iconEl);
+      item.appendChild(textDiv);
+    }
+    item.addEventListener('click', function(){ clickNotif(n.id, n.lien||''); });
+    list.appendChild(item);
   });
-
-  list.innerHTML = prefsHTML + notifHTML;
 }
+
 
 function renderNotifToggle(key, label){
   var checked = _notifPrefs[key];
@@ -10047,11 +10087,13 @@ function renderVideos(){
         if(Array.isArray(dbVids) && dbVids.length){
           qHtml += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
           dbVids.forEach(function(v){
-            qHtml += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
-              + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
-              + '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + (v.message||'') + '</div>'
-              + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
-              + '<source src="' + v.url + '" type="video/mp4"></video></div>';
+            qHtml += '<div style="margin:0 0 2px;background:#000;overflow:hidden;">'
+              + '<video style="width:100%;max-height:420px;background:#000;display:block;object-fit:cover;" controls preload="metadata" playsinline>'
+              + '<source src="' + v.url + '" type="video/mp4"></video>'
+              + '<div style="padding:10px 14px 14px;background:#fff;">'
+              + '<div style="font-size:14px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:3px;">' + v.titre + '</div>'
+              + (v.message ? '<div style="font-size:13px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + v.message + '</div>' : '')
+              + '</div></div>';
           });
         }
         view.innerHTML = qHtml;
@@ -10137,11 +10179,13 @@ function renderVideos(){
       if(Array.isArray(dbVids) && dbVids.length){
         var extra = '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
         dbVids.forEach(function(v){
-          extra += '<div style="margin:0 16px 10px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
-            + '<div style="padding:10px 14px 4px;font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
-            + '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + (v.message||'') + '</div>'
-            + '<video style="width:100%;max-height:220px;background:#000;display:block;" controls preload="metadata" playsinline>'
-            + '<source src="' + v.url + '" type="video/mp4"></video></div>';
+          extra += '<div style="margin:0 0 2px;background:#000;overflow:hidden;">'
+            + '<video style="width:100%;max-height:420px;background:#000;display:block;object-fit:cover;" controls preload="metadata" playsinline poster="">'
+            + '<source src="' + v.url + '" type="video/mp4"></video>'
+            + '<div style="padding:10px 14px 14px;background:#fff;">'
+            + '<div style="font-size:14px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:3px;">' + v.titre + '</div>'
+            + (v.message ? '<div style="font-size:13px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + v.message + '</div>' : '')
+            + '</div></div>';
         });
         view.innerHTML = h + extra;
       } else {
