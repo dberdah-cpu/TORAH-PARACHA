@@ -9831,10 +9831,16 @@ function toggleNotifPref(key){
 function clickNotif(id, lien){
   markNotifRead(id);
   closeNotifPanel();
-  if(lien === 'recettes') openRecettes();
-  else if(lien === 'videos') openVideos ? openVideos() : null;
-  else if(lien === 'shabbat') openShabbatPanel ? openShabbatPanel() : null;
-  else if(lien === 'cours') openCours ? openCours() : null;
+  // Délai pour laisser le panneau se fermer avant navigation
+  setTimeout(function(){
+    if(lien === 'recettes') openRecettes();
+    else if(lien === 'videos'){ if(typeof openVideos==='function') openVideos(); }
+    else if(lien === 'shabbat'){ if(typeof openShabbatPanel==='function') openShabbatPanel(); }
+    else if(lien === 'cours'){ if(typeof openCours==='function') openCours(); }
+    else if(lien === 'hayom'){ if(typeof openHayomYom==='function') openHayomYom(); }
+    else if(lien === 'sefer'){ if(typeof openSefer==='function') openSefer(); }
+    else if(lien === 'cal'){ if(typeof openCal==='function') openCal(); }
+  }, 200);
 }
 
 // ── Vérifications automatiques au démarrage ──────────────────
@@ -10179,13 +10185,12 @@ function renderVideos(){
       if(Array.isArray(dbVids) && dbVids.length){
         var extra = '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
         dbVids.forEach(function(v){
-          extra += '<div style="margin:0 0 2px;background:#000;overflow:hidden;">'
-            + '<video style="width:100%;max-height:420px;background:#000;display:block;object-fit:cover;" controls preload="metadata" playsinline poster="">'
+          extra += '<div style="margin:0 16px 12px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
+            + '<div style="padding:10px 14px 6px;font-size:14px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
+            + (v.message ? '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + v.message + '</div>' : '')
+            + '<video style="width:100%;display:block;background:#000;" controls preload="metadata" playsinline webkit-playsinline>'
             + '<source src="' + v.url + '" type="video/mp4"></video>'
-            + '<div style="padding:10px 14px 14px;background:#fff;">'
-            + '<div style="font-size:14px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:3px;">' + v.titre + '</div>'
-            + (v.message ? '<div style="font-size:13px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + v.message + '</div>' : '')
-            + '</div></div>';
+            + '</div>';
         });
         view.innerHTML = h + extra;
       } else {
