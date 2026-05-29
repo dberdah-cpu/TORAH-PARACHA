@@ -10333,10 +10333,8 @@ function adminLoadVideos(){
         + '<div class="admin-vid-msg">' + (v.message||'').substring(0,80) + '...</div>'
         + '<span class="admin-badge ' + (v.actif ? 'admin-badge-green' : 'admin-badge-red') + '">'
         + (v.actif ? 'En ligne' : 'Masquée') + '</span>'
-        + '</div>'
-        + '<div style="display:flex;flex-direction:column;gap:6px;">'
-        + '<button onclick="adminEditVideoById(\\\'' + v.id + '\\\',\\\'' + (v.titre||'').replace(/\'/g,'') + '\\\',\\\'' + (v.message||'').replace(/\'/g,'').substring(0,200) + '\\\')" class="admin-btn admin-btn-secondary" style="padding:5px 10px;font-size:11px;">✏️</button>'
-        + '<button onclick="adminDeleteVideo(\\\'' + v.id + '\\\')" class="admin-btn admin-btn-danger" style="padding:5px 10px;font-size:11px;">✕</button>'
+        + '</div>' + '<div style="display:flex;flex-direction:column;gap:6px;">'
+        + '<button onclick="adminDeleteVideo(\'' + v.id + '\')" class="admin-btn admin-btn-danger" style="padding:6px 12px;font-size:12px;">🗑 Suppr</button>'
         + '</div>'
         + '</div>';
     });
@@ -10413,14 +10411,7 @@ function adminAddVideo(){
       var _u=document.getElementById('adm-vid-url'); if(_u)_u.value='';
       var _t=document.getElementById('adm-titre')||document.getElementById('adm-vid-titre'); if(_t)_t.value='';
       var _m=document.getElementById('adm-message')||document.getElementById('adm-vid-msg'); if(_m)_m.value='';
-      // Reset zone upload
-      var zone = document.getElementById('adm-upload-zone');
-      if(zone) zone.innerHTML = '<div style="font-size:32px;margin-bottom:8px;">📱</div>'
-        + '<div style="font-size:14px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">Choisir une vidéo</div>'
-        + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Depuis ta pellicule iPhone</div>'
-        + '<input type="file" id="adm-file-input" accept="video/mp4,video/*" style="display:none;" onchange="adminFileSelected(this)">';
-      var prog = document.getElementById('adm-upload-progress');
-      if(prog) prog.style.display = 'none';
+      adminResetVideoForm();
       adminLoadVideos();
     } else {
       adminToast('Erreur: ' + (data.message || 'inconnue'));
@@ -10464,10 +10455,43 @@ function adminSaveVideoEdit(id){
   });
 }
 
+function adminResetVideoForm(){
+  // Reset zone upload
+  var zone = document.getElementById('adm-upload-zone');
+  if(zone){
+    zone.onclick = function(){ document.getElementById('adm-file').click(); };
+    zone.innerHTML = '<div style="font-size:32px;margin-bottom:6px;">📱</div>'
+      + '<div style="font-size:14px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;">Choisir une vidéo</div>'
+      + '<div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Depuis ta pellicule</div>';
+  }
+  // Reset input file
+  var fileInput = document.getElementById('adm-file');
+  if(fileInput) fileInput.value = '';
+  // Reset URL cachée
+  var url = document.getElementById('adm-vid-url');
+  if(url) url.value = '';
+  // Reset titre et message
+  var titre = document.getElementById('adm-titre');
+  if(titre) titre.value = '';
+  var msg = document.getElementById('adm-message');
+  if(msg) msg.value = '';
+  // Masquer barre de progression
+  var prog = document.getElementById('adm-upload-progress');
+  if(prog) prog.style.display = 'none';
+  var bar = document.getElementById('adm-progress-bar');
+  if(bar){ bar.style.width = '0%'; bar.style.background = '#7c3aed'; }
+  var txt = document.getElementById('adm-progress-text');
+  if(txt) txt.textContent = '';
+}
+
 function adminDeleteVideo(id){
   if(!confirm('Supprimer cette vidéo ?')) return;
   sbFetch('/rest/v1/videos_data?id=eq.'+id, 'DELETE')
-  .then(function(){ adminToast('Vidéo supprimée', true); adminLoadVideos(); });
+  .then(function(){
+    adminToast('Vidéo supprimée', true);
+    setTimeout(adminLoadVideos, 500);
+  })
+  .catch(function(){ adminToast('Erreur suppression'); });
 }
 
 function syncVideosFromDB(data){
