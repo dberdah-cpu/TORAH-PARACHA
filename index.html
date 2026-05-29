@@ -10599,6 +10599,13 @@ function adminTab(tab){
 
 function adminToast(msg, ok){
   var t = document.getElementById('admin-toast');
+  if(!t){
+    // Fallback : créer le toast dynamiquement
+    t = document.createElement('div');
+    t.id = 'admin-toast';
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;font-weight:600;z-index:9999;white-space:nowrap;max-width:80vw;text-align:center;';
+    document.body.appendChild(t);
+  }
   t.textContent = (ok ? '✅ ' : '❌ ') + msg;
   t.style.display = 'block';
   setTimeout(function(){ t.style.display='none'; }, 3000);
@@ -10618,6 +10625,7 @@ function adminLoadVideos(){
       var item = document.createElement('div');
       item.className = 'admin-vid-item';
       item.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;padding:10px;background:#fff;border-radius:var(--radius-sm);margin-bottom:8px;box-shadow:var(--shadow-sm);gap:8px;';
+      item.setAttribute('data-vid-id', v.id);
       var badge = v.actif
         ? '<span class="admin-badge admin-badge-green">En ligne</span>'
         : '<span class="admin-badge admin-badge-red">Masquée</span>';
@@ -10808,12 +10816,18 @@ function adminResetVideoForm(){
 
 function adminDeleteVideo(id){
   if(!confirm('Supprimer cette vidéo ?')) return;
+  // Retrait visuel immédiat
+  var list = document.getElementById('adm-vid-list');
+  if(list){
+    var items = list.querySelectorAll('[data-vid-id="'+id+'"]');
+    items.forEach(function(el){ el.style.opacity='0.3'; el.style.pointerEvents='none'; });
+  }
   sbFetch('/rest/v1/videos_data?id=eq.'+id, 'DELETE')
   .then(function(){
-    adminToast('Vidéo supprimée', true);
-    setTimeout(adminLoadVideos, 500);
+    adminToast('Vidéo supprimée ✓', true);
+    setTimeout(adminLoadVideos, 300);
   })
-  .catch(function(){ adminToast('Erreur suppression'); });
+  .catch(function(){ adminToast('Erreur suppression'); setTimeout(adminLoadVideos, 300); });
 }
 
 function syncVideosFromDB(data){
@@ -11490,7 +11504,9 @@ try {
   </div>
 
   <!-- Section Vidéos -->
-  <div id="admin-section-videos" class="admin-section active" style="padding:0 16px;">
+  <div id="admin-toast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:Poppins,sans-serif;font-weight:600;z-index:9999;white-space:nowrap;max-width:80vw;text-align:center;"></div>
+
+<div id="admin-section-videos" class="admin-section active" style="padding:0 16px;">
     <div class="admin-card">
       <div class="admin-card-title">🎬 Ajouter une vidéo</div>
       <!-- Zone sélection fichier -->
