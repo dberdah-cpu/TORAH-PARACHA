@@ -1020,6 +1020,9 @@ body{
     <button style="background:none;border:none;cursor:pointer;padding:4px" onclick="alert('Notifications bientôt disponibles')">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1C1E" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </button>
+    <div id="hdr-avatar" onclick="openProfile()" style="width:34px;height:34px;border-radius:50%;background:var(--grad-main);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;border:2px solid rgba(124,58,237,0.15);">
+      <span id="hdr-avatar-initials" style="font-size:12px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;line-height:1;">👤</span>
+    </div>
   </div>
 </div>
 
@@ -5549,6 +5552,7 @@ function showParachiotView(){
   },100);
 }
 function showProfileView(){
+  updateHdrAvatar();
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-detail').style.display='none';
   document.getElementById('view-hayom').style.display='none';
@@ -11088,6 +11092,8 @@ if(window.location.search.indexOf('admin=kedoshim2026') >= 0){
 
 try {
   buildHome();
+  // Mettre à jour l'avatar dans le header si déjà connecté
+  setTimeout(updateHdrAvatar, 800);
 } catch(e) {
   document.getElementById('view-home').innerHTML =
     '<div style="padding:40px 20px;font-family:sans-serif">'
