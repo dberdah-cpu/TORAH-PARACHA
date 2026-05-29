@@ -8697,31 +8697,99 @@ function openHistoires(){
 }
 
 function renderHistoires(){
+  var view = document.getElementById('view-histoires');
   var h='<div class="hist-header">'
     +'<div class="hist-header-title">📖 Histoires Vraies</div>'
     +'<div class="hist-header-sub">Des récits vrais · Des sources authentiques</div>'
     +'</div>';
 
-  // Grouper par catégorie
+  function buildHistoireCard(s, isNew){
+    var newBadge = isNew ? '<span style="background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;font-family:Poppins,sans-serif;margin-left:6px;">NOUVEAU</span>' : '';
+    var card = '<div class="hist-card" onclick="openHistoireDetail(\''+s.id+'\')">';
+    card += '<div class="hist-card-body">';
+    card += '<div class="hist-card-cat">' + s.categorie + newBadge + '</div>';
+    card += '<div class="hist-card-title">' + s.titre + '</div>';
+    card += '<div class="hist-card-sub">' + (s.sous_titre||'') + '</div>';
+    card += '<div class="hist-card-footer">';
+    card += '<span class="hist-card-epoque">' + (s.epoque||'') + '</span>';
+    card += '<span class="hist-card-duree">⏱ ' + (s.duree||'') + '</span>';
+    card += '</div></div></div>';
+    return card;
+  }
+
+  // Charger les histoires Supabase en premier
+  if(supabase){
+    supabase.from('histoires').select('*').eq('actif',true).order('created_at',{ascending:false})
+    .then(function(res){
+      var dbHistoires = res.data || [];
+      var now = Date.now();
+      var extra = '';
+      if(dbHistoires.length){
+        extra += '<div class="hist-cat-label" style="color:var(--purple);">✨ Nouvelles histoires</div>';
+        dbHistoires.forEach(function(s){
+          var age = (now - new Date(s.created_at).getTime()) / (1000*60*60*24);
+          extra += buildHistoireCard(s, age < 7);
+        });
+      }
+      // Histoires codées en dur
+      var cats = {};
+      HISTOIRES_DATA.forEach(function(s){
+        if(!cats[s.categorie]) cats[s.categorie]=[];
+        cats[s.categorie].push(s);
+      });
+      var local = '';
+      Object.keys(cats).forEach(function(cat){
+        local += '<div class="hist-cat-label">'+cat+'</div>';
+        cats[cat].forEach(function(s){ local += buildHistoireCard(s, false); });
+      });
+      view.innerHTML = h + extra + local + getHistoireSlider();
+      initHistoireSlider();
+    }).catch(function(){
+      renderHistoiresLocal(h);
+    });
+  } else {
+    renderHistoiresLocal(h);
+  }
+
+  // Afficher les histoires locales pendant le chargement
+  renderHistoiresLocal(h);
+}
+
+function getHistoireSlider(){
+  return '<div class="text-slider-wrap" style="margin-bottom:8px;">'
+    + '<span class="text-slider-label">A</span>'
+    + '<input type="range" min="0" max="100" value="50" class="text-slider" id="slider_view-histoires"'
+    + ' oninput="applySliderSize(\'view-histoires\',this.value)">'
+    + '<span class="text-slider-label" style="font-size:16px">A</span></div>';
+}
+
+function initHistoireSlider(){
+  setTimeout(function(){
+    var sl = document.getElementById('slider_view-histoires');
+    if(sl){ var saved=localStorage.getItem('textsize_view-histoires'); if(saved) applySliderSize('view-histoires',saved); }
+  }, 100);
+}
+
+function renderHistoiresLocal(h){
+  var view = document.getElementById('view-histoires');
   var cats = {};
   HISTOIRES_DATA.forEach(function(s){
     if(!cats[s.categorie]) cats[s.categorie]=[];
     cats[s.categorie].push(s);
   });
-
   Object.keys(cats).forEach(function(cat){
     h += '<div class="hist-cat-label">'+cat+'</div>';
     cats[cat].forEach(function(s){
-      var hCard = '<div class="hist-card" onclick="openHistoireDetail(\'' + s.id + '\')">';
-      hCard += '<div class="hist-card-body">';
-      hCard += '<div class="hist-card-cat">' + s.categorie + '</div>';
-      hCard += '<div class="hist-card-title">' + s.titre + '</div>';
-      hCard += '<div class="hist-card-sub">' + s.sous_titre + '</div>';
-      hCard += '<div class="hist-card-footer">';
-      hCard += '<span class="hist-card-epoque">' + s.epoque + '</span>';
-      hCard += '<span class="hist-card-duree">⏱ ' + s.duree + '</span>';
-      hCard += '</div></div></div>';
-      h += hCard;
+      var card = '<div class="hist-card" onclick="openHistoireDetail(\''+s.id+'\')">';
+      card += '<div class="hist-card-body">';
+      card += '<div class="hist-card-cat">'+s.categorie+'</div>';
+      card += '<div class="hist-card-title">'+s.titre+'</div>';
+      card += '<div class="hist-card-sub">'+(s.sous_titre||'')+'</div>';
+      card += '<div class="hist-card-footer">';
+      card += '<span class="hist-card-epoque">'+(s.epoque||'')+'</span>';
+      card += '<span class="hist-card-duree">⏱ '+(s.duree||'')+'</span>';
+      card += '</div></div></div>';
+      h += card;
     });
   });
 
@@ -8736,8 +8804,21 @@ function renderHistoires(){
 }
 
 function openHistoireDetail(id){
+  // Chercher d'abord dans Supabase (UUID), sinon dans HISTOIRES_DATA (slug)
+  var isUUID = /^[0-9a-f-]{36}$/.test(id);
+  if(isUUID && supabase){
+    supabase.from('histoires').select('*').eq('id',id).single()
+    .then(function(res){
+      if(res.data) _renderHistoireDetail(res.data);
+    });
+    return;
+  }
   var s = HISTOIRES_DATA.find(function(x){return x.id===id;});
   if(!s) return;
+  _renderHistoireDetail(s);
+}
+
+function _renderHistoireDetail(s){
   ['view-histoires'].forEach(function(vid){
     var el=document.getElementById(vid); if(el) el.style.display='none';
   });
@@ -8773,6 +8854,7 @@ function openHistoireDetail(id){
 var _readerUtterance = null;
 var _skipAutoSpeak = false;
 var _readerPlaying = false;
+
 
 function readerBar(textId, barId){
   return '<div class="reader-bar" id="'+barId+'">'
@@ -10644,6 +10726,7 @@ function adminTab(tab){
   if(tab==='tarifs') adminLoadTarifs();
   if(tab==='users') adminLoadUsers();
   if(tab==='stats') adminLoadStats();
+  if(tab==='histoires') adminLoadHistoires();
 }
 
 function adminToast(msg, ok){
@@ -10832,6 +10915,80 @@ function adminSaveVideoEdit(id){
     adminToast('Vidéo modifiée !', true);
     adminLoadVideos();
   });
+}
+
+
+// ── HISTOIRES ADMIN ───────────────────────────────────────────
+function adminLoadHistoires(){
+  if(!supabase){ document.getElementById('adm-hist-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté</div>'; return; }
+  supabase.from('histoires').select('*').order('created_at',{ascending:false})
+  .then(function(res){
+    var list = document.getElementById('adm-hist-list');
+    var data = res.data || [];
+    if(!data.length){ list.innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune histoire publiée.</div>'; return; }
+    list.innerHTML = '';
+    data.forEach(function(h){
+      var item = document.createElement('div');
+      item.style.cssText = 'padding:10px;background:#f9f9f9;border-radius:8px;margin-bottom:8px;';
+      var titre = document.createElement('div');
+      titre.style.cssText = 'font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;';
+      titre.textContent = h.titre;
+      var cat = document.createElement('div');
+      cat.style.cssText = 'font-size:11px;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:6px;';
+      cat.textContent = h.categorie;
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;gap:8px;';
+      var btnDel = document.createElement('button');
+      btnDel.className = 'admin-btn admin-btn-danger';
+      btnDel.style.cssText = 'padding:5px 10px;font-size:12px;';
+      btnDel.textContent = '🗑 Supprimer';
+      btnDel.onclick = function(){ adminDeleteHistoire(h.id); };
+      var btnToggle = document.createElement('button');
+      btnToggle.className = 'admin-btn admin-btn-secondary';
+      btnToggle.style.cssText = 'padding:5px 10px;font-size:12px;';
+      btnToggle.textContent = h.actif ? '👁 Masquer' : '✅ Publier';
+      btnToggle.onclick = function(){ adminToggleHistoire(h.id, h.actif); };
+      btns.appendChild(btnToggle);
+      btns.appendChild(btnDel);
+      item.appendChild(titre);
+      item.appendChild(cat);
+      item.appendChild(btns);
+      list.appendChild(item);
+    });
+  });
+}
+
+function adminAddHistoire(){
+  var cat = (document.getElementById('adm-hist-categorie')||{value:''}).value.trim() || 'Hassidout';
+  var titre = (document.getElementById('adm-hist-titre')||{value:''}).value.trim();
+  var sousTitre = (document.getElementById('adm-hist-sous-titre')||{value:''}).value.trim();
+  var epoque = (document.getElementById('adm-hist-epoque')||{value:''}).value.trim();
+  var duree = (document.getElementById('adm-hist-duree')||{value:''}).value.trim();
+  var texte = (document.getElementById('adm-hist-texte')||{value:''}).value.trim();
+  if(!titre || !texte){ adminToast('Titre et texte obligatoires'); return; }
+  supabase.from('histoires').insert({
+    categorie: cat, titre: titre, sous_titre: sousTitre,
+    epoque: epoque, duree: duree || '3 min', texte: texte, actif: true
+  }).then(function(){
+    adminToast('Histoire publiée !', true);
+    document.getElementById('adm-hist-titre').value = '';
+    document.getElementById('adm-hist-sous-titre').value = '';
+    document.getElementById('adm-hist-texte').value = '';
+    document.getElementById('adm-hist-epoque').value = '';
+    document.getElementById('adm-hist-duree').value = '';
+    setTimeout(adminLoadHistoires, 300);
+  }).catch(function(){ adminToast('Erreur publication'); });
+}
+
+function adminDeleteHistoire(id){
+  if(!confirm('Supprimer cette histoire ?')) return;
+  supabase.from('histoires').delete().eq('id',id)
+  .then(function(){ adminToast('Histoire supprimée', true); setTimeout(adminLoadHistoires, 300); });
+}
+
+function adminToggleHistoire(id, actif){
+  supabase.from('histoires').update({actif: !actif}).eq('id',id)
+  .then(function(){ adminToast(!actif ? 'Histoire publiée !' : 'Histoire masquée', true); setTimeout(adminLoadHistoires, 300); });
 }
 
 function adminResetVideoForm(){
@@ -11550,6 +11707,7 @@ try {
     <button class="admin-tab" onclick="adminTab('boutique')">🛍 Boutique</button>
     <button class="admin-tab" onclick="adminTab('users')">👥 Utilisateurs</button>
     <button class="admin-tab" onclick="adminTab('stats')">📊 Stats</button>
+    <button class="admin-tab" onclick="adminTab('histoires')">📖 Histoires</button>
   </div>
 
   <!-- Section Vidéos -->
