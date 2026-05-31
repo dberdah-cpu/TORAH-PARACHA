@@ -6165,6 +6165,8 @@ function updateProfileUI(){
   if(currentUser){
     fb.style.display='none';
     if(cb)cb.style.display='block';
+    var sb=document.getElementById('profile-setup-block');
+    if(sb)sb.style.display='none';
     var fname=(currentUser.user_metadata&&currentUser.user_metadata.first_name)||'';
     var dn=fname||currentUser.email.split('@')[0];
     if(nm)nm.textContent='Bonjour, '+dn+' 👋';
