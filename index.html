@@ -1092,9 +1092,9 @@ body{
     <div id="auth-form-block" style="background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
       <!-- Toggle login/register/magic -->
       <div style="display:flex;background:var(--gray-1);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px;gap:3px">
-        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Connexion</button>
-        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">Inscription</button>
-        <button id="tab-magic" onclick="switchAuthTab('magic')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">📧 Lien</button>
+        <button id="tab-login" onclick="switchAuthTab(\x27login\x27)" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Connexion</button>
+        <button id="tab-register" onclick="switchAuthTab(\x27register\x27)" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">Inscription</button>
+        <button id="tab-magic" onclick="switchAuthTab(\x27magic\x27)" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">📧 Lien</button>
       </div>
 
       <!-- Champs normaux -->
@@ -5557,14 +5557,102 @@ function showParachiotView(){
 }
 function showProfileView(){
   updateHdrAvatar();
-  updateProfileUI();
-  document.getElementById('view-home').style.display='none';
-  document.getElementById('view-detail').style.display='none';
-  document.getElementById('view-hayom').style.display='none';
-  document.getElementById('view-sefer').style.display='none';
-  document.getElementById('view-profile').style.display='block';
-  document.getElementById('btn-back').style.display='none';
+  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-cours','view-histoires','view-histoire-detail','view-videos','view-recettes'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  var vp=document.getElementById('view-profile');
+  if(vp) vp.style.display='block';
+  var bb=document.getElementById('btn-back'); if(bb) bb.style.display='none';
   window.scrollTo(0,0);
+  renderProfileContent();
+}
+
+function renderProfileContent(){
+  var vp=document.getElementById('view-profile');
+  if(!vp) return;
+
+  function doRender(user){
+    var dn='',email='',dateStr='',photoUrl=null;
+    if(user){
+      var meta=user.user_metadata||{};
+      dn=meta.first_name||meta.full_name||meta.name||(user.email?user.email.split('@')[0]:'Utilisateur');
+      email=user.email||'';
+      try{ dateStr=new Date(user.created_at).toLocaleDateString('fr-FR'); }catch(e){}
+      photoUrl=meta.avatar_url||meta.picture||null;
+      try{ var lp=localStorage.getItem('profile_photo_'+user.id); if(lp) photoUrl=lp; }catch(e){}
+    }
+
+    var avatarContent=photoUrl
+      ?'<img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+      :'<span style="font-size:32px;font-weight:700;color:#fff;">'+(dn?dn[0].toUpperCase():'?')+'</span>';
+
+    var html='<div style="background:var(--grad-main);padding:56px 20px 32px;text-align:center;">'
+      +'<div onclick="changeProfilePhoto()" style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.2);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;">'
+      +avatarContent+'</div>'
+      +'<div style="font-size:22px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:4px;">'+(user?'Bonjour '+dn+' !':'Mon Profil')+'</div>'
+      +'<div style="font-size:14px;color:rgba(255,255,255,0.75);">'+(user?email:'Connectez-vous pour personnaliser votre experience')+'</div>'
+      +'</div>';
+
+    if(user){
+      html+='<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">'
+        +'<div style="background:#fff;border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);">'
+        +'<div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;font-family:Poppins,sans-serif;">Mon compte</div>'
+        +'<div style="font-size:14px;color:var(--gray-4);line-height:1.7;">Email : '+email+(dateStr?'<br>Membre depuis '+dateStr:'')+'</div>'
+        +'</div>'
+        +'<div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;">'
+        +'<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">Inviter un ami</div>'
+        +'<button onclick="inviterWhatsApp()" style="width:100%;background:#fff;color:#128C7E;border:none;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">Inviter via WhatsApp</button>'
+        +'</div>'
+        +'<div style="background:linear-gradient(135deg,#003087,#009cde);border-radius:var(--radius);padding:14px 16px;">'
+        +'<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">Soutenir Kedoshim</div>'
+        +'<a href="https://donate.stripe.com/14A14p67K0X10gv87RdQQ00" target="_blank" style="display:block;background:#fff;color:#003087;text-align:center;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;text-decoration:none;">Faire un don</a>'
+        +'</div>'
+        +'<button onclick="authSignOut()" style="width:100%;padding:13px;background:transparent;color:#EF4444;border:1.5px solid #FEE2E2;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Se deconnecter</button>'
+        +'<div style="text-align:center;"><button onclick="openAdmin()" style="background:transparent;border:1px solid var(--gray-2);color:var(--gray-4);padding:8px 20px;border-radius:20px;font-size:12px;font-family:Poppins,sans-serif;cursor:pointer;">Admin</button></div>'
+        +'</div>';
+    } else {
+      html+='<div style="padding:20px;">'
+        +'<div style="background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);">'
+        +'<div id="auth-msg" style="display:none;padding:12px;border-radius:8px;font-size:14px;font-weight:600;font-family:Poppins,sans-serif;margin-bottom:14px;"></div>'
+        +'<div id="auth-tabs" style="display:flex;background:var(--gray-1);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px;gap:3px;">'
+        +'<button id="tab-login" onclick="switchAuthTab(\x27login\x27)" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Connexion</button>'
+        +'<button id="tab-register" onclick="switchAuthTab(\x27register\x27)" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif;">Inscription</button>'
+        +'<button id="tab-magic" onclick="switchAuthTab(\x27magic\x27)" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif;">Lien</button>'
+        +'</div>'
+        +'<div id="auth-normal-fields">'
+        +'<input type="email" id="auth-email" placeholder="Adresse e-mail" autocomplete="email" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:10px;font-family:Poppins,sans-serif;box-sizing:border-box;">'
+        +'<input type="password" id="auth-pwd" placeholder="Mot de passe" autocomplete="current-password" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;box-sizing:border-box;">'
+        +'<input type="text" id="auth-firstname" placeholder="Prenom (optionnel)" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;box-sizing:border-box;display:none;">'
+        +'</div>'
+        +'<div id="magic-fields" style="display:none;">'
+        +'<input type="email" id="magic-email" placeholder="Adresse e-mail" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;box-sizing:border-box;">'
+        +'</div>'
+        +'<button id="auth-submit-btn" onclick="authSubmit()" style="width:100%;padding:14px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;margin-bottom:16px;">Se connecter</button>'
+        +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><div style="flex:1;height:1px;background:var(--gray-2);"></div><span style="font-size:12px;color:var(--gray-3);">ou</span><div style="flex:1;height:1px;background:var(--gray-2);"></div></div>'
+        +'<button onclick="authGoogle()" style="width:100%;padding:13px;background:#fff;color:var(--dark);border:1.5px solid var(--gray-2);border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Continuer avec Google</button>'
+        +'</div></div>';
+    }
+    vp.innerHTML=html;
+  }
+
+  if(currentUser){
+    doRender(currentUser);
+  } else if(typeof supabase!=='undefined'&&supabase){
+    supabase.auth.getSession().then(function(r){
+      if(r.data&&r.data.session) currentUser=r.data.session.user;
+      doRender(currentUser||null);
+    }).catch(function(){ doRender(null); });
+  } else {
+    doRender(null);
+  }
+}
+
+function changeProfilePhoto(){
+  if(!currentUser) return;
+  var inp=document.createElement('input');
+  inp.type='file'; inp.accept='image/*';
+  inp.onchange=function(){ uploadProfilePhoto(inp); };
+  inp.click();
 }
 function showComingSoon(){
   alert('Authentification bientôt disponible ! La prochaine version intègrera Firebase Auth avec email et Google.');
@@ -5825,8 +5913,10 @@ function initSupabase(){
     supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
     supabase.auth.onAuthStateChange(function(event,session){
       currentUser=session?session.user:null;
-      updateProfileUI();
+      updateHdrAvatar();
       checkAutoNotifs();
+      var vp=document.getElementById('view-profile');
+      if(vp&&vp.style.display==='block') renderProfileContent();
       if(event==='SIGNED_IN'&&window.location.hash.includes('access_token')){
         window.history.replaceState({},'',window.location.pathname);
         showProfileView();
@@ -5834,7 +5924,7 @@ function initSupabase(){
     });
     supabase.auth.getSession().then(function(r){
       currentUser=r.data.session?r.data.session.user:null;
-      updateProfileUI();
+      updateHdrAvatar();
     });
   };
   document.head.appendChild(script);
@@ -6113,7 +6203,7 @@ function authSignOut(){
   if(!supabase) return;
   supabase.auth.signOut().then(function(){
     currentUser=null;
-    updateProfileUI();
+    renderProfileContent();
     showAuthMsg('',false);
     var m=document.getElementById('auth-msg');
     if(m)m.style.display='none';
