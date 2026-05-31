@@ -5557,120 +5557,14 @@ function showParachiotView(){
 }
 function showProfileView(){
   updateHdrAvatar();
-  // Cacher toutes les vues
-  ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-cours','view-histoires','view-histoire-detail','view-videos','view-recettes'].forEach(function(id){
-    var el=document.getElementById(id); if(el) el.style.display='none';
-  });
-  var vp = document.getElementById('view-profile');
-  vp.style.display = 'block';
+  updateProfileUI();
+  document.getElementById('view-home').style.display='none';
+  document.getElementById('view-detail').style.display='none';
+  document.getElementById('view-hayom').style.display='none';
+  document.getElementById('view-sefer').style.display='none';
+  document.getElementById('view-profile').style.display='block';
   document.getElementById('btn-back').style.display='none';
-
-  // Reconstruire le contenu du profil directement
-  renderProfileContent();
   window.scrollTo(0,0);
-}
-
-function renderProfileContent(){
-  var vp = document.getElementById('view-profile');
-  if(!vp) return;
-
-  // Récupérer la session fraîche si besoin
-  function doRender(user){
-    var dn = '', email = '', dateStr = '', photoUrl = null;
-    if(user){
-      var meta = user.user_metadata || {};
-      dn = meta.first_name || meta.full_name || meta.name || (user.email ? user.email.split('@')[0] : 'Utilisateur');
-      email = user.email || '';
-      try { dateStr = new Date(user.created_at).toLocaleDateString('fr-FR'); } catch(e){}
-      photoUrl = meta.avatar_url || meta.picture || null;
-      try { var lp=localStorage.getItem('profile_photo_'+user.id); if(lp) photoUrl=lp; } catch(e){}
-    }
-
-    var avatarHTML = photoUrl
-      ? '<img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
-      : '<span style="font-size:32px;font-weight:700;color:#fff;">'+(dn?dn[0].toUpperCase():'👤')+'</span>';
-
-    var heroHTML = '<div style="background:var(--grad-main);padding:56px 20px 32px;text-align:center;position:relative;">'
-      + '<div onclick="changeProfilePhoto()" style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.2);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;">'
-      + avatarHTML + '</div>'
-      + '<div style="font-size:22px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:4px;">'+(user?'Bonjour, '+dn+' 👋':'Mon Profil')+'</div>'
-      + '<div style="font-size:14px;color:rgba(255,255,255,0.7);">'+(user?email:'Connectez-vous pour personnaliser votre expérience')+'</div>'
-      + '</div>';
-
-    var bodyHTML = '';
-
-    if(user){
-      // Bloc connecté
-      bodyHTML = '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">'
-        // Info
-        + '<div style="background:#fff;border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);">'
-        + '<div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;font-family:Poppins,sans-serif;">Mon compte</div>'
-        + '<div style="font-size:14px;color:var(--gray-4);line-height:1.7;">📧 '+email+(dateStr?'<br>🕐 Membre depuis '+dateStr:'')+'</div>'
-        + '</div>'
-        // Inviter
-        + '<div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;">'
-        + '<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">📲 Inviter un ami</div>'
-        + '<button onclick="inviterWhatsApp()" style="width:100%;background:#fff;color:#128C7E;border:none;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">📲 Inviter via WhatsApp</button>'
-        + '</div>'
-        // Soutenir
-        + '<div style="background:linear-gradient(135deg,#003087,#009cde);border-radius:var(--radius);padding:14px 16px;">'
-        + '<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">💙 Soutenir Kedoshim</div>'
-        + '<a href="https://donate.stripe.com/14A14p67K0X10gv87RdQQ00" target="_blank" style="display:block;background:#fff;color:#003087;text-align:center;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;text-decoration:none;">💙 Faire un don</a>'
-        + '</div>'
-        // Déconnexion
-        + '<button onclick="authSignOut()" style="width:100%;padding:13px;background:transparent;color:#EF4444;border:1.5px solid #FEE2E2;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Se déconnecter</button>'
-        // Admin
-        + '<div style="text-align:center;"><button onclick="openAdmin()" style="background:transparent;border:1px solid var(--gray-2);color:var(--gray-4);padding:8px 20px;border-radius:20px;font-size:12px;font-family:Poppins,sans-serif;cursor:pointer;">⚙️</button></div>'
-        + '</div>';
-    } else {
-      // Formulaire login
-      bodyHTML = '<div style="padding:20px;">'
-        + '<div id="auth-msg" style="display:none;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:Poppins,sans-serif;margin-bottom:14px;"></div>'
-        + '<div id="auth-form-block" style="background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);">'
-        + renderAuthFormHTML()
-        + '</div></div>';
-    }
-
-    vp.innerHTML = heroHTML + bodyHTML;
-  }
-
-  if(currentUser){
-    doRender(currentUser);
-  } else if(typeof supabase !== 'undefined' && supabase){
-    supabase.auth.getSession().then(function(r){
-      if(r.data && r.data.session){ currentUser = r.data.session.user; }
-      doRender(currentUser);
-    }).catch(function(){ doRender(null); });
-  } else {
-    doRender(null);
-  }
-}
-
-function changeProfilePhoto(){
-  if(!currentUser) return;
-  var inp = document.createElement('input');
-  inp.type='file'; inp.accept='image/*';
-  inp.onchange = function(){ uploadProfilePhoto(inp); };
-  inp.click();
-}
-
-function renderAuthFormHTML(){
-  return '<div style="display:flex;background:var(--gray-1);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px;gap:3px;">'
-    + '<button id="tab-login" onclick="switchAuthTab(\'login\')" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Connexion</button>'
-    + '<button id="tab-register" onclick="switchAuthTab(\'register\')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif;">Inscription</button>'
-    + '<button id="tab-magic" onclick="switchAuthTab(\'magic\')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif;">📧 Lien</button>'
-    + '</div>'
-    + '<div id="auth-normal-fields">'
-    + '<input type="email" id="auth-email" placeholder="Adresse e-mail" autocomplete="email" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:10px;font-family:Poppins,sans-serif;box-sizing:border-box;">'
-    + '<input type="password" id="auth-pwd" placeholder="Mot de passe" autocomplete="current-password" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;box-sizing:border-box;">'
-    + '<input type="text" id="auth-firstname" placeholder="Prénom (optionnel)" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;box-sizing:border-box;display:none;">'
-    + '</div>'
-    + '<div id="magic-fields" style="display:none;">'
-    + '<input type="email" id="magic-email" placeholder="Adresse e-mail" autocomplete="email" style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:16px;font-family:Poppins,sans-serif;box-sizing:border-box;">'
-    + '</div>'
-    + '<button id="auth-submit-btn" onclick="authSubmit()" style="width:100%;padding:14px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;margin-bottom:16px;">Se connecter</button>'
-    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><div style="flex:1;height:1px;background:var(--gray-2);"></div><span style="font-size:12px;color:var(--gray-3);font-weight:600;">ou</span><div style="flex:1;height:1px;background:var(--gray-2);"></div></div>'
-    + '<button onclick="authGoogle()" style="width:100%;padding:13px;background:#fff;color:var(--dark);border:1.5px solid var(--gray-2);border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">🔵 Continuer avec Google</button>';
 }
 function showComingSoon(){
   alert('Authentification bientôt disponible ! La prochaine version intègrera Firebase Auth avec email et Google.');
@@ -5931,10 +5825,7 @@ function initSupabase(){
     supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
     supabase.auth.onAuthStateChange(function(event,session){
       currentUser=session?session.user:null;
-      updateHdrAvatar();
-      // Rafraîchir le profil si la vue est ouverte
-      var vp=document.getElementById('view-profile');
-      if(vp && vp.style.display==='block') renderProfileContent();
+      updateProfileUI();
       checkAutoNotifs();
       if(event==='SIGNED_IN'&&window.location.hash.includes('access_token')){
         window.history.replaceState({},'',window.location.pathname);
@@ -5943,7 +5834,7 @@ function initSupabase(){
     });
     supabase.auth.getSession().then(function(r){
       currentUser=r.data.session?r.data.session.user:null;
-      updateHdrAvatar();
+      updateProfileUI();
     });
   };
   document.head.appendChild(script);
@@ -6160,7 +6051,14 @@ function authSubmit(){
     .then(function(r){
       if(btn){btn.disabled=false;btn.textContent='Se connecter';}
       if(r.error)showAuthMsg('Email ou mot de passe incorrect.',true);
-      else{showAuthMsg('✅ Connecté !',false);currentUser=r.data.user||r.data.session.user;renderProfileContent();}
+      else{
+        currentUser = (r.data && (r.data.user || (r.data.session && r.data.session.user))) || null;
+        showAuthMsg('✅ Connecté !',false);
+        if(currentUser && supabase){
+          supabase.from('users_progress').upsert({user_id:currentUser.id, email:currentUser.email, updated_at:new Date().toISOString()},{onConflict:'user_id'}).then(function(){});
+        }
+        renderProfileContent();
+      }
     });
   }
 }
@@ -11061,6 +10959,35 @@ function adminSaveVideoEdit(id){
 
 
 // ── HISTOIRES ADMIN ───────────────────────────────────────────
+
+function adminShowAddHistoire(){
+  var f = document.getElementById('adm-hist-form');
+  if(f){ f.style.display = f.style.display==='none' ? 'block' : 'none'; }
+}
+
+function adminSaveHistoire(){
+  var titre   = (document.getElementById('adm-hist-titre').value||'').trim();
+  var accroche = (document.getElementById('adm-hist-accroche').value||'').trim();
+  var texte   = (document.getElementById('adm-hist-texte').value||'').trim();
+  if(!titre||!texte){ adminToast('Titre et histoire requis.'); return; }
+  if(!supabase){ adminToast('Supabase non connecté.'); return; }
+  supabase.from('histoires').insert([{
+    titre: titre,
+    sous_titre: accroche,
+    histoire: texte,
+    actif: true,
+    created_at: new Date().toISOString()
+  }]).then(function(res){
+    if(res.error){ adminToast('Erreur: '+res.error.message); return; }
+    adminToast('✅ Histoire publiée !');
+    document.getElementById('adm-hist-form').style.display='none';
+    ['adm-hist-titre','adm-hist-accroche','adm-hist-texte'].forEach(function(id){
+      var el=document.getElementById(id); if(el) el.value='';
+    });
+    adminLoadHistoires();
+  });
+}
+
 function adminLoadHistoires(){
   if(!supabase){ document.getElementById('adm-hist-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté</div>'; return; }
   supabase.from('histoires').select('*').order('created_at',{ascending:false})
@@ -11185,10 +11112,21 @@ function syncVideosFromDB(data){
 
 // ── UTILISATEURS ──────────────────────────────────────────────
 function adminLoadUsers(){
-  sbFetch('/rest/v1/profiles?order=created_at.desc&select=*')
+  // Essayer users_progress d'abord, puis profiles
+  var el = document.getElementById('adm-users-list');
+  if(!el) return;
+  el.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Chargement...</div>';
+  sbFetch('/rest/v1/users_progress?order=updated_at.desc&select=*')
   .then(function(data){
     if(!Array.isArray(data) || !data.length){
-      document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucun utilisateur inscrit.</div>';
+      // Essayer profiles
+      return sbFetch('/rest/v1/profiles?order=created_at.desc&select=*');
+    }
+    return data;
+  })
+  .then(function(data){
+    if(!Array.isArray(data) || !data.length){
+      document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune donnée locale.<br><small>👉 <a href=\'https://supabase.com/dashboard/project/atsfgzabpwirfhnzpzei/auth/users\' target=\'_blank\' style=\'color:var(--purple);\'>Voir les utilisateurs sur Supabase</a></small></div>';
       return;
     }
     var html = '';
@@ -11922,6 +11860,26 @@ try {
   </div>
 </div>
 
+  <!-- Section Histoires -->
+  <div id="admin-section-histoires" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">📖 Histoires publiées</div>
+      <div style="margin-bottom:12px;">
+        <button onclick="adminShowAddHistoire()" style="background:var(--purple);color:#fff;border:none;padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">+ Nouvelle histoire</button>
+      </div>
+      <div id="adm-hist-form" style="display:none;background:var(--gray-1);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;">
+        <div style="font-size:12px;color:var(--gray-4);margin-bottom:10px;font-family:Poppins,sans-serif;">Colle le titre, l'accroche et l'histoire — chacun dans son champ.</div>
+        <input id="adm-hist-titre" placeholder="Titre *" style="width:100%;padding:10px;border:1px solid var(--gray-2);border-radius:8px;margin-bottom:8px;font-family:Poppins,sans-serif;font-size:14px;font-weight:700;box-sizing:border-box;">
+        <input id="adm-hist-accroche" placeholder="Phrase d'accroche (facultatif)" style="width:100%;padding:10px;border:1px solid var(--gray-2);border-radius:8px;margin-bottom:8px;font-family:Poppins,sans-serif;font-size:13px;font-style:italic;box-sizing:border-box;">
+        <textarea id="adm-hist-texte" placeholder="L'histoire complète (coller ici)..." rows="8" style="width:100%;padding:10px;border:1px solid var(--gray-2);border-radius:8px;margin-bottom:8px;font-family:Poppins,sans-serif;font-size:13px;box-sizing:border-box;resize:vertical;"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button onclick="adminSaveHistoire()" style="flex:1;background:var(--purple);color:#fff;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">💾 Publier</button>
+          <button onclick="document.getElementById('adm-hist-form').style.display='none'" style="flex:1;background:var(--gray-2);color:var(--dark);border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Annuler</button>
+        </div>
+      </div>
+      <div id="adm-hist-list"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
+    </div>
+  </div>
 
 <!-- Panneau Notifications -->
 <div id="notif-panel" style="display:none;position:fixed;inset:0;z-index:9800;">
