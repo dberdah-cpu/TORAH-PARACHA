@@ -6222,6 +6222,22 @@ function updateProfileUI(){
   }
 }
 
+// Cacher le splash — multiple sécurités
+setTimeout(hideSplash, 2500);           // normal
+setTimeout(function(){                   // force à 3s
+  var s=document.getElementById('splash');
+  if(s){s.style.display='none';s.style.opacity='0';s.style.visibility='hidden';}
+}, 3000);
+window.addEventListener('error', function(){ 
+  setTimeout(hideSplash, 300);
+});
+// Sécurité iframe (Claude, etc.) — si geolocation bloquée
+if(window.self !== window.top){          // on est dans un iframe
+  setTimeout(hideSplash, 1500);
+}
+
+
+
 function initThemesDragScroll(){
   var bar = document.getElementById('recueil-themes-bar');
   if(!bar) return;
