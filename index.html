@@ -1090,13 +1090,15 @@ body{
 
     <!-- Form login/register (affiché si non connecté) -->
     <div id="auth-form-block" style="background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
-      <!-- Toggle login/register -->
+      <!-- Toggle login/register/magic -->
       <div style="display:flex;background:var(--gray-1);border-radius:var(--radius-sm);padding:3px;margin-bottom:20px;gap:3px">
-        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:13px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Se connecter</button>
-        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">S'inscrire</button>
+        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:9px;border-radius:9px;border:none;background:#fff;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;font-family:Poppins,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Connexion</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">Inscription</button>
+        <button id="tab-magic" onclick="switchAuthTab('magic')" style="flex:1;padding:9px;border-radius:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--gray-3);cursor:pointer;font-family:Poppins,sans-serif">📧 Lien</button>
       </div>
 
-      <!-- Champs communs -->
+      <!-- Champs normaux -->
+      <div id="auth-normal-fields">
       <input type="email" id="auth-email" placeholder="Adresse e-mail" autocomplete="email"
         style="width:100%;padding:13px 16px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:15px;margin-bottom:10px;font-family:Poppins,sans-serif;background:var(--gray-1);color:var(--dark);outline:none">
       <div style="position:relative;margin-bottom:6px">
@@ -1382,6 +1384,7 @@ body{
 <div id="cal-sheet-backdrop" onclick="closeDaySheet()"></div>
 <!-- Day sheet -->
 <div id="cal-day-sheet"></div>
+</div>
 </div>
 <div id="view-home"></div>
 <div id="view-cours" style="display:none;max-width:600px;margin:0 auto;padding:72px 16px 160px;"></div>
@@ -6052,6 +6055,30 @@ function authSubmit(){
   }
 }
 
+function authMagicLink(){
+  var email = (document.getElementById('magic-email')||{value:''}).value.trim();
+  if(!email){ showToast('Entrez votre email'); return; }
+  if(!supabase){ showToast('Connexion indisponible'); return; }
+  var btn = document.querySelector('#magic-link-form button');
+  if(btn){ btn.textContent = 'Envoi en cours...'; btn.disabled = true; }
+  supabase.auth.signInWithOtp({
+    email: email,
+    options: { emailRedirectTo: 'https://kedoshim.netlify.app' }
+  }).then(function(res){
+    if(btn){ btn.textContent = '✉️ Envoyer le lien magique'; btn.disabled = false; }
+    if(res.error){
+      showToast('Erreur : ' + res.error.message);
+    } else {
+      var msg = document.getElementById('magic-sent-msg');
+      if(msg) msg.style.display = 'block';
+      if(btn) btn.style.display = 'none';
+    }
+  }).catch(function(){
+    if(btn){ btn.textContent = '✉️ Envoyer le lien magique'; btn.disabled = false; }
+    showToast('Erreur envoi email');
+  });
+}
+
 function authGoogle(){
   if(typeof isShabbatNow==='function' && isShabbatNow()){
     document.getElementById('shabbat-overlay').classList.add('visible');
@@ -9521,17 +9548,13 @@ function displayRecettes(){
     h += '</div>';
     // Titre
     h += '<div style="padding:0 14px 10px;font-size:15px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">'+r.titre+'</div>';
-    // Média scrollable
-    if(r.photo_url || r.video_url){
-      h += '<div style="overflow-x:auto;white-space:nowrap;padding:0 14px 10px;-webkit-overflow-scrolling:touch;">';
-      if(r.photo_url){
-        h += '<img src="'+r.photo_url+'" style="display:inline-block;width:200px;height:150px;object-fit:cover;border-radius:10px;margin-right:8px;vertical-align:top;">';
-      }
-      if(r.video_url){
-        h += '<video style="display:inline-block;width:200px;height:150px;object-fit:cover;border-radius:10px;vertical-align:top;" controls playsinline preload="metadata">'
-          + '<source src="'+r.video_url+'" type="video/mp4"></video>';
-      }
-      h += '</div>';
+    // Média pleine largeur
+    if(r.photo_url){
+      h += '<img src="'+r.photo_url+'" style="width:100%;max-height:280px;object-fit:cover;display:block;">';
+    }
+    if(r.video_url){
+      h += '<video style="width:100%;display:block;background:#000;" controls playsinline preload="metadata" webkit-playsinline>'
+        + '<source src="'+r.video_url+'" type="video/mp4"></video>';
     }
     // Texte recette
     if(r.texte){
@@ -9734,7 +9757,13 @@ async function loadNotifs(){
       .eq('user_id', currentUser.id)
       .order('created_at', {ascending: false})
       .limit(50);
-    _notifList = res.data || [];
+    // Dédoublonner par ID
+    var seen = {};
+    _notifList = (res.data || []).filter(function(n){
+      if(seen[n.id]) return false;
+      seen[n.id] = true;
+      return true;
+    });
     _notifUnread = _notifList.filter(function(n){ return !n.lu; }).length;
     updateNotifBadge();
   } catch(e){ console.log('loadNotifs err', e); }
@@ -9782,7 +9811,12 @@ function toggleNotifPanel(){
   if(!panel) return;
   if(panel.style.display === 'none' || !panel.style.display){
     panel.style.display = 'flex';
-    loadNotifs().then(renderNotifPanel);
+    // Si les notifs sont déjà en mémoire, juste rendre
+    if(_notifList.length > 0){
+      renderNotifPanel();
+    } else {
+      loadNotifs().then(renderNotifPanel);
+    }
   } else {
     panel.style.display = 'none';
   }
@@ -10617,10 +10651,7 @@ function openAdmin(){
   var code = prompt('Code administrateur :');
   if(code !== ADMIN_CODE){ alert('Code incorrect.'); return; }
   document.getElementById('view-admin').style.display = 'block';
-  adminTab('videos');
-  adminLoadVideos();
-  adminLoadUsers();
-  adminLoadStats();
+  adminTab('videos'); // adminTab charge déjà adminLoadVideos
 }
 
 function closeAdmin(){
@@ -10640,6 +10671,7 @@ function adminLoadTarifs(){
       list.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Aucun tarif.</div>';
       return;
     }
+    list.innerHTML = '';
     var h = '';
     _tarifsCache.forEach(function(t){
       h += '<div style="background:var(--gray-1);border-radius:10px;padding:12px;margin-bottom:8px;">';
