@@ -1257,7 +1257,7 @@ body{
     </div>
 
     <!-- Config notice -->
-    <div id="supabase-notice" style="display:none;background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
+    <div id="supabase-notice" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
       
 
       <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px;font-family:Poppins,sans-serif">⚙️ Configuration requise</div>
@@ -5557,7 +5557,7 @@ function showParachiotView(){
 }
 function showProfileView(){
   updateHdrAvatar();
-  // Afficher la vue d'abord
+  updateProfileUI();
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-detail').style.display='none';
   document.getElementById('view-hayom').style.display='none';
@@ -5565,18 +5565,6 @@ function showProfileView(){
   document.getElementById('view-profile').style.display='block';
   document.getElementById('btn-back').style.display='none';
   window.scrollTo(0,0);
-  // Appliquer l'UI profil APRES que la vue est visible
-  setTimeout(function(){
-    // Récupérer la session Supabase fraîche si currentUser manque
-    if(!currentUser && typeof supabase !== 'undefined' && supabase){
-      supabase.auth.getSession().then(function(r){
-        if(r.data && r.data.session) currentUser = r.data.session.user;
-        updateProfileUI();
-      });
-    } else {
-      updateProfileUI();
-    }
-  }, 50);
 }
 function showComingSoon(){
   alert('Authentification bientôt disponible ! La prochaine version intègrera Firebase Auth avec email et Google.');
@@ -6167,134 +6155,72 @@ function updateHdrAvatar(){
 
 function updateProfileUI(){
   var fb=document.getElementById('auth-form-block');
+  var psb=document.getElementById('profile-setup-block');
   var cb=document.getElementById('profile-connected-block');
   var nm=document.getElementById('profile-name');
   var em=document.getElementById('profile-email-display');
   var av=document.getElementById('profile-avatar');
   var inf=document.getElementById('profile-info');
   var ntc=document.getElementById('supabase-notice');
-  if(!fb) return;
-  if(currentUser){
-    fb.style.display='none';
-    if(cb)cb.style.display='block';
-    var fname=(currentUser.user_metadata&&currentUser.user_metadata.first_name)||'';
-    var dn=fname||currentUser.email.split('@')[0];
-    if(nm)nm.textContent='Bonjour, '+dn+' 👋';
-    if(em)em.textContent=currentUser.email;
-    if(av){
-      // Récupérer photo Google ou photo uploadée
-      var photoUrl = (currentUser.user_metadata && (currentUser.user_metadata.avatar_url || currentUser.user_metadata.picture)) || null;
-      // Chercher aussi dans localStorage (photo uploadée)
-      var localPhoto = localStorage.getItem('profile_photo_' + currentUser.id);
-      if(localPhoto) photoUrl = localPhoto;
-      // Rendre l'avatar cliquable
-      av.style.cursor = 'pointer';
-      av.title = 'Changer ma photo';
-      av.onclick = function(){
-        var inp = document.createElement('input');
-        inp.type = 'file'; inp.accept = 'image/*';
-        inp.onchange = function(){ uploadProfilePhoto(inp); };
-        inp.click();
-      };
-      if(photoUrl){
-        av.innerHTML = '<img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.textContent=\''+dn[0].toUpperCase()+'\'">';
-        av.style.background = 'transparent';
-        av.style.fontSize = '0';
-        // Indicateur de modification
-        av.innerHTML += '<div style="position:absolute;bottom:0;right:0;background:#7c3aed;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;">📷</div>';
-        av.style.position = 'relative';
-      } else {
-        av.textContent = dn[0].toUpperCase();
-        av.style.background = 'rgba(255,255,255,0.25)';
-        av.style.fontSize = '28px';
-        av.style.fontFamily = 'Poppins,sans-serif';
-        av.style.fontWeight = '700';
-        av.style.color = '#fff';
-      }
+
+  // Masquer toujours le notice Supabase
+  if(ntc) ntc.style.display='none';
+
+  if(!currentUser){
+    // Non connecté
+    if(fb) fb.style.display='block';
+    if(psb) psb.style.display='none';
+    if(cb) cb.style.display='none';
+    if(nm) nm.textContent='Mon Profil';
+    if(em) em.textContent='Connectez-vous pour personnaliser votre expérience';
+    if(av){av.textContent='👤';av.style.fontSize='36px';av.style.background='rgba(255,255,255,0.15)';}
+    return;
+  }
+
+  // Connecté : masquer le form, afficher le bloc connecté
+  if(fb) fb.style.display='none';
+  if(psb) psb.style.display='none';
+  if(cb){ cb.style.display='block'; cb.style.visibility='visible'; cb.style.opacity='1'; }
+
+  var meta = currentUser.user_metadata || {};
+  var dn = meta.first_name || meta.full_name || meta.name || currentUser.email.split('@')[0];
+  if(nm) nm.textContent='Bonjour, '+dn+' 👋';
+  if(em) em.textContent=currentUser.email;
+
+  // Avatar
+  if(av){
+    var photoUrl = meta.avatar_url || meta.picture || null;
+    try{ var lp=localStorage.getItem('profile_photo_'+currentUser.id); if(lp) photoUrl=lp; }catch(e){}
+    av.style.cursor='pointer';
+    av.title='Changer ma photo';
+    av.onclick=function(){
+      var inp=document.createElement('input');
+      inp.type='file'; inp.accept='image/*';
+      inp.onchange=function(){ uploadProfilePhoto(inp); };
+      inp.click();
+    };
+    if(photoUrl){
+      av.style.position='relative';
+      av.innerHTML='<img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.textContent=\x27'+dn[0].toUpperCase()+'\x27">'
+        +'<div style="position:absolute;bottom:0;right:0;background:#7c3aed;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;">📷</div>';
+      av.style.background='transparent';
+      av.style.fontSize='0';
+    } else {
+      av.textContent=dn[0].toUpperCase();
+      av.style.background='rgba(255,255,255,0.25)';
+      av.style.fontSize='28px';
+      av.style.fontWeight='700';
+      av.style.color='#fff';
     }
-    if(inf){
-      inf.innerHTML='📧 '+currentUser.email+'<br>🕐 Membre depuis '+new Date(currentUser.created_at).toLocaleDateString('fr-FR');
-      // Bouton changer photo
-    }
-    if(ntc)ntc.style.display='none';
-  } else {
-    fb.style.display='block';
-    if(cb)cb.style.display='none';
-    if(nm)nm.textContent='Mon Profil';
-    if(em)em.textContent='Connectez-vous pour personnaliser votre expérience';
-    if(av){av.textContent='👤';av.style.fontSize='36px';}
-    if(ntc)ntc.style.display='none'; // Supabase configuré — cacher la notice
+  }
+
+  // Info email + date
+  if(inf){
+    var dateStr='';
+    try{ dateStr=new Date(currentUser.created_at).toLocaleDateString('fr-FR'); }catch(e){}
+    inf.innerHTML='📧 '+currentUser.email+(dateStr?'<br>🕐 Membre depuis '+dateStr:'');
   }
 }
-
-
-// Cacher le splash — multiple sécurités
-setTimeout(hideSplash, 2500);           // normal
-setTimeout(function(){                   // force à 3s
-  var s=document.getElementById('splash');
-  if(s){s.style.display='none';s.style.opacity='0';s.style.visibility='hidden';}
-}, 3000);
-window.addEventListener('error', function(){ 
-  setTimeout(hideSplash, 300);
-});
-// Sécurité iframe (Claude, etc.) — si geolocation bloquée
-if(window.self !== window.top){          // on est dans un iframe
-  setTimeout(hideSplash, 1500);
-}
-
-
-// ══════════════════════════════════════════════════════════════
-// GAMIFICATION SYSTEM
-// ══════════════════════════════════════════════════════════════
-
-// ── Données locales (fallback sans Supabase) ──
-var localProgress = {
-  streak_current: 0, streak_best: 0, streak_last_date: null,
-  points_total: 0, niveau: 'debutant', badges: []
-};
-
-// ── Configuration ──
-var NIVEAUX = [
-  {id:'debutant', emoji:'🌱', name:'Débutant', sub:'Celui qui commence son chemin', min:0, max:7},
-  {id:'talmid', emoji:'📖', name:'Talmid', sub:'Celui qui étudie avec régularité', min:8, max:30},
-  {id:'haver', emoji:'✡️', name:'Haver', sub:'Le compagnon de la communauté', min:31, max:100},
-  {id:'rav', emoji:'🏆', name:'Rav', sub:'Celui qui peut transmettre', min:101, max:364},
-  {id:'kadosh', emoji:'👑', name:'Kadosh', sub:'Nous sommes tous Kadosh', min:365, max:9999}
-];
-
-var BADGES_DEF = [
-  {id:'premier_pas', emoji:'👣', name:'Premier pas', desc:'Premier jour d\'étude'},
-  {id:'shabbat_chalom', emoji:'🕯', name:'Chabbat Chalom', desc:'Respecté le Chabbat'},
-  {id:'beaba', emoji:'📚', name:'Béaba transmis', desc:'Partagé un enseignement'},
-  {id:'7jours', emoji:'🔥', name:'7 jours', desc:'Streak de 7 jours'},
-  {id:'30jours', emoji:'⭐', name:'30 jours', desc:'Streak de 30 jours'},
-  {id:'100jours', emoji:'💎', name:'100 jours', desc:'Streak de 100 jours'},
-  {id:'hayom', emoji:'☀️', name:'Hayom Yom', desc:'Premier Hayom Yom lu'},
-  {id:'paracha', emoji:'📖', name:'Lecteur', desc:'Première paracha lue'},
-  {id:'recueil', emoji:'💛', name:'Explorateur', desc:'10 enseignements lus'}
-];
-
-var SAVAIS_TU = [
-  {text:"Le mot 'Torah' vient de la racine hébraïque 'horé' qui signifie enseigner et guider. La Torah n'est pas une loi — c'est un chemin de vie.", source:"Tanya, ch.4"},
-  {text:"Le Baal Chem Tov enseignait que D.ieu est présent partout — y compris dans les moments de doute et de questionnement.", source:"Keter Shem Tov"},
-  {text:"Il y a 613 mitsvot : 248 positives (correspondant aux 248 membres du corps) et 365 négatives (correspondant aux 365 jours de l'année solaire).", source:"Talmud, Makkot 23b"},
-  {text:"Le mot 'Israël' signifie 'celui qui a lutté avec D.ieu et les hommes et a prévalu'. C'est un nom de combat, pas de victoire facile.", source:"Genèse 32:29"},
-  {text:"La mezouza contient les paragraphes du Shema. Chaque fois qu'on franchit une porte, on est rappelé à l'Unité divine.", source:"Deutéronome 6:9"},
-  {text:"Le Rabbi de Loubavitch disait : 'Un peu de lumière repousse beaucoup de ténèbres.' Une seule bonne action peut changer un monde.", source:"Likoutei Si'hot vol.1"},
-  {text:"Il y a 4 niveaux d'interprétation de la Torah : Pshat (simple), Remez (allusion), Drach (enseignement) et Sod (mystère). Ensemble ils forment PaRDeS — le verger.", source:"Zohar"},
-  {text:"Le Chabbat est mentionné 12 fois dans la Torah — autant que les 12 tribus d'Israël. Le Chabbat unit tout Israël.", source:"Mechilta, Yitro"},
-  {text:"La lettre Alef, première lettre de l'alphabet hébreu, est composée de deux Yod et d'un Vav — soit la valeur numérique 26, le nom de D.ieu.", source:"Sefer Yetsira"},
-  {text:"Le Rabbi enseignait que chaque Juif possède une lettre unique dans la Torah. Si une lettre manque dans un rouleau, tout le rouleau est invalide.", source:"Likoutei Si'hot vol.4"}
-];
-
-var savaisTuIndex = 0;
-var savaisTuSeen = [];
-var shabbatOverlayShown = false;
-
-// ── INITIALISATION ──
-
-// Drag scroll souris sur la barre de thèmes
-  updateHdrAvatar();
 
 function initThemesDragScroll(){
   var bar = document.getElementById('recueil-themes-bar');
