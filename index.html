@@ -1257,7 +1257,7 @@ body{
     </div>
 
     <!-- Config notice -->
-    <div id="supabase-notice" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
+    <div id="supabase-notice" style="display:none;background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;border:1px solid rgba(79,70,229,0.12)">
       
 
       <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px;font-family:Poppins,sans-serif">⚙️ Configuration requise</div>
@@ -5557,7 +5557,7 @@ function showParachiotView(){
 }
 function showProfileView(){
   updateHdrAvatar();
-  updateProfileUI();
+  // Afficher la vue d'abord
   document.getElementById('view-home').style.display='none';
   document.getElementById('view-detail').style.display='none';
   document.getElementById('view-hayom').style.display='none';
@@ -5565,6 +5565,18 @@ function showProfileView(){
   document.getElementById('view-profile').style.display='block';
   document.getElementById('btn-back').style.display='none';
   window.scrollTo(0,0);
+  // Appliquer l'UI profil APRES que la vue est visible
+  setTimeout(function(){
+    // Récupérer la session Supabase fraîche si currentUser manque
+    if(!currentUser && typeof supabase !== 'undefined' && supabase){
+      supabase.auth.getSession().then(function(r){
+        if(r.data && r.data.session) currentUser = r.data.session.user;
+        updateProfileUI();
+      });
+    } else {
+      updateProfileUI();
+    }
+  }, 50);
 }
 function showComingSoon(){
   alert('Authentification bientôt disponible ! La prochaine version intègrera Firebase Auth avec email et Google.');
@@ -6165,8 +6177,6 @@ function updateProfileUI(){
   if(currentUser){
     fb.style.display='none';
     if(cb)cb.style.display='block';
-    var sb=document.getElementById('profile-setup-block');
-    if(sb)sb.style.display='none';
     var fname=(currentUser.user_metadata&&currentUser.user_metadata.first_name)||'';
     var dn=fname||currentUser.email.split('@')[0];
     if(nm)nm.textContent='Bonjour, '+dn+' 👋';
