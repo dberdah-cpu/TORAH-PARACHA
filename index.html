@@ -3409,7 +3409,26 @@ function getHYFromJSON(hd){
   if(!HY_JSON) return null;
   var monthName=HEB_MONTH_TO_JSON[hd.m];
   if(!monthName||!HY_JSON[monthName]) return null;
-  return HY_JSON[monthName][String(hd.d)]||null;
+  var monthData=HY_JSON[monthName];
+  // Essayer hd.d d'abord (JSON corrigé), sinon hd.d-1 (ancien JSON décalé)
+  if(monthData[String(hd.d)]) return monthData[String(hd.d)];
+  // Vérifier la version du JSON via _note
+  if(HY_JSON._note && HY_JSON._note.indexOf('corrig')>=0){
+    return null; // JSON corrigé mais entrée manquante
+  }
+  // Ancien JSON : décalage -1
+  var prevDay = hd.d - 1;
+  if(prevDay >= 1) return monthData[String(prevDay)]||null;
+  // Passage mois précédent
+  var prevM = hd.m-1; if(prevM<1) prevM=12;
+  var prevMonthName = HEB_MONTH_TO_JSON[prevM];
+  if(prevMonthName && HY_JSON[prevMonthName]){
+    var prevData = HY_JSON[prevMonthName];
+    var prevKeys = Object.keys(prevData).filter(function(k){return !isNaN(k);});
+    var lastDay = Math.max.apply(null,prevKeys.map(Number));
+    return prevData[String(lastDay)]||null;
+  }
+  return null;
 }
 
 // ── SEFER HAMITSVOT JSON ──────────────────────────────────────────────────────
@@ -10166,6 +10185,10 @@ function clickNotif(id, lien){
 // ── Vérifications automatiques au démarrage ──────────────────
 async function checkAutoNotifs(){
   if(!supabase || !currentUser) return;
+  // Anti-doublon : exécuter une seule fois par heure
+  var antiDupKey = 'notif_check_' + new Date().toISOString().substring(0,13);
+  if(localStorage.getItem(antiDupKey)) return;
+  localStorage.setItem(antiDupKey, '1');
   var now = new Date();
   var day = now.getDay(); // 5 = vendredi
   var hour = now.getHours();
@@ -11957,6 +11980,37 @@ function renderTehilimPage(){
   });
 }
 
+function switchTehTab(tab){
+  var heb = document.getElementById('teh-reader-heb');
+  var wrap = document.getElementById('teh-reader-iframe-wrap');
+  var fr = document.getElementById('teh-reader-fr');
+  var tabs = ['heb','phonetique','traduction'];
+  tabs.forEach(function(t){
+    var btn = document.getElementById('teh-tab-'+t);
+    if(btn){
+      btn.style.background = t===tab?'#fff':'transparent';
+      btn.style.color = t===tab?'var(--purple)':'var(--gray-3)';
+      btn.style.boxShadow = t===tab?'0 1px 3px rgba(0,0,0,0.1)':'none';
+    }
+  });
+  if(tab==='heb'){
+    if(heb) heb.style.display='block';
+    if(wrap) wrap.style.display='none';
+    if(fr) fr.style.display='none';
+  } else if(tab==='phonetique'||tab==='traduction'){
+    if(heb) heb.style.display='none';
+    if(fr) fr.style.display='none';
+    if(wrap){
+      wrap.style.display='block';
+      var iframe = document.getElementById('teh-reader-iframe');
+      var psNum = wrap.getAttribute('data-psaume');
+      if(iframe && psNum && !iframe.src.includes('tehilim-'+psNum)){
+        iframe.src = 'https://tehilim-online.com/les-psaumes-de-David/Tehilim-'+psNum;
+      }
+    }
+  }
+}
+
 function loadTehilimText(psaume, btnEl){
   if(!psaume) return;
   if(isShabbatNow()){ showToast('Chabbat Chalom ! Les Téhilim se lisent après la Havdala.'); return; }
@@ -11970,6 +12024,12 @@ function loadTehilimText(psaume, btnEl){
   if(title) title.textContent = 'Psaume ' + psaume;
   if(hebEl) hebEl.innerHTML = '<div style="text-align:center;color:var(--gray-4);padding:20px;">Chargement...</div>';
   if(frEl) frEl.innerHTML = '';
+  // Stocker numéro psaume pour iframe + reset onglet hébreu
+  var wrap = document.getElementById('teh-reader-iframe-wrap');
+  if(wrap){ wrap.setAttribute('data-psaume', psaume); wrap.style.display='none'; }
+  var ifrEl = document.getElementById('teh-reader-iframe');
+  if(ifrEl) ifrEl.src = ''; // reset
+  switchTehTab('heb');
   reader.scrollIntoView({behavior:'smooth', block:'start'});
 
   // Points + streak Téhilim
@@ -11990,17 +12050,25 @@ function loadTehilimText(psaume, btnEl){
     }).join(' ');
     if(hebEl) hebEl.innerHTML = heText || 'Texte non disponible';
 
-    fetch('https://www.sefaria.org/api/texts/Psalms.' + psaume + '?lang=fr&commentary=0')
+    // Sefaria : essayer traduction française, sinon anglaise
+    fetch('https://www.sefaria.org/api/texts/Psalms.' + psaume + '?lang=en&commentary=0')
     .then(function(r2){ return r2.json(); })
     .then(function(d2){
-      var frVerses = d2.text || d2.he || [];
-      if(typeof frVerses === 'string') frVerses = [frVerses];
-      var frText = frVerses.map(function(v,i){
+      var enVerses = d2.text || [];
+      if(typeof enVerses === 'string') enVerses = [enVerses];
+      // Construire traduction avec translitération si disponible
+      var trText = enVerses.map(function(v,i){
         var clean = String(v).replace(/<[^>]+>/g,'');
         return '<span style="font-size:11px;color:var(--gray-3);">'+(i+1)+'.</span> '+clean;
       }).join('<br>');
-      if(frEl) frEl.innerHTML = frText || '';
-    }).catch(function(){});
+      if(frEl){
+        frEl.innerHTML = '<div style="font-size:11px;color:var(--gray-3);font-weight:600;margin-bottom:6px;font-family:Poppins,sans-serif;">Traduction (anglais)</div>' + (trText||'');
+        // Ajouter lien vers traduction française externe
+
+      }
+    }).catch(function(){
+      if(frEl) frEl.innerHTML = '<a href="https://www.tehilim-online.com" target="_blank" style="font-size:12px;color:var(--purple);">Lire sur tehilim-online.com →</a>';
+    });
   })
   .catch(function(){
     if(hebEl) hebEl.innerHTML = '<div style="text-align:center;color:var(--gray-4);padding:20px;">Erreur de chargement.<br><a href="https://www.tehilim-online.com" target="_blank" style="color:var(--purple);">Ouvrir sur tehilim-online.com</a></div>';
@@ -12172,12 +12240,12 @@ function showOnboardingStep(step){
   var vp = document.getElementById('view-profile');
   if(!vp) return;
 
-  var steps = {
-    1: buildOnboardingStep1(),
-    2: buildOnboardingStep2(),
-    3: buildOnboardingStep3(),
-    4: buildOnboardingStep4()
-  };
+  // Construire SEULEMENT l'étape demandée
+  var stepHTML = '';
+  if(step===1) stepHTML = buildOnboardingStep1();
+  else if(step===2) stepHTML = buildOnboardingStep2();
+  else if(step===3) stepHTML = buildOnboardingStep3();
+  else if(step===4) stepHTML = buildOnboardingStep4();
 
   var hero = '<div style="background:var(--grad-main);padding:56px 20px 28px;text-align:center;">'
     + '<div style="font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:16px;font-family:Poppins,sans-serif;">Étape ' + step + '/4</div>'
@@ -12185,7 +12253,7 @@ function showOnboardingStep(step){
     + [1,2,3,4].map(function(i){ return '<div style="width:40px;height:4px;border-radius:2px;background:' + (i<=step?'#fff':'rgba(255,255,255,0.3)') + ';"></div>'; }).join('')
     + '</div></div>';
 
-  vp.innerHTML = hero + steps[step];
+  vp.innerHTML = hero + stepHTML;
 }
 
 function buildOnboardingStep1(){
@@ -12494,11 +12562,19 @@ try {
         <div id="teh-reader-title" style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;"></div>
         <button onclick="document.getElementById('teh-reader').style.display='none'" style="background:var(--gray-1);border:none;color:var(--gray-4);width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;">X</button>
       </div>
-      <div id="teh-reader-heb" style="font-size:20px;line-height:1.8;color:var(--dark);text-align:right;direction:rtl;font-family:serif;margin-bottom:16px;"></div>
-      <div id="teh-reader-fr" style="font-size:13px;line-height:1.7;color:var(--gray-4);border-top:1px solid var(--gray-2);padding-top:12px;"></div>
-      <div style="margin-top:14px;text-align:center;">
-        <a href="https://www.tehilim-online.com" target="_blank" style="font-size:12px;color:var(--purple);font-family:Poppins,sans-serif;text-decoration:none;">Lire tous les Psaumes sur tehilim-online.com →</a>
+      <!-- Onglets -->
+      <div style="display:flex;gap:4px;margin-bottom:12px;background:var(--gray-1);border-radius:var(--radius-sm);padding:3px;">
+        <button onclick="switchTehTab('heb')" id="teh-tab-heb" style="flex:1;padding:7px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;background:#fff;color:var(--purple);box-shadow:0 1px 3px rgba(0,0,0,0.1);">Hébreu</button>
+        <button onclick="switchTehTab('phonetique')" id="teh-tab-phonetique" style="flex:1;padding:7px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;background:transparent;color:var(--gray-3);">Phonétique</button>
+        <button onclick="switchTehTab('traduction')" id="teh-tab-traduction" style="flex:1;padding:7px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;background:transparent;color:var(--gray-3);">Traduction</button>
       </div>
+      <!-- Hébreu -->
+      <div id="teh-reader-heb" style="font-size:20px;line-height:1.8;color:var(--dark);text-align:right;direction:rtl;font-family:serif;margin-bottom:8px;"></div>
+      <!-- Phonétique + Traduction via iframe -->
+      <div id="teh-reader-iframe-wrap" style="display:none;height:400px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--gray-2);">
+        <iframe id="teh-reader-iframe" style="width:100%;height:100%;border:none;" loading="lazy"></iframe>
+      </div>
+      <div id="teh-reader-fr" style="display:none;font-size:13px;line-height:1.7;color:var(--gray-4);"></div>
     </div>
   </div>
 </div>
