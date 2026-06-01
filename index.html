@@ -5770,20 +5770,31 @@ function showRecueilView(){
 }
 
 function loadEnseignements(){
-  fetch('enseignements.json')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      enseignementsData=d;
-      buildThemesBar(d.themes);
-      renderEnseignements();
-    })
-    .catch(function(e){
-      console.error('Recueil load error:',e);
-      var el=document.getElementById('recueil-list');
-      if(el) el.innerHTML='<div class="ens-empty">⚠️ Fichier enseignements.json non trouvé.<br><small>Upload-le à la racine du repo GitHub.</small></div>';
-    });
-}
+  var el=document.getElementById('recueil-list');
+  if(el) el.innerHTML='<div class="ens-empty" style="text-align:center;padding:40px 20px;color:var(--gray-4);font-size:14px;font-family:Poppins,sans-serif;">Chargement…</div>';
 
+  // Essayer en relatif d'abord, puis URL absolue GitHub Pages
+  var urls = [
+    'enseignements.json',
+    'https://dberdah-cpu.github.io/TORAH-PARACHA/enseignements.json'
+  ];
+
+  function tryFetch(index){
+    if(index >= urls.length){
+      if(el) el.innerHTML='<div class="ens-empty" style="text-align:center;padding:40px;color:var(--gray-4);">Impossible de charger les enseignements.</div>';
+      return;
+    }
+    fetch(urls[index])
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(function(d){
+        enseignementsData = d;
+        if(typeof buildThemesBar === 'function') buildThemesBar(d.themes);
+        if(typeof renderEnseignements === 'function') renderEnseignements();
+      })
+      .catch(function(){ tryFetch(index+1); });
+  }
+  tryFetch(0);
+}
 
 function toggleThemesExpand(){
   var wrap = document.getElementById('recueil-themes-wrap');
@@ -6869,20 +6880,18 @@ function showToast(msg){
 
 function requireLogin(retryFn){
   if(currentUser) return true;
-  // Supabase pas encore initialisé - attendre
-  if(!supabase){
-    if(retryFn) setTimeout(retryFn, 500);
-    return false;
+  if(typeof supabase !== 'undefined' && supabase){
+    supabase.auth.getSession().then(function(r){
+      if(r.data && r.data.session){
+        currentUser = r.data.session.user;
+        if(retryFn) retryFn(); else location.reload();
+      } else {
+        showAuthForm();
+      }
+    });
+  } else {
+    showAuthForm();
   }
-  // Vérifier la session async
-  supabase.auth.getSession().then(function(r){
-    if(r.data && r.data.session){
-      currentUser = r.data.session.user;
-      if(retryFn) retryFn();
-    } else {
-      showAuthForm();
-    }
-  });
   return false;
 }
 
@@ -10093,9 +10102,6 @@ async function checkAutoNotifs(){
 
   // Événements personnels — check les events du calendrier du jour
   checkCalendarEventsNotifs(today);
-
-  // Charger le badge
-  loadNotifs();
 }
 
 async function checkCalendarEventsNotifs(today){
