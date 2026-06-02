@@ -1674,7 +1674,7 @@ var PARASHA_MAP = {
   'Emor':31,
   'Behar':32,'Bechukotai':32,'Behar-Bechukotai':32,'Behar Bechukotai':32,
   'Bamidbar':34,'Nasso':35,'Naso':35,
-  "Beha'alotcha":36,"Beha’alotcha":36,"Behaʼalotcha":36,
+  "Beha'alotcha":36,"Beha’alotcha":36,"Beha’alotkha":36,"Behaʼalotcha":36,"Behaalotkha":36,"Behaalotcha":36,
   'Beha-alotcha':36,'Behaalotcha':36,'Behalotcha':36,
   "Beha'Alotcha":36,"Beha’Alotcha":36,
   'Shelach':37,'Shelach-Lecha':37,'Shelach Lecha':37,
@@ -11224,7 +11224,8 @@ function adminSaveHistoire(){
 
 function adminLoadHistoires(){
   var listEl = document.getElementById('adm-hist-list');
-  if(!listEl) return;
+  console.log('[Admin] adminLoadHistoires appelé, listEl=', listEl, 'supabase=', !!supabase);
+  if(!listEl){ console.warn('[Admin] adm-hist-list introuvable!'); return; }
   if(!supabase){ listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté à Supabase.</div>'; return; }
   listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Chargement...</div>';
   sbFetch('/rest/v1/histoires?order=created_at.desc&select=*')
