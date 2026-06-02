@@ -1691,18 +1691,18 @@ var PARASHA_FR = {
 
 
   'Bereshit':'Beréchit','Noach':'Noach','Lech-Lecha':'Lekh Lekha','Lech Lecha':'Lekh Lekha',
-  'Vayera':'Vayéra','Chayei Sara':'Chayei Sarah','Chayei Sarah':'Chayei Sarah',
-  'Toldot':'Toldot','Vayetzei':'Vayétsé','Vayishlach':'Vayichlah','Vayeshev':'Vayéchev',
+  'Vayera':'Vayéra','Chayei Sara':'Hayé Sarah','Chayei Sarah':'Hayé Sarah',
+  'Toldot':'Toledot','Toldot':'Toledot','Vayetzei':'Vayétsé','Vayishlach':'Vayichlah','Vayeshev':'Vayéchev',
   'Miketz':'Mikets','Vayigash':'Vayigach','Vayechi':'Vayéhi','Vayechi':"Vayé'hi",
   'Shemot':'Chemot',"Va'era":"Va'era",'Vaera':'Vaéra','Bo':'Bo','Beshalach':'Bechalah',
   'Yitro':'Yitro','Mishpatim':'Michpatim','Terumah':'Terouma','Tetzaveh':'Tetsavé',
   'Ki Tisa':'Ki Tissa','Ki Tissa':'Ki Tissa',
   'Vayakhel':'Vayakhel','Pekudei':'Pekoudei','Vayakhel-Pekudei':'Vayakhel-Pekoudei',
   'Vayikra':'Vayikra','Tzav':'Tsav','Shemini':'Chemini',
-  'Tazria':'Tazria','Metzora':'Metsora','Tazria-Metzora':'Tazria-Metsora',
-  'Achrei Mot':'Acharei Mot','Kedoshim':'Kedochim',
+  'Tazria':'Tazria','Metzora':'Metsora','Tazria-Metzora':'Tazria','Tazria':'Tazria','Metzora':'Metsora',
+  'Achrei Mot':'A’haré Mot','Kedoshim':'Kedochim',
   'Achrei Mot-Kedoshim':'Acharei Mot-Kedochim',
-  'Acharei Mot':'Acharei Mot','Acharei Mot-Kedoshim':'Acharei Mot-Kedochim',
+  'Acharei Mot':'A’haré Mot','Acharei Mot-Kedoshim':'A’haré Mot-Kedochim',
   'Emor':'Emor','Behar':'Behar','Bechukotai':'Behoukotaï','Behar-Bechukotai':'Behar-Behoukotaï',
   'Bamidbar':'Bamidbar','Nasso':'Nasso',
   "Beha'alotcha":'Behaalotekha','Behalotcha':'Behalotecha','Shelach':'Chelah','Korach':'Koraḥ',
@@ -1713,7 +1713,14 @@ var PARASHA_FR = {
   'Shoftim':'Choftim','Ki Teitzei':'Ki Tetsé','Ki Tetze':'Ki Tetsé',
   'Ki Tavo':'Ki Tavo','Nitzavim':'Nitsavim','Vayeilech':'Vayélekh',
   'Nitzavim-Vayeilech':'Nitsavim-Vayélekh',"Ha'azinu":'Haazinou','Haazinu':'Haazinou',
-  'Vezot Haberakhah':'Vezot Haberakha','Vezot HaBerakha':'Vezot Haberakha'
+  'Vezot Haberakhah':'Vezot Haberakha','Vezot HaBerakha':'Vezot Haberakha',
+  // Fêtes
+  'Rosh Hashana':'Roch Hachana','Rosh HaShanah':'Roch Hachana',
+  'Yom Kippur':'Kippour','Yom Kippour':'Kippour',
+  'Sukkot':'Souccot','Sukkoth':'Souccot',
+  'Shavuot':'Chavouot','Shavuoth':'Chavouot',
+  'Pesach':'Pessah','Passover':'Pessah',
+  'Chanukah':'Hanoukka','Hanukkah':'Hanoukka'
 };
 
 // ── CYCLE TEHILIM MENSUEL (jour hébreu 1-30 → Psaumes) ──────────
@@ -1734,6 +1741,25 @@ var TEHILIM_CYCLE = {
   23:[1,2,3], 24:[4,5,6,7], 25:[8,9,10,11], 26:[12,13,14,15],
   27:[16,17,18], 28:[19,20,21], 29:[22,23,24], 30:[25,26,27,28,29]
 };
+
+var TEHILIM_JSON=null,TEHILIM_JSON_LOADING=false,TEHILIM_JSON_CBS=[];
+function loadTehilimJSON(cb){
+  if(TEHILIM_JSON){if(cb)cb(TEHILIM_JSON);return;}
+  if(cb)TEHILIM_JSON_CBS.push(cb);
+  if(TEHILIM_JSON_LOADING)return;
+  TEHILIM_JSON_LOADING=true;
+  var urls=['tehilim.json','https://dberdah-cpu.github.io/TORAH-PARACHA/tehilim.json'];
+  function tryU(i){
+    if(i>=urls.length){TEHILIM_JSON={};TEHILIM_JSON_CBS.forEach(function(f){f({});});TEHILIM_JSON_CBS=[];return;}
+    fetch(urls[i]).then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(d){TEHILIM_JSON=d;TEHILIM_JSON_CBS.forEach(function(f){f(d);});TEHILIM_JSON_CBS=[];})
+    .catch(function(){tryU(i+1);});
+  }
+  tryU(0);
+}
+function cleanTehFr(s){return String(s||'').replace(/^\d+\s+/,'').trim();}
+
+
 
 
 
@@ -5810,7 +5836,6 @@ var currentTheme='all';
 var expandedCards={};
 
 function showRecueilView(){
-  if(!isLoggedIn()){ showAuthForm('Connectez-vous pour accéder aux Lumières de Torah.'); return; }
   ['view-home','view-detail','view-hayom','view-sefer','view-profile','view-recueil'].forEach(function(id){
     var el=document.getElementById(id);
     if(el) el.style.display='none';
@@ -5983,7 +6008,7 @@ function initSupabase(){
       updateHdrAvatar();
       checkAutoNotifs();
       var vp=document.getElementById('view-profile');
-      if(vp&&vp.style.display==='block') renderProfileContent();
+      if(vp&&vp.style.display==='block'&&onboardingStep===0) renderProfileContent();
       if(event==='SIGNED_IN'&&window.location.hash.includes('access_token')){
         window.history.replaceState({},'',window.location.pathname);
         showProfileView();
@@ -9388,23 +9413,15 @@ async function load1MinVideo(parashaName){
 
   // Normaliser : enlever accents, apostrophes, tirets pour comparaison souple
   function norm(s){
-    return s.normalize('NFD').replace(/[̀-ͯ]/g,'')
-      .replace(/['‘’ʼ]/g,'')
-      .replace(/[-\s]+/g,' ').trim().toLowerCase();
+    if(!s)return'';
+    try{s=s.normalize('NFD');}catch(e){}
+    return s.replace(/[̀-ͯ]/g,'').replace(/['‘’ʼ]/g,'').replace(/[-\s:]+/g,' ').trim().toLowerCase();
   }
-  var frNorm = norm(frName);
-  var enNorm = norm(enName);
-
-  // Chercher dans les titres : match exact du nom normalisé
-  for(var i=0;i<_1minCache.length;i++){
-    var title = norm(_1minCache[i].snippet.title||'');
-    if(frNorm && title.indexOf(frNorm)>=0) return _1minCache[i];
-  }
-  // Fallback : chercher nom anglais normalisé
-  for(var j=0;j<_1minCache.length;j++){
-    var title2 = norm(_1minCache[j].snippet.title||'');
-    if(enNorm && title2.indexOf(enNorm)>=0) return _1minCache[j];
-  }
+  var frNorm=norm(frName),enNorm=norm(enName);
+  for(var i=0;i<_1minCache.length;i++){var t1=norm(_1minCache[i].snippet.title||'');if(frNorm&&t1.indexOf(frNorm)>=0)return _1minCache[i];}
+  for(var j=0;j<_1minCache.length;j++){var t2=norm(_1minCache[j].snippet.title||'');if(enNorm&&t2.indexOf(enNorm)>=0)return _1minCache[j];}
+  var fw=frNorm.split(' ').filter(function(w){return w.length>3;});
+  for(var k=0;k<_1minCache.length;k++){var t3=norm(_1minCache[k].snippet.title||'');if(fw.length&&fw.every(function(w){return t3.indexOf(w)>=0;}))return _1minCache[k];}
   return null;
 }
 
@@ -11981,97 +11998,52 @@ function renderTehilimPage(){
 }
 
 function switchTehTab(tab){
-  var heb = document.getElementById('teh-reader-heb');
-  var wrap = document.getElementById('teh-reader-iframe-wrap');
-  var fr = document.getElementById('teh-reader-fr');
-  var tabs = ['heb','phonetique','traduction'];
-  tabs.forEach(function(t){
-    var btn = document.getElementById('teh-tab-'+t);
-    if(btn){
-      btn.style.background = t===tab?'#fff':'transparent';
-      btn.style.color = t===tab?'var(--purple)':'var(--gray-3)';
-      btn.style.boxShadow = t===tab?'0 1px 3px rgba(0,0,0,0.1)':'none';
-    }
+  var heb=document.getElementById('teh-reader-heb');
+  var wrap=document.getElementById('teh-reader-iframe-wrap');
+  var fr=document.getElementById('teh-reader-fr');
+  ['heb','phonetique','traduction'].forEach(function(t){
+    var btn=document.getElementById('teh-tab-'+t);
+    if(btn){btn.style.background=t===tab?'#fff':'transparent';btn.style.color=t===tab?'var(--purple)':'var(--gray-3)';btn.style.boxShadow=t===tab?'0 1px 3px rgba(0,0,0,0.1)':'none';}
   });
-  if(tab==='heb'){
-    if(heb) heb.style.display='block';
-    if(wrap) wrap.style.display='none';
-    if(fr) fr.style.display='none';
-  } else if(tab==='phonetique'||tab==='traduction'){
-    if(heb) heb.style.display='none';
-    if(fr) fr.style.display='none';
-    if(wrap){
-      wrap.style.display='block';
-      var iframe = document.getElementById('teh-reader-iframe');
-      var psNum = wrap.getAttribute('data-psaume');
-      if(iframe && psNum && !iframe.src.includes('tehilim-'+psNum)){
-        iframe.src = 'https://tehilim-online.com/les-psaumes-de-David/Tehilim-'+psNum;
-      }
-    }
-  }
+  if(tab==='heb'){if(heb)heb.style.display='block';if(wrap)wrap.style.display='none';if(fr)fr.style.display='none';}
+  else if(tab==='phonetique'){if(heb)heb.style.display='none';if(wrap)wrap.style.display='none';if(fr){fr.style.display='block';fr.innerHTML=fr.getAttribute('data-ph')||'';}}
+  else if(tab==='traduction'){if(heb)heb.style.display='none';if(wrap)wrap.style.display='none';if(fr){fr.style.display='block';fr.innerHTML=fr.getAttribute('data-fr')||'';}}
 }
-
-function loadTehilimText(psaume, btnEl){
-  if(!psaume) return;
-  if(isShabbatNow()){ showToast('Chabbat Chalom ! Les Téhilim se lisent après la Havdala.'); return; }
-
-  var reader = document.getElementById('teh-reader');
-  var title = document.getElementById('teh-reader-title');
-  var hebEl = document.getElementById('teh-reader-heb');
-  var frEl = document.getElementById('teh-reader-fr');
-  if(!reader) return;
+function loadTehilimText(psaume,btnEl){
+  if(!psaume)return;
+  if(isShabbatNow()){showToast('Chabbat Chalom !');return;}
+  var reader=document.getElementById('teh-reader');
+  var title=document.getElementById('teh-reader-title');
+  var hebEl=document.getElementById('teh-reader-heb');
+  var frEl=document.getElementById('teh-reader-fr');
+  if(!reader)return;
   reader.style.display='block';
-  if(title) title.textContent = 'Psaume ' + psaume;
-  if(hebEl) hebEl.innerHTML = '<div style="text-align:center;color:var(--gray-4);padding:20px;">Chargement...</div>';
-  if(frEl) frEl.innerHTML = '';
-  // Stocker numéro psaume pour iframe + reset onglet hébreu
-  var wrap = document.getElementById('teh-reader-iframe-wrap');
-  if(wrap){ wrap.setAttribute('data-psaume', psaume); wrap.style.display='none'; }
-  var ifrEl = document.getElementById('teh-reader-iframe');
-  if(ifrEl) ifrEl.src = ''; // reset
+  if(title)title.textContent='Psaume '+psaume;
+  if(hebEl)hebEl.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-4);">Chargement…</div>';
+  if(frEl){frEl.innerHTML='';frEl.removeAttribute('data-ph');frEl.removeAttribute('data-fr');}
   switchTehTab('heb');
-  reader.scrollIntoView({behavior:'smooth', block:'start'});
-
-  // Points + streak Téhilim
-  var isPersonal = (psaume === personalPsaume);
-  var isAnniv = checkTehilimAnniversaire();
-  var pts = isPersonal ? 10 : 5;
-  if(isAnniv) pts = pts * 2;
-  recordTehilimActivity(psaume, pts, isPersonal, isAnniv);
-
-  // Charger depuis Sefaria API
-  fetch('https://www.sefaria.org/api/texts/Psalms.' + psaume + '?lang=he&commentary=0')
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    var heVerses = d.he || [];
-    if(typeof heVerses === 'string') heVerses = [heVerses];
-    var heText = heVerses.map(function(v,i){
-      return '<span style="font-size:11px;color:var(--gray-3);margin-left:4px;">'+(i+1)+'</span> '+v;
-    }).join(' ');
-    if(hebEl) hebEl.innerHTML = heText || 'Texte non disponible';
-
-    // Sefaria : essayer traduction française, sinon anglaise
-    fetch('https://www.sefaria.org/api/texts/Psalms.' + psaume + '?lang=en&commentary=0')
-    .then(function(r2){ return r2.json(); })
-    .then(function(d2){
-      var enVerses = d2.text || [];
-      if(typeof enVerses === 'string') enVerses = [enVerses];
-      // Construire traduction avec translitération si disponible
-      var trText = enVerses.map(function(v,i){
-        var clean = String(v).replace(/<[^>]+>/g,'');
-        return '<span style="font-size:11px;color:var(--gray-3);">'+(i+1)+'.</span> '+clean;
-      }).join('<br>');
-      if(frEl){
-        frEl.innerHTML = '<div style="font-size:11px;color:var(--gray-3);font-weight:600;margin-bottom:6px;font-family:Poppins,sans-serif;">Traduction (anglais)</div>' + (trText||'');
-        // Ajouter lien vers traduction française externe
-
-      }
-    }).catch(function(){
-      if(frEl) frEl.innerHTML = '<a href="https://www.tehilim-online.com" target="_blank" style="font-size:12px;color:var(--purple);">Lire sur tehilim-online.com →</a>';
-    });
-  })
-  .catch(function(){
-    if(hebEl) hebEl.innerHTML = '<div style="text-align:center;color:var(--gray-4);padding:20px;">Erreur de chargement.<br><a href="https://www.tehilim-online.com" target="_blank" style="color:var(--purple);">Ouvrir sur tehilim-online.com</a></div>';
+  reader.scrollIntoView({behavior:'smooth',block:'start'});
+  var isPersonal=(psaume===personalPsaume);
+  var isAnniv=checkTehilimAnniversaire();
+  var pts=isPersonal?10:5;if(isAnniv)pts*=2;
+  recordTehilimActivity(psaume,pts,isPersonal,isAnniv);
+  loadTehilimJSON(function(json){
+    var ps=json[String(psaume)];
+    if(!ps||!ps.versets||!ps.versets.length){
+      if(hebEl)hebEl.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-4);">Psaume non disponible.</div>';
+      return;
+    }
+    if(hebEl)hebEl.innerHTML=ps.versets.map(function(v,i){
+      return '<span style="font-size:11px;color:rgba(124,58,237,0.5);margin-left:4px;vertical-align:super;">'+(i+1)+'</span><span style="font-size:19px;line-height:2;font-family:serif;">'+(v.heb||'')+'</span> ';
+    }).join('');
+    if(frEl){
+      frEl.setAttribute('data-ph',ps.versets.map(function(v,i){
+        return '<div style="margin-bottom:10px;"><span style="font-size:11px;color:var(--purple);font-weight:700;">'+(i+1)+'.</span> <span style="font-size:14px;font-style:italic;">'+(v.phonetique||'')+'</span></div>';
+      }).join(''));
+      frEl.setAttribute('data-fr',ps.versets.map(function(v,i){
+        return '<div style="margin-bottom:10px;"><span style="font-size:11px;color:var(--purple);font-weight:700;">'+(i+1)+'.</span> <span style="font-size:14px;">'+cleanTehFr(v.fr||'')+'</span></div>';
+      }).join(''));
+    }
   });
 }
 
@@ -12207,7 +12179,7 @@ function showAnniversaireMessage(prenom){
 // ONBOARDING PROFIL
 // ═══════════════════════════════════════════════════════════════
 var onboardingData = {prenom:'',nom:'',pseudo:'',dob:'',dobSoir:false,genre:''};
-var onboardingStep = 1;
+var onboardingStep = 0;
 
 function scheduleTehilimNotif(){
   // Rappel Téhilim via checkAutoNotifs — si activé, créer notif quotidienne
@@ -12427,6 +12399,7 @@ function obSave(){
       last_name: onboardingData.nom
     }});
     showToast('Bienvenue ' + onboardingData.prenom + ' !');
+    onboardingStep = 0;
     setTimeout(function(){ renderProfileContent(); }, 500);
   });
 }
