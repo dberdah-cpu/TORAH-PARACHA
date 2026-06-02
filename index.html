@@ -1691,7 +1691,9 @@ var PARASHA_MAP = {
   "Bechukotai":33,"Bekhukotai":33,
   "Balak":40,
   "Masei":43,"Massei":43,
-  "Vayeilech":52,"Vayelech":52};
+  "Vayeilech":52,"Vayelech":52,
+  "Shelach":37,"Shelach-Lecha":37
+};
 // Mapping Hebcal (anglais) → nom français pour l'affichage dans le bandeau
 var PARASHA_FR = {
 
@@ -11219,8 +11221,10 @@ function adminLoadHistoires(){
   if(!listEl) return;
   if(!supabase){ listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté à Supabase.</div>'; return; }
   listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Chargement...</div>';
-  supabase.from('histoires').select('*').order('created_at',{ascending:false})
-  .then(function(res){
+  sbFetch('/rest/v1/histoires?order=created_at.desc&select=*')
+  .then(function(res){ var fakeRes = {data: Array.isArray(res)?res:[], error: res&&res.message?res:null}; return fakeRes; })
+  .then(function(res)
+  {
     var list = document.getElementById('adm-hist-list');
     if(res.error){
       list.innerHTML = '<div style="color:#ef4444;font-size:12px;">Erreur: '+res.error.message+'<br><small>Vérifiez que la table histoires existe et que RLS est désactivé.</small></div>';
@@ -11345,42 +11349,51 @@ function syncVideosFromDB(data){
 
 // ── UTILISATEURS ──────────────────────────────────────────────
 function adminLoadUsers(){
-  // Essayer users_progress d'abord, puis profiles
-  var el = document.getElementById('adm-users-list');
-  if(!el) return;
-  el.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Chargement...</div>';
+  var el=document.getElementById('adm-users-list');
+  if(!el)return;
+  el.innerHTML='<div style="color:var(--gray-4);font-size:13px;padding:12px;">Chargement...</div>';
   sbFetch('/rest/v1/users_progress?order=updated_at.desc&select=*')
   .then(function(data){
-    if(!Array.isArray(data) || !data.length){
-      // Essayer profiles
-      return sbFetch('/rest/v1/profiles?order=created_at.desc&select=*');
-    }
-    return data;
-  })
-  .then(function(data){
-    if(!Array.isArray(data) || !data.length){
-      document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucun utilisateur dans users_progress.<br><small>Les utilisateurs apparaissent après leur première connexion.</small><br><a href="https://supabase.com/dashboard/project/atsfgzabpwirfhnzpzei/auth/users" target="_blank" style="color:var(--purple);font-size:12px;">Voir sur Supabase →</a></div>';
+    if(!Array.isArray(data)||!data.length){
+      el.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;"><div style="font-size:24px;margin-bottom:8px;">👥</div><div>Aucun utilisateur enregistré.</div><div style="font-size:12px;margin-top:4px;">Ils apparaîtront ici à leur prochaine connexion.</div></div>';
       return;
     }
-    var html = '';
+    var total=data.length;
+    var avecProfil=data.filter(function(u){return u.prenom;}).length;
+    var avgStreak=Math.round(data.reduce(function(s,u){return s+(u.tehilim_streak||0);},0)/total);
+    var html='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:700;color:#fff;">'+total+'</div><div style="font-size:10px;color:rgba(255,255,255,0.8);font-family:Poppins,sans-serif;">Utilisateurs</div></div>'
+      +'<div style="background:linear-gradient(135deg,#059669,#047857);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:700;color:#fff;">'+avecProfil+'</div><div style="font-size:10px;color:rgba(255,255,255,0.8);font-family:Poppins,sans-serif;">Avec profil</div></div>'
+      +'<div style="background:linear-gradient(135deg,#db2777,#be185d);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:700;color:#fff;">'+avgStreak+'</div><div style="font-size:10px;color:rgba(255,255,255,0.8);font-family:Poppins,sans-serif;">Streak moy.</div></div>'
+      +'</div><div style="display:flex;flex-direction:column;gap:8px;">';
     data.forEach(function(u){
-      var date = u.created_at ? new Date(u.created_at).toLocaleDateString('fr-FR') : '-';
-      var last = u.last_seen ? new Date(u.last_seen).toLocaleDateString('fr-FR') : 'jamais';
-      html += '<div class="admin-user-item">'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;">'
-        + '<div class="admin-user-email">' + (u.email || u.id.substring(0,8)+'...') + '</div>'
-        + '<span class="admin-badge ' + (u.actif ? 'admin-badge-green' : 'admin-badge-red') + '">' + (u.actif?'Actif':'Inactif') + '</span>'
-        + '</div>'
-        + '<div class="admin-user-meta">Inscrit le ' + date + ' · Dernière visite: ' + last + '</div>'
-        + (u.role==='admin' ? '<span class="admin-badge" style="background:#ede9fe;color:#5b21b6;">Admin</span>' : '')
-        + '</div>';
+      var nom=[u.prenom,u.nom].filter(Boolean).join(' ')||'—';
+      var email=u.email||'—';
+      var last=u.updated_at?new Date(u.updated_at).toLocaleDateString('fr-FR'):'—';
+      var streak=u.tehilim_streak||0;
+      var genre=u.genre==='homme'?'👨':u.genre==='femme'?'👩':'👤';
+      var psaume=u.psaume_perso?'Ps.'+u.psaume_perso:'—';
+      var ini=(u.prenom||u.email||'?')[0].toUpperCase();
+      html+='<div style="background:#fff;border-radius:var(--radius);padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
+        +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">'
+        +'<div style="width:36px;height:36px;border-radius:50%;background:var(--grad-main);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0;">'+ini+'</div>'
+        +'<div style="flex:1;min-width:0;">'
+        +'<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+genre+' '+nom+'</div>'
+        +'<div style="font-size:11px;color:var(--gray-4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+email+'</div>'
+        +'</div>'
+        +'<div style="font-size:11px;color:var(--purple);font-weight:700;flex-shrink:0;">📜 '+psaume+'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:12px;">'
+        +'<div style="font-size:11px;color:var(--gray-4);">🕐 '+last+'</div>'
+        +(streak>0?'<div style="font-size:11px;color:#db2777;font-weight:600;">🔥 '+streak+'j</div>':'')
+        +'</div></div>';
     });
-    document.getElementById('adm-users-list').innerHTML = html;
-  })
-  .catch(function(){
-    document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Connexion à la DB utilisateurs impossible.</div>';
+    el.innerHTML=html+'</div>';
+  }).catch(function(e){
+    el.innerHTML='<div style="color:#ef4444;font-size:13px;padding:12px;">Erreur: '+(e&&e.message||'inconnue')+'</div>';
   });
 }
+
 
 // ── STATISTIQUES ───────────────────────────────────────────────
 function adminLoadStats(){
@@ -11935,7 +11948,7 @@ function renderTehilimPage(){
   var psaumes = TEHILIM_CYCLE[dayNum] || [];
   var descEl = document.getElementById('teh-day-desc');
   if(descEl) descEl.innerHTML = 'Jour ' + dayNum + ' de ' + monthName + ' · Psaumes ' + psaumes.join(', ')
-    + ' &nbsp;<a href="https://tehilim-online.com/tehilim-du-jour/tehilim-du-jour-' + dayNum + '" target="_blank" style="color:var(--purple);font-size:11px;text-decoration:none;">Voir sur tehilim-online →</a>';
+    + ' &nbsp;<a href="https://koulam.app/tehilim" target="_blank" style="color:var(--purple);font-size:11px;text-decoration:none;font-family:Poppins,sans-serif;">📖 Psaume du jour →</a>';
   var listEl = document.getElementById('teh-day-list');
   if(listEl){
     listEl.innerHTML = '';
