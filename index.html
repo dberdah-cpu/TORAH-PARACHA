@@ -1684,7 +1684,14 @@ var PARASHA_MAP = {
   "Re'eh":47,'Reeh':47,'Shoftim':48,'Ki Teitzei':49,'Ki Tetze':49,
   'Ki Tavo':50,'Nitzavim':51,'Vayeilech':51,'Nitzavim-Vayeilech':51,
   "Ha'azinu":53,'Haazinu':53,'Vezot Haberakhah':54,'Vezot HaBerakha':54
-};
+,
+  // Parachot manquantes dans PARASHA_MAP
+  "Metzora":28,"Metzorah":28,
+  "Kedoshim":30,
+  "Bechukotai":33,"Bekhukotai":33,
+  "Balak":40,
+  "Masei":43,"Massei":43,
+  "Vayeilech":52,"Vayelech":52};
 // Mapping Hebcal (anglais) → nom français pour l'affichage dans le bandeau
 var PARASHA_FR = {
 
@@ -2372,7 +2379,7 @@ function closeCalOverlay(){
 }
 
 function openCal(){
-  if(!requireLogin()) return;
+  // Ouvrir le calendrier sans bloquer sur le login
   var t=new Date();
   calY=t.getFullYear(); calM=t.getMonth();
   calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
@@ -3436,24 +3443,8 @@ function getHYFromJSON(hd){
   var monthName=HEB_MONTH_TO_JSON[hd.m];
   if(!monthName||!HY_JSON[monthName]) return null;
   var monthData=HY_JSON[monthName];
-  // Essayer hd.d d'abord (JSON corrigé), sinon hd.d-1 (ancien JSON décalé)
+  // Chercher hd.d directement
   if(monthData[String(hd.d)]) return monthData[String(hd.d)];
-  // Vérifier la version du JSON via _note
-  if(HY_JSON._note && HY_JSON._note.indexOf('corrig')>=0){
-    return null; // JSON corrigé mais entrée manquante
-  }
-  // Ancien JSON : décalage -1
-  var prevDay = hd.d - 1;
-  if(prevDay >= 1) return monthData[String(prevDay)]||null;
-  // Passage mois précédent
-  var prevM = hd.m-1; if(prevM<1) prevM=12;
-  var prevMonthName = HEB_MONTH_TO_JSON[prevM];
-  if(prevMonthName && HY_JSON[prevMonthName]){
-    var prevData = HY_JSON[prevMonthName];
-    var prevKeys = Object.keys(prevData).filter(function(k){return !isNaN(k);});
-    var lastDay = Math.max.apply(null,prevKeys.map(Number));
-    return prevData[String(lastDay)]||null;
-  }
   return null;
 }
 
@@ -11224,10 +11215,17 @@ function adminSaveHistoire(){
 }
 
 function adminLoadHistoires(){
-  if(!supabase){ document.getElementById('adm-hist-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté</div>'; return; }
+  var listEl = document.getElementById('adm-hist-list');
+  if(!listEl) return;
+  if(!supabase){ listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté à Supabase.</div>'; return; }
+  listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Chargement...</div>';
   supabase.from('histoires').select('*').order('created_at',{ascending:false})
   .then(function(res){
     var list = document.getElementById('adm-hist-list');
+    if(res.error){
+      list.innerHTML = '<div style="color:#ef4444;font-size:12px;">Erreur: '+res.error.message+'<br><small>Vérifiez que la table histoires existe et que RLS est désactivé.</small></div>';
+      return;
+    }
     var data = res.data || [];
     if(!data.length){ list.innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune histoire publiée.</div>'; return; }
     list.innerHTML = '';
@@ -11361,7 +11359,7 @@ function adminLoadUsers(){
   })
   .then(function(data){
     if(!Array.isArray(data) || !data.length){
-      document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucune donnée locale.<br><small>👉 <a href=\'https://supabase.com/dashboard/project/atsfgzabpwirfhnzpzei/auth/users\' target=\'_blank\' style=\'color:var(--purple);\'>Voir les utilisateurs sur Supabase</a></small></div>';
+      document.getElementById('adm-users-list').innerHTML = '<div style="color:var(--gray-4);font-size:13px;font-family:Poppins,sans-serif;">Aucun utilisateur dans users_progress.<br><small>Les utilisateurs apparaissent après leur première connexion.</small><br><a href="https://supabase.com/dashboard/project/atsfgzabpwirfhnzpzei/auth/users" target="_blank" style="color:var(--purple);font-size:12px;">Voir sur Supabase →</a></div>';
       return;
     }
     var html = '';
@@ -11936,7 +11934,8 @@ function renderTehilimPage(){
   // Psaumes du jour
   var psaumes = TEHILIM_CYCLE[dayNum] || [];
   var descEl = document.getElementById('teh-day-desc');
-  if(descEl) descEl.textContent = 'Jour ' + dayNum + ' de ' + monthName + ' · Psaumes ' + psaumes.join(', ');
+  if(descEl) descEl.innerHTML = 'Jour ' + dayNum + ' de ' + monthName + ' · Psaumes ' + psaumes.join(', ')
+    + ' &nbsp;<a href="https://tehilim-online.com/tehilim-du-jour/tehilim-du-jour-' + dayNum + '" target="_blank" style="color:var(--purple);font-size:11px;text-decoration:none;">Voir sur tehilim-online →</a>';
   var listEl = document.getElementById('teh-day-list');
   if(listEl){
     listEl.innerHTML = '';
@@ -12349,7 +12348,19 @@ function obSetSoir(isSoir){
 
 function obSetGenre(g){
   onboardingData.genre = g;
-  showOnboardingStep(3);
+  // Mettre à jour visuellement sans reconstruire toute la vue
+  var hBtn=document.getElementById('ob-homme');
+  var fBtn=document.getElementById('ob-femme');
+  if(hBtn){
+    hBtn.style.background=g==='homme'?'var(--grad-main)':'var(--gray-1)';
+    var hTxt=hBtn.querySelector('div:last-child');
+    if(hTxt)hTxt.style.color=g==='homme'?'#fff':'var(--dark)';
+  }
+  if(fBtn){
+    fBtn.style.background=g==='femme'?'var(--grad-main)':'var(--gray-1)';
+    var fTxt=fBtn.querySelector('div:last-child');
+    if(fTxt)fTxt.style.color=g==='femme'?'#fff':'var(--dark)';
+  }
 }
 
 function obUpdateHebDate(){
