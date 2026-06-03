@@ -11325,6 +11325,7 @@ function adminSaveHistoire(){
     titre: titre,
     sous_titre: accroche,
     histoire: texte,
+    texte: texte,
     actif: true,
     created_at: new Date().toISOString()
   }]).then(function(res){
@@ -11373,8 +11374,8 @@ function adminLoadHistoires(){
       var btnToggle = document.createElement('button');
       btnToggle.className = 'admin-btn admin-btn-secondary';
       btnToggle.style.cssText = 'padding:5px 10px;font-size:12px;';
-      btnToggle.textContent = h.actif ? '👁 Masquer' : '✅ Publier';
-      btnToggle.onclick = function(){ adminToggleHistoire(h.id, h.actif); };
+      btnToggle.textContent = h.activ ? '👁 Masquer' : '✅ Publier';
+      btnToggle.onclick = function(){ adminToggleHistoire(h.id, h.activ); };
       btns.appendChild(btnToggle);
       btns.appendChild(btnDel);
       item.appendChild(titre);
