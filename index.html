@@ -1734,21 +1734,36 @@ var PARASHA_FR = {
 
 // ── CYCLE TEHILIM MENSUEL (jour hébreu 1-30 → Psaumes) ──────────
 var TEHILIM_CYCLE = {
-  1:[1,2,3,4,5,6,7,8,9], 2:[10,11,12,13,14,15,16,17],
-  3:[18,19,20,21,22,23,24,25,26,27,28], 4:[29,30,31,32,33,34],
-  5:[35,36,37,38], 6:[39,40,41,42,43,44,45,46,47,48,49,50],
-  7:[51,52,53,54,55], 8:[56,57,58,59,60,61,62,63,64,65],
-  9:[66,67,68], 10:[69,70,71], 11:[72,73,74,75,76,77,78],
-  12:[79,80,81,82,83,84,85], 13:[86,87,88,89,90,91],
-  14:[92,93,94,95,96,97,98,99,100,101,102,103],
-  15:[104,105], 16:[106,107],
-  17:[108,109,110,111,112,113,114,115,116,117,118],
-  18:[119],
-  19:[120,121,122,123,124,125,126,127,128,129,130,131,132,133,134],
-  20:[135,136], 21:[137,138,139,140,141,142,143,144],
-  22:[145,146,147,148,149,150],
-  23:[1,2,3], 24:[4,5,6,7], 25:[8,9,10,11], 26:[12,13,14,15],
-  27:[16,17,18], 28:[19,20,21], 29:[22,23,24], 30:[25,26,27,28,29]
+  1:[1,2,3,4,5,6,7,8,9],
+  2:[10,11,12,13,14,15,16,17],
+  3:[18,19,20,21,22],
+  4:[23,24,25,26,27,28],
+  5:[29,30,31,32,33,34],
+  6:[35,36,37,38],
+  7:[39,40,41,42,43],
+  8:[44,45,46,47,48],
+  9:[49,50,51,52,53,54],
+  10:[55,56,57,58,59],
+  11:[60,61,62,63,64,65],
+  12:[66,67,68],
+  13:[69,70,71],
+  14:[72,73,74,75,76],
+  15:[77,78],
+  16:[79,80,81,82],
+  17:[83,84,85,86,87],
+  18:[88,89],
+  19:[90,91,92,93,94,95,96],
+  20:[97,98,99,100,101,102,103],
+  21:[104,105],
+  22:[106,107],
+  23:[108,109,110,111,112],
+  24:[113,114,115,116,117,118],
+  25:[119],
+  26:[119],
+  27:[120,121,122,123,124,125,126,127,128,129,130,131,132,133,134],
+  28:[135,136,137,138,139],
+  29:[140,141,142,143,144],
+  30:[145,146,147,148,149,150]
 };
 
 var TEHILIM_JSON=null,TEHILIM_JSON_LOADING=false,TEHILIM_JSON_CBS=[];
@@ -2394,8 +2409,9 @@ function openCal(){
   renderCalGrid();
   renderCalFetes();
   updateCalDateBar(t);
-  document.getElementById('cal-overlay').classList.add('open');
-  document.getElementById('cal-overlay').scrollTop=0;
+  var calOv=document.getElementById('cal-overlay');
+  if(calOv){ calOv.classList.add('open'); calOv.scrollTop=0; }
+  else { console.error('[Cal] cal-overlay introuvable!'); }
 }
 
 function closeCal(){
@@ -3425,6 +3441,7 @@ var HEB_MONTH_TO_JSON = {
 
 function loadHYJSON(cb){
   if(HY_JSON){cb(HY_JSON);return;}
+  console.log('[HY] Chargement hayom_yom.json...');
   HY_JSON_CALLBACKS.push(cb);
   if(HY_JSON_LOADING) return;
   HY_JSON_LOADING=true;
@@ -11998,7 +12015,7 @@ function renderTehilimPage(){
   var psaumes = TEHILIM_CYCLE[dayNum] || [];
   var descEl = document.getElementById('teh-day-desc');
   if(descEl) descEl.innerHTML = 'Jour ' + dayNum + ' de ' + monthName + ' · Psaumes ' + psaumes.join(', ')
-    + ' &nbsp;<a href="https://koulam.app/tehilim" target="_blank" style="color:var(--purple);font-size:11px;text-decoration:none;font-family:Poppins,sans-serif;">📖 Psaume du jour →</a>';
+    + ' &nbsp;<a href="https://www.tehilim-online.com" target="_blank" style="color:var(--purple);font-size:11px;text-decoration:none;font-family:Poppins,sans-serif;">📖 Téhilim Online →</a>';
   var listEl = document.getElementById('teh-day-list');
   if(listEl){
     listEl.innerHTML = '';
