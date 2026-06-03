@@ -2381,13 +2381,15 @@ function closeCalOverlay(){
 }
 
 function openCal(){
-  // Ouvrir le calendrier sans bloquer sur le login
   var t=new Date();
   calY=t.getFullYear(); calM=t.getMonth();
   calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
-  document.getElementById('cv-day').value=t.getDate();
-  document.getElementById('cv-mon').value=t.getMonth();
-  document.getElementById('cv-year').value=t.getFullYear();
+  var cvDay=document.getElementById('cv-day');
+  var cvMon=document.getElementById('cv-mon');
+  var cvYear=document.getElementById('cv-year');
+  if(cvDay) cvDay.value=t.getDate();
+  if(cvMon) cvMon.value=t.getMonth();
+  if(cvYear) cvYear.value=t.getFullYear();
   updEvDisp(); renderEvList();
   renderCalGrid();
   renderCalFetes();
@@ -3747,7 +3749,9 @@ function openHayomYom(){
 
   // 2. JSON local (hayom_yom.json sur GitHub Pages) — priorité absolue
   loadHYJSON(function(json){
+    console.log('[HY] JSON chargé, clés:', Object.keys(json||{}).slice(0,5), 'hd=', hd);
     var txt=getHYFromJSON(hd);
+    console.log('[HY] txt=', txt?txt.substring(0,50):'NULL');
     if(txt){
       var data={fr:txt,src:'Hayom Yom · '+dateFrDisplay,url:loubUrl};
       HY_CACHE[key]=data;renderHayomYom(data);return;
@@ -5856,11 +5860,13 @@ var currentTheme='all';
 var expandedCards={};
 
 function showRecueilView(){
-  ['view-home','view-detail','view-hayom','view-sefer','view-profile','view-recueil'].forEach(function(id){
+  ['view-home','view-detail','view-hayom','view-sefer','view-profile',
+   'view-histoires','view-histoire-detail','view-tehilim','view-videos','view-recettes'].forEach(function(id){
     var el=document.getElementById(id);
     if(el) el.style.display='none';
   });
-  document.getElementById('view-recueil').style.display='block';
+  var vr=document.getElementById('view-recueil');
+  if(vr) vr.style.display='block';
   // Bouton retour
   var bb=document.getElementById('btn-back');
   if(bb){bb.style.display='flex';}
@@ -11262,10 +11268,8 @@ function adminLoadHistoires(){
   if(!listEl){ console.warn('[Admin] adm-hist-list introuvable!'); return; }
   if(!supabase){ listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Non connecté à Supabase.</div>'; return; }
   listEl.innerHTML = '<div style="color:var(--gray-4);font-size:13px;">Chargement...</div>';
-  sbFetch('/rest/v1/histoires?order=created_at.desc&select=*')
-  .then(function(res){ var fakeRes = {data: Array.isArray(res)?res:[], error: res&&res.message?res:null}; return fakeRes; })
-  .then(function(res)
-  {
+  supabase.from('histoires').select('*').order('created_at',{ascending:false})
+  .then(function(res){
     var list = document.getElementById('adm-hist-list');
     if(res.error){
       list.innerHTML = '<div style="color:#ef4444;font-size:12px;">Erreur: '+res.error.message+'<br><small>Vérifiez que la table histoires existe et que RLS est désactivé.</small></div>';
