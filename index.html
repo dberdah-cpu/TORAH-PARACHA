@@ -6133,6 +6133,9 @@ function initSupabase(){
   script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
   script.onload=function(){
     supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    // Charger les images thèmes dès que possible
+    loadThemeImagesFromStorage();
+
     supabase.auth.onAuthStateChange(function(event,session){
       currentUser=session?session.user:null;
       updateHdrAvatar();
@@ -11229,6 +11232,7 @@ function adminTab(tab, btn){
   else if(tab==='users') adminLoadUsers();
   else if(tab==='stats') adminLoadStats();
   else if(tab==='histoires') adminLoadHistoires();
+  else if(tab==='images') adminLoadThemeImages();
 }
 
 function adminToast(msg, ok){
@@ -12699,6 +12703,106 @@ function obSave(){
   });
 }
 
+// ── GESTION IMAGES THÈMES ────────────────────────────────────────
+var THEME_IMAGES_CACHE = {};
+
+async function adminLoadThemeImages(){
+  var list = document.getElementById('admin-theme-images-list');
+  if(!list) return;
+
+  // Créer le bucket si besoin
+  if(supabase){
+    await supabase.storage.createBucket('theme-images', {public: true}).catch(function(){});
+  }
+
+  // Charger les images existantes depuis Storage
+  if(supabase){
+    var res = await supabase.storage.from('theme-images').list('');
+    var files = (res.data||[]).map(function(f){ return f.name; });
+    files.forEach(function(f){
+      var themeId = f.replace(/\.[^.]+$/,'');
+      var pub = supabase.storage.from('theme-images').getPublicUrl(f);
+      THEME_IMAGES_CACHE[themeId] = pub.data.publicUrl;
+    });
+  }
+
+  var h = '';
+  if(typeof HIST_THEMES === 'undefined'){ list.innerHTML='<div>HIST_THEMES non chargé</div>'; return; }
+  HIST_THEMES.forEach(function(theme){
+    var current = THEME_IMAGES_CACHE[theme.id] || theme.img;
+    h += '<div style="background:#fff;border-radius:var(--radius);padding:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">'
+      + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'
+      + '<div style="font-size:20px;">'+theme.emoji+'</div>'
+      + '<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'+theme.label+'</div>'
+      + '</div>'
+      + '<div style="display:flex;gap:8px;align-items:center;">'
+      + '<img src="'+current+'" style="width:80px;height:54px;object-fit:cover;border-radius:6px;background:var(--gray-2);"">'
+      + '<label style="flex:1;background:var(--gray-1);border:1.5px dashed var(--gray-3);border-radius:8px;padding:8px;text-align:center;cursor:pointer;font-size:12px;color:var(--purple);font-family:Poppins,sans-serif;">'
+      + '📁 Choisir une image'
+      + '<input type="file" accept="image/*" style="display:none;" onchange="adminUploadThemeImage(this,\''+theme.id+'\',this.closest(\'div[style*=border-radius\')?.querySelector(\'img\')||null)">'
+      + '</label>'
+      + '</div>'
+      + '<div id="upload-status-'+theme.id+'" style="font-size:11px;color:var(--purple);font-family:Poppins,sans-serif;margin-top:4px;"></div>'
+      + '</div>';
+  });
+  list.innerHTML = h;
+}
+
+async function adminUploadThemeImage(input, themeId, previewImg){
+  var file = input.files[0];
+  if(!file) return;
+  var statusEl = document.getElementById('upload-status-'+themeId);
+  if(statusEl) statusEl.textContent = 'Upload en cours...';
+
+  var ext = file.name.split('.').pop().toLowerCase();
+  var path = themeId+'.'+ext;
+
+  try{
+    // Supprimer ancienne version
+    await supabase.storage.from('theme-images').remove([themeId+'.jpg', themeId+'.png', themeId+'.jpeg', themeId+'.webp']).catch(function(){});
+
+    // Uploader
+    var res = await supabase.storage.from('theme-images').upload(path, file, {
+      contentType: file.type,
+      upsert: true
+    });
+    if(res.error) throw res.error;
+
+    var pub = supabase.storage.from('theme-images').getPublicUrl(path);
+    var url = pub.data.publicUrl;
+
+    // Mettre à jour le cache et la preview
+    THEME_IMAGES_CACHE[themeId] = url;
+    if(previewImg) previewImg.src = url;
+
+    // Mettre à jour HIST_THEMES en mémoire
+    var t = HIST_THEMES.find(function(t){ return t.id===themeId; });
+    if(t) t.img = url;
+
+    if(statusEl) statusEl.textContent = '✅ Image mise à jour !';
+    setTimeout(function(){ if(statusEl) statusEl.textContent=''; }, 3000);
+  } catch(e){
+    if(statusEl) statusEl.textContent = '❌ Erreur: '+(e.message||e);
+  }
+}
+
+// Charger les images thèmes au démarrage
+async function loadThemeImagesFromStorage(){
+  if(!supabase) return;
+  try{
+    var res = await supabase.storage.from('theme-images').list('');
+    if(res.error) return;
+    (res.data||[]).forEach(function(f){
+      var themeId = f.name.replace(/\.[^.]+$/,'');
+      var pub = supabase.storage.from('theme-images').getPublicUrl(f.name);
+      var url = pub.data.publicUrl;
+      THEME_IMAGES_CACHE[themeId] = url;
+      var t = HIST_THEMES.find(function(t){ return t.id===themeId; });
+      if(t) t.img = url;
+    });
+  } catch(e){}
+}
+
 try {
   initLoc();
   initSupabase();
@@ -12817,6 +12921,7 @@ try {
     <button class="admin-tab" data-tab="users" onclick="adminTab('users',this)">👥 Utilisateurs</button>
     <button class="admin-tab" data-tab="stats" onclick="adminTab('stats',this)">📊 Stats</button>
     <button class="admin-tab" data-tab="histoires" onclick="adminTab('histoires',this)">📖 Histoires</button>
+    <button class="admin-tab" data-tab="images" onclick="adminTab('images',this)">🖼 Images</button>
   </div>
 
   <!-- Section Vidéos -->
@@ -12927,6 +13032,19 @@ try {
       </div>
       <div id="adm-hist-list"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
     </div>
+
+  <!-- Section Images Thèmes -->
+  <div id="admin-section-images" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">🖼 Images des thèmes</div>
+      <div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:16px;">
+        Uploadez une image par thème. Format recommandé : 600×400px, JPG ou PNG.
+      </div>
+      <div id="admin-theme-images-list" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="text-align:center;padding:20px;color:var(--gray-4);">Chargement...</div>
+      </div>
+    </div>
+  </div>
 </div><!-- /view-admin-fix -->
   </div>
 </div><!-- /view-admin -->
