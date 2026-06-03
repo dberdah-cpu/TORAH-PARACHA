@@ -12371,6 +12371,17 @@ function obNext2(){
 }
 
 function obNext3(){
+  // Lire le genre depuis le DOM si onboardingData.genre est vide
+  if(!onboardingData.genre){
+    // Essayer sessionStorage
+    try{ var sg=sessionStorage.getItem('ob_genre'); if(sg) onboardingData.genre=sg; }catch(e){}
+  }
+  if(!onboardingData.genre){
+    var hBtn = document.getElementById('ob-homme');
+    var fBtn = document.getElementById('ob-femme');
+    if(hBtn && hBtn.style.background && hBtn.style.background.indexOf('grad')>=0) onboardingData.genre='homme';
+    else if(fBtn && fBtn.style.background && fBtn.style.background.indexOf('grad')>=0) onboardingData.genre='femme';
+  }
   if(!onboardingData.genre){ showToast('Sélectionne ton genre.'); return; }
   showOnboardingStep(4);
 }
@@ -12388,7 +12399,7 @@ function obSetSoir(isSoir){
 
 function obSetGenre(g){
   onboardingData.genre = g;
-  // Mettre à jour visuellement sans reconstruire toute la vue
+  try{ sessionStorage.setItem('ob_genre', g); }catch(e){}
   var hBtn=document.getElementById('ob-homme');
   var fBtn=document.getElementById('ob-femme');
   if(hBtn){
