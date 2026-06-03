@@ -3444,10 +3444,11 @@ document.addEventListener('touchend', function(e){
 }, {passive:true});
 
 function goHome(){
+  closeAdmin();
   if(window.speechSynthesis) window.speechSynthesis.cancel();
   _readerPlaying = false;
   // Cacher ET vider les vues dynamiques
-  ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail','view-recettes'].forEach(function(id){
+  ['view-detail','view-hayom','view-sefer','view-profile','view-recueil','view-cours','recueil-detail','view-recettes','view-tehilim'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){
       el.style.display='none';
@@ -3785,6 +3786,7 @@ function getLoubavitchURL(id){
 }
 
 function openHayomYom(){
+  closeAdmin();
   if(!requireLogin()) return;
   var vc=document.getElementById('view-cours'); if(vc) vc.style.display='none';
   if(checkAndBlockShabbat()) return;
@@ -5572,6 +5574,7 @@ function translateVerses(verses,lang,cb){
 }
 
 function openP(id){
+  closeAdmin();
   if(!requireLogin()) return;
   setTimeout(function(){ if(typeof recordActivity==='function') recordActivity('paracha',10); },100);
   // Si id=currentCID et qu'on a un nom Hebcal, utiliser le mapping correct
@@ -5712,6 +5715,7 @@ function showParachiotView(){
   },100);
 }
 function showProfileView(){
+  closeAdmin();
   updateHdrAvatar();
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil','view-cours','view-histoires','view-histoire-detail','view-videos','view-recettes'].forEach(function(id){
     var el=document.getElementById(id); if(el) el.style.display='none';
@@ -5925,6 +5929,7 @@ var currentTheme='all';
 var expandedCards={};
 
 function showRecueilView(){
+  closeAdmin();
   ['view-home','view-detail','view-hayom','view-sefer','view-profile',
    'view-histoires','view-histoire-detail','view-tehilim','view-videos','view-recettes'].forEach(function(id){
     var el=document.getElementById(id);
@@ -12034,6 +12039,7 @@ try {
 var personalPsaume = null;
 
 function showTehilimView(){
+  closeAdmin();
   ['view-home','view-detail','view-hayom','view-sefer','view-recueil',
    'view-profile','view-histoires','view-histoire-detail','view-videos',
    'view-recettes','view-cours'].forEach(function(id){
