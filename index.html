@@ -2784,6 +2784,7 @@ function toggleRecueilCard(id){
 function openShabbatPanel(){
   var panel=document.getElementById('shabbat-panel');
   var backdrop=document.getElementById('shabbat-backdrop');
+  if(!panel||!backdrop){ console.error('[Shabbat] panel ou backdrop introuvable'); return; }
   panel.classList.add('open');
   backdrop.classList.add('visible');
   renderShabbatPanel();
