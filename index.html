@@ -10994,7 +10994,13 @@ function openAdmin(){
 }
 
 function closeAdmin(){
-  document.getElementById('view-admin').style.display = 'none';
+  var va = document.getElementById('view-admin');
+  if(va) va.style.display = 'none';
+  // Cacher toutes les sections admin
+  document.querySelectorAll('.admin-section').forEach(function(s){
+    s.style.display = 'none';
+    s.classList.remove('active');
+  });
 }
 
 // ── GESTION TARIFS ──────────────────────────────────────────
