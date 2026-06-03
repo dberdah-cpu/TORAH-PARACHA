@@ -4062,19 +4062,19 @@ function renderHayomYomFallback(dateFr,url){
 // 251523 = 4 Iyar 5786 = 21 avril 2026
 
 var HIST_THEMES = [
-  {id:'tanakh',    label:'Tanakh & Midrash',        emoji:'📖', img:'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&q=80&auto=format&fit=crop'},
-  {id:'talmud',    label:'Talmud',                   emoji:'📜', img:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80&auto=format&fit=crop'},
-  {id:'prophetes', label:'Prophètes',                emoji:'🔥', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80&auto=format&fit=crop'},
-  {id:'histoire',  label:'Histoire Juive',            emoji:'🏛', img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'},
-  {id:'hassidisme',label:'Hassidisme',               emoji:'✨', img:'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=600&q=80&auto=format&fit=crop'},
-  {id:'rabbi',     label:'Le Rabbi',                  emoji:'👑', img:'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&q=80&auto=format&fit=crop'},
-  {id:'moderne',   label:'Histoire Moderne',          emoji:'🕍', img:'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80&auto=format&fit=crop'},
-  {id:'femmes',    label:'Femmes de la Torah',        emoji:'👩', img:'https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&q=80&auto=format&fit=crop'},
-  {id:'miracles',  label:'Miracles',                  emoji:'💫', img:'https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=600&q=80&auto=format&fit=crop'},
-  {id:'guerres',   label:'Guerres d\'Israël',         emoji:'⚔️', img:'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=600&q=80&auto=format&fit=crop'},
-  {id:'sages',     label:'Sages du Talmud',           emoji:'📚', img:'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80&auto=format&fit=crop'},
-  {id:'tsadikim',  label:'Tsadikim Hassidiques',      emoji:'🕯', img:'https://images.unsplash.com/photo-1502101872923-d48509bff386?w=600&q=80&auto=format&fit=crop'},
-  {id:'nahman',    label:'Contes de Rabbi Nahman',    emoji:'📖', img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80&auto=format&fit=crop'}
+  {id:'tanakh',    label:'Tanakh & Midrash',        emoji:'📖', img:'https://image.pollinations.ai/prompt/ancient+hebrew+scroll+Torah+parchment+old+sepia+gold+light+religious+jewish?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'talmud',    label:'Talmud',                   emoji:'📜', img:'https://image.pollinations.ai/prompt/ancient+talmud+books+jewish+library+dark+candle+light+sepia+religious+study?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'prophetes', label:'Prophètes',                emoji:'🔥', img:'https://image.pollinations.ai/prompt/desert+sinai+sunset+biblical+landscape+dramatic+sky+ancient+israel+golden?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'histoire',  label:'Histoire Juive',            emoji:'🏛', img:'https://image.pollinations.ai/prompt/ancient+jerusalem+temple+mount+stone+walls+historical+jewish+sepia+dramatic?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'hassidisme',label:'Hassidisme',               emoji:'✨', img:'https://image.pollinations.ai/prompt/hasidic+jews+prayer+synagogue+dark+candle+light+tallit+religious+mystical?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'rabbi',     label:'Le Rabbi',                  emoji:'👑', img:'https://image.pollinations.ai/prompt/rabbi+chabad+lubavitch+770+brooklyn+old+photograph+sepia+religious+wisdom?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'moderne',   label:'Histoire Moderne',          emoji:'🕍', img:'https://image.pollinations.ai/prompt/world+war+two+jewish+memorial+candles+dark+dramatic+solemn+israel?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'femmes',    label:'Femmes de la Torah',        emoji:'👩', img:'https://image.pollinations.ai/prompt/jewish+woman+shabbat+candles+lighting+prayer+elegant+sepia+gold+religious?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'miracles',  label:'Miracles',                  emoji:'💫', img:'https://image.pollinations.ai/prompt/parting+red+sea+exodus+dramatic+light+rays+biblical+mystical+golden?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'guerres',   label:'Guerres d\'Israël',         emoji:'⚔️', img:'https://image.pollinations.ai/prompt/western+wall+israel+soldiers+1967+black+white+dramatic+liberation+jerusalem?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'sages',     label:'Sages du Talmud',           emoji:'📚', img:'https://image.pollinations.ai/prompt/jewish+sage+rabbi+old+man+talmud+candle+studying+beard+sepia+religious?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'tsadikim',  label:'Tsadikim Hassidiques',      emoji:'🕯', img:'https://image.pollinations.ai/prompt/hasidic+tzaddik+dancing+prayer+mystical+dark+candles+religious+joyful?width=600&height=400&nologo=true&model=flux&seed=42'},
+  {id:'nahman',    label:'Contes de Rabbi Nahman',    emoji:'📖', img:'https://image.pollinations.ai/prompt/forest+night+mystical+candlelight+fairy+tale+jewish+story+dark+magical?width=600&height=400&nologo=true&model=flux&seed=42'}
 ];
 
 // Mapping catégorie texte → id thème
