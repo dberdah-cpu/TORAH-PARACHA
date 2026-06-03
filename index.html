@@ -2576,7 +2576,7 @@ function scrollToAddEvent(){
 }
 function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
-function updEvDisp(){var el=document.getElementById('ev-date-display');if(!calSel){el.textContent='Sélectionnez un jour';return;}var hd=g2h(calSel.d,calSel.m,calSel.y);if(calEvType==='greg')el.textContent='Date : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';}
+function updEvDisp(){var el=document.getElementById('ev-date-display');if(!el)return;if(!calSel){el.textContent='Sélectionnez un jour';return;}var hd=g2h(calSel.d,calSel.m,calSel.y);if(calEvType==='greg')el.textContent='Date : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';}
 function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});saveEv();document.getElementById('ev-name').value='';renderCalGrid();renderEvList();buildHome();}
 function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();}
 function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
@@ -2928,7 +2928,9 @@ function updateShabbatInlineCard(){
 }
 
 function closeShabbatPanel(){
-  document.getElementById('shabbat-panel').classList.remove('open');
+  var spEl=document.getElementById('shabbat-panel');
+  if(!spEl)return;
+  spEl.classList.remove('open');
   document.getElementById('shabbat-backdrop').classList.remove('visible');
 }
 
@@ -3466,9 +3468,9 @@ function getHYFromJSON(hd){
   var monthData=HY_JSON[monthName];
   // Le JSON corrigé a les clés décalées de -1 par rapport à Hebcal
   // Hebcal dit 18 Sivan → chercher clé 17 dans le JSON
-  var day = hd.d - 1;
+  var day = hd.d - 2;
   if(day >= 1 && monthData[String(day)]) return monthData[String(day)];
-  // Passage au mois précédent si day=0
+  // Passage au mois précédent si day<=0
   if(day <= 0){
     var prevM = hd.m - 1; if(prevM < 1) prevM = 12;
     var prevName = HEB_MONTH_TO_JSON[prevM];
