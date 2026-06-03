@@ -12329,8 +12329,8 @@ function buildOnboardingStep4(){
     hebDateStr2 = hd.d + ' ' + mn + ' ' + hd.y;
 
     // Paracha de naissance via PARASHA_MAP (approximation par date)
-    var pid = resolveParashaFromHebDate ? resolveParashaFromHebDate(hd) : null;
-    if(pid){ var p=getP(pid); parashaStr=p?p.name:''; }
+    // Paracha de naissance : on ne peut pas la calculer facilement sans API
+    parashaStr = '';
 
     // Psaume = âge hébreu + 1
     var hdNow = parseHebDate(hebDateStr) || g2h(new Date().getDate(),new Date().getMonth(),new Date().getFullYear());
@@ -12371,16 +12371,12 @@ function obNext2(){
 }
 
 function obNext3(){
-  // Lire le genre depuis le DOM si onboardingData.genre est vide
+  if(!onboardingData.genre){ try{ onboardingData.genre=sessionStorage.getItem('ob_genre')||''; }catch(e){} }
   if(!onboardingData.genre){
-    // Essayer sessionStorage
-    try{ var sg=sessionStorage.getItem('ob_genre'); if(sg) onboardingData.genre=sg; }catch(e){}
-  }
-  if(!onboardingData.genre){
-    var hBtn = document.getElementById('ob-homme');
-    var fBtn = document.getElementById('ob-femme');
-    if(hBtn && hBtn.style.background && hBtn.style.background.indexOf('grad')>=0) onboardingData.genre='homme';
-    else if(fBtn && fBtn.style.background && fBtn.style.background.indexOf('grad')>=0) onboardingData.genre='femme';
+    var hBtn=document.getElementById('ob-homme');
+    var fBtn=document.getElementById('ob-femme');
+    if(hBtn&&hBtn.style.background&&hBtn.style.background.indexOf('grad')>=0) onboardingData.genre='homme';
+    else if(fBtn&&fBtn.style.background&&fBtn.style.background.indexOf('grad')>=0) onboardingData.genre='femme';
   }
   if(!onboardingData.genre){ showToast('Sélectionne ton genre.'); return; }
   showOnboardingStep(4);
@@ -12399,7 +12395,7 @@ function obSetSoir(isSoir){
 
 function obSetGenre(g){
   onboardingData.genre = g;
-  try{ sessionStorage.setItem('ob_genre', g); }catch(e){}
+  try{ sessionStorage.setItem('ob_genre',g); }catch(e){}
   var hBtn=document.getElementById('ob-homme');
   var fBtn=document.getElementById('ob-femme');
   if(hBtn){
