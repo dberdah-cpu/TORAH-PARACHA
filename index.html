@@ -4060,6 +4060,40 @@ function renderHayomYomFallback(dateFr,url){
 
 // loubavitch.fr Sefer HaMitsvot — ID de référence
 // 251523 = 4 Iyar 5786 = 21 avril 2026
+
+var HIST_THEMES = [
+  {id:'tanakh',    label:'Tanakh & Midrash',        emoji:'📖', img:'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&q=80&auto=format&fit=crop'},
+  {id:'talmud',    label:'Talmud',                   emoji:'📜', img:'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80&auto=format&fit=crop'},
+  {id:'prophetes', label:'Prophètes',                emoji:'🔥', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80&auto=format&fit=crop'},
+  {id:'histoire',  label:'Histoire Juive',            emoji:'🏛', img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop'},
+  {id:'hassidisme',label:'Hassidisme',               emoji:'✨', img:'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=600&q=80&auto=format&fit=crop'},
+  {id:'rabbi',     label:'Le Rabbi',                  emoji:'👑', img:'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&q=80&auto=format&fit=crop'},
+  {id:'moderne',   label:'Histoire Moderne',          emoji:'🕍', img:'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600&q=80&auto=format&fit=crop'},
+  {id:'femmes',    label:'Femmes de la Torah',        emoji:'👩', img:'https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&q=80&auto=format&fit=crop'},
+  {id:'miracles',  label:'Miracles',                  emoji:'💫', img:'https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=600&q=80&auto=format&fit=crop'},
+  {id:'guerres',   label:'Guerres d\'Israël',         emoji:'⚔️', img:'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=600&q=80&auto=format&fit=crop'},
+  {id:'sages',     label:'Sages du Talmud',           emoji:'📚', img:'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80&auto=format&fit=crop'},
+  {id:'tsadikim',  label:'Tsadikim Hassidiques',      emoji:'🕯', img:'https://images.unsplash.com/photo-1502101872923-d48509bff386?w=600&q=80&auto=format&fit=crop'},
+  {id:'nahman',    label:'Contes de Rabbi Nahman',    emoji:'📖', img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80&auto=format&fit=crop'}
+];
+
+// Mapping catégorie texte → id thème
+var HIST_CAT_MAP = {
+  'Tanakh & Midrash':'tanakh','TANAKH & MIDRASH':'tanakh','Midrash':'tanakh',
+  'Talmud':'talmud','TALMUD':'talmud','SAGES DU TALMUD':'sages',
+  'Prophètes':'prophetes','PROPHÈTES':'prophetes',
+  'Histoire Juive':'histoire','HISTOIRE JUIVE — DESTRUCTION':'histoire','HISTOIRE MODERNE':'moderne',
+  'Hassidisme':'hassidisme','HASSIDISME':'hassidisme',
+  'Le Rabbi':'rabbi','LE RABBI':'rabbi',
+  'Histoire Moderne':'moderne',
+  'Femmes':'femmes','FEMMES DE L\'HISTOIRE JUIVE':'femmes','FEMMES DE LA TORAH':'femmes',
+  'Miracles':'miracles','MIRACLES DU PASSÉ':'miracles','MIRACLES DES GUERRES D\'ISRAËL':'guerres',
+  'Guerres d\'Israël':'guerres','MIRACLES DES GUERRES D\'ISRAËL':'guerres',
+  'Sages du Talmud':'sages','SAGES DU TALMUD':'sages',
+  'Tsadikim':'tsadikim','TSADIKIM HASSIDIQUES':'tsadikim',
+  'Contes de Rabbi Nahman':'nahman','CONTES DE RABBI NAHMAN':'nahman'
+};
+
 var HISTOIRES_DATA = [
   {
     "id": "david-goliath",
@@ -9011,62 +9045,140 @@ function openHistoires(){
 
 function renderHistoires(){
   var view = document.getElementById('view-histoires');
-  var h='<div class="hist-header">'
-    +'<div class="hist-header-title">📖 Histoires Vraies</div>'
-    +'<div class="hist-header-sub">Des récits vrais · Des sources authentiques</div>'
-    +'</div>';
+  if(!view) return;
 
-  function buildHistoireCard(s, isNew){
-    var newBadge = isNew ? '<span style="background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;font-family:Poppins,sans-serif;margin-left:6px;">NOUVEAU</span>' : '';
-    var card = '<div class="hist-card" onclick="openHistoireDetail(\''+s.id+'\')">';
-    card += '<div class="hist-card-body">';
-    card += '<div class="hist-card-cat">' + s.categorie + newBadge + '</div>';
-    card += '<div class="hist-card-title">' + s.titre + '</div>';
-    card += '<div class="hist-card-sub">' + (s.sous_titre||'') + '</div>';
-    card += '<div class="hist-card-footer">';
-    card += '<span class="hist-card-epoque">' + (s.epoque||'') + '</span>';
-    card += '<span class="hist-card-duree">⏱ ' + (s.duree||'') + '</span>';
-    card += '</div></div></div>';
-    return card;
-  }
-
-  // Charger les histoires Supabase en premier
+  // Charger depuis Supabase en priorité
   if(supabase){
-    supabase.from('histoires').select('*').eq('actif',true).order('created_at',{ascending:false})
+    supabase.from('histoires').select('*').eq('actif', true).order('created_at',{ascending:false})
     .then(function(res){
-      var dbHistoires = res.data || [];
-      var now = Date.now();
-      var extra = '';
-      if(dbHistoires.length){
-        extra += '<div class="hist-cat-label" style="color:var(--purple);">✨ Nouvelles histoires</div>';
-        dbHistoires.forEach(function(s){
-          var age = (now - new Date(s.created_at).getTime()) / (1000*60*60*24);
-          extra += buildHistoireCard(s, age < 7);
-        });
-      }
-      // Histoires codées en dur
-      var cats = {};
-      HISTOIRES_DATA.forEach(function(s){
-        if(!cats[s.categorie]) cats[s.categorie]=[];
-        cats[s.categorie].push(s);
-      });
-      var local = '';
-      Object.keys(cats).forEach(function(cat){
-        local += '<div class="hist-cat-label">'+cat+'</div>';
-        cats[cat].forEach(function(s){ local += buildHistoireCard(s, false); });
-      });
-      view.innerHTML = h + extra + local + getHistoireSlider();
-      initHistoireSlider();
+      var supaData = res.data || [];
+      _renderHistoiresPage(view, supaData);
     }).catch(function(){
-      renderHistoiresLocal(h);
+      _renderHistoiresPage(view, []);
     });
   } else {
-    renderHistoiresLocal(h);
+    _renderHistoiresPage(view, []);
+  }
+}
+
+function _renderHistoiresPage(view, supaData){
+  // Fusionner données Supabase + HISTOIRES_DATA locales
+  var allHistoires = supaData.slice();
+  // Ajouter les histoires locales non présentes dans Supabase
+  if(typeof HISTOIRES_DATA !== 'undefined'){
+    HISTOIRES_DATA.forEach(function(h){
+      var exists = supaData.some(function(s){ return s.titre === h.titre; });
+      if(!exists) allHistoires.push(h);
+    });
   }
 
-  // Afficher les histoires locales pendant le chargement
-  renderHistoiresLocal(h);
+  // Trouver l'histoire à la Une
+  var une = allHistoires.find(function(h){ return h.une || h.publiee; });
+
+  var h = '';
+
+  // ── HERO HEADER
+  h += '<div style="background:linear-gradient(135deg,#1a0533,#2d1b69);padding:56px 20px 24px;text-align:center;">'
+    + '<div style="font-size:22px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;margin-bottom:4px;">📖 Histoires Vraies</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,0.6);font-family:Poppins,sans-serif;">Des récits vrais · Des sources authentiques</div>'
+    + '</div>';
+
+  h += '<div style="padding:16px;">';
+
+  // ── HISTOIRE À LA UNE
+  if(une){
+    var uneImg = une.image_url || 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=800&q=80&auto=format&fit=crop';
+    var uneCat = une.categorie || '';
+    var uneTheme = HIST_THEMES.find(function(t){ return t.id === (HIST_CAT_MAP[uneCat]||uneCat); });
+    h += '<div onclick="openHistoireDetail(\''+( une.id||une.titre||'')+'\' )" style="position:relative;border-radius:var(--radius);overflow:hidden;margin-bottom:20px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.15);">'
+      + '<img src="'+uneImg+'" style="width:100%;height:220px;object-fit:cover;display:block;">'
+      + '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 60%);">'
+      + '<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;">'
+      + '<div style="display:inline-block;background:rgba(255,255,255,0.2);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;font-family:Poppins,sans-serif;margin-bottom:6px;backdrop-filter:blur(4px);">⭐ À LA UNE · '+(uneTheme?uneTheme.emoji+' '+uneTheme.label:uneCat)+'</div>'
+      + '<div style="font-size:18px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;line-height:1.3;margin-bottom:4px;">'+( une.titre||'')+'</div>'
+      + '<div style="font-size:12px;color:rgba(255,255,255,0.75);font-family:Poppins,sans-serif;">'+( une.sous_titre||une.accroche||'')+'</div>'
+      + '</div></div></div>';
+  }
+
+  // ── CARTES THÈMES
+  h += '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:12px;">Par thème</div>';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">';
+
+  HIST_THEMES.forEach(function(theme){
+    // Compter les histoires de ce thème
+    var count = allHistoires.filter(function(s){
+      var catId = HIST_CAT_MAP[s.categorie||''] || (s.categorie||'').toLowerCase().replace(/[^a-z]/g,'');
+      return catId === theme.id || (s.categorie||'').toLowerCase().includes(theme.label.toLowerCase().substring(0,5));
+    }).length;
+    if(count === 0 && typeof HISTOIRES_DATA !== 'undefined'){
+      count = HISTOIRES_DATA.filter(function(s){
+        return (s.categorie||'').toUpperCase() === theme.label.toUpperCase() ||
+               HIST_CAT_MAP[s.categorie||''] === theme.id;
+      }).length;
+    }
+
+    h += '<div onclick="showHistoiresTheme(\''+theme.id+'\',\''+theme.label+'\')" style="position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;aspect-ratio:1;box-shadow:0 2px 10px rgba(0,0,0,0.12);">'
+      + '<img src="'+theme.img+'" style="width:100%;height:100%;object-fit:cover;display:block;filter:brightness(0.6);">'
+      + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;text-align:center;">'
+      + '<div style="font-size:22px;margin-bottom:4px;">'+theme.emoji+'</div>'
+      + '<div style="font-size:12px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;line-height:1.3;text-shadow:0 1px 4px rgba(0,0,0,0.5);">'+theme.label+'</div>'
+      + (count>0?'<div style="font-size:10px;color:rgba(255,255,255,0.7);font-family:Poppins,sans-serif;margin-top:2px;">'+count+' histoire'+(count>1?'s':'')+'</div>':'')
+      + '</div></div>';
+  });
+
+  h += '</div>';
+  h += '</div>';
+
+  view.innerHTML = h + getHistoireSlider();
+  initHistoireSlider();
 }
+
+function showHistoiresTheme(themeId, themeLabel){
+  var view = document.getElementById('view-histoires');
+  if(!view) return;
+
+  // Rassembler toutes les histoires de ce thème
+  var all = [];
+  if(typeof HISTOIRES_DATA !== 'undefined'){
+    HISTOIRES_DATA.forEach(function(h){
+      if(HIST_CAT_MAP[h.categorie||''] === themeId || (h.categorie||'').toUpperCase().includes(themeLabel.toUpperCase().substring(0,5))){
+        all.push(h);
+      }
+    });
+  }
+
+  var themeObj = HIST_THEMES.find(function(t){ return t.id === themeId; }) || {};
+
+  var h = '<div style="position:relative;">'
+    + '<img src="'+(themeObj.img||'')+'" style="width:100%;height:160px;object-fit:cover;display:block;filter:brightness(0.5);">'
+    + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">'
+    + '<div style="font-size:28px;margin-bottom:6px;">'+(themeObj.emoji||'')+'</div>'
+    + '<div style="font-size:20px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;">'+themeLabel+'</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;">'+all.length+' histoire'+(all.length>1?'s':'')+'</div>'
+    + '</div>'
+    + '<button onclick="renderHistoires()" style="position:absolute;top:56px;left:16px;background:rgba(0,0,0,0.4);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;backdrop-filter:blur(4px);">←</button>'
+    + '</div>';
+
+  h += '<div style="padding:16px;display:flex;flex-direction:column;gap:10px;">';
+
+  all.forEach(function(s){
+    var duree = s.duree ? '⏱ '+s.duree+' min' : (s.reading_time ? '⏱ '+s.reading_time : '');
+    h += '<div onclick="openHistoireDetail(\''+encodeURIComponent(s.id||s.titre)+'\')" style="background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.08);cursor:pointer;display:flex;gap:0;">'
+      + '<div style="flex:1;padding:14px 12px;">'
+      + '<div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;line-height:1.3;">'+s.titre+'</div>'
+      + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;line-height:1.4;margin-bottom:6px;">'+(s.sous_titre||s.accroche||'')+'</div>'
+      + (duree?'<div style="font-size:11px;color:var(--purple);">'+duree+'</div>':'')
+      + '</div></div>';
+  });
+
+  if(all.length === 0){
+    h += '<div style="text-align:center;padding:40px;color:var(--gray-4);font-size:14px;font-family:Poppins,sans-serif;">Aucune histoire dans ce thème pour l\'instant.</div>';
+  }
+
+  h += '</div>';
+  view.innerHTML = h;
+}
+
 
 function getHistoireSlider(){
   return '<div class="text-slider-wrap" style="margin-bottom:8px;">'
@@ -11321,12 +11433,17 @@ function adminSaveHistoire(){
   var texte   = (document.getElementById('adm-hist-texte').value||'').trim();
   if(!titre||!texte){ adminToast('Titre et histoire requis.'); return; }
   if(!supabase){ adminToast('Supabase non connecté.'); return; }
+  var uneVal = document.getElementById('adm-hist-une') ? document.getElementById('adm-hist-une').checked : false;
+  var catVal = document.getElementById('adm-hist-categorie') ? document.getElementById('adm-hist-categorie').value : '';
   supabase.from('histoires').insert([{
     titre: titre,
     sous_titre: accroche,
     histoire: texte,
     texte: texte,
     actif: true,
+    une: uneVal,
+    publiee: uneVal,
+    categorie: catVal || 'Général',
     created_at: new Date().toISOString()
   }]).then(function(res){
     if(res.error){ adminToast('Erreur: '+res.error.message); return; }
@@ -12783,6 +12900,26 @@ try {
         <input id="adm-hist-titre" placeholder="Titre *" style="width:100%;padding:10px;border:1px solid var(--gray-2);border-radius:8px;margin-bottom:8px;font-family:Poppins,sans-serif;font-size:14px;font-weight:700;box-sizing:border-box;">
         <input id="adm-hist-accroche" placeholder="Phrase d'accroche (facultatif)" style="width:100%;padding:10px;border:1px solid var(--gray-2);border-radius:8px;margin-bottom:8px;font-family:Poppins,sans-serif;font-size:13px;font-style:italic;box-sizing:border-box;">
         <textarea id="adm-hist-texte" placeholder="L'histoire complète (coller ici)..." rows="8" style="width:100%;padding:10px;border:1px solid var(--gray-2);border-radius:8px;margin-bottom:8px;font-family:Poppins,sans-serif;font-size:13px;box-sizing:border-box;resize:vertical;"></textarea>
+        <select id="adm-hist-categorie" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-2);border-radius:8px;font-size:13px;font-family:Poppins,sans-serif;background:#fff;color:var(--dark);margin-bottom:8px;">
+          <option value="">-- Choisir un thème --</option>
+          <option>Tanakh &amp; Midrash</option>
+          <option>Talmud</option>
+          <option>Prophètes</option>
+          <option>Histoire Juive</option>
+          <option>Hassidisme</option>
+          <option>Le Rabbi</option>
+          <option>Histoire Moderne</option>
+          <option>Femmes de la Torah</option>
+          <option>Miracles</option>
+          <option>Guerres d'Israël</option>
+          <option>Sages du Talmud</option>
+          <option>Tsadikim Hassidiques</option>
+          <option>Contes de Rabbi Nahman</option>
+        </select>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <input type="checkbox" id="adm-hist-une" style="width:16px;height:16px;cursor:pointer;accent-color:var(--purple);">
+          <label for="adm-hist-une" style="font-size:13px;font-family:Poppins,sans-serif;color:var(--dark);cursor:pointer;">⭐ Mettre à la Une</label>
+        </div>
         <div style="display:flex;gap:8px;">
           <button onclick="adminSaveHistoire()" style="flex:1;background:var(--purple);color:#fff;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">💾 Publier</button>
           <button onclick="document.getElementById('adm-hist-form').style.display='none'" style="flex:1;background:var(--gray-2);color:var(--dark);border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Annuler</button>
