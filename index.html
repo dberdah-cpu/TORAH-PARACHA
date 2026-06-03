@@ -5662,6 +5662,8 @@ function renderProfileContent(){
     var dn='',email='',dateStr='',photoUrl=null;
     if(user){
       var meta=user.user_metadata||{};
+      var upCache={};
+      try{ upCache=JSON.parse(localStorage.getItem('up_cache_'+user.id)||'{}'); }catch(e){}
       dn=meta.first_name||meta.full_name||meta.name||(user.email?user.email.split('@')[0]:'Utilisateur');
       email=user.email||'';
       try{ dateStr=new Date(user.created_at).toLocaleDateString('fr-FR'); }catch(e){}
@@ -5686,7 +5688,7 @@ function renderProfileContent(){
         +'<div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;font-family:Poppins,sans-serif;">Mon compte</div>'
         +'<div style="font-size:14px;color:var(--gray-4);line-height:1.7;">Email : '+email+(dateStr?'<br>Membre depuis '+dateStr:'')+'</div>'
         +'</div>'
-        +'<button onclick="startOnboarding()" style="width:100%;padding:12px;background:var(--gray-1);color:var(--purple);border:1.5px solid var(--purple);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">✏️ Compléter mon profil</button>'
+        +(upCache&&upCache.prenom?'':'<button onclick="startOnboarding()" style="width:100%;padding:12px;background:var(--gray-1);color:var(--purple);border:1.5px solid var(--purple);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">✏️ Compléter mon profil</button>')
         +'<div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;">'
         +'<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">Inviter un ami</div>'
         +'<button onclick="inviterWhatsApp()" style="width:100%;background:#fff;color:#128C7E;border:none;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">Inviter via WhatsApp</button>'
@@ -5724,7 +5726,19 @@ function renderProfileContent(){
   }
 
   if(currentUser){
-    doRender(currentUser);
+    // Charger les données du profil depuis Supabase pour avoir upCache à jour
+    if(typeof supabase!=='undefined'&&supabase){
+      supabase.from('users_progress').select('prenom,nom,email,psaume_perso,tehilim_streak,genre,date_naissance_heb_j,date_naissance_heb_m')
+      .eq('user_id',currentUser.id).single()
+      .then(function(res){
+        if(res.data){
+          try{ localStorage.setItem('up_cache_'+currentUser.id, JSON.stringify(res.data)); }catch(e){}
+        }
+        doRender(currentUser);
+      }).catch(function(){ doRender(currentUser); });
+    } else {
+      doRender(currentUser);
+    }
   } else if(typeof supabase!=='undefined'&&supabase){
     supabase.auth.getSession().then(function(r){
       if(r.data&&r.data.session) currentUser=r.data.session.user;
@@ -11964,9 +11978,14 @@ function showTehilimView(){
 }
 
 function renderTehilimPage(){
-  // Date hébraïque
-  var hd = parseHebDate(hebDateStr) || g2h(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
-  var dayNum = hd.d;
+  // Date hébraïque - priorité à hebDateStr (Hebcal), sinon g2h
+  var hd = null;
+  if(hebDateStr) hd = parseHebDate(hebDateStr);
+  if(!hd){
+    var t=new Date();
+    hd = g2h(t.getDate(), t.getMonth(), t.getFullYear());
+  }
+  var dayNum = hd ? hd.d : new Date().getDate();
   var monthName = HEB_MONTH_TO_JSON[hd.m] || '';
   var dateEl = document.getElementById('teh-date-display');
   if(dateEl) dateEl.textContent = (hebDateFr||'') + ' · Jour ' + dayNum + ' du mois';
@@ -12328,9 +12347,27 @@ function buildOnboardingStep4(){
     var mn=HEB_MONTH_TO_JSON[hd.m]||'';
     hebDateStr2 = hd.d + ' ' + mn + ' ' + hd.y;
 
-    // Paracha de naissance via PARASHA_MAP (approximation par date)
-    // Paracha de naissance : on ne peut pas la calculer facilement sans API
-    parashaStr = '';
+    // Paracha de naissance via l'API Hebcal (async - sera mise à jour après)
+    parashaStr = 'Chargement...';
+    // Lancer le fetch async
+    var dobYear=y, dobMonth=m+1, dobDay=d;
+    setTimeout(function(){
+      fetch('https://www.hebcal.com/sedrot/?cfg=json&dt='+dobYear+'-'+String(dobMonth).padStart(2,'0')+'-'+String(dobDay).padStart(2,'0')+'&lg=en')
+      .then(function(r){return r.json();})
+      .then(function(dd){
+        var raw = dd.sedra||dd.parasha||'';
+        if(raw){
+          raw = raw.replace(/^Parashat\s+/i,'').trim();
+          var fr = PARASHA_FR[raw]||raw;
+          var el = document.getElementById('ob-paracha-naissance');
+          if(el) el.textContent = fr;
+          onboardingData.parashaStr = fr;
+        }
+      }).catch(function(){
+        var el = document.getElementById('ob-paracha-naissance');
+        if(el) el.textContent = '—';
+      });
+    }, 100);
 
     // Psaume = âge hébreu + 1
     var hdNow = parseHebDate(hebDateStr) || g2h(new Date().getDate(),new Date().getMonth(),new Date().getFullYear());
@@ -12345,7 +12382,7 @@ function buildOnboardingStep4(){
     + '<div style="font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:10px;">Tes infos personnelles</div>'
     + '<div style="font-size:14px;color:var(--dark);font-family:Poppins,sans-serif;line-height:2;">'
     + '<div>📅 Date hébraïque : <strong>' + hebDateStr2 + '</strong></div>'
-    + (parashaStr!=='...'?'<div>📖 Paracha de naissance : <strong>' + parashaStr + '</strong></div>':'')
+    + '<div>📖 Paracha de naissance : <strong id="ob-paracha-naissance">' + parashaStr + '</strong></div>'
     + '<div>📜 Psaume personnel : <strong>' + psaumeStr + '</strong></div>'
     + '<div>👤 Genre : <strong>' + onboardingData.genre + '</strong></div>'
     + '</div></div>'
@@ -12448,6 +12485,7 @@ function obSave(){
     date_naissance_heb_j: hd.d,
     date_naissance_heb_m: hd.m,
     date_naissance_heb_y: hd.y,
+    paracha_naissance: onboardingData.parashaStr||'',
     updated_at: new Date().toISOString()
   },{onConflict:'user_id'}).then(function(res){
     if(res.error){ showToast('Erreur: '+res.error.message); return; }
