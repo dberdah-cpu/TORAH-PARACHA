@@ -11609,6 +11609,26 @@ function adminShowAddHistoire(){
   if(f){ f.style.display = f.style.display==='none' ? 'block' : 'none'; }
 }
 
+function adminEditHistoire(h){
+  var form = document.getElementById('adm-hist-form');
+  if(!form) return;
+  form.style.display = 'block';
+  // Remplir les champs
+  var titre = document.getElementById('adm-hist-titre');
+  var accroche = document.getElementById('adm-hist-accroche');
+  var texte = document.getElementById('adm-hist-texte');
+  var une = document.getElementById('adm-hist-une');
+  var cat = document.getElementById('adm-hist-categorie');
+  if(titre) titre.value = h.titre||'';
+  if(accroche) accroche.value = h.sous_titre||h.accroche||'';
+  if(texte) texte.value = h.histoire||h.texte||'';
+  if(une) une.checked = !!(h.une);
+  if(cat) cat.value = h.categorie||'';
+  // Stocker l'ID pour la mise à jour
+  form.dataset.editId = h.id||'';
+  form.scrollIntoView({behavior:'smooth'});
+}
+
 function adminSaveHistoire(){
   var titre   = (document.getElementById('adm-hist-titre').value||'').trim();
   var accroche = (document.getElementById('adm-hist-accroche').value||'').trim();
@@ -11617,17 +11637,17 @@ function adminSaveHistoire(){
   if(!supabase){ adminToast('Supabase non connecté.'); return; }
   var uneVal = document.getElementById('adm-hist-une') ? document.getElementById('adm-hist-une').checked : false;
   var catVal = document.getElementById('adm-hist-categorie') ? document.getElementById('adm-hist-categorie').value : '';
-  supabase.from('histoires').insert([{
-    titre: titre,
-    sous_titre: accroche,
-    histoire: texte,
-    texte: texte,
-    actif: true,
-    une: uneVal,
-    publiee: uneVal,
-    categorie: catVal || 'Général',
-    created_at: new Date().toISOString()
-  }]).then(function(res){
+  var form = document.getElementById('adm-hist-form');
+  var editId = form ? form.dataset.editId : '';
+  var record = {
+    titre: titre, sous_titre: accroche, histoire: texte, texte: texte,
+    actif: true, une: uneVal, publiee: uneVal,
+    categorie: catVal || 'Général', updated_at: new Date().toISOString()
+  };
+  var promise = editId
+    ? supabase.from('histoires').update(record).eq('id', editId)
+    : supabase.from('histoires').insert([Object.assign(record, {created_at: new Date().toISOString()})]);
+  promise.then(function(res){
     if(res.error){ adminToast('Erreur: '+res.error.message); return; }
     adminToast('✅ Histoire publiée !');
     document.getElementById('adm-hist-form').style.display='none';
@@ -13003,11 +13023,6 @@ var THEME_IMAGES_CACHE = {};
 async function adminLoadThemeImages(){
   var list = document.getElementById('admin-theme-images-list');
   if(!list) return;
-
-  // Créer le bucket si besoin
-  if(supabase){
-    await supabase.storage.createBucket('theme-images', {public: true}).catch(function(){});
-  }
 
   // Charger les images existantes depuis Storage
   if(supabase){
