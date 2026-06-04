@@ -12987,17 +12987,32 @@ function buildOnboardingStep4(){
     // Lancer le fetch async
     var dobYear=y, dobMonth=m+1, dobDay=d;
     setTimeout(function(){
-      fetch('https://www.hebcal.com/sedrot/?cfg=json&dt='+dobYear+'-'+String(dobMonth).padStart(2,'0')+'-'+String(dobDay).padStart(2,'0')+'&lg=en')
+      fetch('https://www.hebcal.com/converter?cfg=json&gy='+dobYear+'&gm='+dobMonth+'&gd='+dobDay+'&g2h=1&strict=1')
       .then(function(r){return r.json();})
       .then(function(dd){
-        var raw = dd.sedra||dd.parasha||'';
-        if(raw){
-          raw = raw.replace(/^Parashat\s+/i,'').trim();
-          var fr = PARASHA_FR[raw]||raw;
-          var el = document.getElementById('ob-paracha-naissance');
-          if(el) el.textContent = fr;
-          onboardingData.parashaStr = fr;
-        }
+        // Mettre à jour aussi la date hébraïque avec la valeur correcte de Hebcal
+        var hebD = dd.hd, hebM = dd.hm, hebY = dd.hy;
+        var hmFR = {'Nisan':'Nissan','Iyyar':'Iyar','Sivan':'Sivan','Tamuz':'Tamouz',
+          'Av':'Av','Elul':'Eloul','Tishrei':'Tishri','Cheshvan':'Cheshvan',
+          'Kislev':'Kislev','Tevet':'Tevet','Shevat':'Chevat','Adar':'Adar','Adar II':'Adar II'};
+        var hebDateFixed = hebD + ' ' + (hmFR[hebM]||hebM) + ' ' + hebY;
+        var elDate = document.getElementById('ob-heb-date');
+        if(elDate) elDate.textContent = hebDateFixed;
+        onboardingData.hebDateFixed = hebDateFixed;
+        onboardingData.heb_j = hebD;
+        onboardingData.heb_m_name = hebM;
+        onboardingData.heb_y = hebY;
+        // Stocker le numéro du mois hébreu
+        var hebMonthNums = {'Nisan':1,'Iyyar':2,'Sivan':3,'Tamuz':4,'Av':5,'Elul':6,
+          'Tishrei':7,'Cheshvan':8,'Kislev':9,'Tevet':10,'Shevat':11,'Adar':12,'Adar II':13};
+        onboardingData.heb_m_num = hebMonthNums[hebM] || 0;
+        // Paracha
+        var raw = dd.parasha||'';
+        if(raw) raw = raw.replace(/^Parashat\s+/i,'').trim();
+        var fr = (raw && PARASHA_FR[raw]) ? PARASHA_FR[raw] : (raw||'—');
+        var elPar = document.getElementById('ob-paracha-naissance');
+        if(elPar) elPar.textContent = fr;
+        onboardingData.parashaStr = fr;
       }).catch(function(){
         var el = document.getElementById('ob-paracha-naissance');
         if(el) el.textContent = '—';
@@ -13016,7 +13031,7 @@ function buildOnboardingStep4(){
     + '<div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;">'
     + '<div style="font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:10px;">Tes infos personnelles</div>'
     + '<div style="font-size:14px;color:var(--dark);font-family:Poppins,sans-serif;line-height:2;">'
-    + '<div>📅 Date hébraïque : <strong>' + hebDateStr2 + '</strong></div>'
+    + '<div>📅 Date hébraïque : <strong id="ob-heb-date">' + hebDateStr2 + '</strong></div>'
     + '<div>📖 Paracha de naissance : <strong id="ob-paracha-naissance">' + parashaStr + '</strong></div>'
     + '<div>📜 Psaume personnel : <strong>' + psaumeStr + '</strong></div>'
     + '<div>👤 Genre : <strong>' + onboardingData.genre + '</strong></div>'
@@ -13092,6 +13107,10 @@ function obUpdateHebDate(){
   if(onboardingData.dobSoir){
     var t2=new Date(y,m,d+1);
     hd=g2h(t2.getDate(),t2.getMonth(),t2.getFullYear());
+  }
+  // Utiliser les données corrigées de Hebcal si disponibles
+  if(onboardingData.heb_j && onboardingData.heb_y){
+    hd = {d: onboardingData.heb_j, m: onboardingData.heb_m_num||hd.m, y: onboardingData.heb_y};
   }
   var mn=HEB_MONTH_TO_JSON[hd.m]||'';
   var el=document.getElementById('ob-heb-date');
