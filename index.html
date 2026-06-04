@@ -12996,6 +12996,18 @@ function buildOnboardingStep4(){
       .then(function(dd){
         // Mettre à jour aussi la date hébraïque avec la valeur correcte de Hebcal
         var hebD = dd.hd, hebM = dd.hm, hebY = dd.hy;
+        // Chercher la paracha via /shabbat
+        fetch('https://www.hebcal.com/shabbat?cfg=json&gy='+dobYear+'&gm='+dobMonth+'&gd='+dobDay+'&m=50&b=18&lg=fr&geo=none')
+        .then(function(r2){return r2.json();})
+        .then(function(sd){
+          var rawS='';
+          if(sd.items){ sd.items.forEach(function(it){ if(it.category==='parashat') rawS=it.title||''; }); }
+          if(rawS) rawS=rawS.replace(/^Paracha\s+/i,'').replace(/^Parashat\s+/i,'').trim();
+          var frS=(rawS&&PARASHA_FR[rawS])?PARASHA_FR[rawS]:(rawS||'—');
+          var elPar=document.getElementById('ob-paracha-naissance');
+          if(elPar) elPar.textContent=frS;
+          onboardingData.parashaStr=frS;
+        }).catch(function(){});
         var hmFR = {'Nisan':'Nissan','Iyyar':'Iyar','Sivan':'Sivan','Tamuz':'Tamouz',
           'Av':'Av','Elul':'Eloul','Tishrei':'Tishri','Cheshvan':'Cheshvan',
           'Kislev':'Kislev','Tevet':'Tevet','Shevat':'Chevat','Adar':'Adar','Adar II':'Adar II'};
@@ -13262,11 +13274,12 @@ function loadProfileInfoBlock(){
   if(!uc.paracha_naissance && uc.date_naissance_greg){
     var parts = uc.date_naissance_greg.split('-');
     if(parts.length===3){
-      fetch('https://www.hebcal.com/converter?cfg=json&gy='+parts[0]+'&gm='+parseInt(parts[1])+'&gd='+parseInt(parts[2])+'&g2h=1&strict=1')
+      fetch('https://www.hebcal.com/shabbat?cfg=json&gy='+parts[0]+'&gm='+parseInt(parts[1])+'&gd='+parseInt(parts[2])+'&m=50&b=18&lg=fr&geo=none')
       .then(function(r){return r.json();})
       .then(function(data){
-        var raw = data.parasha||'';
-        if(raw) raw=raw.replace(/^Parashat\s+/i,'').trim();
+        var raw = '';
+        if(data.items){ data.items.forEach(function(it){ if(it.category==='parashat') raw=it.title||''; }); }
+        if(raw) raw=raw.replace(/^Paracha\s+/i,'').replace(/^Parashat\s+/i,'').trim();
         var fr = (raw&&PARASHA_FR[raw])?PARASHA_FR[raw]:(raw||'—');
         var elP=document.getElementById('profile-paracha-naissance');
         if(elP) elP.textContent=fr;
