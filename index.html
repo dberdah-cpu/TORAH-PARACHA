@@ -6018,6 +6018,7 @@ function renderProfileContent(){
         +'<div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;font-family:Poppins,sans-serif;">Mon compte</div>'
         +'<div style="font-size:14px;color:var(--gray-4);line-height:1.7;">Email : '+email+(dateStr?'<br>Membre depuis '+dateStr:'')+'</div>'
         +'</div>'
+        +'<div id="profile-info-block"></div>'
         +'<div style="display:flex;gap:8px;margin-bottom:8px;">'    +'<button onclick="startOnboarding()" style="flex:1;padding:12px;background:var(--gray-1);color:var(--purple);border:1.5px solid var(--purple);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">'+(upCache&&upCache.prenom?'Modifier mon profil':'Completer mon profil')+'</button>'    +'<button onclick="showSecuritySettings()" style="flex:1;padding:12px;background:var(--gray-1);color:var(--gray-4);border:1.5px solid var(--gray-2);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Securite</button>'    +'</div>'
         +'<div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;">'
         +'<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">Inviter un ami</div>'
@@ -6065,7 +6066,10 @@ function renderProfileContent(){
           try{ localStorage.setItem('up_cache_'+currentUser.id, JSON.stringify(res.data)); upCacheGlobal=res.data; }catch(e){}
         }
         doRender(currentUser);
-        setTimeout(loadMitsvaDate, 300);
+        setTimeout(function(){
+          loadMitsvaDate();
+          loadProfileInfoBlock();
+        }, 300);
       }).catch(function(){ doRender(currentUser); setTimeout(loadMitsvaDate, 300); });
     } else {
       doRender(currentUser);
@@ -13233,6 +13237,77 @@ async function adminUploadThemeImage(input, themeId, previewImg){
 }
 
 // Charger les images thèmes au démarrage
+
+function loadProfileInfoBlock(){
+  var el = document.getElementById('profile-info-block');
+  if(!el || !upCacheGlobal || !upCacheGlobal.prenom) return;
+  var uc = upCacheGlobal;
+  var MOIS = {1:'Nissan',2:'Iyar',3:'Sivan',4:'Tamouz',5:'Av',6:'Eloul',
+    7:'Tishri',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Chevat',12:'Adar',13:'Adar II'};
+  var hebDate = uc.date_naissance_heb_j
+    ? uc.date_naissance_heb_j+' '+(MOIS[uc.date_naissance_heb_m]||'')+' '+(uc.date_naissance_heb_y||'')
+    : '';
+  var html = '<div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px;">'
+    +'<div style="font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:10px;">Tes infos personnelles</div>'
+    +'<div style="font-size:13px;color:var(--dark);font-family:Poppins,sans-serif;line-height:2;">'
+    +(hebDate?'<div>📅 Date hébraïque : <strong>'+hebDate+'</strong></div>':'')
+    +'<div>📖 Paracha de naissance : <strong id="profile-paracha-naissance">'+(uc.paracha_naissance||'...')+'</strong></div>'
+    +(uc.psaume_perso?'<div>📜 Psaume personnel : <strong>Psaume '+uc.psaume_perso+'</strong></div>':'')
+    +(uc.genre?'<div>👤 Genre : <strong>'+uc.genre+'</strong></div>':'')
+    +'<div id="profile-mitsva-date" style="color:var(--purple);"></div>'
+    +'</div></div>';
+  el.innerHTML = html;
+
+  // Charger paracha si manquante
+  if(!uc.paracha_naissance && uc.date_naissance_greg){
+    var parts = uc.date_naissance_greg.split('-');
+    if(parts.length===3){
+      fetch('https://www.hebcal.com/converter?cfg=json&gy='+parts[0]+'&gm='+parseInt(parts[1])+'&gd='+parseInt(parts[2])+'&g2h=1&strict=1')
+      .then(function(r){return r.json();})
+      .then(function(data){
+        var raw = data.parasha||'';
+        if(raw) raw=raw.replace(/^Parashat\s+/i,'').trim();
+        var fr = (raw&&PARASHA_FR[raw])?PARASHA_FR[raw]:(raw||'—');
+        var elP=document.getElementById('profile-paracha-naissance');
+        if(elP) elP.textContent=fr;
+        // Sauvegarder en Supabase
+        if(fr&&fr!=='—'&&supabase&&currentUser){
+          supabase.from('users_progress').update({paracha_naissance:fr}).eq('user_id',currentUser.id).then(function(){});
+        }
+      }).catch(function(){
+        var elP=document.getElementById('profile-paracha-naissance');
+        if(elP) elP.textContent='—';
+      });
+    }
+  }
+
+  // Charger date Mitsva
+  loadMitsvaDateInto('profile-mitsva-date');
+}
+
+function loadMitsvaDateInto(elId){
+  var el = document.getElementById(elId);
+  if(!el||!upCacheGlobal) return;
+  var uc = upCacheGlobal;
+  if(!uc.date_naissance_heb_j||!uc.date_naissance_heb_m||!uc.date_naissance_heb_y) return;
+  var MOIS_EN = {1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
+    7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
+  var genre = uc.genre||'';
+  var yearsAdd = genre==='femme'?12:13;
+  var label = genre==='femme'?'👧 Bat Mitsva':'👦 Bar Mitsva';
+  var mitsvYear = parseInt(uc.date_naissance_heb_y)+yearsAdd;
+  var hmName = MOIS_EN[uc.date_naissance_heb_m]||'';
+  el.textContent = label+' : calcul...';
+  fetch('https://www.hebcal.com/converter?cfg=json&hy='+mitsvYear+'&hm='+encodeURIComponent(hmName)+'&hd='+uc.date_naissance_heb_j+'&h2g=1&strict=1')
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(!data.gd){el.style.display='none';return;}
+    var MOIS_FR=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
+    var gDate=data.gd+' '+MOIS_FR[(data.gm||1)-1]+' '+data.gy;
+    var hDate=data.hd+' '+(data.hm||'')+' '+data.hy;
+    el.innerHTML=label+' : <strong>'+gDate+'</strong> ('+hDate+')';
+  }).catch(function(){el.style.display='none';});
+}
 
 function loadMitsvaDate(){
   var el = document.getElementById('ob-mitsva-date');
