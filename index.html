@@ -2810,14 +2810,20 @@ function doConvert(){
     var holiday = (!para && data.events) ? data.events.join(', ') : '';
 
     // Bar Mitsva (+13 ans) et Bat Mitsva (+12 ans) via Hebcal
-    var hy13 = hy+13, hy12 = hy+12;
+    var hy13 = parseInt(hy)+13, hy12 = parseInt(hy)+12;
+    // Hebcal h2g: convertir date hébraïque (même jour/mois, +13/12 ans) → grégorien
     var urlBar = 'https://www.hebcal.com/converter?cfg=json&hy='+hy13+'&hm='+encodeURIComponent(hm)+'&hd='+hd_num+'&h2g=1&strict=1';
     var urlBat = 'https://www.hebcal.com/converter?cfg=json&hy='+hy12+'&hm='+encodeURIComponent(hm)+'&hd='+hd_num+'&h2g=1&strict=1';
+    console.log('[Mitsva] Bar:', urlBar);
+    console.log('[Mitsva] Bat:', urlBat);
 
     Promise.all([fetch(urlBar).then(function(r){return r.json();}), fetch(urlBat).then(function(r){return r.json();})])
     .then(function(results){
       var r13=results[0], r12=results[1];
-      var fmtG = function(r){ return r.gd+' '+FR_M[r.gm-1]+' '+r.gy; };
+      var fmtG = function(r){ 
+        if(!r||!r.gd) return '—';
+        return r.gd+' '+FR_M[(r.gm||1)-1]+' '+r.gy; 
+      };
       var fmtH = function(r){ return r.hd+' '+(hmFR[r.hm]||r.hm)+' '+r.hy; };
 
       res.innerHTML = '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:6px;">'
