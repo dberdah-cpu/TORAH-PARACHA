@@ -6018,7 +6018,7 @@ function renderProfileContent(){
         +'<div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;font-family:Poppins,sans-serif;">Mon compte</div>'
         +'<div style="font-size:14px;color:var(--gray-4);line-height:1.7;">Email : '+email+(dateStr?'<br>Membre depuis '+dateStr:'')+'</div>'
         +'</div>'
-        +(upCache&&upCache.prenom?'':'<button onclick="startOnboarding()" style="width:100%;padding:12px;background:var(--gray-1);color:var(--purple);border:1.5px solid var(--purple);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">✏️ Compléter mon profil</button>')
+        +'<div style="display:flex;gap:8px;margin-bottom:8px;">'    +'<button onclick="startOnboarding()" style="flex:1;padding:12px;background:var(--gray-1);color:var(--purple);border:1.5px solid var(--purple);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">'+(upCache&&upCache.prenom?'Modifier mon profil':'Completer mon profil')+'</button>'    +'<button onclick="showSecuritySettings()" style="flex:1;padding:12px;background:var(--gray-1);color:var(--gray-4);border:1.5px solid var(--gray-2);border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Securite</button>'    +'</div>'
         +'<div style="background:linear-gradient(135deg,#25D366,#128C7E);border-radius:var(--radius);padding:14px 16px;">'
         +'<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;font-family:Poppins,sans-serif;">Inviter un ami</div>'
         +'<button onclick="inviterWhatsApp()" style="width:100%;background:#fff;color:#128C7E;border:none;padding:10px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;font-family:Poppins,sans-serif;cursor:pointer;">Inviter via WhatsApp</button>'
@@ -12877,7 +12877,14 @@ function scheduleTehilimNotif(){
 
 function startOnboarding(){
   onboardingStep = 1;
-  onboardingData = {prenom:'',nom:'',pseudo:'',dob:'',dobSoir:false,genre:''};
+  onboardingData = {
+    prenom:(upCacheGlobal&&upCacheGlobal.prenom)||'',
+    nom:(upCacheGlobal&&upCacheGlobal.nom)||'',
+    pseudo:(upCacheGlobal&&upCacheGlobal.pseudo)||'',
+    dob:(upCacheGlobal&&upCacheGlobal.date_naissance_greg)||'',
+    dobSoir:false,
+    genre:(upCacheGlobal&&upCacheGlobal.genre)||''
+  };
   showOnboardingStep(1);
 }
 
@@ -13249,6 +13256,43 @@ function loadMitsvaDate(){
 }
 
 var upCacheGlobal = {};
+function showSecuritySettings(){
+  var p=document.getElementById('security-panel');
+  if(p){p.style.display='block';p.scrollTop=0;}
+}
+function closeSecurityPanel(){
+  var p=document.getElementById('security-panel');
+  if(p) p.style.display='none';
+}
+function secChangeEmail(){
+  var email=(document.getElementById('sec-new-email')||{}).value||'';
+  var msg=document.getElementById('sec-email-msg');
+  if(!email||!email.includes('@')){if(msg)msg.textContent='Email invalide.';return;}
+  if(!supabase){if(msg)msg.textContent='Non connecte.';return;}
+  supabase.auth.updateUser({email:email}).then(function(r){
+    if(r.error){if(msg)msg.textContent='Erreur: '+r.error.message;return;}
+    if(msg){msg.textContent='Email mis a jour! Verifiez votre boite mail.';msg.style.color='#059669';}
+  });
+}
+function secChangePwd(){
+  var pwd=(document.getElementById('sec-new-pwd')||{}).value||'';
+  var c2=(document.getElementById('sec-confirm-pwd')||{}).value||'';
+  var msg=document.getElementById('sec-pwd-msg');
+  if(!pwd||pwd.length<6){if(msg)msg.textContent='Min. 6 caracteres.';return;}
+  if(pwd!==c2){if(msg)msg.textContent='Mots de passe differents.';return;}
+  if(!supabase){if(msg)msg.textContent='Non connecte.';return;}
+  supabase.auth.updateUser({password:pwd}).then(function(r){
+    if(r.error){if(msg)msg.textContent='Erreur: '+r.error.message;return;}
+    if(msg){msg.textContent='Mot de passe mis a jour!';msg.style.color='#059669';}
+    document.getElementById('sec-new-pwd').value='';
+    document.getElementById('sec-confirm-pwd').value='';
+  });
+}
+function secLogout(){
+  if(!supabase)return;
+  supabase.auth.signOut().then(function(){currentUser=null;closeSecurityPanel();goHome();});
+}
+
 async function loadThemeImagesFromStorage(){
   if(!supabase) return;
   try{
@@ -13368,6 +13412,32 @@ try {
   </div>
 </div>
 
+
+<!-- Panel Securite -->
+<div id="security-panel" style="display:none;position:fixed;inset:0;z-index:9100;background:var(--gray-1);overflow-y:auto;padding:0 0 80px;">
+  <div style="background:var(--grad-main);padding:56px 20px 24px;">
+    <button onclick="closeSecurityPanel()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;margin-bottom:12px;">&#8592;</button>
+    <div style="font-size:20px;font-weight:800;color:#fff;font-family:Poppins,sans-serif;">Securite du compte</div>
+  </div>
+  <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+    <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);">
+      <div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:12px;">Changer l'adresse email</div>
+      <input type="email" id="sec-new-email" placeholder="Nouvelle adresse email" style="width:100%;padding:12px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:14px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:8px;">
+      <button onclick="secChangeEmail()" style="width:100%;padding:12px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Mettre a jour</button>
+      <div id="sec-email-msg" style="font-size:12px;color:var(--purple);margin-top:6px;font-family:Poppins,sans-serif;"></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);">
+      <div style="font-size:14px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:12px;">Changer le mot de passe</div>
+      <input type="password" id="sec-new-pwd" placeholder="Nouveau mot de passe" style="width:100%;padding:12px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:14px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:8px;">
+      <input type="password" id="sec-confirm-pwd" placeholder="Confirmer" style="width:100%;padding:12px;border:1.5px solid var(--gray-2);border-radius:var(--radius-sm);font-size:14px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:8px;">
+      <button onclick="secChangePwd()" style="width:100%;padding:12px;background:var(--grad-main);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Changer</button>
+      <div id="sec-pwd-msg" style="font-size:12px;color:var(--purple);margin-top:6px;font-family:Poppins,sans-serif;"></div>
+    </div>
+    <div style="background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);">
+      <button onclick="secLogout()" style="width:100%;padding:12px;background:#fee2e2;color:#ef4444;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Se deconnecter</button>
+    </div>
+  </div>
+</div>
 
 <!-- Dashboard Admin -->
 <div id="view-admin" style="display:none;position:fixed;inset:0;z-index:8000;background:var(--gray-1);overflow-y:auto;padding:0 0 80px;">
