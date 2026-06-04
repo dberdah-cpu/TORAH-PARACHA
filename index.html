@@ -1445,9 +1445,9 @@ body{
    </div>
    <div id="conv-result"></div>
   </div>
-  <div class="cu-section">
-   <div class="cu-title">Ajouter un événement</div>
-   <input type="text" id="ev-name" placeholder="Nom de l'événement">
+  <div class="cu-section" style="background:#F5F3FF;border-radius:12px;margin:12px;padding:16px;">
+   <div style="font-size:13px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:12px;">Ajouter un evenement</div>
+   <input type="text" id="ev-name" placeholder="Nom de l'evenement" style="width:100%;padding:10px 12px;border:1.5px solid var(--purple);border-radius:8px;font-size:14px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:10px;background:#fff;">
    <div class="ev-type-row">
     <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
     <button class="ev-type-btn" id="evt-heb" onclick="setEvType('heb')">Date hébraïque</button>
@@ -13265,7 +13265,7 @@ function loadProfileInfoBlock(){
     +(hebDate?'<div>📅 Date hébraïque : <strong>'+hebDate+'</strong></div>':'')
     +'<div>📖 Paracha de naissance : <strong id="profile-paracha-naissance">'+(uc.paracha_naissance||'...')+'</strong></div>'
     +(uc.psaume_perso?'<div>📜 Psaume personnel : <strong>Psaume '+uc.psaume_perso+'</strong></div>':'')
-    +(uc.genre?'<div>👤 Genre : <strong>'+uc.genre+'</strong></div>':'')
+    // Genre masque
     +'<div id="profile-mitsva-date" style="color:var(--purple);"></div>'
     +'</div></div>';
   el.innerHTML = html;
