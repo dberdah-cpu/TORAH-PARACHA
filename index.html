@@ -1332,6 +1332,43 @@ body{
       <div id="teh-day-desc" style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:12px;"></div>
       <div id="teh-day-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
     </div>
+    <!-- Carte Lire un Psaume -->
+    <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow);">
+      <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);font-family:Poppins,sans-serif;margin-bottom:10px;">📖 Lire un Psaume</div>
+      <select id="teh-select-one" style="width:100%;padding:10px 12px;border:none;border-radius:var(--radius-sm);font-size:13px;font-family:Poppins,sans-serif;background:rgba(255,255,255,0.15);color:#fff;margin-bottom:10px;cursor:pointer;"></select>
+      <button onclick="tehReadOne()" style="width:100%;padding:10px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Lire ce Psaume →</button>
+    </div>
+
+    <!-- Carte Lire une plage -->
+    <div style="background:linear-gradient(135deg,#064e3b,#059669);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow);">
+      <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);font-family:Poppins,sans-serif;margin-bottom:10px;">📚 Lire une plage de Psaumes</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;">
+        <div style="flex:1;">
+          <div style="font-size:10px;color:rgba(255,255,255,0.7);margin-bottom:4px;font-family:Poppins,sans-serif;">De</div>
+          <select id="teh-range-from" style="width:100%;padding:8px 10px;border:none;border-radius:var(--radius-sm);font-size:13px;font-family:Poppins,sans-serif;background:rgba(255,255,255,0.15);color:#fff;cursor:pointer;"></select>
+        </div>
+        <div style="color:rgba(255,255,255,0.6);font-size:18px;margin-top:14px;">→</div>
+        <div style="flex:1;">
+          <div style="font-size:10px;color:rgba(255,255,255,0.7);margin-bottom:4px;font-family:Poppins,sans-serif;">À</div>
+          <select id="teh-range-to" style="width:100%;padding:8px 10px;border:none;border-radius:var(--radius-sm);font-size:13px;font-family:Poppins,sans-serif;background:rgba(255,255,255,0.15);color:#fff;cursor:pointer;"></select>
+        </div>
+      </div>
+      <button onclick="tehReadRange()" style="width:100%;padding:10px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Lire cette plage →</button>
+    </div>
+
+    <!-- Carte Tikoun Haklali -->
+    <div style="background:linear-gradient(135deg,#4c1d00,#92400e);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <div style="font-size:24px;">🕯</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">Tikoun Haklali</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:Poppins,sans-serif;">Correction générale de l'âme · Rabbi Nahman de Breslev</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);font-family:Poppins,sans-serif;margin-bottom:10px;">Psaumes 16, 32, 41, 42, 59, 77, 90, 105, 137, 150</div>
+      <button onclick="tehReadTikoun()" style="width:100%;padding:10px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;">Lire le Tikoun Haklali →</button>
+    </div>
+
     <div id="teh-reader" style="display:none;background:#fff;border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow);">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div id="teh-reader-title" style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;"></div>
@@ -1778,6 +1815,91 @@ var PARASHA_FR = {
 };
 
 // ── CYCLE TEHILIM MENSUEL (jour hébreu 1-30 → Psaumes) ──────────
+
+var TEHILIM_INTENTIONS = {
+  1:"prévenir d'une fausse couche",2:"contre une tempête en mer et le mal de tête",
+  3:"contre le mal à l'épaule ou à la tête",4:"en toutes occasions",
+  5:"empêcher le mauvais esprit",6:"pour ceux qui souffrent des yeux",
+  7:"repousser ses ennemis",8:"trouver grâce devant une autorité",
+  9:"pour un enfant malade",10:"contre ses ennemis",
+  11:"pour détruire ses ennemis",12:"contre la faiblesse",
+  13:"échapper à une mort violente",14:"contre la peur",
+  15:"tuer un démon et un mauvais esprit",16:"découvrir un voleur",
+  17:"pour prendre la route",18:"se protéger contre les hommes mauvais",
+  19:"pour la sagesse et la bonté",20:"pour les malades",
+  21:"avant d'aller devant une autorité",22:"contre le chagrin",
+  23:"pour expliquer un rêve",24:"pour être sauvé d'une inondation",
+  25:"conjurer le malheur",26:"contre le danger et le malheur",
+  27:"contre les bêtes sauvages",28:"pour qu'une prière soit acceptée",
+  29:"prier contre l'esprit du mal",30:"contre toutes les mauvaises choses",
+  31:"contre le mauvais œil",32:"pour demander miséricorde",
+  33:"pour une mère qui a perdu ses enfants",34:"pendant la route",
+  35:"contre ses rivaux",36:"pour détruire les méchants",
+  37:"pour une location et faire passer un moment d'ivresse",
+  38:"contre les mauvais conseils et les mauvaises paroles",
+  39:"pour celui qui jeûne",40:"échapper à un mauvais esprit",
+  41:"pour ne pas perdre son emploi",42:"avant de construire une maison",
+  43:"avant de construire une maison",44:"échapper à un mauvais esprit",
+  45:"pour celui qui a une épouse méchante",46:"si un homme hait sa femme",
+  47:"pour faire pénitence",48:"pour faire peur à ses ennemis",
+  49:"contre la fièvre",50:"échapper aux brigands",
+  51:"contre un débauché",52:"contre la tentation de la médisance",
+  53:"pour faire peur à ses ennemis",54:"pour se venger de ses ennemis",
+  55:"contre toutes les mauvaises choses",56:"pour un détenu",
+  57:"pour la réussite",58:"contre un chien méchant",
+  59:"contre le mauvais penchant",60:"pour aller en guerre",
+  61:"pour celui qui a peur de rester à la maison",
+  62:"après les prières de Minha et Arvit",63:"pour réussir dans les affaires",
+  64:"avant de traverser une rivière",65:"pour obtenir quelque chose de quelqu'un",
+  66:"pour un possédé du démon",67:"contre une fièvre persistante",
+  68:"contre le mauvais esprit",69:"pour un homme cupide et débauché",
+  70:"en temps de guerre",71:"pour plaire",72:"pour trouver grâce",
+  73:"pour conjurer la haine",74:"si vous craignez des ennemis",
+  75:"pour éliminer l'orgueil",76:"échapper à l'eau et au feu",
+  77:"se protéger de toute souffrance",78:"trouver grâce devant les autorités",
+  79:"pour vaincre des ennemis",80:"se protéger de l'idolâtrie",
+  81:"se protéger de l'idolâtrie",82:"pour celui qui perd ses membres",
+  83:"en cas de guerre",84:"pour un malade qui maigrit",
+  85:"pour contenter un ami",86:"échapper à un mauvais sort",
+  87:"pour sauver la ville",88:"pour sauver la ville ou une assemblée",
+  89:"pour celui qui perd ses membres",90:"échapper à un lion",
+  91:"contre un mauvais esprit",92:"pour assister à de grands miracles",
+  93:"pour gagner un procès",94:"si votre ennemi vous poursuit",
+  95:"pour ne pas être trompé par les gens",96:"pour réjouir sa famille",
+  97:"pour réjouir sa famille",98:"pour faire la paix avec son prochain",
+  99:"pour avoir la foi",100:"pour vaincre son ennemi",
+  101:"contre un mauvais esprit",102:"pour avoir des enfants",
+  103:"pour avoir des enfants",104:"pour éloigner une chose nuisible",
+  105:"maladie qui récidive une quatrième fois",106:"maladie qui récidive une troisième fois",
+  107:"contre une maladie persistante",108:"pour la réussite",
+  109:"si votre ennemi vous poursuit",110:"pour faire la paix avec son ennemi",
+  111:"pour se faire des amis",112:"pour devenir fort et puissant",
+  113:"contre l'hérésie",114:"avant d'acheter et de vendre",
+  115:"avant de discuter avec ses pareils",116:"échapper à une mort violente",
+  117:"si on vous a dénoncé à tort",118:"avant de répondre à un mécréant",
+  119:"avant d'accomplir une mitsva",120:"pour faire la paix",
+  121:"bon pour la guérison",122:"avant de rencontrer un homme important",
+  123:"pour un esclave en fuite",124:"pour une traversée en bateau",
+  125:"contre les ennemis",126:"pour une femme qui a perdu ses enfants",
+  127:"pour un bébé qui vient de naître",128:"pour une femme enceinte",
+  129:"pour une mitsva",130:"avant une traversée en bateau",
+  131:"contre l'orgueilleux",132:"pour tenir ses serments",
+  133:"pour inspirer l'amitié",134:"à dire avant l'étude",
+  135:"contre les pensées hérétiques",136:"pour avouer ses fautes",
+  137:"pour conjurer la haine",138:"pour lutter contre l'orgueil",
+  139:"pour ramener l'amour entre mari et femme",
+  140:"contre la haine entre mari et femme",141:"contre les douleurs du cœur",
+  142:"pour ceux qui souffrent des cuisses",143:"pour ceux qui souffrent des bras",
+  144:"pour celui qui s'est brisé une main",145:"contre la peur",
+  146:"se protéger des coups d'épée",147:"contre la morsure du serpent",
+  148:"contre un incendie",149:"contre la propagation d'un incendie",
+  150:"pour louer Dieu dans toutes Ses actions"
+};
+
+var TIKOUN_HAKLALI = [16,32,41,42,59,77,90,105,137,150];
+var _tehCurrentList = null; // liste en cours de lecture
+var _tehCurrentIndex = 0;  // index dans la liste
+
 var TEHILIM_CYCLE = {
   1:[1,2,3,4,5,6,7,8,9],
   2:[10,11,12,13,14,15,16,17],
@@ -9488,9 +9610,9 @@ function kriatLoadAliya(idx){
   _kriatAudio = new Audio(al.url);
   _kriatAudio.preload = 'auto';
   
-  // Sauter l'intro de 20s
+  // Sauter l'intro de 22s
   _kriatAudio.addEventListener('canplay', function(){
-    if(_kriatAudio.currentTime < 20) _kriatAudio.currentTime = 20;
+    if(_kriatAudio.currentTime < 22) _kriatAudio.currentTime = 22;
     _kriatAudio.play();
     document.getElementById('kriat-mini-playbtn').textContent = '⏸';
   }, {once: true});
@@ -9500,7 +9622,7 @@ function kriatLoadAliya(idx){
     var dur = _kriatAudio.duration;
     var cur = _kriatAudio.currentTime;
     if(dur > 0){
-      var pct = Math.max(0, (cur - 20) / (dur - 20) * 100);
+      var pct = Math.max(0, (cur - 22) / (dur - 22) * 100);
       document.getElementById('kriat-progress-fill').style.width = Math.min(pct,100) + '%';
     }
   });
@@ -9535,14 +9657,14 @@ function kriatNext(){
 
 function kriatPrev(){
   if(_kriatIdx > 0) kriatLoadAliya(_kriatIdx - 1);
-  else if(_kriatAudio) _kriatAudio.currentTime = 20;
+  else if(_kriatAudio) _kriatAudio.currentTime = 22;
 }
 
 function kriatSeek(e){
   if(!_kriatAudio || !_kriatAudio.duration) return;
   var bar = document.getElementById('kriat-progress-bar');
   var pct = e.offsetX / bar.offsetWidth;
-  _kriatAudio.currentTime = 20 + pct * (_kriatAudio.duration - 20);
+  _kriatAudio.currentTime = 22 + pct * (_kriatAudio.duration - 22);
 }
 
 function kriatClose(){
@@ -9553,13 +9675,28 @@ function kriatClose(){
 function openKriatTorah(overrideName){
   if(!isLoggedIn()){ showAuthForm('Connectez-vous pour écouter la lecture de la Paracha.'); return; }
   var parashaName = overrideName || currentParashaName || getParashaFromCalendar() || '';
+  // Normaliser : enlever apostrophes, accents, variantes
+  function normP(s){
+    return s.normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/['‘’ʼ]/g,'')
+      .replace(/[-\s]+/g,'').toLowerCase()
+      .replace(/kha$/,'cha').replace(/kha/,'cha');
+  }
   var info = TB_KRIAT[parashaName];
   if(!info){
+    var pn = normP(parashaName);
     for(var k in TB_KRIAT){
-      if(parashaName.toLowerCase().indexOf(k.toLowerCase())>=0 || k.toLowerCase().indexOf(parashaName.toLowerCase())>=0){
+      var kn = normP(k);
+      if(pn === kn || pn.indexOf(kn)>=0 || kn.indexOf(pn)>=0){
         info = TB_KRIAT[k]; break;
       }
     }
+  }
+  // Fallback via currentCID
+  if(!info && typeof currentCID !== 'undefined'){
+    var p = getP(currentCID);
+    if(p) info = TB_KRIAT[p.name] || TB_KRIAT[normP(p.name)];
+    if(!info && p){ for(var k2 in TB_KRIAT){ if(normP(k2)===normP(p.name)){info=TB_KRIAT[k2];break;} } }
   }
   if(!info){ alert('Lecture non disponible pour cette paracha.'); return; }
 
@@ -12197,19 +12334,36 @@ function renderTehilimPage(){
   var psaumes = TEHILIM_CYCLE[dayNum] || [];
   var descEl = document.getElementById('teh-day-desc');
   if(descEl) descEl.innerHTML = 'Jour ' + dayNum + ' de ' + monthName + ' · Psaumes ' + psaumes.join(', ')
-    + ' &nbsp;<a href="https://www.tehilim-online.com" target="_blank" style="color:var(--purple);font-size:11px;text-decoration:none;font-family:Poppins,sans-serif;">📖 Téhilim Online →</a>';
+   ;
   var listEl = document.getElementById('teh-day-list');
   if(listEl){
     listEl.innerHTML = '';
-    psaumes.forEach(function(p){
+    psaumes.forEach(function(p, idx){
       var btn = document.createElement('button');
       btn.textContent = 'Ps. ' + p;
       btn.style.cssText = 'padding:8px 14px;background:var(--grad-main);color:#fff;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;';
-      btn.onclick = function(){ loadTehilimText(p, null); };
+      btn.onclick = function(){
+        _tehCurrentList = psaumes.slice();
+        _tehCurrentIndex = idx;
+        tehLoadCurrent();
+      };
       listEl.appendChild(btn);
     });
+    // Bouton "Lire tous"
+    if(psaumes.length > 1){
+      var btnAll = document.createElement('button');
+      btnAll.textContent = 'Lire tout →';
+      btnAll.style.cssText = 'padding:8px 14px;background:rgba(124,58,237,0.15);color:var(--purple);border:1.5px solid var(--purple);border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Poppins,sans-serif;';
+      btnAll.onclick = function(){
+        _tehCurrentList = psaumes.slice();
+        _tehCurrentIndex = 0;
+        tehLoadCurrent();
+      };
+      listEl.appendChild(btnAll);
+    }
   }
 
+  tehBuildSelects();
   // Psaume personnel
   var personalCard = document.getElementById('teh-personal-card');
   var loginPrompt = document.getElementById('teh-login-prompt');
@@ -12270,6 +12424,105 @@ function switchTehTab(tab){
   else if(tab==='phonetique'){if(heb)heb.style.display='none';if(wrap)wrap.style.display='none';if(fr){fr.style.display='block';fr.innerHTML=fr.getAttribute('data-ph')||'';}}
   else if(tab==='traduction'){if(heb)heb.style.display='none';if(wrap)wrap.style.display='none';if(fr){fr.style.display='block';fr.innerHTML=fr.getAttribute('data-fr')||'';}}
 }
+
+// ── LECTURE TÉHILIM AVANCÉE ──────────────────────────────────────
+
+function tehBuildSelects(){
+  ['teh-select-one','teh-range-from','teh-range-to'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el || el.options.length > 1) return;
+    for(var i=1; i<=150; i++){
+      var opt = document.createElement('option');
+      opt.value = i;
+      var intent = TEHILIM_INTENTIONS[i] || '';
+      var cap = intent ? intent.charAt(0).toUpperCase() + intent.slice(1) : '';
+      opt.textContent = i + (cap ? ' — ' + cap : '');
+      el.appendChild(opt);
+    }
+  });
+  var to = document.getElementById('teh-range-to');
+  if(to && to.value == '1') to.value = '10';
+}
+
+function tehReadOne(){
+  var sel = document.getElementById('teh-select-one');
+  if(!sel) return;
+  var num = parseInt(sel.value);
+  if(!num) return;
+  _tehCurrentList = [num];
+  _tehCurrentIndex = 0;
+  tehLoadCurrent();
+}
+
+function tehReadRange(){
+  var from = parseInt((document.getElementById('teh-range-from')||{}).value)||1;
+  var to2 = parseInt((document.getElementById('teh-range-to')||{}).value)||10;
+  if(from > to2){ var tmp=from; from=to2; to2=tmp; }
+  _tehCurrentList = [];
+  for(var i=from; i<=to2; i++) _tehCurrentList.push(i);
+  _tehCurrentIndex = 0;
+  tehLoadCurrent();
+}
+
+function tehReadTikoun(){
+  _tehCurrentList = TIKOUN_HAKLALI.slice();
+  _tehCurrentIndex = 0;
+  tehLoadCurrent();
+}
+
+function tehLoadCurrent(){
+  if(!_tehCurrentList || _tehCurrentIndex < 0 || _tehCurrentIndex >= _tehCurrentList.length) return;
+  var psaume = _tehCurrentList[_tehCurrentIndex];
+  loadTehilimText(psaume, null);
+  tehUpdateNav();
+}
+
+function tehUpdateNav(){
+  if(!_tehCurrentList || _tehCurrentList.length <= 1){
+    var nav = document.getElementById('teh-nav');
+    if(nav) nav.style.display='none';
+    return;
+  }
+  var reader = document.getElementById('teh-reader');
+  if(!reader) return;
+  var nav = document.getElementById('teh-nav');
+  if(!nav){
+    nav = document.createElement('div');
+    nav.id = 'teh-nav';
+    reader.appendChild(nav);
+  }
+  var psaume = _tehCurrentList[_tehCurrentIndex];
+  var total = _tehCurrentList.length;
+  var pos = _tehCurrentIndex + 1;
+  nav.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--gray-2);margin-top:12px;';
+  nav.innerHTML = '<button onclick="tehPrev()" '+(_tehCurrentIndex===0?'disabled':'')
+    +' style="background:var(--gray-1);border:none;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;opacity:'+(_tehCurrentIndex===0?'0.4':'1')+';">← Précédent</button>'
+    +'<span style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;">Ps. '+psaume+' ('+pos+'/'+total+')</span>'
+    +'<button onclick="tehNext()" '+(_tehCurrentIndex>=total-1?'disabled':'')
+    +' style="background:var(--grad-main);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;opacity:'+(_tehCurrentIndex>=total-1?'0.4':'1')+';">Suivant →</button>';
+}
+
+function tehPrev(){
+  if(!_tehCurrentList || _tehCurrentIndex <= 0) return;
+  _tehCurrentIndex--;
+  tehLoadCurrent();
+}
+
+function tehNext(){
+  if(!_tehCurrentList || _tehCurrentIndex >= _tehCurrentList.length-1) return;
+  _tehCurrentIndex++;
+  tehLoadCurrent();
+}
+
+function toggleTehPriere(type){
+  var el = document.getElementById('teh-priere-'+type);
+  var arrow = document.getElementById('teh-'+type+'-arrow');
+  if(!el) return;
+  var open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.textContent = open ? '▼' : '▲';
+}
+
 function loadTehilimText(psaume,btnEl){
   if(!psaume)return;
   if(isShabbatNow()){showToast('Chabbat Chalom !');return;}
@@ -12912,7 +13165,19 @@ try {
   <div style="background:#fff;padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--gray-2);position:sticky;top:0;z-index:10;">
     <button onclick="closeAdmin()" style="background:var(--gray-2);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">✕</button>
     <div style="font-size:16px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">⚙️ Dashboard Admin</div>
-  </div>
+  
+  <!-- Section Images Thèmes -->
+  <div id="admin-section-images" class="admin-section" style="padding:0 16px;">
+    <div class="admin-card">
+      <div class="admin-card-title">🖼 Images des thèmes</div>
+      <div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:16px;">
+        Uploadez une image par thème. Format recommandé : 600×400px, JPG ou PNG.
+      </div>
+      <div id="admin-theme-images-list" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="text-align:center;padding:20px;color:var(--gray-4);">Chargement...</div>
+      </div>
+    </div>
+</div>
 
   <div style="display:flex;gap:8px;padding:12px 16px;overflow-x:auto;border-bottom:1px solid var(--gray-2);">
     <button class="admin-tab active" onclick="adminTab('videos',this)">🎬 Vidéos</button>
@@ -13033,17 +13298,6 @@ try {
       <div id="adm-hist-list"><div style="color:var(--gray-4);font-size:13px;">Chargement...</div></div>
     </div>
 
-  <!-- Section Images Thèmes -->
-  <div id="admin-section-images" class="admin-section" style="padding:0 16px;">
-    <div class="admin-card">
-      <div class="admin-card-title">🖼 Images des thèmes</div>
-      <div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:16px;">
-        Uploadez une image par thème. Format recommandé : 600×400px, JPG ou PNG.
-      </div>
-      <div id="admin-theme-images-list" style="display:flex;flex-direction:column;gap:12px;">
-        <div style="text-align:center;padding:20px;color:var(--gray-4);">Chargement...</div>
-      </div>
-    </div>
   </div>
 </div><!-- /view-admin-fix -->
   </div>
