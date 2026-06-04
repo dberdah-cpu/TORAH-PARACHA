@@ -2353,6 +2353,42 @@ function hebDIY(y){return hebElapsed(y+1)-hebElapsed(y);}
 function hebDIM(m,y){switch(m){case 1:case 3:case 5:case 7:case 11:return 30;case 13:return 29;case 6:return hebLeap(y)?30:29;case 8:return(hebDIY(y)%10)===5?30:29;case 9:return(hebDIY(y)%10)===3?29:30;default:return 29;}}
 function gregToJD(d,m,y){m=m+1;return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d-1524.5-(y>1582||(y===1582&&m>10)||(y===1582&&m===10&&d>=15)?Math.floor(y/100)-Math.floor(y/400)-2:0);}
 // Note: retourne un .5 intentionnel — jdToHeb le gère avec floor(jd)+0.5
+
+// Hébreu → Julien
+function hebToJD(hd){
+  var m=hd.m, d=hd.d, y=hd.y;
+  var elapsed = hebElapsed(y);
+  // Mois : calculer les jours depuis le début de l'année
+  var monthDays=0;
+  var monthLengths=[0,30,29,29,29,30,29,30,29,30,29,30,29,30,29]; // approx
+  // Utiliser une approche par mois
+  var isLeap = (((7*y)+1)%19 < 7);
+  var months = isLeap ? [0,30,29,29,29,30,29,0,30,29,30,29,30,29] : [0,30,29,29,29,30,29,30,29,30,29,30,29];
+  // Ajustement Cheshvan/Kislev selon l'année
+  var yearLen = hebElapsed(y+1) - elapsed;
+  if(yearLen%10 === 5) months[3]=30; // Cheshvan long
+  if(yearLen%10 === 3) months[4]=29; // Kislev court
+  for(var i=1;i<m;i++) monthDays += months[i]||29;
+  return elapsed + 347997 + monthDays + d - 0.5;
+}
+
+// Julien → Grégorien
+function jdToGreg(jd){
+  var z=Math.floor(jd+0.5), f=jd+0.5-z;
+  var a=z; if(z>=2299161){var g=Math.floor((z-1867216.25)/36524.25); a=z+1+g-Math.floor(g/4);}
+  var b=a+1524, c=Math.floor((b-122.1)/365.25), dd=Math.floor(365.25*c);
+  var e=Math.floor((b-dd)/30.6001);
+  var day=b-dd-Math.floor(30.6001*e);
+  var month=e<14?e-1:e-13;
+  var year=month>2?c-4716:c-4715;
+  return {d:day, m:month-1, y:year}; // m en 0-indexed comme JS
+}
+
+// Ajouter N années hébraïques à une date heb
+function hebAddYears(hd, n){
+  return {d:hd.d, m:hd.m, y:hd.y+n};
+}
+
 function jdToHeb(jd){jd=Math.floor(jd)+0.5;var yr=Math.floor((jd-347997)/365.25)+1;while(hebElapsed(yr+1)<=jd-347997)yr++;while(hebElapsed(yr)>jd-347997)yr--;var st=hebElapsed(yr)+347997;var mo=1;var nm=hebMonthsInYear(yr);while(mo<nm&&st+hebDIM(mo,yr)<=jd){st+=hebDIM(mo,yr);mo++;}return{d:Math.floor(jd-st+1),m:mo,y:yr};}
 function g2h(d,m,y){return jdToHeb(gregToJD(d,m,y));}
 function hmName(m,y,heb){var lp=hebLeap(y);if(heb)return lp?HMLH[m-1]:HMH[m-1];return lp?HML[m-1]:HM[m-1];}
@@ -2747,9 +2783,60 @@ function updEvDisp(){var el=document.getElementById('ev-date-display');if(!el)re
 function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});saveEv();document.getElementById('ev-name').value='';renderCalGrid();renderEvList();buildHome();}
 function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();}
 function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
-function doConvert(){var d=parseInt(document.getElementById('cv-day').value)||1,m=parseInt(document.getElementById('cv-mon').value),y=parseInt(document.getElementById('cv-year').value)||2026;var hd=g2h(d,m,y);var res=document.getElementById('conv-result');res.style.display='block';res.innerHTML=fmtHeb(hd)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd)+'</small>';}
+function doConvert(){
+  var d=parseInt(document.getElementById('cv-day').value)||1;
+  var m=parseInt(document.getElementById('cv-mon').value);
+  var y=parseInt(document.getElementById('cv-year').value)||2026;
+  var res=document.getElementById('conv-result');
+  res.style.display='block';
+  res.innerHTML='<small style="color:var(--gray-4);">Chargement...</small>';
 
-// HOME
+  // Tout via Hebcal API - fiable à 100%
+  fetch('https://www.hebcal.com/converter?cfg=json&gy='+y+'&gm='+(m+1)+'&gd='+d+'&g2h=1&strict=1')
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var hy=data.hy, hm=data.hm, hd_num=data.hd;
+    var hmFR = {'Nisan':'Nissan','Iyyar':'Iyar','Sivan':'Sivan','Tamuz':'Tamouz',
+      'Av':'Av','Elul':'Eloul','Tishrei':'Tishri','Cheshvan':'Cheshvan',
+      'Kislev':'Kislev','Tevet':'Tevet','Shevat':'Chevat',
+      'Adar I':'Adar I','Adar II':'Adar II','Adar':'Adar'};
+    var hmDisplay = hmFR[hm] || hm;
+
+    // Paracha
+    var para = data.parasha || '';
+    if(para) para = para.replace(/^Parashat\s+/i,'').trim();
+    var paraFR = PARASHA_FR[para] || para || '';
+    // Fête
+    var holiday = (!para && data.events) ? data.events.join(', ') : '';
+
+    // Bar Mitsva (+13 ans) et Bat Mitsva (+12 ans) via Hebcal
+    var hy13 = hy+13, hy12 = hy+12;
+    var urlBar = 'https://www.hebcal.com/converter?cfg=json&hy='+hy13+'&hm='+encodeURIComponent(hm)+'&hd='+hd_num+'&h2g=1&strict=1';
+    var urlBat = 'https://www.hebcal.com/converter?cfg=json&hy='+hy12+'&hm='+encodeURIComponent(hm)+'&hd='+hd_num+'&h2g=1&strict=1';
+
+    Promise.all([fetch(urlBar).then(function(r){return r.json();}), fetch(urlBat).then(function(r){return r.json();})])
+    .then(function(results){
+      var r13=results[0], r12=results[1];
+      var fmtG = function(r){ return r.gd+' '+FR_M[r.gm-1]+' '+r.gy; };
+      var fmtH = function(r){ return r.hd+' '+(hmFR[r.hm]||r.hm)+' '+r.hy; };
+
+      res.innerHTML = '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:6px;">'
+        + hd_num+' '+hmDisplay+' '+hy+'</div>'
+        + (paraFR?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:6px;">📖 '+paraFR+'</div>':'')
+        + (holiday?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:6px;">🎉 '+holiday+'</div>':'')
+        + '<div style="font-size:12px;color:var(--gray-4);margin-bottom:2px;">👦 Bar Mitsva : <strong>'+fmtG(r13)+'</strong> ('+fmtH(r13)+')</div>'
+        + '<div style="font-size:12px;color:var(--gray-4);">👧 Bat Mitsva : <strong>'+fmtG(r12)+'</strong> ('+fmtH(r12)+')</div>';
+    }).catch(function(){
+      res.innerHTML = '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'
+        + hd_num+' '+hmDisplay+' '+hy+'</div>'
+        + (paraFR?'<div style="font-size:12px;color:var(--purple);">📖 '+paraFR+'</div>':'');
+    });
+  }).catch(function(){
+    // Fallback sans API
+    var hd2=g2h(d,m,y);
+    res.innerHTML = fmtHeb(hd2)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd2)+'</small>';
+  });
+}
 function getP(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i];return null;}
 
 var HNS=["","א","ב","ג","ד","ה","ו","ז","ח","ט","י","יא","יב","יג","יד","טו","טז","יז","יח","יט","כ","כא","כב","כג","כד","כה","כו","כז","כח","כט","ל","לא","לב","לג","לד","לה","לו","לז","לח","לט","מ","מא","מב","מג","מד","מה","מו","מז","מח","מט","נ","נא","נב","נג","נד","נה","נו","נז","נח","נט","ס"];
@@ -12857,6 +12944,7 @@ function buildOnboardingStep4(){
   var parashaStr = '...';
   var psaumeStr = '...';
   var hebDateStr2 = '...';
+  var mitsvaTxtProfil = '';
 
   if(onboardingData.dob){
     var parts = onboardingData.dob.split('-');
@@ -12868,6 +12956,17 @@ function buildOnboardingStep4(){
     }
     var mn=HEB_MONTH_TO_JSON[hd.m]||'';
     hebDateStr2 = hd.d + ' ' + mn + ' ' + hd.y;
+    // Calcul Bar/Bat Mitsva
+    var mitsvaTxtProfil = '';
+    try{
+      var yearsToAdd = (onboardingData.genre === 'femme') ? 12 : 13;
+      var hdMitsva = hebAddYears(hd, yearsToAdd);
+      var gMitsva = jdToGreg(hebToJD(hdMitsva));
+      var labelMitsva = (onboardingData.genre === 'femme') ? '👧 Bat Mitsva' : '👦 Bar Mitsva';
+      var dateMitsvaFmt = gMitsva.d + ' ' + FR_M[gMitsva.m] + ' ' + gMitsva.y;
+      var hebMitsvaFmt = hdMitsva.d + ' ' + (HEB_MONTH_TO_JSON[hdMitsva.m]||'') + ' ' + hdMitsva.y;
+      mitsvaTxtProfil = '<div>'+labelMitsva+' : <strong>'+dateMitsvaFmt+'</strong> ('+hebMitsvaFmt+')</div>';
+    }catch(e){ mitsvaTxtProfil=''; }
 
     // Paracha de naissance via l'API Hebcal (async - sera mise à jour après)
     parashaStr = 'Chargement...';
