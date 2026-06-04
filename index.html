@@ -6058,14 +6058,15 @@ function renderProfileContent(){
   if(currentUser){
     // Charger les données du profil depuis Supabase pour avoir upCache à jour
     if(typeof supabase!=='undefined'&&supabase){
-      supabase.from('users_progress').select('prenom,nom,email,psaume_perso,tehilim_streak,genre,date_naissance_heb_j,date_naissance_heb_m')
+      supabase.from('users_progress').select('prenom,nom,email,psaume_perso,tehilim_streak,genre,date_naissance_heb_j,date_naissance_heb_m,date_naissance_heb_y,date_naissance_greg')
       .eq('user_id',currentUser.id).single()
       .then(function(res){
         if(res.data){
-          try{ localStorage.setItem('up_cache_'+currentUser.id, JSON.stringify(res.data)); }catch(e){}
+          try{ localStorage.setItem('up_cache_'+currentUser.id, JSON.stringify(res.data)); upCacheGlobal=res.data; }catch(e){}
         }
         doRender(currentUser);
-      }).catch(function(){ doRender(currentUser); });
+        setTimeout(loadMitsvaDate, 300);
+      }).catch(function(){ doRender(currentUser); setTimeout(loadMitsvaDate, 300); });
     } else {
       doRender(currentUser);
     }
@@ -13206,6 +13207,48 @@ async function adminUploadThemeImage(input, themeId, previewImg){
 }
 
 // Charger les images thèmes au démarrage
+
+function loadMitsvaDate(){
+  var el = document.getElementById('ob-mitsva-date');
+  if(!el) return;
+  var dob = onboardingData.dob || (upCacheGlobal && upCacheGlobal.date_naissance_greg) || '';
+  var genre = onboardingData.genre || (upCacheGlobal && upCacheGlobal.genre) || '';
+  var hebJ = onboardingData.date_naissance_heb_j || (upCacheGlobal && upCacheGlobal.date_naissance_heb_j) || 0;
+  var hebM = onboardingData.date_naissance_heb_m || (upCacheGlobal && upCacheGlobal.date_naissance_heb_m) || 0;
+  var hebY = onboardingData.date_naissance_heb_y || (upCacheGlobal && upCacheGlobal.date_naissance_heb_y) || 0;
+  if(!dob && !hebJ) { el.style.display='none'; return; }
+
+  var yearsAdd = (genre === 'femme') ? 12 : 13;
+  var label = (genre === 'femme') ? '👧 Bat Mitsva' : '👦 Bar Mitsva';
+
+  // Calculer depuis la date grégorienne si pas de date heb
+  if(!hebJ && dob){
+    var parts = dob.split('-');
+    var gd=parseInt(parts[2]), gm=parseInt(parts[1])-1, gy=parseInt(parts[0]);
+    var hd = g2h(gd, gm, gy);
+    hebJ = hd.d; hebM = hd.m; hebY = hd.y;
+  }
+  if(!hebJ || !hebM || !hebY){ el.style.display='none'; return; }
+
+  // Noms des mois hébraïques pour Hebcal API
+  var hebMonthNames = {1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
+    7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
+  var hmName = hebMonthNames[hebM] || '';
+  var mitsvYear = parseInt(hebY) + yearsAdd;
+
+  el.textContent = label + ' : calcul...';
+  fetch('https://www.hebcal.com/converter?cfg=json&hy='+mitsvYear+'&hm='+encodeURIComponent(hmName)+'&hd='+hebJ+'&h2g=1&strict=1')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(!data.gd){ el.style.display='none'; return; }
+    var gMitsva = data.gd+' '+['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][(data.gm||1)-1]+' '+data.gy;
+    var hMitsva = data.hd+' '+(data.hm||'')+' '+data.hy;
+    el.innerHTML = label+' : <strong>'+gMitsva+'</strong> ('+hMitsva+')';
+    el.style.color = 'var(--purple)';
+  }).catch(function(){ el.style.display='none'; });
+}
+
+var upCacheGlobal = {};
 async function loadThemeImagesFromStorage(){
   if(!supabase) return;
   try{
