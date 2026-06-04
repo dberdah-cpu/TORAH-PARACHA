@@ -11696,6 +11696,11 @@ function adminLoadHistoires(){
       btnToggle.textContent = h.activ ? '👁 Masquer' : '✅ Publier';
       btnToggle.onclick = function(){ adminToggleHistoire(h.id, h.activ); };
       btns.appendChild(btnToggle);
+      var btnEdit = document.createElement('button');
+      btnEdit.style.cssText = 'background:var(--gray-1);color:var(--dark);border:1px solid var(--gray-2);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;';
+      btnEdit.textContent = '✏️ Modifier';
+      btnEdit.onclick = (function(hist){ return function(){ adminEditHistoire(hist); }; })(h);
+      btns.appendChild(btnEdit);
       btns.appendChild(btnDel);
       item.appendChild(titre);
       item.appendChild(cat);
