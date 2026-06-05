@@ -6113,6 +6113,7 @@ function renderProfileContent(){
         if(res.data){
           try{ localStorage.setItem('up_cache_'+currentUser.id, JSON.stringify(res.data)); upCacheGlobal=res.data; }catch(e){}
         }
+        initUpCacheGlobal();
         doRender(currentUser);
         setTimeout(function(){
           loadMitsvaDate();
@@ -6411,6 +6412,10 @@ function initSupabase(){
     supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
     // Charger les images thèmes dès que possible
     loadThemeImagesFromStorage();
+    // Charger les notifs pour badge au démarrage
+    setTimeout(function(){
+      if(typeof loadNotifs==='function') loadNotifs().then(function(){ updateNotifBadge(); }).catch(function(){});
+    }, 1500);
 
     supabase.auth.onAuthStateChange(function(event,session){
       currentUser=session?session.user:null;
@@ -13380,68 +13385,35 @@ function loadProfileInfoBlock(){
   // Charger date Mitsva
   loadMitsvaDateInto('profile-mitsva-date');
 
-  // Ajouter anniversaire hébraïque comme événement récurrent dans le calendrier
-  if(uc.date_naissance_heb_j && uc.date_naissance_heb_m && currentUser){
-    addHebrewBirthdayToCalendar(uc);
+  // Ajouter anniversaire hébraïque dans le calendrier localStorage
+  if(uc.date_naissance_heb_j && uc.date_naissance_heb_m){
+    addHebrewBirthdayLocal(uc);
   }
 }
 
-function addHebrewBirthdayToCalendar(uc){
-  if(!supabase || !currentUser) return;
-  var MOIS_EN = {1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
-    7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
+function addHebrewBirthdayLocal(uc){
+  // Vérifier si déjà dans calEvents
+  var alreadyIn = (calEvents||[]).some(function(ev){
+    return ev.name && ev.name.toLowerCase().indexOf('anniversaire') >= 0;
+  });
+  if(alreadyIn) return;
   var MOIS_FR = {1:'Nissan',2:'Iyar',3:'Sivan',4:'Tamouz',5:'Av',6:'Eloul',
     7:'Tishri',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Chevat',12:'Adar',13:'Adar II'};
-  var hmEN = MOIS_EN[uc.date_naissance_heb_m] || '';
   var hmFR = MOIS_FR[uc.date_naissance_heb_m] || '';
-  var currentYear = new Date().getFullYear();
   var eventName = 'Anniversaire hebraique - '+uc.date_naissance_heb_j+' '+hmFR;
-
-  // Vérifier si l'événement existe déjà
-  supabase.from('events').select('id').eq('user_id', currentUser.id)
-  .ilike('title', '%Anniversaire hebraique%')
-  .then(function(res){
-    if(res.data && res.data.length > 0) return; // Déjà présent
-    // Calculer la prochaine date grégorienne de cet anniversaire hébreu
-    // via Hebcal API
-    var today = new Date();
-    var yearHeb = uc.date_naissance_heb_y ? parseInt(uc.date_naissance_heb_y) : 5780;
-    // Calculer pour l'année hébreu courante
-    var currentHebYear = yearHeb + (currentYear - (yearHeb > 5700 ? 5700+1940 : 1940));
-    currentHebYear = Math.round(currentYear + 3760);
-    fetch('https://www.hebcal.com/converter?cfg=json&hy='+currentHebYear+'&hm='+encodeURIComponent(hmEN)+'&hd='+uc.date_naissance_heb_j+'&h2g=1&strict=1')
-    .then(function(r){return r.json();})
-    .then(function(data){
-      if(!data.gd) return;
-      var eventDate = data.gy+'-'+String(data.gm).padStart(2,'0')+'-'+String(data.gd).padStart(2,'0');
-      // Si la date est passée, calculer pour l'année suivante
-      if(new Date(eventDate) < today){
-        fetch('https://www.hebcal.com/converter?cfg=json&hy='+(currentHebYear+1)+'&hm='+encodeURIComponent(hmEN)+'&hd='+uc.date_naissance_heb_j+'&h2g=1&strict=1')
-        .then(function(r2){return r2.json();})
-        .then(function(d2){
-          if(!d2.gd) return;
-          var nextDate = d2.gy+'-'+String(d2.gm).padStart(2,'0')+'-'+String(d2.gd).padStart(2,'0');
-          saveHebrewBirthdayEvent(eventName, nextDate);
-        }).catch(function(){});
-      } else {
-        saveHebrewBirthdayEvent(eventName, eventDate);
-      }
-    }).catch(function(){});
-  }).catch(function(){});
-}
-
-function saveHebrewBirthdayEvent(name, date){
-  if(!supabase || !currentUser) return;
-  supabase.from('events').insert([{
-    user_id: currentUser.id,
-    title: name,
-    date: date+'T12:00:00',
+  // Ajouter comme événement hébreu récurrent
+  calEvents.push({
+    name: eventName,
     type: 'heb',
-    notes: 'Anniversaire hebraique - ajouté automatiquement'
-  }]).then(function(res){
-    if(!res.error) console.log('[Cal] Anniversaire hébraïque ajouté:', date);
-  }).catch(function(){});
+    hd: uc.date_naissance_heb_j,
+    hm: uc.date_naissance_heb_m,
+    gd: 0, gm: 0
+  });
+  saveEv();
+  console.log('[Cal] Anniversaire hébraïque ajouté en local');
 }
+
+
 
 function loadMitsvaDateInto(elId){
   var el = document.getElementById(elId);
@@ -13508,6 +13480,16 @@ function loadMitsvaDate(){
 }
 
 var upCacheGlobal = {};
+
+function initUpCacheGlobal(){
+  if(currentUser){
+    try{
+      var cached=JSON.parse(localStorage.getItem('up_cache_'+currentUser.id)||'{}');
+      if(cached&&cached.prenom) Object.assign(upCacheGlobal,cached);
+    }catch(e){}
+  }
+}
+
 function showSecuritySettings(){
   var p=document.getElementById('security-panel');
   if(p){p.style.display='block';p.scrollTop=0;}
