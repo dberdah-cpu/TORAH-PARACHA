@@ -1447,7 +1447,7 @@ body{
   </div>
   <div class="cu-section" style="background:#F5F3FF;border-radius:12px;margin:12px;padding:16px;">
    <div style="font-size:13px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:12px;">Ajouter un evenement</div>
-   <input type="text" id="ev-name" placeholder="Nom de l'evenement" style="width:100%;padding:10px 12px;border:1.5px solid var(--purple);border-radius:8px;font-size:14px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:10px;background:#fff;">
+   <input type="text" id="ev-name" placeholder="Nom de l'evenement" style="width:100%;padding:14px 16px;border:2px solid var(--purple);border-radius:10px;font-size:15px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:10px;background:#fff;box-shadow:0 2px 8px rgba(124,58,237,0.1);">
    <div class="ev-type-row">
     <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
     <button class="ev-type-btn" id="evt-heb" onclick="setEvType('heb')">Date hébraïque</button>
@@ -2766,7 +2766,7 @@ function showDaySheet(d,hd,fts,evs){
     html+='<div class="cds-empty">Aucun événement ce jour</div>';
   }
   // Bouton ajouter événement
-  html+='<button class="cds-add-btn" onclick="closeDaySheet();scrollToAddEvent()">+ Ajouter un événement</button>';
+  html+='<button class="cds-add-btn" onclick="scrollToAddEvent();setTimeout(closeDaySheet,100)">+ Ajouter un événement</button>';
   sheet.innerHTML=html;
   sheet.classList.add('open');
   var backdrop=document.getElementById('cal-sheet-backdrop');
@@ -2774,8 +2774,18 @@ function showDaySheet(d,hd,fts,evs){
 }
 
 function scrollToAddEvent(){
-  var el=document.getElementById('cal-addevent');
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  // Fermer la sheet après un petit délai pour que le scroll soit visible
+  setTimeout(function(){
+    var el=document.getElementById('cal-addevent');
+    if(el){
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+      // Mettre le focus sur le champ de saisie
+      setTimeout(function(){
+        var inp=document.getElementById('ev-name');
+        if(inp) inp.focus();
+      }, 400);
+    }
+  }, 150);
 }
 function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
