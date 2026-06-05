@@ -12738,10 +12738,7 @@ function tehLoadCurrent(){
   var psaume = _tehCurrentList[_tehCurrentIndex];
   loadTehilimText(psaume, null);
   tehUpdateNav();
-  // Restaurer l'onglet actif après chargement
-  if(_tehActiveTab && _tehActiveTab !== 'heb'){
-    setTimeout(function(){ switchTehTab(_tehActiveTab); }, 100);
-  }
+  // Onglet restaure dans loadTehilimText apres JSON
 }
 
 function tehUpdateNav(){
@@ -12824,6 +12821,10 @@ function loadTehilimText(psaume,btnEl){
       frEl.setAttribute('data-fr',ps.versets.map(function(v,i){
         return '<div style="margin-bottom:10px;"><span style="font-size:11px;color:var(--purple);font-weight:700;">'+(i+1)+'.</span> <span style="font-size:14px;">'+cleanTehFr(v.fr||'')+'</span></div>';
       }).join(''));
+    }
+    // Restaurer l'onglet actif apres chargement du contenu
+    if(typeof _tehActiveTab !== 'undefined' && _tehActiveTab !== 'heb'){
+      switchTehTab(_tehActiveTab);
     }
   });
 }
