@@ -1056,8 +1056,9 @@ body{
 
 <!-- Niveau Panel -->
 <div id="niveau-backdrop" onclick="closeNiveauPanel()"></div>
-<div id="niveau-panel">
+<div id="niveau-panel" style="position:relative;">
   <div class="np-handle"></div>
+  <button onclick="closeNiveauPanel()" style="position:absolute;top:16px;right:16px;background:var(--gray-2);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;z-index:10;">x</button>
   <div id="niveau-panel-content"></div>
 </div>
 
@@ -1432,6 +1433,7 @@ body{
  <div id="cal-utils">
   <div class="cu-section">
    <div class="cu-title">Conversion de date</div>
+   <button onclick="resetToToday()" style="font-size:11px;background:var(--purple);color:#fff;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-family:Poppins,sans-serif;margin-bottom:8px;">Aujourd'hui</button>
    <div class="conv-row">
     <input type="number" id="cv-day" min="1" max="31" value="24" style="max-width:70px">
     <select id="cv-mon">
@@ -1443,7 +1445,29 @@ body{
     <input type="number" id="cv-year" min="1900" max="2100" value="2026" style="max-width:80px">
     <button class="conv-btn" onclick="doConvert()">→ Hébreu</button>
    </div>
+   <div style="display:flex;align-items:center;gap:6px;margin:6px 0 10px;">
+     <input type="checkbox" id="cv-apres-cs" style="width:14px;height:14px;accent-color:var(--purple);cursor:pointer;">
+     <label for="cv-apres-cs" style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;cursor:pointer;">Après le coucher du soleil</label>
+   </div>
    <div id="conv-result"></div>
+   <!-- Conversion inverse : Hébreu → Grégorien -->
+   <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-2);">
+     <div style="font-size:12px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:8px;">Hébreu → Grégorien</div>
+     <div class="conv-row">
+       <input type="number" id="cv-heb-day" min="1" max="30" value="1" style="max-width:50px;">
+       <select id="cv-heb-mon">
+         <option value="Tishrei">Tishri</option><option value="Cheshvan">Cheshvan</option>
+         <option value="Kislev">Kislev</option><option value="Tevet" selected>Tevet</option>
+         <option value="Shevat">Chevat</option><option value="Adar">Adar</option>
+         <option value="Adar II">Adar II</option><option value="Nisan">Nissan</option>
+         <option value="Iyyar">Iyar</option><option value="Sivan">Sivan</option>
+         <option value="Tamuz">Tamouz</option><option value="Av">Av</option><option value="Elul">Eloul</option>
+       </select>
+       <input type="number" id="cv-heb-year" min="5700" max="6000" value="5786" style="max-width:70px;">
+       <button class="conv-btn" onclick="doConvertHebToGreg()">→ Grégorien</button>
+     </div>
+     <div id="conv-result-heb"></div>
+   </div>
   </div>
   <div class="cu-section" style="background:#F5F3FF;border-radius:12px;margin:12px;padding:16px;">
    <div style="font-size:13px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:8px;">Ajouter un evenement</div>
@@ -2835,60 +2859,39 @@ function doConvert(){
   var d=parseInt(document.getElementById('cv-day').value)||1;
   var m=parseInt(document.getElementById('cv-mon').value);
   var y=parseInt(document.getElementById('cv-year').value)||2026;
+  // Checkbox après coucher du soleil
+  var apresCS = document.getElementById('cv-apres-cs');
+  if(apresCS && apresCS.checked){
+    var t2=new Date(y,m,d+1);
+    d=t2.getDate(); m=t2.getMonth(); y=t2.getFullYear();
+  }
   var res=document.getElementById('conv-result');
   res.style.display='block';
   res.innerHTML='<small style="color:var(--gray-4);">Chargement...</small>';
-
-  // Tout via Hebcal API - fiable à 100%
-  fetch('https://www.hebcal.com/converter?cfg=json&gy='+y+'&gm='+(m+1)+'&gd='+d+'&g2h=1&strict=1')
+  fetch('https://www.hebcal.com/shabbat?cfg=json&gy='+y+'&gm='+(m+1)+'&gd='+d+'&m=50&b=18&lg=fr&geo=none')
   .then(function(r){return r.json();})
-  .then(function(data){
-    var hy=data.hy, hm=data.hm, hd_num=data.hd;
-    var hmFR = {'Nisan':'Nissan','Iyyar':'Iyar','Sivan':'Sivan','Tamuz':'Tamouz',
-      'Av':'Av','Elul':'Eloul','Tishrei':'Tishri','Cheshvan':'Cheshvan',
-      'Kislev':'Kislev','Tevet':'Tevet','Shevat':'Chevat',
-      'Adar I':'Adar I','Adar II':'Adar II','Adar':'Adar'};
-    var hmDisplay = hmFR[hm] || hm;
-
-    // Paracha
-    var para = data.parasha || '';
-    if(para) para = para.replace(/^Parashat\s+/i,'').trim();
-    var paraFR = PARASHA_FR[para] || para || '';
-    // Fête
-    var holiday = (!para && data.events) ? data.events.join(', ') : '';
-
-    // Bar Mitsva (+13 ans) et Bat Mitsva (+12 ans) via Hebcal
-    var hy13 = parseInt(hy)+13, hy12 = parseInt(hy)+12;
-    // Hebcal h2g: convertir date hébraïque (même jour/mois, +13/12 ans) → grégorien
-    var urlBar = 'https://www.hebcal.com/converter?cfg=json&hy='+hy13+'&hm='+encodeURIComponent(hm)+'&hd='+hd_num+'&h2g=1&strict=1';
-    var urlBat = 'https://www.hebcal.com/converter?cfg=json&hy='+hy12+'&hm='+encodeURIComponent(hm)+'&hd='+hd_num+'&h2g=1&strict=1';
-    console.log('[Mitsva] Bar:', urlBar);
-    console.log('[Mitsva] Bat:', urlBat);
-
-    Promise.all([fetch(urlBar).then(function(r){return r.json();}), fetch(urlBat).then(function(r){return r.json();})])
-    .then(function(results){
-      var r13=results[0], r12=results[1];
-      var fmtG = function(r){ 
-        if(!r||!r.gd) return '—';
-        return r.gd+' '+FR_M[(r.gm||1)-1]+' '+r.gy; 
-      };
-      var fmtH = function(r){ return r.hd+' '+(hmFR[r.hm]||r.hm)+' '+r.hy; };
-
-      res.innerHTML = '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:6px;">'
-        + hd_num+' '+hmDisplay+' '+hy+'</div>'
-        + (paraFR?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:6px;">📖 '+paraFR+'</div>':'')
-        + (holiday?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:6px;">🎉 '+holiday+'</div>':'')
-        + '<div style="font-size:12px;color:var(--gray-4);margin-bottom:2px;">👦 Bar Mitsva : <strong>'+fmtG(r13)+'</strong> ('+fmtH(r13)+')</div>'
-        + '<div style="font-size:12px;color:var(--gray-4);">👧 Bat Mitsva : <strong>'+fmtG(r12)+'</strong> ('+fmtH(r12)+')</div>';
-    }).catch(function(){
-      res.innerHTML = '<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">'
-        + hd_num+' '+hmDisplay+' '+hy+'</div>'
-        + (paraFR?'<div style="font-size:12px;color:var(--purple);">📖 '+paraFR+'</div>':'');
+  .then(function(shab){
+    return fetch('https://www.hebcal.com/converter?cfg=json&gy='+y+'&gm='+(m+1)+'&gd='+d+'&g2h=1&strict=1')
+    .then(function(r2){return r2.json();})
+    .then(function(data){
+      var hy=data.hy, hm=data.hm, hd_num=data.hd;
+      var hmFR={'Nisan':'Nissan','Iyyar':'Iyar','Sivan':'Sivan','Tamuz':'Tamouz',
+        'Av':'Av','Elul':'Eloul','Tishrei':'Tishri','Cheshvan':'Cheshvan',
+        'Kislev':'Kislev','Tevet':'Tevet','Shevat':'Chevat','Adar':'Adar','Adar II':'Adar II'};
+      var hmDisplay=hmFR[hm]||hm;
+      var para=''; var holiday='';
+      if(shab.items){ shab.items.forEach(function(it){
+        if(it.category==='parashat') para=(it.title||'').replace(/^Parashat\s+/i,'').replace(/^Paracha\s+/i,'').trim();
+        else if(it.category==='holiday' && !para) holiday=it.title||'';
+      });}
+      var paraFR=(para&&PARASHA_FR[para])?PARASHA_FR[para]:(para||'');
+      res.innerHTML='<div style="font-size:15px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:6px;">'+hd_num+' '+hmDisplay+' '+hy+'</div>'
+        +(paraFR?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:4px;">📖 '+paraFR+'</div>':'')
+        +(holiday?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:4px;">🎉 '+holiday+'</div>':'');
     });
   }).catch(function(){
-    // Fallback sans API
     var hd2=g2h(d,m,y);
-    res.innerHTML = fmtHeb(hd2)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd2)+'</small>';
+    res.innerHTML=fmtHeb(hd2)+'<br><small style="color:#c9a84c">'+fmtHebLat(hd2)+'</small>';
   });
 }
 function getP(id){for(var i=0;i<P.length;i++)if(P[i].id===id)return P[i];return null;}
@@ -7058,9 +7061,29 @@ function updateNiveau(){
   });
   if(newNiveau !== localProgress.niveau){
     var nData = NIVEAUX.find(function(n){return n.id===newNiveau;});
-    if(nData) showToast(nData.emoji+' Nouveau niveau : '+nData.name+' !');
+    if(nData){ showToast(nData.emoji+' Nouveau niveau : '+nData.name+' !'); sendNotifNiveau(nData); }
     localProgress.niveau = newNiveau;
   }
+}
+
+function sendNotifBadge(badge){
+  if(!supabase||!currentUser) return;
+  supabase.from('notifications').insert([{
+    user_id:currentUser.id, type:'badge',
+    titre:(badge.emoji||'')+' Badge obtenu !',
+    message:'Tu as debloque : '+badge.name,
+    created_at:new Date().toISOString(), lu:false
+  }]).then(function(){ loadNotifs().then(updateNotifBadge); }).catch(function(){});
+}
+
+function sendNotifNiveau(niveau){
+  if(!supabase||!currentUser) return;
+  supabase.from('notifications').insert([{
+    user_id:currentUser.id, type:'niveau',
+    titre:(niveau.emoji||'')+' Nouveau niveau !',
+    message:'Tu as atteint : '+niveau.name,
+    created_at:new Date().toISOString(), lu:false
+  }]).then(function(){ loadNotifs().then(updateNotifBadge); }).catch(function(){});
 }
 
 // ── BADGES ──
@@ -12842,6 +12865,10 @@ function checkTehilimAnniversaire(){
 function recordTehilimActivity(psaume, pts, isPersonal, isAnniv){
   if(!currentUser || !supabase) return;
   var today = new Date().toISOString().split('T')[0];
+  // Un psaume ne compte qu'une fois par jour
+  var tehKey = 'activity_' + today + '_teh_' + psaume;
+  if(localStorage.getItem(tehKey)) return;
+  try{ localStorage.setItem(tehKey, '1'); }catch(e){}
   var cacheKey = 'teh_streak_' + (currentUser?currentUser.id:'');
 
   // Streak Téhilim (hors Chabbat)
