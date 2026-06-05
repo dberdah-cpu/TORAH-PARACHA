@@ -13352,7 +13352,21 @@ function loadProfileInfoBlock(){
     +'<div style="font-size:13px;color:var(--dark);font-family:Poppins,sans-serif;line-height:2;">'
     +(hebDate?'<div>🎂 Anniversaire hébraïque : <strong>'+hebDate+'</strong></div>':'')
     +'<div>📖 Paracha de naissance : <strong id="profile-paracha-naissance">'+(uc.paracha_naissance||'...')+'</strong></div>'
-    +(uc.psaume_perso?'<div>📜 Mon Psaume : <strong>Psaume '+uc.psaume_perso+'</strong></div><div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-left:20px;">(âge + 1 an)</div>':'')
+    +(function(){
+      var ps = uc.psaume_perso;
+      // Calculer si null : année hébraïque actuelle - année de naissance + 1
+      if(!ps && uc.date_naissance_heb_y){
+        var currentHebYear = new Date().getFullYear() + 3760;
+        ps = currentHebYear - parseInt(uc.date_naissance_heb_y) + 1;
+        if(ps > 150) ps = ((ps-1)%150)+1;
+        // Sauvegarder en Supabase
+        if(supabase && currentUser){
+          supabase.from('users_progress').update({psaume_perso:ps}).eq('user_id',currentUser.id).then(function(){});
+          try{ var c=JSON.parse(localStorage.getItem('up_cache_'+currentUser.id)||'{}'); c.psaume_perso=ps; localStorage.setItem('up_cache_'+currentUser.id,JSON.stringify(c)); }catch(e){}
+        }
+      }
+      return ps ? '<div>📜 Mon Psaume : <strong>Psaume '+ps+'</strong></div>' : '';
+    })()
     // Genre masque
     +'<div id="profile-mitsva-date" style="color:var(--purple);"></div>'
     +'</div></div>';
