@@ -2635,9 +2635,11 @@ function openCal(){
   if(cvMon) cvMon.value=t.getMonth();
   if(cvYear) cvYear.value=t.getFullYear();
   // Initialiser aussi les champs hébreu avec la date du jour
-  var hd0 = g2h(t.getDate(), t.getMonth(), t.getFullYear());
   var hebMonEN = {1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
     7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
+  var hd0 = null;
+  if(typeof hebDateStr !== 'undefined' && hebDateStr) hd0 = parseHebDate(hebDateStr);
+  if(!hd0) hd0 = g2h(t.getDate(), t.getMonth(), t.getFullYear());
   var cvHebDay = document.getElementById('cv-heb-day');
   var cvHebMon = document.getElementById('cv-heb-mon');
   var cvHebYear = document.getElementById('cv-heb-year');
@@ -2875,9 +2877,13 @@ function resetToToday(){
   if(cvDay) cvDay.value=t.getDate();
   if(cvMon) cvMon.value=t.getMonth();
   if(cvYear) cvYear.value=t.getFullYear();
-  // Heb (recalculer)
-  var hd0=g2h(t.getDate(),t.getMonth(),t.getFullYear());
+  // Heb — utiliser hebDateStr (calculé par Hebcal) si disponible, sinon g2h()
   var HEN={1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
+  var hd0 = null;
+  if(typeof hebDateStr !== 'undefined' && hebDateStr){
+    hd0 = parseHebDate(hebDateStr);
+  }
+  if(!hd0) hd0 = g2h(t.getDate(),t.getMonth(),t.getFullYear());
   var cvHD=document.getElementById('cv-heb-day');
   var cvHM=document.getElementById('cv-heb-mon');
   var cvHY=document.getElementById('cv-heb-year');
