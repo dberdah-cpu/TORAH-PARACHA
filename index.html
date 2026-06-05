@@ -2694,9 +2694,15 @@ function renderCalFetes(){
   var panel=document.getElementById('cal-fetes-list');
   if(!panel||!hebcalHolidays) return;
   var now=new Date(); now.setHours(0,0,0,0);
+  // Catégories de fêtes majeures Hebcal
+  var majorCats = ['holiday','roshhashanah','yomkippur','sukkot','shminiatzeret',
+    'simchattorah','chanukah','purim','pesach','shavuot','tishaBav','yomkippur'];
   var upcoming=hebcalHolidays.filter(function(it){
     if(it.category==='roshchodesh') return false;
-    if(it.category!=='holiday') return false;
+    if(it.category==='parashat') return false;
+    if(it.category==='candles') return false;
+    if(it.category==='havdalah') return false;
+    if(majorCats.indexOf(it.category)<0 && it.category!=='holiday') return false;
     return new Date(it.date+'T00:00:00')>=now;
   }).slice(0,8);
   var MON=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
