@@ -1446,7 +1446,8 @@ body{
    <div id="conv-result"></div>
   </div>
   <div class="cu-section" style="background:#F5F3FF;border-radius:12px;margin:12px;padding:16px;">
-   <div style="font-size:13px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:12px;">Ajouter un evenement</div>
+   <div style="font-size:13px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:8px;">Ajouter un evenement</div>
+   <div id="ev-selected-date" style="display:none;font-size:12px;color:var(--dark);font-family:Poppins,sans-serif;background:rgba(124,58,237,0.08);padding:8px 12px;border-radius:8px;margin-bottom:10px;border-left:3px solid var(--purple);"></div>
    <input type="text" id="ev-name" placeholder="Nom de l'evenement" style="width:100%;padding:14px 16px;border:2px solid var(--purple);border-radius:10px;font-size:15px;font-family:Poppins,sans-serif;box-sizing:border-box;margin-bottom:10px;background:#fff;box-shadow:0 2px 8px rgba(124,58,237,0.1);">
    <div class="ev-type-row">
     <button class="ev-type-btn sel" id="evt-greg" onclick="setEvType('greg')">Date universelle</button>
@@ -2743,6 +2744,7 @@ function calDayClick(d){
   calSel={d:d,m:calM,y:calY};
   updateCalDateBar(new Date(calY,calM,d));
   updEvDisp();
+  updateAddEventDateDisplay();
   renderCalGrid(); // re-render pour mettre à jour la sélection
   var hd=g2h(d,calM,calY);
   var isoDay=calY+'-'+pad2(calM+1)+'-'+pad2(d);
@@ -2792,12 +2794,12 @@ function showDaySheet(d,hd,fts,evs){
 }
 
 function scrollToAddEvent(){
-  // Fermer la sheet après un petit délai pour que le scroll soit visible
   setTimeout(function(){
     var el=document.getElementById('cal-addevent');
     if(el){
+      // Mettre à jour l'affichage de la date sélectionnée
+      updateAddEventDateDisplay();
       el.scrollIntoView({behavior:'smooth',block:'start'});
-      // Mettre le focus sur le champ de saisie
       setTimeout(function(){
         var inp=document.getElementById('ev-name');
         if(inp) inp.focus();
@@ -2805,10 +2807,28 @@ function scrollToAddEvent(){
     }
   }, 150);
 }
+
+function updateAddEventDateDisplay(){
+  var el = document.getElementById('ev-selected-date');
+  if(!el || !calSel) return;
+  var d = calSel.d, m = calSel.m, y = calSel.y;
+  var hd = g2h(d, m, y);
+  var hebStr = hd.d + ' ' + hmName(hd.m, hd.y, false) + ' ' + hd.y;
+  var gregStr = d + ' ' + FR_M[m] + ' ' + y;
+  el.innerHTML = '📅 Événement pour le <strong>' + gregStr + '</strong> · ' + hebStr;
+  el.style.display = 'block';
+}
 function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
 function updEvDisp(){var el=document.getElementById('ev-date-display');if(!el)return;if(!calSel){el.textContent='Sélectionnez un jour';return;}var hd=g2h(calSel.d,calSel.m,calSel.y);if(calEvType==='greg')el.textContent='Date : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';}
-function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});saveEv();document.getElementById('ev-name').value='';renderCalGrid();renderEvList();buildHome();}
+function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});saveEv();
+  document.getElementById('ev-name').value='';
+  // Remettre la date du jour
+  var t=new Date();
+  calSel={d:t.getDate(),m:t.getMonth(),y:t.getFullYear()};
+  var evDateEl=document.getElementById('ev-selected-date');
+  if(evDateEl) evDateEl.style.display='none';
+  renderCalGrid();renderEvList();buildHome();}
 function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();}
 function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
 function doConvert(){
@@ -10637,6 +10657,28 @@ function renderNotifPanel(){
       + '<div style="font-size:12px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-top:4px;">Vous serez notifié des nouveaux contenus</div>';
     list.appendChild(empty);
     return;
+  }
+
+  // Evenements du jour
+  var t0=new Date(); var td=t0.getDate(),tm=t0.getMonth(),ty=t0.getFullYear();
+  var todayEvs=(calEvents||[]).filter(function(ev){
+    if(ev.type==='heb'){var hd=g2h(td,tm,ty);return ev.hd===hd.d&&ev.hm===hd.m;}
+    return ev.gd===td&&ev.gm===tm;
+  });
+  if(todayEvs.length>0){
+    var todayDiv=document.createElement('div');
+    todayDiv.style.cssText='padding:10px 16px;border-bottom:1px solid var(--gray-2);';
+    var tt=document.createElement('div');
+    tt.style.cssText='font-size:11px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:6px;';
+    tt.textContent='EVENEMENTS DU JOUR';
+    todayDiv.appendChild(tt);
+    todayEvs.forEach(function(ev){
+      var el=document.createElement('div');
+      el.style.cssText='font-size:13px;color:var(--dark);font-family:Poppins,sans-serif;padding:4px 0;';
+      el.textContent='🗓 '+ev.name;
+      todayDiv.appendChild(el);
+    });
+    list.appendChild(todayDiv);
   }
 
   _notifList.forEach(function(n){
