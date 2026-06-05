@@ -12665,8 +12665,8 @@ function renderTehilimPage(){
 
 var _tehActiveTab = 'heb'; // mémoriser l'onglet actif
 
-function switchTehTab(tab){
-  _tehActiveTab = tab;
+function switchTehTab(tab, interne){
+  if(!interne) _tehActiveTab = tab;
   var heb=document.getElementById('teh-reader-heb');
   var wrap=document.getElementById('teh-reader-iframe-wrap');
   var fr=document.getElementById('teh-reader-fr');
@@ -12799,7 +12799,7 @@ function loadTehilimText(psaume,btnEl){
   if(title)title.textContent='Psaume '+psaume;
   if(hebEl)hebEl.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-4);">Chargement…</div>';
   if(frEl){frEl.innerHTML='';frEl.removeAttribute('data-ph');frEl.removeAttribute('data-fr');}
-  switchTehTab('heb');
+  switchTehTab('heb', true); // true = interne, ne pas mémoriser
   reader.scrollIntoView({behavior:'smooth',block:'start'});
   var isPersonal=(psaume===personalPsaume);
   var isAnniv=checkTehilimAnniversaire();
