@@ -2697,12 +2697,24 @@ function renderCalFetes(){
   // Catégories de fêtes majeures Hebcal
   var majorCats = ['holiday','roshhashanah','yomkippur','sukkot','shminiatzeret',
     'simchattorah','chanukah','purim','pesach','shavuot','tishaBav','yomkippur'];
+  // Fêtes mineures à exclure
+  var excludeTitles = ['Rosh Hashana LaBehemot', 'Behemot',
+    'Tu BiShvat', 'Tu B Av', 'Lag BaOmer', 'Tzom Gedaliah', 'Tzom Tammuz',
+    'Asara B Tevet', 'Taanit Esther', 'Shushan Purim', 'Isru Chag',
+    'Yom HaShoah', 'Yom HaZikaron', 'Yom HaAtzmaut', 'Yom Yerushalayim',
+    'Pesach Sheni'];
   var upcoming=hebcalHolidays.filter(function(it){
     if(it.category==='roshchodesh') return false;
     if(it.category==='parashat') return false;
     if(it.category==='candles') return false;
     if(it.category==='havdalah') return false;
+    if(it.category==='minor') return false;
     if(majorCats.indexOf(it.category)<0 && it.category!=='holiday') return false;
+    // Exclure les fêtes mineures par titre
+    var title = it.title||'';
+    for(var xi=0;xi<excludeTitles.length;xi++){
+      if(title.toLowerCase().indexOf(excludeTitles[xi].toLowerCase())>=0) return false;
+    }
     return new Date(it.date+'T00:00:00')>=now;
   }).slice(0,8);
   var MON=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
@@ -10953,6 +10965,16 @@ function renderVideos(){
       .then(function(r){ return r.json(); })
       .then(function(dbVids){
         if(Array.isArray(dbVids) && dbVids.length){
+          // Vidéo à la une
+          var uneVid = dbVids.find(function(v){ return v.une; });
+          if(uneVid){
+            qHtml += '<div style="margin:0 16px 16px;background:linear-gradient(135deg,#1a0533,#4c1d95);border-radius:var(--radius);padding:14px 16px;cursor:pointer;" onclick="this.querySelector(\'video\').play()">'
+              +'<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);font-family:Poppins,sans-serif;margin-bottom:6px;">⭐ VIDÉO À LA UNE</div>'
+              +'<div style="font-size:15px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:8px;">'+uneVid.titre+'</div>'
+              +(uneVid.message?'<div style="font-size:12px;color:rgba(255,255,255,0.7);font-family:Poppins,sans-serif;margin-bottom:8px;">'+uneVid.message+'</div>':'')
+              +'<video style="width:100%;max-height:280px;border-radius:8px;" controls preload="none" src="'+uneVid.url+'" poster="'+( uneVid.photo_url||'')+'"></video>'
+              +'</div>';
+          }
           qHtml += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
           dbVids.forEach(function(v){
             qHtml += '<div style="margin:0 0 2px;background:#000;overflow:hidden;">'
@@ -11663,7 +11685,9 @@ function adminAddVideo(){
   var titre = (document.getElementById('adm-titre') || document.getElementById('adm-vid-titre') || {value:''}).value.trim();
   var msg = (document.getElementById('adm-message') || document.getElementById('adm-vid-msg') || {value:''}).value.trim();
   if(!titre){ adminToast('Titre obligatoire'); return; }
-  sbFetch('/rest/v1/videos_data', 'POST', {url:url, titre:titre, message:msg, actif:true, ordre:0})
+  sbFetch('/rest/v1/videos_data', 'POST', {url:url, titre:titre, message:msg, actif:true, ordre:0,
+      une: document.getElementById('adm-vid-une') ? document.getElementById('adm-vid-une').checked : false
+    })
   .then(function(data){
     if(data && !data.error){
       adminToast('Vidéo ajoutée !', true);
@@ -13272,15 +13296,16 @@ function loadProfileInfoBlock(){
   var uc = upCacheGlobal;
   var MOIS = {1:'Nissan',2:'Iyar',3:'Sivan',4:'Tamouz',5:'Av',6:'Eloul',
     7:'Tishri',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Chevat',12:'Adar',13:'Adar II'};
+  // Anniversaire hébraïque sans année
   var hebDate = uc.date_naissance_heb_j
-    ? uc.date_naissance_heb_j+' '+(MOIS[uc.date_naissance_heb_m]||'')+' '+(uc.date_naissance_heb_y||'')
+    ? uc.date_naissance_heb_j+' '+(MOIS[uc.date_naissance_heb_m]||'')
     : '';
   var html = '<div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px;">'
     +'<div style="font-size:13px;font-weight:600;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:10px;">Tes infos personnelles</div>'
     +'<div style="font-size:13px;color:var(--dark);font-family:Poppins,sans-serif;line-height:2;">'
-    +(hebDate?'<div>📅 Date hébraïque : <strong>'+hebDate+'</strong></div>':'')
+    +(hebDate?'<div>🎂 Anniversaire hébraïque : <strong>'+hebDate+'</strong></div>':'')
     +'<div>📖 Paracha de naissance : <strong id="profile-paracha-naissance">'+(uc.paracha_naissance||'...')+'</strong></div>'
-    +(uc.psaume_perso?'<div>📜 Psaume personnel : <strong>Psaume '+uc.psaume_perso+'</strong></div>':'')
+    +(uc.psaume_perso?'<div>📜 Mon Psaume : <strong>Psaume '+uc.psaume_perso+'</strong></div><div style="font-size:11px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-left:20px;">(âge + 1 an)</div>':'')
     // Genre masque
     +'<div id="profile-mitsva-date" style="color:var(--purple);"></div>'
     +'</div></div>';
@@ -13312,6 +13337,68 @@ function loadProfileInfoBlock(){
 
   // Charger date Mitsva
   loadMitsvaDateInto('profile-mitsva-date');
+
+  // Ajouter anniversaire hébraïque comme événement récurrent dans le calendrier
+  if(uc.date_naissance_heb_j && uc.date_naissance_heb_m && currentUser){
+    addHebrewBirthdayToCalendar(uc);
+  }
+}
+
+function addHebrewBirthdayToCalendar(uc){
+  if(!supabase || !currentUser) return;
+  var MOIS_EN = {1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
+    7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
+  var MOIS_FR = {1:'Nissan',2:'Iyar',3:'Sivan',4:'Tamouz',5:'Av',6:'Eloul',
+    7:'Tishri',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Chevat',12:'Adar',13:'Adar II'};
+  var hmEN = MOIS_EN[uc.date_naissance_heb_m] || '';
+  var hmFR = MOIS_FR[uc.date_naissance_heb_m] || '';
+  var currentYear = new Date().getFullYear();
+  var eventName = 'Anniversaire hebraique - '+uc.date_naissance_heb_j+' '+hmFR;
+
+  // Vérifier si l'événement existe déjà
+  supabase.from('events').select('id').eq('user_id', currentUser.id)
+  .ilike('title', '%Anniversaire hebraique%')
+  .then(function(res){
+    if(res.data && res.data.length > 0) return; // Déjà présent
+    // Calculer la prochaine date grégorienne de cet anniversaire hébreu
+    // via Hebcal API
+    var today = new Date();
+    var yearHeb = uc.date_naissance_heb_y ? parseInt(uc.date_naissance_heb_y) : 5780;
+    // Calculer pour l'année hébreu courante
+    var currentHebYear = yearHeb + (currentYear - (yearHeb > 5700 ? 5700+1940 : 1940));
+    currentHebYear = Math.round(currentYear + 3760);
+    fetch('https://www.hebcal.com/converter?cfg=json&hy='+currentHebYear+'&hm='+encodeURIComponent(hmEN)+'&hd='+uc.date_naissance_heb_j+'&h2g=1&strict=1')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.gd) return;
+      var eventDate = data.gy+'-'+String(data.gm).padStart(2,'0')+'-'+String(data.gd).padStart(2,'0');
+      // Si la date est passée, calculer pour l'année suivante
+      if(new Date(eventDate) < today){
+        fetch('https://www.hebcal.com/converter?cfg=json&hy='+(currentHebYear+1)+'&hm='+encodeURIComponent(hmEN)+'&hd='+uc.date_naissance_heb_j+'&h2g=1&strict=1')
+        .then(function(r2){return r2.json();})
+        .then(function(d2){
+          if(!d2.gd) return;
+          var nextDate = d2.gy+'-'+String(d2.gm).padStart(2,'0')+'-'+String(d2.gd).padStart(2,'0');
+          saveHebrewBirthdayEvent(eventName, nextDate);
+        }).catch(function(){});
+      } else {
+        saveHebrewBirthdayEvent(eventName, eventDate);
+      }
+    }).catch(function(){});
+  }).catch(function(){});
+}
+
+function saveHebrewBirthdayEvent(name, date){
+  if(!supabase || !currentUser) return;
+  supabase.from('events').insert([{
+    user_id: currentUser.id,
+    title: name,
+    date: date+'T12:00:00',
+    type: 'heb',
+    notes: 'Anniversaire hebraique - ajouté automatiquement'
+  }]).then(function(res){
+    if(!res.error) console.log('[Cal] Anniversaire hébraïque ajouté:', date);
+  }).catch(function(){});
 }
 
 function loadMitsvaDateInto(elId){
@@ -13628,6 +13715,10 @@ try {
       <!-- Titre et description -->
       <input id="adm-titre" class="admin-input" placeholder="Titre de la vidéo *" style="margin-bottom:8px;">
       <textarea id="adm-message" class="admin-input" placeholder="Message / description (optionnel)" style="min-height:60px;resize:vertical;margin-bottom:12px;"></textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <input type="checkbox" id="adm-vid-une" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;">
+        <label for="adm-vid-une" style="font-size:13px;font-family:Poppins,sans-serif;color:var(--dark);cursor:pointer;">⭐ Mettre à la Une</label>
+      </div>
       <button onclick="adminAddVideo()" class="admin-btn admin-btn-primary" style="width:100%;padding:13px;font-size:14px;">✅ Publier la vidéo</button>
     </div>
     <div class="admin-card">
