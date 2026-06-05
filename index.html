@@ -12663,7 +12663,10 @@ function renderTehilimPage(){
   });
 }
 
+var _tehActiveTab = 'heb'; // mémoriser l'onglet actif
+
 function switchTehTab(tab){
+  _tehActiveTab = tab;
   var heb=document.getElementById('teh-reader-heb');
   var wrap=document.getElementById('teh-reader-iframe-wrap');
   var fr=document.getElementById('teh-reader-fr');
@@ -12682,6 +12685,15 @@ function tehBuildSelects(){
   ['teh-select-one','teh-range-from','teh-range-to'].forEach(function(id){
     var el = document.getElementById(id);
     if(!el || el.options.length > 1) return;
+    // Ajouter l'option par défaut seulement pour teh-select-one
+    if(id === 'teh-select-one'){
+      var defOpt = document.createElement('option');
+      defOpt.value = '';
+      defOpt.textContent = '— Choisir un psaume —';
+      defOpt.disabled = true;
+      defOpt.selected = true;
+      el.appendChild(defOpt);
+    }
     for(var i=1; i<=150; i++){
       var opt = document.createElement('option');
       opt.value = i;
@@ -12726,6 +12738,10 @@ function tehLoadCurrent(){
   var psaume = _tehCurrentList[_tehCurrentIndex];
   loadTehilimText(psaume, null);
   tehUpdateNav();
+  // Restaurer l'onglet actif après chargement
+  if(_tehActiveTab && _tehActiveTab !== 'heb'){
+    setTimeout(function(){ switchTehTab(_tehActiveTab); }, 100);
+  }
 }
 
 function tehUpdateNav(){
