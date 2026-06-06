@@ -2963,7 +2963,7 @@ function doConvert(){
       var hmDisplay=hmFR[hm]||hm;
       var para=''; var holiday='';
       if(shab.items){ shab.items.forEach(function(it){
-        if(it.category==='parashat') para=(it.title||'').replace(/^Parashat\s+/i,'').replace(/^Paracha\s+/i,'').trim();
+        if(it.category==='parashat') para=(it.title||'').replace(/\u0332/g,'').replace(/^Parachah\s+/i,'').replace(/^Parashat\s+/i,'').replace(/^Paracha\s+/i,'').trim();
         else if(it.category==='holiday' && !para) holiday=it.title||'';
       });}
       var paraFR=(para&&PARASHA_FR[para])?PARASHA_FR[para]:(para||'');
@@ -7953,25 +7953,11 @@ var COURS_DATA = {
     "sefaria": "https://www.sefaria.org/Numbers.12.13?lang=bi&with=Rashi&lang2=fr"
   },
   "shelah-0": {
-    "titre": "📿 17 Tamouz — Dimanche",
-    "sous_titre": "Shiva Asar beTamouz — Jour de jeûne",
-    "accroche": "Cinq catastrophes. Un seul jour. Un seul appel : reviens.",
-    "fete": false,
-    "chome": false,
-    "jeune": true,
-    "intro": "Le 17 Tamouz est un jour de jeûne qui commémore cinq événements tragiques de l'histoire juive. Le plus connu : Moïse brise les Tables de la Loi en voyant le veau d'or. Ce jour marque aussi le début des Trois Semaines — une période de deuil qui culmine avec Ticha BeAv.",
-    "verset": {
-      "heb": "וַיִּחַר אַף מֹשֶׁה וַיַּשְׁלֵךְ מִיָּדָו אֶת הַלֻּחֹת",
-      "fr": "La colère de Moïse s'enflamma et il jeta de ses mains les Tables — et il les brisa au pied de la montagne.",
-      "ref": "Exode 32:19"
-    },
-    "rachi": "Rachi s'arrête sur vayashlekh midav et halouchot — il jeta de ses mains les Tables. Rachi justifie l'acte de Moïse : les Tables portaient la mention 'ne commets pas d'adultère'. Faire entrer des Tables qui interdisent l'idolâtrie dans un camp qui pratique l'idolâtrie serait comme apporter un acte de fiançailles à une femme déjà infidèle. Rachi note que D.ieu a félicité Moïse pour cet acte — yishar kokhakha shibarta — bien fait pour avoir brisé.",
-    "questions": "Le Rabbi dans le Likoutei Si'hot (vol. 21, Ki Tissa) pose deux questions. Première : si Moïse avait prévu de briser les Tables, pourquoi les avoir portées jusqu'en bas de la montagne — pourquoi ne pas les avoir brisées en haut ? Deuxième : les Tables venaient de D.ieu — comment Moïse pouvait-il se permettre de les briser, même pour une bonne raison ?",
-    "revelation": "Le Rabbi révèle que Moïse a porté les Tables jusqu'en bas précisément pour que le peuple les voie — et voie ce qu'il perdait. Ce n'était pas une punition visible — c'était un miroir. Moïse voulait qu'Israël comprenne, dans un choc visuel inoubliable, la gravité de ce qu'il venait de faire. Et D.ieu a approuvé parce que l'acte de Moïse venait d'un amour profond pour le peuple — pas de la colère aveugle. Briser les Tables pour sauver Israël d'une culpabilité insurmontable — car posséder les Tables tout en les ayant trahies aurait été une condamnation définitive. La brisure était un acte de miséricorde. Le Rabbi ajoute : le 17 Tamouz n'est pas un jour de désespoir — c'est un jour d'appel. D.ieu a pardonné la faute du veau d'or. Yom Kippour, quarante jours plus tard, a apporté les deuxièmes Tables. La brisure précède toujours le renouvellement.",
-    "message": "Le 17 Tamouz marque le début d'un chemin vers Yom Kippour. Les Tables ont été brisées — et elles ont été données à nouveau. Dans ta vie, il y a des ruptures qui semblent définitives. Elles ne le sont pas. La même miséricorde qui a accordé de nouvelles Tables à Israël est disponible pour toi aujourd'hui.",
-    "source": "Rachi sur Exode 32:19 · Likoutei Si'hot vol. 21, Ki Tissa",
-    "sefaria": "https://www.sefaria.org/Exodus.32.19?lang=bi&with=Rashi&lang2=fr"
-  },
+    "titre": "CHELA'H — Dimanche",
+    "sous_titre": "Nombres 13:1-2 — L'envoi des espions",
+    "accroche": "Pourquoi D.ieu permet-il d'envoyer des espions s'Il sait que leur rapport sera negatif ?",
+    "texte": "<p>La paracha Chela'h Lekha commence par l'envoi de douze espions en Terre de Canaan. Le Lubavitcher Rebbe souligne : D.ieu dit a Moise <em>Envoie pour toi</em> — c'est ton choix. La foi ne demande pas de preuves, elle les precede.</p>",
+    "source": "Rachi · Likoutei Si'hot · Sfat Emet"},
   "shelah-1": {
     "titre": "CHÉLA'H — Lundi",
     "sous_titre": "Nombres 13:27-33 — Le rapport des espions",
@@ -9399,7 +9385,7 @@ function getCoursKey(paracha, day){
     'nasso':'nasso', 'naso':'nasso',
     'behalotecha':'behalotecha', 'behaalotkha':'behalotecha', 'beaalotekha':'behalotecha',
     'bhalotcha':'behalotecha', 'baalotcha':'behalotecha', 'alotcha':'behalotecha',
-    'shelah':'shelah', 'shlah':'shelah', 'chelah':'shelah', 'chela':'shelah',
+    'shelah':'shelah', 'shlah':'shelah', 'chelah':'shelah', 'chela':'shelah', 'chelahlekha':'shelah',
     'shelachlecha':'shelah', 'shelachlekha':'shelah',
     'korah':'korah', 'korach':'korah', 'kore':'korah',
     'chukat':'choukat', 'chukkatbalak':'choukat', 'chukatbalak':'choukat',
