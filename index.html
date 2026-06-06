@@ -1666,6 +1666,7 @@ var hebDateStr = '';
 var hebDateHeb = '';
 var hebDateFr = '';  // date hébraïque en transcription française, depuis Hebcal
 var currentParashaName = ''; // nom paracha de la semaine (anglais Hebcal)
+var _apiDateOverride = null; // date API pour corriger samedi soir
 
 // Calendrier des parashot 2026 (date du chabbat = dernier jour de la semaine)
 // Format: [année, mois-1, jour, nomParacha]
@@ -2101,6 +2102,7 @@ function loadHebcalAll(lat,lng,cb){
       apiDate=new Date(now);
       apiDate.setDate(apiDate.getDate()+1);
       console.log('[Torah] Samedi après Havdala → API date =', apiDate.toISOString().split('T')[0]);
+    _apiDateOverride = apiDate.toISOString().split('T')[0];
     }
   }
 
@@ -12276,7 +12278,11 @@ function refreshCoursCard(){
 }
 
 function buildCoursCard(){
+  // Utiliser la date API Hebcal si disponible (corrige le cas samedi soir après Havdala)
   var now = new Date();
+  if(typeof _apiDateOverride !== 'undefined' && _apiDateOverride){
+    now = new Date(_apiDateOverride);
+  }
   var jsDay = now.getDay();
   var courseDay = (jsDay===6) ? -1 : jsDay;
   if(courseDay < 0) return '';
