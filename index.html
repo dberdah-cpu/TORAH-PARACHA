@@ -1455,7 +1455,7 @@ body{
    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-2);">
      <div style="font-size:12px;font-weight:700;color:var(--purple);font-family:Poppins,sans-serif;margin-bottom:8px;">Hébreu → Grégorien</div>
      <div class="conv-row">
-       <input type="number" id="cv-heb-day" min="1" max="30" value="1" style="max-width:50px;">
+       <input type="number" id="cv-heb-day" min="1" max="30" style="max-width:62px;width:62px;">
        <select id="cv-heb-mon">
          <option value="Tishrei">Tishri</option><option value="Cheshvan">Cheshvan</option>
          <option value="Kislev">Kislev</option><option value="Tevet">Tevet</option>
@@ -1464,7 +1464,7 @@ body{
          <option value="Iyyar">Iyar</option><option value="Sivan" selected>Sivan</option>
          <option value="Tamuz">Tamouz</option><option value="Av">Av</option><option value="Elul">Eloul</option>
        </select>
-       <input type="number" id="cv-heb-year" min="5700" max="6000" value="5786" style="max-width:70px;">
+       <input type="number" id="cv-heb-year" min="5700" max="6000" style="max-width:80px;width:80px;">
        <button class="conv-btn" onclick="doConvertHebToGreg()">→ Grégorien</button>
      </div>
      <div id="conv-result-heb"></div>
@@ -2658,7 +2658,7 @@ function openCal(){
       if(cvHM) cvHM.value=data.hm; // ex: "Sivan" - correspond aux valeurs du select
       if(cvHY) cvHY.value=data.hy;
     }).catch(function(){});
-  }, 200);
+  }, 500);
 }
 
 function closeCal(){
