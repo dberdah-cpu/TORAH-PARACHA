@@ -2440,8 +2440,43 @@ var FETE_EMOJI={'Rosh Hashana':'🍎','Yom Kippur':'📖','Sukkot':'🌿','Shmin
 function getFeteEmoji(title){for(var k in FETE_EMOJI){if(title.indexOf(k)>=0)return FETE_EMOJI[k];}return FETE_EMOJI['default'];}
 
 // BANNERS — utilise les données Hebcal chargées
-var calEvents=[];try{calEvents=JSON.parse(localStorage.getItem('torah_ev')||'[]');}catch(e){}
-function saveEv(){try{localStorage.setItem('torah_ev',JSON.stringify(calEvents));}catch(e){}}
+var calEvents=[];
+try{calEvents=JSON.parse(localStorage.getItem('torah_ev')||'[]');}catch(e){}
+
+function saveEv(){
+  try{localStorage.setItem('torah_ev',JSON.stringify(calEvents));}catch(e){}
+}
+
+function loadEventsFromSupabase(){
+  if(!supabase||!currentUser) return;
+  supabase.from('events').select('*').eq('user_id',currentUser.id)
+  .then(function(res){
+    if(!res.data||!res.data.length) return;
+    res.data.forEach(function(ev){
+      var exists=calEvents.some(function(e){
+        return e.name===ev.name&&e.type===ev.type&&e.gd===ev.gd&&e.gm===ev.gm;
+      });
+      if(!exists) calEvents.push({id:ev.id,name:ev.name,type:ev.type||'greg',
+        gd:ev.gd,gm:ev.gm,hd:ev.hd,hm:ev.hm});
+    });
+    saveEv(); renderEvList(); renderCalGrid();
+  }).catch(function(){});
+}
+
+function saveEvToSupabase(ev){
+  if(!supabase||!currentUser) return;
+  supabase.from('events').insert([{
+    user_id:currentUser.id,name:ev.name,type:ev.type||'greg',
+    gd:ev.gd||0,gm:ev.gm||0,hd:ev.hd||0,hm:ev.hm||0
+  }]).then(function(){}).catch(function(){});
+}
+
+function deleteEvFromSupabase(name,type){
+  if(!supabase||!currentUser) return;
+  supabase.from('events').delete()
+    .eq('user_id',currentUser.id).eq('name',name)
+    .then(function(){}).catch(function(){});
+}
 function getTodayEv(){var t=new Date(),gd=t.getDate(),gm=t.getMonth(),gy=t.getFullYear(),hd=g2h(gd,gm,gy);return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 
 var PIRKE_AVOT_OMER = [{"jour": 1, "mishna": "1:1", "texte": "Moïse reçut la Torah au Sinaï et la transmit à Josué, Josué aux Anciens, les Anciens aux Prophètes, et les Prophètes la transmirent aux hommes de la Grande Assemblée.", "auteur": "Pirké Avot 1:1"}, {"jour": 2, "mishna": "1:2", "texte": "Le monde repose sur trois choses : la Torah, le service divin et les œuvres de bonté.", "auteur": "Shimon HaTsadik · Pirké Avot 1:2"}, {"jour": 3, "mishna": "1:3", "texte": "Ne sois pas comme des serviteurs qui servent le maître pour recevoir une récompense. Sois comme ceux qui servent sans attendre de récompense.", "auteur": "Antigonus de Sokho · Pirké Avot 1:3"}, {"jour": 4, "mishna": "1:4", "texte": "Couvre-toi de la poussière des pieds de tes maîtres et bois leurs paroles avec soif.", "auteur": "Yossé ben Yo'ezer · Pirké Avot 1:4"}, {"jour": 5, "mishna": "1:5", "texte": "Que ta maison soit grande ouverte. Traite les pauvres comme des membres de ta famille.", "auteur": "Yossé ben Yoh'anan · Pirké Avot 1:5"}, {"jour": 6, "mishna": "1:6", "texte": "Fais-toi un maître, acquiers-toi un ami et juge chaque homme favorablement.", "auteur": "Yehochoua ben Pera'hia · Pirké Avot 1:6"}, {"jour": 7, "mishna": "1:14", "texte": "Si je ne suis pas pour moi-même, qui le sera ? Et si je ne suis que pour moi-même, que suis-je ? Et si pas maintenant — quand ?", "auteur": "Hillel · Pirké Avot 1:14"}, {"jour": 8, "mishna": "2:1", "texte": "Quelle est la bonne voie que l'homme doit choisir ? Celle qui est honorable pour lui et qui lui vaut l'estime des autres.", "auteur": "Rabbi · Pirké Avot 2:1"}, {"jour": 9, "mishna": "2:2", "texte": "L'étude de la Torah est belle quand elle s'accompagne d'un métier, car l'effort des deux ensemble fait oublier le péché.", "auteur": "Rabban Gamliel · Pirké Avot 2:2"}, {"jour": 10, "mishna": "2:4", "texte": "Ne te fie pas à toi-même jusqu'au jour de ta mort. Ne juge pas ton prochain avant d'être à sa place.", "auteur": "Hillel · Pirké Avot 2:4"}, {"jour": 11, "mishna": "2:5", "texte": "Un homme grossier ne craint pas le péché. Un ignorant ne peut être pieux. Un timide n'apprend pas. Un homme colérique n'enseigne pas.", "auteur": "Hillel · Pirké Avot 2:5"}, {"jour": 12, "mishna": "2:6", "texte": "En un lieu où il n'y a pas d'hommes, efforce-toi d'être un homme.", "auteur": "Hillel · Pirké Avot 2:6"}, {"jour": 13, "mishna": "2:10", "texte": "Que l'honneur de ton ami te soit aussi cher que le tien propre.", "auteur": "Rabbi Eliezer · Pirké Avot 2:10"}, {"jour": 14, "mishna": "2:13", "texte": "La mauvaise voie dont l'homme doit s'éloigner : un mauvais cœur.", "auteur": "Rabbi Eliezer · Pirké Avot 2:13"}, {"jour": 15, "mishna": "3:1", "texte": "Sache d'où tu viens, où tu vas, et devant Qui tu devras rendre des comptes.", "auteur": "Akavya ben Mahalalel · Pirké Avot 3:1"}, {"jour": 16, "mishna": "3:2", "texte": "Prie pour le bien-être du gouvernement, car sans la crainte qu'il inspire, les hommes s'avaleraient les uns les autres.", "auteur": "Rabbi Hanina · Pirké Avot 3:2"}, {"jour": 17, "mishna": "3:3", "texte": "Si deux personnes sont assises ensemble et échangent des paroles de Torah, la Présence divine repose entre elles.", "auteur": "Rabbi Hanania · Pirké Avot 3:3"}, {"jour": 18, "mishna": "3:9", "texte": "Celui dont la crainte du péché précède sa sagesse — sa sagesse durera. Celui dont la sagesse précède la crainte du péché — sa sagesse ne durera pas.", "auteur": "Rabbi Hanina ben Dossa · Pirké Avot 3:9"}, {"jour": 19, "mishna": "3:14", "texte": "Aimé est l'homme, car il a été créé à l'image de D.ieu. Aimé est Israël, car il est appelé fils de D.ieu.", "auteur": "Rabbi Akiva · Pirké Avot 3:14"}, {"jour": 20, "mishna": "3:17", "texte": "S'il n'y a pas de farine, il n'y a pas de Torah. S'il n'y a pas de Torah, il n'y a pas de farine.", "auteur": "Rabbi Elazar ben Azaria · Pirké Avot 3:17"}, {"jour": 21, "mishna": "3:21", "texte": "La Torah est comme l'eau — elle va toujours vers le bas, vers ceux qui s'humilient pour la recevoir.", "auteur": "Rabbi Akiva · Pirké Avot 3:21"}, {"jour": 22, "mishna": "4:1", "texte": "Qui est fort ? Celui qui maîtrise son penchant. Qui est riche ? Celui qui se réjouit de son lot. Qui est honoré ? Celui qui honore les autres.", "auteur": "Ben Zoma · Pirké Avot 4:1"}, {"jour": 23, "mishna": "4:2", "texte": "Court après la mitsva légère comme après la mitsva importante, car tu ne sais pas quelle récompense t'est réservée.", "auteur": "Ben Azzaï · Pirké Avot 4:2"}, {"jour": 24, "mishna": "4:3", "texte": "Ne méprise personne et ne dédaigne aucune chose — car il n'y a pas d'homme qui n'ait son heure.", "auteur": "Ben Azzaï · Pirké Avot 4:3"}, {"jour": 25, "mishna": "4:5", "texte": "Celui qui apprend afin d'enseigner — on lui accorde de pouvoir apprendre et enseigner. Celui qui apprend afin de pratiquer — on lui accorde d'apprendre, d'enseigner, de garder et de pratiquer.", "auteur": "Rabbi Yishmael · Pirké Avot 4:5"}, {"jour": 26, "mishna": "4:17", "texte": "Mieux vaut une heure de retour et de bonnes actions dans ce monde que toute la vie du monde à venir. Et mieux vaut une heure de sérénité du monde à venir que toute la vie de ce monde.", "auteur": "Rabbi Yaakov · Pirké Avot 4:17"}, {"jour": 27, "mishna": "4:20", "texte": "Celui qui apprend étant jeune — à quoi ressemble-t-il ? À de l'encre écrite sur du papier neuf. Celui qui apprend étant vieux — à de l'encre écrite sur du papier effacé.", "auteur": "Elisha ben Avouya · Pirké Avot 4:20"}, {"jour": 28, "mishna": "4:28", "texte": "La jalousie, la convoitise et la vaine gloire font sortir l'homme du monde.", "auteur": "Rabbi Eliezer HaKappar · Pirké Avot 4:28"}, {"jour": 29, "mishna": "5:1", "texte": "Le monde a été créé par dix paroles. Pour enseigner la valeur de chaque parole — et combien est grave la faute de celui qui la détruit.", "auteur": "Pirké Avot 5:1"}, {"jour": 30, "mishna": "5:3", "texte": "Avraham fut éprouvé dix fois et résista à toutes — pour montrer combien grand était l'amour d'Avraham notre père.", "auteur": "Pirké Avot 5:3"}, {"jour": 31, "mishna": "5:7", "texte": "Sept choses caractérisent le sot et sept le sage. Le sage ne parle pas avant celui qui est plus grand que lui en sagesse.", "auteur": "Pirké Avot 5:7"}, {"jour": 32, "mishna": "5:10", "texte": "Quatre types de caractères : celui qui dit 'le mien est à moi et le tien est à toi' — c'est le caractère ordinaire. Celui qui dit 'le mien est à toi et le tien est à moi' — c'est l'ignorant. Celui qui dit 'le mien est à toi et le tien est aussi à toi' — c'est le pieux.", "auteur": "Pirké Avot 5:10"}, {"jour": 33, "mishna": "5:13", "texte": "Quatre types d'étudiants : celui qui apprend vite et oublie vite — son gain est annulé par sa perte. Celui qui apprend lentement et oublie lentement — sa perte est annulée par son gain. Celui qui apprend vite et oublie lentement — c'est un bon lot.", "auteur": "Pirké Avot 5:13"}, {"jour": 34, "mishna": "5:16", "texte": "Tout amour qui dépend d'une cause — quand la cause disparaît, l'amour disparaît. Mais l'amour qui ne dépend d'aucune cause ne disparaît jamais.", "auteur": "Pirké Avot 5:16"}, {"jour": 35, "mishna": "5:23", "texte": "Sois audacieux comme le léopard, léger comme l'aigle, rapide comme le cerf et fort comme le lion pour accomplir la volonté de ton Père céleste.", "auteur": "Yehouda ben Tema · Pirké Avot 5:23"}, {"jour": 36, "mishna": "6:1", "texte": "Celui qui étudie la Torah lishmah — pour elle-même — mérite beaucoup de choses. On lui révèle les secrets de la Torah.", "auteur": "Rabbi Méïr · Pirké Avot 6:1"}, {"jour": 37, "mishna": "6:2", "texte": "Qui est vraiment libre ? Celui qui se consacre à l'étude de la Torah.", "auteur": "Pirké Avot 6:2"}, {"jour": 38, "mishna": "6:3", "texte": "Celui qui apprend de son prochain une seule lettre doit lui témoigner du respect.", "auteur": "Pirké Avot 6:3"}, {"jour": 39, "mishna": "6:4", "texte": "Telle est la voie de la Torah : tu mangeras du pain avec du sel, tu boiras de l'eau avec mesure, tu dormiras à même le sol — et tu peinerai dans la Torah. Si tu fais ainsi, tu seras heureux.", "auteur": "Pirké Avot 6:4"}, {"jour": 40, "mishna": "6:5", "texte": "Ne cherche pas la grandeur pour toi-même, ne convoite pas plus d'honneur que ta science ne le mérite.", "auteur": "Pirké Avot 6:5"}, {"jour": 41, "mishna": "6:6", "texte": "La Torah est plus grande que la prêtrise et la royauté. La royauté s'acquiert par trente vertus, la prêtrise par vingt-quatre. La Torah — par quarante-huit.", "auteur": "Pirké Avot 6:6"}, {"jour": 42, "mishna": "6:9", "texte": "D.ieu dit à Moïse : les Tables, la Torah, les commandements que j'ai écrits pour les instruire — va enseigne-les aux enfants d'Israël.", "auteur": "Pirké Avot 6:9"}, {"jour": 43, "mishna": "6:10", "texte": "Cinq acquisitions a faites le Saint Béni soit-Il dans Son monde : la Torah, le ciel et la terre, Avraham, Israël et le Temple.", "auteur": "Pirké Avot 6:10"}, {"jour": 44, "mishna": "6:11", "texte": "Tout ce que D.ieu a créé dans Son monde, Il ne l'a créé que pour Sa gloire.", "auteur": "Pirké Avot 6:11"}, {"jour": 45, "mishna": "5:23", "texte": "Sois audacieux comme le léopard, léger comme l'aigle, rapide comme le cerf et fort comme le lion pour accomplir la volonté de ton Père céleste.", "auteur": "Yehouda ben Tema · Pirké Avot 5:23"}, {"jour": 46, "mishna": "1:2", "texte": "Le monde repose sur trois choses : la Torah, le service divin et les œuvres de bonté.", "auteur": "Shimon HaTsadik · Pirké Avot 1:2"}, {"jour": 47, "mishna": "1:14", "texte": "Si je ne suis pas pour moi-même, qui le sera ? Et si je ne suis que pour moi-même, que suis-je ? Et si pas maintenant — quand ?", "auteur": "Hillel · Pirké Avot 1:14"}, {"jour": 48, "mishna": "4:1", "texte": "Qui est fort ? Celui qui maîtrise son penchant. Qui est riche ? Celui qui se réjouit de son lot.", "auteur": "Ben Zoma · Pirké Avot 4:1"}, {"jour": 49, "mishna": "6:2", "texte": "Qui est vraiment libre ? Celui qui se consacre à l'étude de la Torah. Et chaque jour une voix céleste retentit du mont Sinaï et dit : malheur aux créatures qui offensent la Torah.", "auteur": "Pirké Avot 6:2"}];
@@ -2864,7 +2899,8 @@ function updateAddEventDateDisplay(){
 function getEvOnDay(gd,gm,gy,hd){return calEvents.filter(function(ev){return ev.type==='greg'?ev.gd===gd&&ev.gm===gm:ev.hd===hd.d&&ev.hm===hd.m;});}
 function setEvType(t){calEvType=t;document.getElementById('evt-greg').className='ev-type-btn'+(t==='greg'?' sel':'');document.getElementById('evt-heb').className='ev-type-btn'+(t==='heb'?' sel':'');updEvDisp();}
 function updEvDisp(){var el=document.getElementById('ev-date-display');if(!el)return;if(!calSel){el.textContent='Sélectionnez un jour';return;}var hd=g2h(calSel.d,calSel.m,calSel.y);if(calEvType==='greg')el.textContent='Date : '+calSel.d+' '+FR_M[calSel.m]+' (chaque année)';else el.textContent='Date hébraïque : '+hd.d+' '+hmName(hd.m,hd.y,false)+' (chaque année)';}
-function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);calEvents.push({name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m});saveEv();
+function addEvent(){var name=document.getElementById('ev-name').value.trim();if(!name){alert('Entrez un nom.');return;}if(!calSel){alert('Sélectionnez un jour.');return;}var hd=g2h(calSel.d,calSel.m,calSel.y);var newEv={name:name,type:calEvType,gd:calSel.d,gm:calSel.m,hd:hd.d,hm:hd.m};
+  calEvents.push(newEv);saveEv();saveEvToSupabase(newEv);
   document.getElementById('ev-name').value='';
   // Remettre la date du jour
   var t=new Date();
@@ -2872,7 +2908,11 @@ function addEvent(){var name=document.getElementById('ev-name').value.trim();if(
   var evDateEl=document.getElementById('ev-selected-date');
   if(evDateEl) evDateEl.style.display='none';
   renderCalGrid();renderEvList();buildHome();}
-function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();}
+function delEvent(i){
+  var ev=calEvents[i];
+  if(ev) deleteEvFromSupabase(ev.name,ev.type);
+  calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();
+}
 function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
 function resetToToday(){
   var t=new Date();
@@ -6493,6 +6533,8 @@ function initSupabase(){
     supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
     // Charger les images thèmes dès que possible
     loadThemeImagesFromStorage();
+    // Charger les evenements depuis Supabase
+    setTimeout(function(){ loadEventsFromSupabase(); }, 1200);
     // Charger les notifs pour badge au démarrage
     setTimeout(function(){
       if(typeof loadNotifs==='function') loadNotifs().then(function(){ updateNotifBadge(); }).catch(function(){});
