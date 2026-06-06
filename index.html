@@ -2025,7 +2025,7 @@ function normalizeParashaName(s){
   s=s.replace(/[‘’ʼ`´]/g,"'");
   // Enlever diacritiques Unicode (NFD) + combining characters
   try{ s=s.normalize('NFD'); }catch(e){}
-  s=s.replace(/[̀-̧̨̲̱ͯ]/g,'');
+  s=s.replace(/[\u0300-\u036f\u0332\u0331]/g,'');
   // Variantes orthographiques courantes
   s=s.replace(/Ahare/gi,'Acharei')
      .replace(/Achare/gi,'Acharei')
@@ -2040,6 +2040,8 @@ function normalizeParashaName(s){
 
 function resolveParasha(raw){
   if(!raw) return null;
+  // 0. Nettoyer les caracteres combinants (ex: Chelah̲ Lekha de Hebcal)
+  raw = raw.replace(/[\u0300-\u036f\u0332\u0331\u0330]/g,'');
   // 1. Match direct
   var m=PARASHA_MAP[raw]; if(m) return m;
   // 2. Sans tirets
@@ -7954,10 +7956,21 @@ var COURS_DATA = {
   },
   "shelah-0": {
     "titre": "CHELA'H — Dimanche",
-    "sous_titre": "Nombres 13:1-2 — L'envoi des espions",
-    "accroche": "Pourquoi D.ieu permet-il d'envoyer des espions s'Il sait que leur rapport sera negatif ?",
-    "texte": "<p>La paracha Chela'h Lekha commence par l'envoi de douze espions en Terre de Canaan. Le Lubavitcher Rebbe souligne : D.ieu dit a Moise <em>Envoie pour toi</em> — c'est ton choix. La foi ne demande pas de preuves, elle les precede.</p>",
-    "source": "Rachi · Likoutei Si'hot · Sfat Emet"},
+    "sous_titre": "Nombres 13:1-16 — L'envoi des explorateurs",
+    "accroche": "Pourquoi D.ieu permet-il l'envoi des espions s'Il sait deja que leur rapport sera negatif ?",
+    "intro": "Au debut de la paracha Chela'h Lekha, D.ieu ordonne a Moise d'envoyer des explorateurs en Terre de Canaan — un par tribu. Moise choisit des hommes eminents. Pourquoi ce voyage est-il necessaire si D.ieu a deja promis la Terre ? Le Lubavitcher Rebbe pose cette question fondamentale.",
+    "verset": {
+      "heb": "שְׁלַח לְךָ אֲנָשִׁים — וְיָתֻרוּ אֶת אֶרֶץ כְּנַעַן",
+      "fr": "Envoie pour toi des hommes, qu'ils explorent la terre de Canaan.",
+      "ref": "Nombres 13:2"
+    },
+    "rachi": "Rachi commente le mot lekha — pour toi — : D.ieu ne l'a pas ordonne de Lui-meme. C'est a ta convenance, si tu veux. D.ieu savait que l'expedition tournerait mal, mais Il a respecte le libre choix du peuple. La foi veritable ne necessite pas de verification.",
+    "questions": "Pourquoi D.ieu dit-il 'envoie pour toi' et non simplement 'envoie' ? Qu'est-ce que cela nous apprend sur la relation entre foi et action ? Y a-t-il des moments ou chercher des 'preuves' affaiblit la foi plutot que de la renforcer ?",
+    "revelation": "Le Rabbi explique que le mot lekha signifie que D.ieu donnait au peuple la possibilite d'atteindre un niveau superieur de foi — croire sans verifier. Les espions etaient une opportunite manquee. La lecon pour nous : parfois le doute lui-meme est l'epreuve. La foi ne demande pas de preuves — elle les precede.",
+    "message": "Aujourd'hui, quand tu fais face a une decision importante — un projet, un changement de vie, une etape spirituelle — demande-toi : est-ce que je cherche des preuves parce que j'en ai besoin, ou parce que j'ai peur de faire confiance ? La foi veritable avance meme sans garanties.",
+    "source": "Rachi sur Nombres 13:2 · Likoutei Si'hot vol. 4, Chela'h",
+    "sefaria": "https://www.sefaria.org/Numbers.13.2?lang=bi&with=Rashi&lang2=fr"
+  },
   "shelah-1": {
     "titre": "CHÉLA'H — Lundi",
     "sous_titre": "Nombres 13:27-33 — Le rapport des espions",
