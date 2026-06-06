@@ -2634,25 +2634,6 @@ function openCal(){
   if(cvDay) cvDay.value=t.getDate();
   if(cvMon) cvMon.value=t.getMonth();
   if(cvYear) cvYear.value=t.getFullYear();
-  // Initialiser aussi les champs hébreu avec la date du jour
-  var hebMonEN = {1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
-    7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
-  var cvHebDay = document.getElementById('cv-heb-day');
-  var cvHebMon = document.getElementById('cv-heb-mon');
-  var cvHebYear = document.getElementById('cv-heb-year');
-  if(typeof hebDateStr !== 'undefined' && hebDateStr){
-    var _op = hebDateStr.trim().split(' ');
-    if(_op.length >= 3){
-      if(cvHebDay) cvHebDay.value = parseInt(_op[0])||1;
-      if(cvHebMon) cvHebMon.value = _op[1];
-      if(cvHebYear) cvHebYear.value = parseInt(_op[_op.length-1])||5786;
-    }
-  } else {
-    var hd0 = g2h(t.getDate(), t.getMonth(), t.getFullYear());
-    if(cvHebDay) cvHebDay.value = hd0.d;
-    if(cvHebMon && hebMonEN[hd0.m]) cvHebMon.value = hebMonEN[hd0.m];
-    if(cvHebYear) cvHebYear.value = hd0.y;
-  }
   updEvDisp(); renderEvList();
   renderCalGrid();
   renderCalFetes();
@@ -2660,6 +2641,20 @@ function openCal(){
   var calOv=document.getElementById('cal-overlay');
   if(calOv){ calOv.classList.add('open'); calOv.scrollTop=0; }
   else { console.error('[Cal] cal-overlay introuvable!'); }
+  // Charger la date hébraïque via Hebcal et remplir les champs
+  setTimeout(function(){
+    var gd=t.getDate(), gm=t.getMonth()+1, gy=t.getFullYear();
+    fetch('https://www.hebcal.com/converter?cfg=json&gy='+gy+'&gm='+gm+'&gd='+gd+'&g2h=1&strict=1')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var cvHD=document.getElementById('cv-heb-day');
+      var cvHM=document.getElementById('cv-heb-mon');
+      var cvHY=document.getElementById('cv-heb-year');
+      if(cvHD) cvHD.value=data.hd;
+      if(cvHM) cvHM.value=data.hm; // ex: "Sivan" - correspond aux valeurs du select
+      if(cvHY) cvHY.value=data.hy;
+    }).catch(function(){});
+  }, 200);
 }
 
 function closeCal(){
