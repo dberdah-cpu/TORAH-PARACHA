@@ -1458,10 +1458,10 @@ body{
        <input type="number" id="cv-heb-day" min="1" max="30" value="1" style="max-width:50px;">
        <select id="cv-heb-mon">
          <option value="Tishrei">Tishri</option><option value="Cheshvan">Cheshvan</option>
-         <option value="Kislev">Kislev</option><option value="Tevet" selected>Tevet</option>
+         <option value="Kislev">Kislev</option><option value="Tevet">Tevet</option>
          <option value="Shevat">Chevat</option><option value="Adar">Adar</option>
          <option value="Adar II">Adar II</option><option value="Nisan">Nissan</option>
-         <option value="Iyyar">Iyar</option><option value="Sivan">Sivan</option>
+         <option value="Iyyar">Iyar</option><option value="Sivan" selected>Sivan</option>
          <option value="Tamuz">Tamouz</option><option value="Av">Av</option><option value="Elul">Eloul</option>
        </select>
        <input type="number" id="cv-heb-year" min="5700" max="6000" value="5786" style="max-width:70px;">
@@ -2876,39 +2876,25 @@ function delEvent(i){calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList
 function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
 function resetToToday(){
   var t=new Date();
-  // Greg
+  // Remettre les champs grégoriens à aujourd'hui
   var cvDay=document.getElementById('cv-day');
   var cvMon=document.getElementById('cv-mon');
   var cvYear=document.getElementById('cv-year');
   if(cvDay) cvDay.value=t.getDate();
   if(cvMon) cvMon.value=t.getMonth();
   if(cvYear) cvYear.value=t.getFullYear();
-  // Heb — extraire directement depuis hebDateStr (ex: "20 Sivan 5786")
+  // Vider les champs hébreu (seront remplis par doConvert via Hebcal)
   var cvHD=document.getElementById('cv-heb-day');
-  var cvHM=document.getElementById('cv-heb-mon');
   var cvHY=document.getElementById('cv-heb-year');
-  if(typeof hebDateStr !== 'undefined' && hebDateStr){
-    var _hp = hebDateStr.trim().split(' ');
-    if(_hp.length >= 3 && cvHD && cvHM && cvHY){
-      cvHD.value = parseInt(_hp[0])||1;
-      cvHM.value = _hp[1]; // nom du mois anglais = valeur exacte du select
-      cvHY.value = parseInt(_hp[_hp.length-1])||5786;
-    }
-  } else {
-    var hd0=g2h(t.getDate(),t.getMonth(),t.getFullYear());
-    var HEN={1:'Nisan',2:'Iyyar',3:'Sivan',4:'Tamuz',5:'Av',6:'Elul',
-      7:'Tishrei',8:'Cheshvan',9:'Kislev',10:'Tevet',11:'Shevat',12:'Adar',13:'Adar II'};
-    if(cvHD) cvHD.value=hd0.d;
-    if(cvHM&&HEN[hd0.m]) cvHM.value=HEN[hd0.m];
-    if(cvHY) cvHY.value=hd0.y;
-  }
+  if(cvHD) cvHD.value='';
+  if(cvHY) cvHY.value='';
   // Vider résultats
-  var res=document.getElementById('conv-result');
-  if(res){res.innerHTML='';res.style.display='none';}
   var res2=document.getElementById('conv-result-heb');
   if(res2){res2.innerHTML='';res2.style.display='none';}
   var apres=document.getElementById('cv-apres-cs');
   if(apres) apres.checked=false;
+  // Lancer la conversion via Hebcal → remplit les champs hébreu correctement
+  doConvert();
 }
 
 function doConvertHebToGreg(){
