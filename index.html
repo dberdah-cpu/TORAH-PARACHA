@@ -2913,7 +2913,34 @@ function delEvent(i){
   if(ev) deleteEvFromSupabase(ev.name,ev.type);
   calEvents.splice(i,1);saveEv();renderCalGrid();renderEvList();buildHome();
 }
-function renderEvList(){var el=document.getElementById('events-list');if(!calEvents.length){el.innerHTML='';return;}var h='<h4>Mes événements</h4>';calEvents.forEach(function(ev,i){var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hébreu)';h+='<div class="ev-item"><div><div class="ev-item-name">🕯 '+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">✕</button></div>';});el.innerHTML=h;}
+function renderEvList(){
+  var el=document.getElementById('events-list');
+  if(!el) return;
+  if(!calEvents.length){el.innerHTML='';return;}
+  var count=calEvents.length;
+  var isOpen=el.dataset.open==='1';
+  var chevron=isOpen?'▴':'▾';
+  var h='<div onclick="toggleEvList()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;cursor:pointer;">'
+    +'<div style="font-size:13px;font-weight:700;color:var(--dark);font-family:Poppins,sans-serif;">Mes evenements <span style="background:var(--purple);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:4px;">'+count+'</span></div>'
+    +'<span style="color:var(--gray-4);font-size:14px;">'+chevron+'</span>'
+    +'</div>';
+  if(isOpen){
+    h+='<div>';
+    calEvents.forEach(function(ev,i){
+      var ds=ev.type==='greg'?'Chaque '+ev.gd+' '+FR_M[ev.gm]:'Chaque '+ev.hd+' '+HM[ev.hm-1]+' (hebreu)';
+      h+='<div class="ev-item"><div><div class="ev-item-name">'+ev.name+'</div><div class="ev-item-date">'+ds+'</div></div><button class="ev-del" onclick="delEvent('+i+')">x</button></div>';
+    });
+    h+='</div>';
+  }
+  el.innerHTML=h;
+}
+
+function toggleEvList(){
+  var el=document.getElementById('events-list');
+  if(!el) return;
+  el.dataset.open=el.dataset.open==='1'?'0':'1';
+  renderEvList();
+}
 function resetToToday(){
   var t=new Date();
   // Remettre les champs grégoriens à aujourd'hui
