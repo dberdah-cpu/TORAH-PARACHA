@@ -11946,9 +11946,7 @@ function adminSaveVideoEdit(id){
   if(!titre){ adminToast('Titre obligatoire'); return; }
   sbFetch('/rest/v1/videos_data?id=eq.'+id, 'PATCH', {titre: titre, message: msg})
   .then(function(){
-    // Fermer overlay
-    var overlays = document.querySelectorAll('div[style*="rgba(0,0,0,.5)"]');
-    overlays.forEach(function(o){ o.remove(); });
+    closeEditOverlay();
     adminToast('Vidéo modifiée !', true);
     adminLoadVideos();
   });
@@ -13941,8 +13939,8 @@ try {
         </div>
         <div id="adm-progress-text" style="font-size:11px;color:var(--gray-4);margin-top:4px;font-family:Poppins,sans-serif;text-align:center;"></div>
       </div>
-      <!-- URL résultante (cachée, remplie auto après upload) -->
-      <input type="hidden" id="     <input type="url" id="adm-vid-url" class="admin-input" placeholder="URL YouTube" style="margin-bottom:8px;">
+      <!-- URL YouTube ou remplie apres upload -->
+      <input type="url" id="adm-vid-url" class="admin-input" placeholder="URL YouTube (ex: https://youtu.be/...)" style="margin-bottom:8px;">
       <!-- Titre et description -->
       <input id="adm-titre" class="admin-input" placeholder="Titre de la vidéo *" style="margin-bottom:8px;">
       <textarea id="adm-message" class="admin-input" placeholder="Message / description (optionnel)" style="min-height:60px;resize:vertical;margin-bottom:12px;"></textarea>
