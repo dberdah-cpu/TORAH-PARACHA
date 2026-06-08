@@ -5938,41 +5938,40 @@ function renderBilingualHebrew(heVerses){
 
 var _rashiData={};
 function toggleRachi(n){var b=document.getElementById('bv-rachi-body-'+n);if(b)b.style.display=b.style.display==='none'?'block':'none';}
-function loadRashiForParasha(sr){
-  if(!sr) return;
+function loadRashiForParasha(parashaName){
+  if(!parashaName) return;
   _rashiData={};
-  var allChapters=[];
-  sr.split('|').forEach(function(ref){
-    var m=ref.match(/(\w+)\s+(\d+)(?:[-](\d+))?/);
-    if(!m) return;
-    var book=m[1],from=parseInt(m[2]),to=m[3]?parseInt(m[3]):from;
-    for(var ch=from;ch<=to;ch++) allChapters.push({book:book,ch:ch});
-  });
-  var offsets={}; var cumOffset=0;
-  allChapters.forEach(function(c){
-    offsets[c.book+c.ch]=cumOffset; cumOffset+=30;
-  });
-  allChapters.forEach(function(c){
-    var rRef='Rashi_on_'+c.book+'.'+c.ch;
-    var off=offsets[c.book+c.ch];
-    fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(rRef)+'?lang=he&context=0&commentary=0')
-    .then(function(r){return r.json();})
-    .then(function(data){
-      var arr=data.he||[];
-      arr.forEach(function(rv,i){
-        var clean=(Array.isArray(rv)?rv.join(' '):(rv||'')).replace(/<[^>]+>/g,'').trim();
-        if(!clean) return;
-        var vn=off+i+1;
-        _rashiData[vn]={he:clean};
-        var w=document.getElementById('bv-rachi-'+vn);
-        var h=document.getElementById('bv-rachi-heb-'+vn);
-        if(w) w.style.display='block';
-        if(h) h.textContent=clean;
+  var urls=['rachi.json','https://dberdah-cpu.github.io/TORAH-PARACHA/rachi.json'];
+  function tryUrl(i){
+    if(i>=urls.length){ console.warn('[Rachi] Impossible de charger rachi.json'); return; }
+    fetch(urls[i]).then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    }).then(function(data){
+      var pd = data[parashaName] || {};
+      var count = 0;
+      // Stocker les refs triées pour mapping séquentiel
+      var sortedRefs = Object.keys(pd).sort(function(a,b){
+        var pa=a.split(':'),pb=b.split(':');
+        return parseInt(pa[0])-parseInt(pb[0]) || parseInt(pa[1])-parseInt(pb[1]);
       });
-      console.log('[Rachi]',rRef,arr.length,'commentaires offset',off);
-    }).catch(function(){});
-  });
+      sortedRefs.forEach(function(ref, seqIdx){
+        var rashiHe = (pd[ref].he||pd[ref]||'');
+        if(!rashiHe) return;
+        var n = seqIdx+1;
+        _rashiData[n] = {he: rashiHe, fr: pd[ref].fr||'', ref: ref};
+        var w=document.getElementById('bv-rachi-'+n);
+        var h=document.getElementById('bv-rachi-heb-'+n);
+        if(w) w.style.display='block';
+        if(h) h.textContent=rashiHe;
+        count++;
+      });
+      console.log('[Rachi]',parashaName,count,'commentaires depuis',urls[i]);
+    }).catch(function(){ tryUrl(i+1); });
+  }
+  tryUrl(0);
 }
+
 function translateRachi(lang){var keys=Object.keys(_rashiData);if(!keys.length)return;var BATCH=3;for(var s=0;s<keys.length;s+=BATCH){(function(st){var batch=keys.slice(st,st+BATCH).map(function(k){return _rashiData[k].he;});var url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=he&tl='+lang+'&dt=t&q='+encodeURIComponent(batch.join('\n|||\n'));setTimeout(function(){fetch(url).then(function(r){return r.json();}).then(function(d){var tr='';if(d&&d[0])d[0].forEach(function(x){if(x&&x[0])tr+=x[0];});tr.split('|||').forEach(function(fr,j){var k=keys[st+j];if(!k)return;var el=document.getElementById('bv-rachi-fr-'+k);if(el){el.textContent=fr.trim();el.style.display='block';}});}).catch(function(){});},Math.floor(st/BATCH)*800);})(s);}}
 
 function renderBilingualEn(enVerses){
@@ -6115,7 +6114,7 @@ function openP(id){
     });
   });
   _rashiData={};
-  if(p.sr)setTimeout(function(){loadRashiForParasha(p.sr);},800);
+  if(p.name)setTimeout(function(){loadRashiForParasha(p.name);},800);
   show1MinInDetail(p.name);
   var btnKriat = document.getElementById("btn-kriat-p");
   if(btnKriat){ btnKriat.style.display="inline-block"; (function(pn){ btnKriat.onclick=function(){ openKriatTorah(pn); }; })(p.name); }
