@@ -10014,7 +10014,7 @@ function kriatLoadAliya(idx){
   
   // Sauter l'intro de 22s
   _kriatAudio.addEventListener('canplay', function(){
-    if(_kriatAudio.currentTime < 22) _kriatAudio.currentTime = 22;
+    if(_kriatAudio.currentTime < 24) _kriatAudio.currentTime = 24;
     _kriatAudio.play();
     document.getElementById('kriat-mini-playbtn').textContent = '⏸';
   }, {once: true});
@@ -10059,14 +10059,14 @@ function kriatNext(){
 
 function kriatPrev(){
   if(_kriatIdx > 0) kriatLoadAliya(_kriatIdx - 1);
-  else if(_kriatAudio) _kriatAudio.currentTime = 22;
+  else if(_kriatAudio) _kriatAudio.currentTime = 24;
 }
 
 function kriatSeek(e){
   if(!_kriatAudio || !_kriatAudio.duration) return;
   var bar = document.getElementById('kriat-progress-bar');
   var pct = e.offsetX / bar.offsetWidth;
-  _kriatAudio.currentTime = 22 + pct * (_kriatAudio.duration - 22);
+  _kriatAudio.currentTime = 24 + pct * (_kriatAudio.duration - 22);
 }
 
 function kriatClose(){
