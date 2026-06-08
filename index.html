@@ -5929,11 +5929,17 @@ function renderBilingualHebrew(heVerses){
       +'<div class="bv-heb">'+clean+'</div>'
       +'<div class="bv-en" id="bv-en-'+(i+1)+'"></div>'
       +'<div class="bv-fr" id="bv-fr-'+(i+1)+'"></div>'
+      +'<div id="bv-rachi-'+(i+1)+'" style="display:none;border-top:1px dashed #ddd;margin-top:6px;padding-top:4px;"><div onclick="toggleRachi('+(i+1)+')" style="font-size:11px;font-weight:700;color:#7c3aed;cursor:pointer;">Rachi</div><div id="bv-rachi-body-'+(i+1)+'" style="display:none"><div id="bv-rachi-heb-'+(i+1)+'" style="font-family:Noto Sans Hebrew,sans-serif;font-size:13px;direction:rtl;text-align:right;color:#555;line-height:1.7;margin-top:4px;"></div><div id="bv-rachi-fr-'+(i+1)+'" style="display:none;font-size:12px;color:#666;font-style:italic;line-height:1.6;"></div></div></div>'
       +'</div>';
   });
   var el=document.getElementById('d-bilingual');
   if(el) el.innerHTML=html||'<div class="loading-txt">Texte non disponible</div>';
 }
+
+var _rashiData={};
+function toggleRachi(n){var b=document.getElementById('bv-rachi-body-'+n);if(b)b.style.display=b.style.display==='none'?'block':'none';}
+function loadRashiForParasha(sr){if(!sr)return;_rashiData={};var parts=sr.split('|');parts.forEach(function(ref){var m=ref.match(/(\w+)\s+(\d+)/);if(!m)return;var rRef='Rashi_on_'+m[1]+'.'+m[2];fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(rRef)+'?lang=he&context=0&commentary=0').then(function(r){return r.json();}).then(function(data){var arr=data.he||[];arr.forEach(function(rv,i){var clean=(Array.isArray(rv)?rv.join(' '):(rv||'')).replace(/<[^>]+>/g,'').trim();if(!clean)return;_rashiData[i+1]={he:clean};var w=document.getElementById('bv-rachi-'+(i+1));var h=document.getElementById('bv-rachi-heb-'+(i+1));if(w)w.style.display='block';if(h)h.textContent=clean;});}).catch(function(){});});}
+function translateRachi(lang){var keys=Object.keys(_rashiData);if(!keys.length)return;var BATCH=3;for(var s=0;s<keys.length;s+=BATCH){(function(st){var batch=keys.slice(st,st+BATCH).map(function(k){return _rashiData[k].he;});var url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=he&tl='+lang+'&dt=t&q='+encodeURIComponent(batch.join('\n|||\n'));setTimeout(function(){fetch(url).then(function(r){return r.json();}).then(function(d){var tr='';if(d&&d[0])d[0].forEach(function(x){if(x&&x[0])tr+=x[0];});tr.split('|||').forEach(function(fr,j){var k=keys[st+j];if(!k)return;var el=document.getElementById('bv-rachi-fr-'+k);if(el){el.textContent=fr.trim();el.style.display='block';}});}).catch(function(){});},Math.floor(st/BATCH)*800);})(s);}}
 
 function renderBilingualEn(enVerses){
   enVersesCache=enVerses;
@@ -5976,6 +5982,7 @@ function doTranslatePage(){
       }
     });
     translateDone=true;
+    if(Object.keys(_rashiData).length) translateRachi(lang);
     if(btn){btn.innerHTML='✓ Traduit en '+lang.toUpperCase();btn.className='translate-btn done';btn.disabled=false;}
   });
 }
@@ -6073,6 +6080,8 @@ function openP(id){
       }
     });
   });
+  _rashiData={};
+  if(p.sr)setTimeout(function(){loadRashiForParasha(p.sr);},800);
   show1MinInDetail(p.name);
   var btnKriat = document.getElementById("btn-kriat-p");
   if(btnKriat){ btnKriat.style.display="inline-block"; (function(pn){ btnKriat.onclick=function(){ openKriatTorah(pn); }; })(p.name); }
