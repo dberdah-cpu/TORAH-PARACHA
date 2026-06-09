@@ -3393,7 +3393,8 @@ function closeShabbatPanel(){
 
 function renderShabbatPanel(){
   var cur=getP(currentCID)||P[0];
-  var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
+  var _curP=getP(currentCID)||cur;
+  var parashaDisplay=PARASHA_FR[currentParashaName]||PARASHA_FR[_curP.name]||currentParashaName||_curP.name||cur.name||'';
   var parashaHeb=currentParashaHeb||cur.heb;
   var mc=MC[currentCID]||{};
 
@@ -3682,7 +3683,7 @@ function buildHome(){
 
   // ── PARACHA — style prototype ──
   var parashaDisplay=PARASHA_FR[currentParashaName]||currentParashaName||cur.name;
-  var parashaHebDisplay=currentParashaHeb||cur.heb;
+  var parashaHebDisplay=currentParashaHeb||(typeof _curP!=='undefined'&&_curP?_curP.heb:'')||cur.heb||'';
   var curForBanner=getP(currentCID)||cur;
   // Résumé court pour "En bref"
   var mc=MC[currentCID]||{};
