@@ -10104,8 +10104,11 @@ function openKriatTorah(overrideName){
   if(!info){ alert('Lecture non disponible pour cette paracha.'); return; }
 
     var livre = info[0], slug = info[1], nom = info[2];
-  var base = 'https://download.torah-box.com/paracha/'+livre+'/'+slug+'/algerien/';
-  var hazzan = 'Rabbi-Emmanuel-Zaoui';
+  // Chemot et Vayikra : pas de version algerienne, utiliser tunisien
+  var isTunisien = (livre === 'chemot-exode' || livre === 'vayikra-levitique');
+  var rite = isTunisien ? 'tunisien' : 'algerien';
+  var hazzan = isTunisien ? 'Rabbi-Yigal-Cohen-Solal' : 'Rabbi-Emmanuel-Zaoui';
+  var base = 'https://download.torah-box.com/paracha/'+livre+'/'+slug+'/'+rite+'/';
   var alLabels = ['1ère Aliya','2ème Aliya','3ème Aliya','4ème Aliya','5ème Aliya','6ème Aliya','7ème Aliya'];
   _kriatParaFr = PARASHA_FR[parashaName] || parashaName;
   _kriatAliyot = [1,2,3,4,5,6,7].map(function(n,i){
