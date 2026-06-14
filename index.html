@@ -3631,7 +3631,7 @@ function buildHome(){
       + '<span style="font-size:22px;">🕯</span>'
       + '<div style="font-size:12px;font-weight:800;color:#92400E;letter-spacing:.5px;">CHABBAT · '+friStr+' – '+satStr+'</div>'
       + '</div>'
-      + (parashaDisplay ? '<div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:4px;">'+parashaDisplay+'</div>' : '')
+      + (PARASHA_FR[currentParashaName]||currentParashaName ? '<div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:4px;">'+(PARASHA_FR[currentParashaName]||currentParashaName)+'</div>' : '')
       + '<div style="font-size:12px;color:#b45309;">'
       + (candleTime ? 'Allumage vendredi <strong>'+candleTime+'</strong>' : '')
       + (candleTime && havdalaTime ? ' &nbsp;|&nbsp; ' : '')
