@@ -4247,7 +4247,7 @@ function openHayomYom(){
   var hd=parseHebDate(hebDateStr)||g2h(t.getDate(),t.getMonth(),t.getFullYear());
   var dateFrDisplay=hebDateFr||fmtHebFr(hd);
   var key='HY_'+todayISO();
-  document.getElementById('hy-date').textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
+  var _hyd=document.getElementById('hy-date'); if(_hyd) _hyd.textContent=dateFrDisplay+' · '+FR_D[t.getDay()]+' '+t.getDate()+' '+FR_M[t.getMonth()]+' '+t.getFullYear();
   document.getElementById('hy-content').style.display='block';
   document.getElementById('hy-iframe-container').style.display='none';
 
@@ -5976,6 +5976,15 @@ function loadRashiForParasha(parashaName){
       return r.json();
     }).then(function(data){
       var pd = data[parashaName] || {};
+      // Parashiot combinées (ex: Chukat-Balak) : fusionner les deux
+      if(Object.keys(pd).length===0 && parashaName.indexOf('-')>=0){
+        var parts=parashaName.split('-');
+        pd={};
+        parts.forEach(function(pn){
+          var sub=data[pn.trim()]||{};
+          Object.keys(sub).forEach(function(k){ pd[k]=sub[k]; });
+        });
+      }
       var count = 0;
       // Stocker les refs triées pour mapping séquentiel
       var sortedRefs = Object.keys(pd).sort(function(a,b){
@@ -10202,6 +10211,14 @@ async function load1MinVideo(parashaName){
   for(var j=0;j<_1minCache.length;j++){var t2=norm(_1minCache[j].snippet.title||'');if(enNorm&&t2.indexOf(enNorm)>=0)return _1minCache[j];}
   var fw=frNorm.split(' ').filter(function(w){return w.length>3;});
   for(var k=0;k<_1minCache.length;k++){var t3=norm(_1minCache[k].snippet.title||'');if(fw.length&&fw.every(function(w){return t3.indexOf(w)>=0;}))return _1minCache[k];}
+  // Parashiot combinées (ex: Chukat-Balak) : essayer chaque partie séparément
+  if(parashaName.indexOf('-')>=0){
+    var parts=parashaName.split('-');
+    for(var pi=0;pi<parts.length;pi++){
+      var partFr=norm(PARASHA_FR[parts[pi].trim()]||parts[pi].trim());
+      for(var m=0;m<_1minCache.length;m++){var tm=norm(_1minCache[m].snippet.title||'');if(partFr&&tm.indexOf(partFr)>=0)return _1minCache[m];}
+    }
+  }
   return null;
 }
 
