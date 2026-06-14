@@ -10023,7 +10023,7 @@ function kriatLoadAliya(idx){
   
   // Progression
   _kriatAudio.addEventListener('timeupdate', function(){
-    var dur = _kriatAudio.duration;
+    if(!_kriatAudio) return; var dur = _kriatAudio.duration;
     var cur = _kriatAudio.currentTime;
     if(dur > 0){
       var pct = Math.max(0, (cur - 22) / (dur - 22) * 100);
