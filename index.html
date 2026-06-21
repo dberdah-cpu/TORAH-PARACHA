@@ -3089,6 +3089,35 @@ function getVerset(hd){
   return VERSETS[idx]||VERSETS[0];
 }
 
+
+function renderKitsour(parashaName){
+  if(typeof KITSOUR_DATA==='undefined' || !parashaName) return '';
+  var list = KITSOUR_DATA[parashaName];
+  // Parashiot combinées
+  if(!list && parashaName.indexOf('-')>=0){
+    var parts=parashaName.split('-');
+    list=[];
+    parts.forEach(function(pn){ if(KITSOUR_DATA[pn.trim()]) list=list.concat(KITSOUR_DATA[pn.trim()]); });
+  }
+  if(!list || !list.length) return '';
+  var h='<div style="margin-top:24px;padding-top:20px;border-top:2px solid #e8e0d0;">';
+  h+='<div style="font-size:13px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;letter-spacing:0.5px;margin-bottom:4px;">✦ SI\'HOT DU REBBE</div>';
+  h+='<div style="font-size:12px;color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:16px;">Résumés (Kitsour) du Likoutei Si\'hot · Mafteiach</div>';
+  list.forEach(function(k){
+    h+='<div style="background:#faf7f0;border-radius:12px;padding:14px 16px;margin-bottom:12px;border-left:3px solid #7c3aed;">';
+    h+='<div style="font-size:14px;font-weight:700;color:#3a2f1a;font-family:Poppins,sans-serif;margin-bottom:4px;">'+k.titre+'</div>';
+    h+='<div style="font-size:11px;color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:10px;">'+k.ref+'</div>';
+    h+='<div style="font-size:14px;line-height:1.7;color:#4a3f2a;font-family:Georgia,serif;">'+k.kitsour+'</div>';
+    var links='';
+    if(k.sicha) links+='<a href="'+k.sicha+'" target="_blank" style="font-size:11px;color:#7c3aed;text-decoration:none;font-weight:600;font-family:Poppins,sans-serif;margin-right:14px;">📄 Si\'ha (hébreu)</a>';
+    if(k.traduit) links+='<a href="'+k.traduit+'" target="_blank" style="font-size:11px;color:#7c3aed;text-decoration:none;font-weight:600;font-family:Poppins,sans-serif;">🌐 Traduit</a>';
+    if(links) h+='<div style="margin-top:10px;">'+links+'</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+
 function showTab(t){
   currentTab=t;
   ['bilingual','sum','com'].forEach(function(x){
@@ -6124,7 +6153,7 @@ function openP(id){
     var ideeParacha=getParashaIdeeCle(id);
     var ideeBlock=ideeParacha?renderIdeeCle(ideeParacha):'';
     document.getElementById('d-summary').innerHTML=m.s+ideeBlock;
-    document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'');
+    document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'')+renderKitsour(p.name);
   });
   // Vue bilingue : hébreu + traduction française verset par verset
   var bilingualEl=document.getElementById('d-bilingual');
@@ -7659,7 +7688,111 @@ function openRecueilSearch(){
 // COURS TORAH · RACHI · RABBI
 // ══════════════════════════════════════════════════════════════
 
+var KITSOUR_DATA = {"Chukat": [{"titre": "La vache rousse et les 13 attributs de miséricorde", "ref": "Likoutei Si'hot vol. 4, p. 1056", "kitsour": "La vache rousse (para adouma) purifie parce qu'elle fait descendre les 13 attributs de miséricorde divine, qui se situent au-delà de l'ordre de l'enchaînement des mondes (séder hichtalchelout). Cette descente s'opère par le 'hok — l'accomplissement de la mitsva d'une manière qui dépasse la raison et l'intelligence. Et la force de ce dévouement (bitoul) total, nous la recevons de Moïse.", "sicha": "https://drive.google.com/open?id=1SiXUPZeYy5dwCHDnKjkkTmAOGAyOjHG_", "traduit": "https://drive.google.com/file/d/16LTW9MYMkcchC0kSOhPcKOI2UuiE_r7e/view"}, {"titre": "Pourquoi les mitsvot dépassent la raison", "ref": "Likoutei Si'hot vol. 8, p. 123 (Houkat I)", "kitsour": "Les nations ne contestent pas les mitsvot parce qu'elles seraient incompréhensibles — au contraire, le fait qu'une mitsva dépasse la raison est la preuve qu'elle vient de D.ieu. C'est pourquoi, à propos de la vache rousse, il est dit que « le Satan et les nations du monde raillent Israël », c'est-à-dire qu'ils prétendent qu'elle n'a aucun sens. La réponse de la Torah est : « tu n'as pas le droit de remettre en question » — car précisément ce qui dépasse l'entendement révèle l'origine divine.", "sicha": "https://drive.google.com/open?id=18ZHk3Hv0Mlroer-EttT8BrPNaRyAEgpd", "traduit": "https://drive.google.com/file/d/1TUtP5Ct2uv_gnwXaSYN8WA0FaNOwgAmD/view"}, {"titre": "La crainte de Moïse face à Og", "ref": "Likoutei Si'hot vol. 8, p. 134 (Houkat II)", "kitsour": "Rachi souligne que Moïse eut peur d'Og, contrairement au reste d'Israël. « Car Je l'ai livré entre tes mains » est dit dans le prolongement de « ne le crains pas », qui ne s'adresse qu'à Moïse — le peuple ne craignait pas Og, simple non-Juif, mais Moïse redoutait que le mérite d'Abraham ne protège Og. Rachi explique donc que le « entre tes mains » s'adresse spécifiquement à Moïse.", "sicha": "https://drive.google.com/open?id=1eTS3O49sSCaziOHx2AYewtH7al1VBnWk", "traduit": "https://drive.google.com/file/d/1m8W3yYiLx2mKcKvEAtu6cgA9FahCvAe7/view"}, {"titre": "Volonté unifiée et impureté du mort", "ref": "Likoutei Si'hot vol. 13, p. 66 (Houkat I)", "kitsour": "L'intellect se divise en détails, tandis que la volonté est une réalité une et indivisible : s'il manque un seul détail dans la volonté, c'est toute la volonté qui est atteinte. Ce principe s'exprime dans plusieurs lois liées à l'impureté du contact avec un mort (toumat met).", "sicha": "https://drive.google.com/open?id=1RoOzKT_Nlf8K3pMLzKLGaYKdP559I9Q6", "traduit": ""}, {"titre": "Le serpent d'airain : transformer la mort en vie", "ref": "Likoutei Si'hot vol. 13, p. 71 (Houkat II)", "kitsour": "Le serpent d'airain représente le retournement (it'hapkha) de la mort en vie, par la force de l'Infini, source de toute vie, qui se situe au-dessus de la Torah elle-même. C'est pourquoi la Torah ne précise pas explicitement qu'il devait être en cuivre — car cette transformation puise à une source qui transcende les définitions de la Torah.", "sicha": "https://drive.google.com/open?id=1R7MoVIuwYzUBI9wf6Jqm6ADvWQy1adAl", "traduit": ""}, {"titre": "La pureté éternelle gravée dans le corps", "ref": "Likoutei Si'hot vol. 18, p. 229 (Houkat I)", "kitsour": "La pureté s'opère par le « décret de la Torah » (houkat haTorah), car la Torah a le pouvoir d'imprimer une marque éternelle dans le corps, même après la séparation de l'âme et du corps. Lorsque l'attachement au corps provient de l'essence divine, cette essence demeure pour toujours. Cela fut révélé à Moïse — niveau de la sagesse (Hokhma) dont l'intériorité est Atik. Et cela ne contredit pas le dévouement (mesirout nefech) de Moïse, car tout son être est mesirout nefech.", "sicha": "https://drive.google.com/open?id=1SMQTXltRDtgv5WQ7UT-V51XciOVKE4ta", "traduit": "https://drive.google.com/file/d/1zaa9VDmWhDUNOI-Xi6u1KLTVJLBSkCW7/view"}, {"titre": "Houkat-Balak et le 12 Tamouz : le dévouement au-delà de la raison", "ref": "Likoutei Si'hot vol. 18, p. 300 (Houkat-Balak, 12-13 Tamouz)", "kitsour": "Le lien de la paracha Houkat avec le 12 Tamouz (libération du Rabbi précédent) tient au 'hok — ce qui dépasse la raison : le dévouement du Rabbi Rayats fut total, sans se demander s'il y avait obligation de se sacrifier. Le lien avec Balak tient à la haine : Balak haïssait Israël plus que tout autre ennemi. Et le lien avec Houkat-Balak réuni, c'est que cette haine se situait elle aussi au-dessous de la raison (une haine « par décret »). Par le dévouement du Rabbi, situé au-dessus de la raison, fut annulée l'opposition située au-dessous de la raison.", "sicha": "https://drive.google.com/open?id=1IAi9p9FCXpQ3Du2esehmKOBG8GSzeOzj", "traduit": "https://drive.google.com/file/d/1P0ja_1j69mPFUnu1xs1zQcgdDaj16zpj/view"}], "Masei": [{"titre": "Les 42 voyages de chaque âme", "ref": "Likoutei Si'hot vol. 4, p. 1083", "kitsour": "Il y a quarante-deux voyages (mas'ot) dans la vie de chaque personne. Ces voyages sont en eux-mêmes sainteté ; ce n'est qu'à cause du libre arbitre que certains sont devenus des étapes non désirées. Mais dans leur essence, chacun fait partie du chemin d'élévation de l'âme.", "sicha": "https://drive.google.com/open?id=14YFHpAYGtOlAo92sncU-08XHYpz0xE61", "traduit": "https://drive.google.com/file/d/1bJSYhg55hRvTDo6zaEBzfYeF6X9g-lvn/view"}, {"titre": "Trois niveaux de Torah : héritage, achat, don", "ref": "Likoutei Si'hot vol. 13, p. 114 (Masei I)", "kitsour": "Il y a trois dimensions dans la Torah : (1) l'héritage (yeroucha) — la Torah est liée à chaque Juif du fait même de son existence ; (2) l'achat (mekhira) — la Torah que l'homme reçoit à la mesure de son effort ; (3) le don (matana) — la Torah telle qu'elle dépasse toute proportion avec l'homme, venant d'en haut après la perfection de son service. De même, concernant la Terre d'Israël, il existe une dimension de « tirage au sort » (goral) qui dépasse le travail de l'homme.", "sicha": "https://drive.google.com/open?id=1MuznGLOcq_aLkYmOEcuJUNDZqW3xvJcr", "traduit": ""}, {"titre": "Les descentes qui sont des montées", "ref": "Likoutei Si'hot vol. 18, p. 390 (Masei I)", "kitsour": "Les voyages renvoient à la descente de l'âme ici-bas, qui est une descente en vue d'une élévation — « il le conduisit pour le guérir ». Même dans les fautes que l'homme commet de lui-même, après la téchouva (le retour), on peut voir que la faute elle-même servait « à le guérir », pour l'élévation qui en résulte.", "sicha": "https://drive.google.com/open?id=1x03aNdYpRt6675X8kR1JH7GJlCPslodR", "traduit": "https://drive.google.com/file/d/1eER9HHM_MZEt7zzoIQNcW486XQ6URK7k/view"}, {"titre": "Avancer d'un mouvement sans mesure", "ref": "Likoutei Si'hot vol. 23, p. 224 (Masei I)", "kitsour": "L'homme doit être un « marcheur » (mehalekh) — c'est-à-dire progresser d'une avancée sans commune mesure avec son niveau actuel. C'est le sens de « voici les voyages » : faire allusion à ce que l'homme doit toujours s'élever d'une marche infinie, sans proportion avec ce qu'il était.", "sicha": "https://drive.google.com/file/d/1D-ltATZlAtux9zX-On4gBswQljJCoXiM/view", "traduit": "https://drive.google.com/file/d/1Mflq_f9bQuBODpy_4v7bHr-MQcuS3OwR/view"}, {"titre": "Les villes de refuge et la mort du Grand Prêtre", "ref": "Likoutei Si'hot vol. 33, p. 206 (Masei II)", "kitsour": "Le séjour dans les villes de refuge n'a pas seulement pour but de protéger le meurtrier involontaire de la vengeance du goel hadam, mais aussi de le sauver du jugement (« il n'a pas de sang »). Cet état perdure jusqu'à la mort du Grand Prêtre, selon les deux explications de Rachi : soit parce qu'il n'est pas digne de se trouver devant le Cohen Gadol, soit parce que la mort du Cohen Gadol apporte l'expiation.", "sicha": "https://drive.google.com/open?id=14AFwZRIzd8Mz2jTxJkAxDigkn9-_auO4", "traduit": ""}]};
+
 var COURS_DATA = {
+  "masei-0": {
+      "titre": "Massei — Dimanche",
+      "sous_titre": "Nombres 33:1 — Les 42 voyages",
+      "accroche": "Pourquoi la Torah énumère-t-elle les 42 campements du désert ?",
+      "intro": "La paracha Massei s'ouvre par une longue liste : les quarante-deux étapes du voyage d'Israël depuis l'Égypte jusqu'aux portes de la Terre promise. Pourquoi consigner chaque campement, chaque halte dans le désert ? Le Rabbi y voit la carte secrète de toute vie humaine.",
+      "verset": {
+          "heb": "אֵלֶּה מַסְעֵי בְנֵי יִשְׂרָאֵל",
+          "fr": "Voici les voyages des enfants d'Israël...",
+          "ref": "Nombres 33:1"
+      },
+      "rachi": "Rachi s'interroge : pourquoi énumérer tous ces voyages ? Il répond en citant le Midrach : pour faire connaître les bontés de D.ieu. Malgré le décret d'errance de quarante ans, Israël ne fut pas ballotté sans cesse — sur ces quarante-deux étapes, quatorze eurent lieu la première année, et la plupart du reste à la fin. Pendant de longues périodes, le peuple resta installé, en repos.",
+      "questions": "Le Rabbi (Likoutei Si'hot vol. 4, Massei) pose la question essentielle : pourquoi la Torah, qui ne contient pas un mot superflu, consacre-t-elle un chapitre entier à une simple liste géographique ? Et surtout : le mot Massei (voyages) est au pluriel. Or le premier déplacement partait d'Égypte — mais les suivants partaient de lieux déjà dans le désert. Pourquoi tout appeler voyages depuis l'Égypte ?",
+      "revelation": "Le Rabbi enseigne que les quarante-deux voyages ne sont pas seulement de l'histoire — ce sont les quarante-deux étapes de l'âme. Chaque être humain accomplit, au cours de sa vie, son propre périple depuis sa propre Égypte (Mitsraïm, de la racine metsarim, les limites, les contraintes) vers sa Terre promise — l'accomplissement de sa mission. Chaque halte, même celles qui semblent être des reculs, fait partie du chemin. Et si tout voyage est nommé depuis l'Égypte, c'est parce que chaque étape de l'élévation reste reliée au point de départ : c'est en sortant de nos limites que nous avançons. Le voyage n'est jamais terminé tant qu'on n'a pas atteint le but — mais chaque pas en fait déjà partie.",
+      "message": "Ta vie n'est pas une suite d'événements dispersés. C'est un voyage avec une direction. Même les étapes qui ressemblent à des arrêts, même les déserts traversés, sont des campements sur la route de ta Terre promise. Rien n'est perdu. Tout te porte vers l'avant.",
+      "source": "Rachi sur Nombres 33:1 · Likoutei Si'hot vol. 4, Massei",
+      "sefaria": "https://www.sefaria.org/Numbers.33.1?lang=bi&with=Rashi&lang2=fr"
+  },
+  "masei-1": {
+      "titre": "Massei — Lundi",
+      "sous_titre": "Nombres 33:2 — Avancer sans cesse",
+      "accroche": "Pourquoi la vie spirituelle ne doit-elle jamais s'arrêter ?",
+      "intro": "Massei est au pluriel : les voyages. Le Rabbi en tire une leçon sur le rythme même de la vie de l'âme — celui d'une montée perpétuelle, sans plateau ni point d'arrivée définitif.",
+      "verset": {
+          "heb": "וַיִּכְתֹּב מֹשֶׁה אֶת מוֹצָאֵיהֶם לְמַסְעֵיהֶם",
+          "fr": "Moïse écrivit leurs points de départ selon leurs voyages...",
+          "ref": "Nombres 33:2"
+      },
+      "rachi": "Le verset associe les points de départ (motsaeihem) aux voyages (mas'eihem). Rachi note que Moïse consigna par écrit, sur ordre divin, chaque départ et chaque étape — donnant à ce mouvement une valeur éternelle, inscrite dans la Torah.",
+      "questions": "Le Rabbi (Likoutei Si'hot vol. 23, Massei) demande : pourquoi insister sur le mouvement perpétuel ? Une fois qu'on a atteint un niveau spirituel élevé, pourquoi ne pas s'y reposer ? Qu'y a-t-il de si essentiel dans le fait de toujours repartir ?",
+      "revelation": "Le Rabbi explique que l'homme doit toujours être en marche — un mehalekh, celui qui avance, par opposition à l'ange appelé omed, celui qui se tient immobile. Le propre de l'être humain, c'est de ne jamais rester sur place. Aussi élevé que soit le niveau atteint, il ne doit jamais devenir une fin. Eleh massei — voici les voyages — enseigne que la vie est faite d'ascensions sans commune mesure les unes avec les autres. Chaque palier atteint doit devenir le tremplin du suivant. S'arrêter, se contenter de ce qu'on a acquis, c'est déjà reculer. La grandeur de l'homme n'est pas dans le niveau qu'il occupe, mais dans son mouvement constant vers le haut — un mouvement qui dépasse toute mesure, ein erokh.",
+      "message": "Ne te repose jamais sur tes acquis spirituels. Ce que tu as atteint hier était bon pour hier. Aujourd'hui appelle un nouveau pas. La vraie vie de l'âme, c'est le mouvement — toujours plus haut, toujours plus loin, sans jamais se croire arrivé.",
+      "source": "Rachi sur Nombres 33:2 · Likoutei Si'hot vol. 23, Massei",
+      "sefaria": "https://www.sefaria.org/Numbers.33.2?lang=bi&with=Rashi&lang2=fr"
+  },
+  "masei-2": {
+      "titre": "Massei — Mardi",
+      "sous_titre": "Nombres 33 — Les descentes qui élèvent",
+      "accroche": "Comment une chute peut-elle devenir une ascension ?",
+      "intro": "Parmi les quarante-deux voyages, certains menèrent Israël vers des lieux d'épreuve et de faute. Le Rabbi révèle un secret bouleversant : même les descentes font partie de la montée.",
+      "verset": {
+          "heb": "וַיִּסְעוּ מֵרַעְמְסֵס",
+          "fr": "Ils partirent de Ramsès...",
+          "ref": "Nombres 33:3"
+      },
+      "rachi": "La Torah décrit le départ d'Égypte main haute, avec assurance et fierté, aux yeux de toute l'Égypte. Mais le voyage qui suivit traversa aussi des lieux de chute — Kivrot HaTaava (les tombeaux du désir), les eaux de Mériba. Le texte les nomme pourtant tous massei, voyages, sans distinction.",
+      "questions": "Le Rabbi (Likoutei Si'hot vol. 18, Massei) pose une question dérangeante : comment des étapes liées aux fautes d'Israël peuvent-elles être appelées voyages au même titre que les autres ? Une faute n'est-elle pas un recul, l'inverse d'une avancée ?",
+      "revelation": "Le Rabbi enseigne une vérité profonde de la téchouva. Le verset compare le voyage à un père qui conduit son fils malade vers un lieu de guérison : holikho lerapeoto, il le mène pour le soigner. Même les étapes douloureuses, même les lieux de chute, faisaient partie du chemin de guérison. Car par la téchouva — le retour vers D.ieu — l'homme peut transformer ses propres fautes en moteur d'élévation. Le Talmud enseigne que pour celui qui revient par amour, les fautes délibérées se changent en mérites. La descente elle-même devient, rétrospectivement, le ressort d'une montée plus haute. Ce qui semblait un éloignement se révèle avoir été lerapeoto — pour le guérir. Rien dans le parcours d'une âme n'est définitivement perdu.",
+      "message": "Tes chutes ne sont pas la fin de ton histoire. Par le retour sincère, ce qui t'a fait tomber peut devenir précisément ce qui te fait monter plus haut que jamais. D.ieu ne conduit pas Ses enfants vers la chute — Il les conduit, à travers tout, vers la guérison.",
+      "source": "Rachi sur Nombres 33 · Likoutei Si'hot vol. 18, Massei · Talmud Yoma 86b",
+      "sefaria": "https://www.sefaria.org/Numbers.33.3?lang=bi&with=Rashi&lang2=fr"
+  },
+  "masei-3": {
+      "titre": "Massei — Mercredi",
+      "sous_titre": "Nombres 35:11 — Les villes de refuge",
+      "accroche": "Pourquoi le meurtrier involontaire reste-t-il enfermé jusqu'à la mort du Grand Prêtre ?",
+      "intro": "La paracha institue les villes de refuge (arei miklat), où celui qui a tué involontairement trouve protection. Mais une loi étrange s'y attache : il doit y rester jusqu'à la mort du Cohen Gadol. Le Rabbi en dévoile le sens caché.",
+      "verset": {
+          "heb": "וְהִקְרִיתֶם לָכֶם עָרִים עָרֵי מִקְלָט",
+          "fr": "Vous vous désignerez des villes, des villes de refuge...",
+          "ref": "Nombres 35:11"
+      },
+      "rachi": "Rachi explique que les villes de refuge protègent le meurtrier involontaire du vengeur du sang (goel hadam). Mais le retour à la liberté n'est possible qu'à la mort du Grand Prêtre. Rachi donne deux raisons : soit parce qu'il n'était pas digne de se trouver devant le Cohen Gadol, soit parce que la mort du Cohen Gadol apporte l'expiation.",
+      "questions": "Le Rabbi (Likoutei Si'hot vol. 33, Massei) interroge : quel lien entre la mort du Grand Prêtre et la libération du meurtrier involontaire ? Et pourquoi cette protection est-elle si absolue que le réfugié ne peut sortir, même pour sauver une vie ?",
+      "revelation": "Le Rabbi explique que la ville de refuge n'est pas une prison — c'est un espace de réparation spirituelle. Le meurtrier involontaire n'est pas un criminel, mais sa négligence a brisé quelque chose dans le monde. La Torah l'envoie dans un lieu où il pourra reconstruire son lien à la vie. Le Cohen Gadol représente le sommet de la sainteté d'Israël, celui qui élève tout le peuple. Tant qu'il vit, le contraste entre sa perfection et la faute du réfugié maintient ce dernier à distance. Sa disparition, paradoxalement, apporte l'expiation : le départ d'un juste éveille une téchouva collective et répare les brèches. La ville de refuge enseigne ainsi que même une faute involontaire exige une transformation — non par punition, mais par élévation.",
+      "message": "Même ce que tu as brisé sans le vouloir appelle une réparation. La Torah ne t'enferme pas dans la culpabilité — elle t'offre un espace pour reconstruire, te recentrer, retrouver le sens du caractère sacré de la vie. La faute involontaire n'est pas effacée par l'oubli, mais transformée par la croissance.",
+      "source": "Rachi sur Nombres 35:11 · Likoutei Si'hot vol. 33, Massei",
+      "sefaria": "https://www.sefaria.org/Numbers.35.11?lang=bi&with=Rashi&lang2=fr"
+  },
+  "masei-4": {
+      "titre": "Massei — Jeudi",
+      "sous_titre": "Nombres 34:2 — La Terre choisie",
+      "accroche": "Pourquoi la Terre d'Israël est-elle le seul lieu choisi par D.ieu ?",
+      "intro": "Avant d'entrer en Canaan, D.ieu trace les frontières précises de la Terre promise. Le Rabbi explique pourquoi cette terre-là, et pas une autre, est le lieu de la destinée d'Israël.",
+      "verset": {
+          "heb": "זֹאת הָאָרֶץ אֲשֶׁר תִּפֹּל לָכֶם בְּנַחֲלָה",
+          "fr": "Voici le pays qui vous tombera en héritage...",
+          "ref": "Nombres 34:2"
+      },
+      "rachi": "Le verset emploie une expression inhabituelle : la terre qui tombera (tipol) en héritage. Rachi relie cette chute à un sort tombé du ciel — la répartition de la terre se fit par tirage au sort divin (goral), au-delà du calcul humain.",
+      "questions": "Le Rabbi (Likoutei Si'hot vol. 18, Massei) demande : pourquoi parler de chute pour un héritage ? Et pourquoi le Rambam interdit-il de quitter la Terre d'Israël, comme s'il y avait là plus qu'une terre ordinaire ?",
+      "revelation": "Le Rabbi enseigne que la Terre d'Israël est le lieu que D.ieu a choisi pour Son peuple — eretz acher Hachem Elokeikha doresh otah, une terre que D.ieu scrute en permanence. Le mot tipol, tombera, évoque le goral, le sort tombé d'en haut : la connexion entre Israël et sa terre dépasse la logique et le mérite humains. C'est un lien d'essence, gravé d'avance. De même que la Torah comporte une dimension de don gratuit (matana) au-delà de l'effort de l'homme, la Terre d'Israël est donnée par une grâce qui transcende le travail. Le Rambam interdit d'en sortir car y résider, c'est habiter le lieu même où la présence divine se révèle. Quitter cette terre, ce n'est pas changer de pays — c'est s'éloigner du lieu du regard divin.",
+      "message": "Il existe pour chacun un lieu, une mission, une vocation choisis d'en haut — au-delà de ce que tu pourrais calculer ou mériter. Reconnaître cette part de grâce dans ta vie, c'est découvrir que tu es relié à quelque chose de plus grand que tes seuls efforts.",
+      "source": "Rachi sur Nombres 34:2 · Likoutei Si'hot vol. 18, Massei · Rambam Hilkhot Melakhim 5",
+      "sefaria": "https://www.sefaria.org/Numbers.34.2?lang=bi&with=Rashi&lang2=fr"
+  },
+  "masei-5": {
+      "titre": "Massei — Vendredi",
+      "sous_titre": "Nombres 33 — Héritage, acquisition, don",
+      "accroche": "La Torah : on en hérite, on l'acquiert, ou on la reçoit ?",
+      "intro": "Pour clore la paracha et le livre des Nombres, le Rabbi dégage des voyages d'Israël une vision en trois niveaux du rapport à la Torah — qui éclaire la manière dont chacun la reçoit.",
+      "verset": {
+          "heb": "אֵלֶּה מַסְעֵי בְנֵי יִשְׂרָאֵל",
+          "fr": "Voici les voyages des enfants d'Israël...",
+          "ref": "Nombres 33:1"
+      },
+      "rachi": "Les voyages culminent dans l'entrée en Terre d'Israël, le lieu où la Torah doit être pleinement vécue. Rachi souligne tout au long du livre que chaque étape prépare cet accomplissement : recevoir la Torah, puis la vivre concrètement sur la terre.",
+      "questions": "Le Rabbi (Likoutei Si'hot vol. 13, Massei) distingue trois rapports possibles à la Torah, à l'image des trois manières d'acquérir la Terre. Comment ces trois niveaux coexistent-ils, et que nous enseignent-ils sur notre propre étude ?",
+      "revelation": "Le Rabbi enseigne qu'il existe trois dimensions dans le lien à la Torah. La première est l'héritage (yeroucha) : la Torah appartient à chaque Juif du seul fait de sa naissance, indépendamment de tout effort — Torah tsiva lanou Moché moracha, un héritage pour toute la communauté de Jacob. La deuxième est l'acquisition (mekhira) : la Torah que l'homme gagne à la mesure de son labeur et de sa peine — yagaata oumatsata, tu as peiné et tu as trouvé. La troisième est le don (matana) : la Torah telle qu'elle dépasse toute proportion avec l'homme, qui descend d'en haut comme une grâce, une fois que l'homme a accompli sa part. Ces trois niveaux ne s'excluent pas : on commence par l'héritage reçu, on le fait sien par l'effort, et l'on s'ouvre alors au don qui transcende l'effort. Le voyage de l'âme passe par ces trois étapes.",
+      "message": "La Torah est à toi par naissance — c'est ton héritage. Mais pour qu'elle devienne vraiment tienne, il faut la conquérir par l'effort. Et lorsque tu as donné le meilleur de toi-même, s'ouvre alors un don qui te dépasse. Hérite, travaille, et reçois — c'est tout le voyage d'une vie.",
+      "source": "Rachi sur Nombres 33 · Likoutei Si'hot vol. 13, Massei",
+      "sefaria": "https://www.sefaria.org/Numbers.33.1?lang=bi&with=Rashi&lang2=fr"
+  },
   "behar-0": {
     "titre": "Behar — Dimanche",
     "sous_titre": "Lévitique 25:1 — Sur le mont Sinaï",
@@ -9540,7 +9673,7 @@ function getCoursKey(paracha, day){
     'choukat':'choukat', 'chukkat':'choukat', 'houkat':'choukat',
     'balak':'balak',
     'pinhas':'pinhas', 'pinkhas':'pinhas',
-    'matot':'matot', 'masei':'matot', 'matos':'matot',
+    'matot':'matot', 'masei':'masei', 'massei':'masei', 'matos':'matot',
     'devarim':'devarim',
     'vaethanan':'vaethanan', 'vaetkhanan':'vaethanan',
     'ekev':'ekev',
