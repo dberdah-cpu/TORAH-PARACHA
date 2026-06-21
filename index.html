@@ -720,9 +720,9 @@ body{
   margin:16px 20px 20px;gap:2px;
 }
 .seg-btn{
-  flex:1;padding:9px 4px;border-radius:10px;
+  flex:1;padding:9px 3px;border-radius:10px;
   border:none;background:transparent;
-  font-size:12px;font-weight:700;color:var(--gray-3);
+  font-size:11.5px;font-weight:700;color:var(--gray-3);
   cursor:pointer;-webkit-appearance:none;
   transition:all .2s;letter-spacing:0.3px;
   font-family:'Poppins',sans-serif;
@@ -1607,6 +1607,7 @@ body{
     <button class="seg-btn active" onclick="showTab('bilingual')">Texte</button>
     <button class="seg-btn" onclick="showTab('sum')">Résumé</button>
     <button class="seg-btn" onclick="showTab('com')">Commentaire</button>
+    <button class="seg-btn" onclick="showTab('sichot')">Si'hot</button>
   </div>
   <div id="tab-bilingual" class="tab-panel active">
     <div id="d-bilingual">
@@ -1616,6 +1617,7 @@ body{
   </div>
   <div id="tab-sum" class="tab-panel"><div class="sumblock" id="d-summary"></div></div>
   <div id="tab-com" class="tab-panel"><div class="comblock" id="d-commentary"></div></div>
+  <div id="tab-sichot" class="tab-panel"><div class="comblock" id="d-sichot"></div></div>
 </div>
 <script>
 // PARACHIOT
@@ -3100,9 +3102,8 @@ function renderKitsour(parashaName){
     parts.forEach(function(pn){ if(KITSOUR_DATA[pn.trim()]) list=list.concat(KITSOUR_DATA[pn.trim()]); });
   }
   if(!list || !list.length) return '';
-  var h='<div style="margin-top:24px;padding-top:20px;border-top:2px solid #e8e0d0;">';
-  h+='<div style="font-size:13px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;letter-spacing:0.5px;margin-bottom:4px;">✦ SI\'HOT DU REBBE</div>';
-  h+='<div style="font-size:12px;color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:16px;">Résumés (Kitsour) du Likoutei Si\'hot · Mafteiach</div>';
+  var h='<div style="padding-top:4px;">';
+  h+='<div style="font-size:12px;color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:16px;">Résumés (Kitsour) du Likoutei Si\'hot du Rabbi de Loubavitch · source Mafteiach</div>';
   list.forEach(function(k){
     h+='<div style="background:#faf7f0;border-radius:12px;padding:14px 16px;margin-bottom:12px;border-left:3px solid #7c3aed;">';
     h+='<div style="font-size:14px;font-weight:700;color:#3a2f1a;font-family:Poppins,sans-serif;margin-bottom:4px;">'+k.titre+'</div>';
@@ -3120,12 +3121,12 @@ function renderKitsour(parashaName){
 
 function showTab(t){
   currentTab=t;
-  ['bilingual','sum','com'].forEach(function(x){
+  ['bilingual','sum','com','sichot'].forEach(function(x){
     var el=document.getElementById('tab-'+x);
     if(el) el.className='tab-panel'+(x===t?' active':'');
   });
   document.querySelectorAll('.seg-btn').forEach(function(el,i){
-    el.className='seg-btn'+(['bilingual','sum','com'][i]===t?' active':'');
+    el.className='seg-btn'+(['bilingual','sum','com','sichot'][i]===t?' active':'');
   });
 }
 
@@ -6153,7 +6154,9 @@ function openP(id){
     var ideeParacha=getParashaIdeeCle(id);
     var ideeBlock=ideeParacha?renderIdeeCle(ideeParacha):'';
     document.getElementById('d-summary').innerHTML=m.s+ideeBlock;
-    document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'')+renderKitsour(p.name);
+    document.getElementById('d-commentary').innerHTML=m.co+(m.so?'<span class="sources">Sources · '+m.so+'</span>':'');
+    var sichotEl=document.getElementById('d-sichot');
+    if(sichotEl){ var sk=renderKitsour(p.name); sichotEl.innerHTML=sk||'<div class="loading-txt">Les Si\'hot du Rabbi pour cette paracha seront bientôt disponibles.</div>'; }
   });
   // Vue bilingue : hébreu + traduction française verset par verset
   var bilingualEl=document.getElementById('d-bilingual');
