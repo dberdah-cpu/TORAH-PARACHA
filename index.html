@@ -13280,7 +13280,7 @@ function setDetailTabsScale(val){
   var scale = 0.85 + (val/100)*0.65;
   ['d-summary','d-commentary','d-sichot','d-bilingual'].forEach(function(id){
     var el = document.getElementById(id);
-    if(el) el.style.fontSize = scale+'rem';
+    if(el) el.style.zoom = scale;
   });
   try { localStorage.setItem('pgscale_detail-tabs', val); } catch(e){}
 }
@@ -13295,7 +13295,7 @@ function setPageScale(containerId, val){
   var el = document.getElementById(containerId);
   if(!el) return;
   var scale = 0.85 + (val/100)*0.65;
-  el.style.setProperty('--font-scale', scale);
+  el.style.zoom = scale;
   try { localStorage.setItem('pgscale_'+containerId, val); } catch(e){}
 }
 function initPageScale(containerId){
