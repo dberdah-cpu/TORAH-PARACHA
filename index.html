@@ -784,6 +784,13 @@ body{
 .comblock p{margin-bottom:14px;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
 .comblock strong{color:var(--purple);font-weight:700}
 .sources{display:block;font-size:11px;color:var(--gray-3);margin-top:12px;font-style:italic}
+/* Kitsour Si'hot */
+.ks-card{background:#faf7f0;border-radius:12px;padding:14px 16px;margin-bottom:12px;border-left:3px solid #7c3aed;}
+.ks-meta{color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:16px;font-size:.8em;}
+.ks-title{font-weight:700;color:#3a2f1a;font-family:Poppins,sans-serif;margin-bottom:4px;}
+.ks-ref{color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:10px;font-size:.78em;}
+.ks-body{line-height:1.7;color:#4a3f2a;font-family:Georgia,serif;}
+.ks-link{color:#7c3aed;text-decoration:none;font-weight:600;font-family:Poppins,sans-serif;font-size:.78em;}
 
 /* ── Idée clé ── */
 
@@ -3216,15 +3223,15 @@ function renderKitsour(parashaName){
   }
   if(!list || !list.length) return '';
   var h='<div style="padding-top:4px;">';
-  h+='<div style="font-size:12px;color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:16px;">Résumés (Kitsour) du Likoutei Si\'hot du Rabbi de Loubavitch · source Mafteiach</div>';
+  h+='<div class="ks-meta">Résumés (Kitsour) du Likoutei Si\'hot du Rabbi de Loubavitch · source Mafteiach</div>';
   list.forEach(function(k){
-    h+='<div style="background:#faf7f0;border-radius:12px;padding:14px 16px;margin-bottom:12px;border-left:3px solid #7c3aed;">';
-    h+='<div style="font-size:14px;font-weight:700;color:#3a2f1a;font-family:Poppins,sans-serif;margin-bottom:4px;">'+k.titre+'</div>';
-    h+='<div style="font-size:11px;color:#9a8860;font-family:Poppins,sans-serif;margin-bottom:10px;">'+k.ref+'</div>';
-    h+='<div style="font-size:14px;line-height:1.7;color:#4a3f2a;font-family:Georgia,serif;">'+k.kitsour+'</div>';
+    h+='<div class="ks-card">';
+    h+='<div class="ks-title">'+k.titre+'</div>';
+    h+='<div class="ks-ref">'+k.ref+'</div>';
+    h+='<div class="ks-body">'+k.kitsour+'</div>';
     var links='';
-    if(k.sicha) links+='<a href="'+k.sicha+'" target="_blank" style="font-size:11px;color:#7c3aed;text-decoration:none;font-weight:600;font-family:Poppins,sans-serif;margin-right:14px;">📄 Si\'ha (hébreu)</a>';
-    if(k.traduit) links+='<a href="'+k.traduit+'" target="_blank" style="font-size:11px;color:#7c3aed;text-decoration:none;font-weight:600;font-family:Poppins,sans-serif;">🌐 Traduit</a>';
+    if(k.sicha) links+='<a href="'+k.sicha+'" target="_blank" class="ks-link" style="margin-right:14px;">📄 Si\'ha (hébreu)</a>';
+    if(k.traduit) links+='<a href="'+k.traduit+'" target="_blank" class="ks-link">🌐 Traduit</a>';
     if(links) h+='<div style="margin-top:10px;">'+links+'</div>';
     h+='</div>';
   });
@@ -13280,7 +13287,7 @@ function setDetailTabsScale(val){
   var scale = 0.85 + (val/100)*0.65;
   ['d-summary','d-commentary','d-sichot','d-bilingual'].forEach(function(id){
     var el = document.getElementById(id);
-    if(el) el.style.zoom = scale;
+    if(el){ el.style.fontSize = scale+'rem'; el.style.zoom = ''; }
   });
   try { localStorage.setItem('pgscale_detail-tabs', val); } catch(e){}
 }
