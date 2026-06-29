@@ -2809,9 +2809,9 @@ function renderCalZmanim(d){
       rowsHtml+='</div>';
     });
     var h='<div style="background:#faf7f0;border-radius:12px;margin:0 4px 6px;border:1px solid #ece4d4;overflow:hidden;">';
-    h+='<div onclick="(function(el){var b=el.nextElementSibling;var open=b.style.display!==\'none\';b.style.display=open?\'none\':\'block\';el.querySelector(\'.zm-arrow\').textContent=open?\'›\':\'‹\';})(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer;">';
-    h+='<span style="font-size:11px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;letter-spacing:.3px;">⏰ Horaires du jour</span>';
-    h+='<span class="zm-arrow" style="font-size:16px;color:#7c3aed;font-weight:700;">›</span>';
+    h+='<div onclick="(function(el){var b=el.nextElementSibling;var open=b.style.display!==\'none\';b.style.display=open?\'none\':\'block\';el.querySelector(\'.zm-arrow\').textContent=open?\'▲\':\'▼\';})(this)" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;cursor:pointer;">';
+    h+='<span style="font-size:14px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;letter-spacing:.5px;">⏰ Horaires du jour</span>';
+    h+='<span class="zm-arrow" style="font-size:11px;color:#7c3aed;font-weight:700;">▼</span>';
     h+='</div>';
     h+='<div style="display:none;padding:0 12px 10px;">';
     h+=rowsHtml;
@@ -3794,15 +3794,15 @@ function buildHome(){
     var feteDate = new Date(nextFete.date);
     var FR_MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
     var feteJour = feteDate.getDate() + ' ' + FR_MOIS[feteDate.getMonth()];
-    h += '<div style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:var(--radius);padding:12px 16px;">';
-    h += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:4px;">' + (nextFete.isFast?'🕊 JEÛNE · ':'✨ FÊTE · ') + feteJour + '</div>';
-    h += '<div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">' + feteLabel + '</div>';
+    h += '<div style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:var(--radius);padding:14px 16px;text-align:center;">';
+    h += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:6px;">' + (nextFete.isFast?'🕊 JEÛNE · ':'✨ FÊTE · ') + feteJour + '</div>';
+    h += '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;">' + feteLabel + '</div>';
     if(nextFete.isFast){
-      if(nextFete.fastStart) h += '<div style="font-size:11px;color:rgba(255,255,255,.85);">🌅 Début ' + nextFete.fastStart + '</div>';
-      if(nextFete.fastEnd) h += '<div style="font-size:11px;color:rgba(255,255,255,.85);">⭐ Fin ' + nextFete.fastEnd + '</div>';
+      if(nextFete.fastStart) h += '<div style="font-size:12px;color:rgba(255,255,255,.85);">🌅 Début ' + nextFete.fastStart + '</div>';
+      if(nextFete.fastEnd) h += '<div style="font-size:12px;color:rgba(255,255,255,.85);">⭐ Fin ' + nextFete.fastEnd + '</div>';
     } else {
-      if(nextFete.candleTime) h += '<div style="font-size:11px;color:rgba(255,255,255,.8);">🕯 Allumage ' + nextFete.candleTime + '</div>';
-      if(nextFete.havdalaTime) h += '<div style="font-size:11px;color:rgba(255,255,255,.8);">✨ Havdala ' + nextFete.havdalaTime + '</div>';
+      if(nextFete.candleTime) h += '<div style="font-size:12px;color:rgba(255,255,255,.8);">🕯 Allumage ' + nextFete.candleTime + '</div>';
+      if(nextFete.havdalaTime) h += '<div style="font-size:12px;color:rgba(255,255,255,.8);">✨ Havdala ' + nextFete.havdalaTime + '</div>';
     }
     h += '</div>';
   }
@@ -13462,8 +13462,8 @@ function renderAllCours(){
   if(!p){
     h += '<div style="padding:32px 16px;text-align:center;color:var(--gray-3);font-family:Poppins,sans-serif;">Cours à venir — revenez bientôt.</div>';
   } else {
-    h += '<div style="margin:0 16px 10px;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow-sm);overflow:hidden;border-left:3px solid var(--purple);">';
-    h += '<div style="padding:11px 14px 6px;color:var(--purple);font-weight:800;font-size:15px;font-family:Poppins,sans-serif;">'+p.nom+'</div>';
+    h += '<div style="margin:0 16px 10px;border-radius:var(--radius);background:linear-gradient(135deg,#1E1B4B,#312E81);box-shadow:0 4px 20px rgba(49,46,129,0.3);overflow:hidden;">';
+    h += '<div style="padding:12px 16px 8px;color:rgba(255,255,255,0.9);font-weight:800;font-size:15px;font-family:Poppins,sans-serif;">'+p.nom+'</div>';
 
     for(var i=0; i<=5; i++){
       var k = p.key+'-'+i;
@@ -13472,13 +13472,13 @@ function renderAllCours(){
       var isToday   = (i === todayDay);
       var isPastDay = (i < todayDay);
       var canClick  = isPastDay || isToday;
-      var dotCol    = canClick ? 'color:var(--purple)' : 'color:#ddd';
-      var textCol   = isToday ? 'color:var(--purple);font-weight:700;' : canClick ? 'color:var(--dark);' : 'color:#bbb;';
-      var todayBg   = isToday ? 'background:rgba(124,58,237,0.06);' : '';
+      var dotCol    = canClick ? 'color:rgba(255,255,255,0.9)' : 'color:rgba(255,255,255,0.2)';
+      var textCol   = isToday ? 'color:#fff;font-weight:700;' : canClick ? 'color:rgba(255,255,255,0.85);' : 'color:rgba(255,255,255,0.3);';
+      var todayBg   = isToday ? 'background:rgba(255,255,255,0.1);' : '';
       var clickAttr = canClick ? 'onclick="openCours(\''+k+'\')"' : '';
       var cursor    = canClick ? 'cursor:pointer;' : 'cursor:default;';
-      var todayBadge = isToday ? '<span style="font-size:9px;background:var(--purple);color:#fff;padding:1px 6px;border-radius:8px;font-family:Poppins,sans-serif;margin-left:6px;">Aujourd\'hui</span>' : '';
-      h += '<div '+clickAttr+' style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid rgba(0,0,0,0.04);'+cursor+todayBg+'">';
+      var todayBadge = isToday ? '<span style="font-size:9px;background:rgba(255,255,255,0.25);color:#fff;padding:1px 6px;border-radius:8px;font-family:Poppins,sans-serif;margin-left:6px;">Aujourd\'hui</span>' : '';
+      h += '<div '+clickAttr+' style="display:flex;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid rgba(255,255,255,0.07);'+cursor+todayBg+'">';
       h += '<span style="font-size:11px;min-width:28px;font-family:Poppins,sans-serif;'+textCol+'font-weight:600;">'+dayNames[i]+'</span>';
       h += '<span style="font-size:12px;'+textCol+'font-family:Poppins,sans-serif;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+c.accroche+todayBadge+'</span>';
       h += '<span style="font-size:12px;'+dotCol+'">'+( canClick ? '›' : '')+'</span>';
