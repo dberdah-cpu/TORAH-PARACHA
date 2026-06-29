@@ -13432,63 +13432,66 @@ function renderAllCours(){
   ];
 
   var now = new Date();
-  var m = now.getMonth(); var d = now.getDate();
-  // Déterminer le prefix courant
-  var currentPrefix = null;
-  if(m===4 && d>=3  && d<=9)  currentPrefix='behar';
-  else if(m===4 && d>=10 && d<=16) currentPrefix='bamidbar';
-  else if(m===4 && d>=17 && d<=23) currentPrefix='nasso';
-  else if(m===4 && d>=24 || (m===5 && d<=6)) currentPrefix='behalotecha';
-  else if(m===5 && d>=7  && d<=13) currentPrefix='shelah';
-  else if(m===5 && d>=14 && d<=20) currentPrefix='korah';
-  else if(m===5 && d>=21 && d<=27) currentPrefix='choukat';
-  else if(m===5 && d>=28 || (m===6 && d<=4)) currentPrefix='balak';
-  else if(m===6 && d>=5  && d<=11) currentPrefix='pinhas';
-  else if(m===6 && d>=12 && d<=18) currentPrefix='matot';
-  else if(m===6 && d>=19 && d<=25) currentPrefix='devarim';
-  else if(m===6 && d>=26 || (m===7 && d<=1)) currentPrefix='vaethanan';
-  else if(m===7 && d>=2  && d<=8)  currentPrefix='ekev';
-  else if(m===7 && d>=9  && d<=15) currentPrefix='reeh';
-  else if(m===7 && d>=16 && d<=22) currentPrefix='choftim';
-  else if(m===7 && d>=23 && d<=29) currentPrefix='kitavo';
-  else if(m===7 && d>=30 || (m===8 && d<=5)) currentPrefix='nitsavim';
-
+  // Utiliser le calendrier Hebcal (currentParashaName) plutôt que des plages codées en dur
+  var HEBCAL_TO_KEY = {
+    'Behar':'behar','Bechukotai':'behar','Behar-Bechukotai':'behar','Behar-Bechukotai':'behar',
+    'Bamidbar':'bamidbar',
+    'Naso':'nasso',
+    "Beha'alotcha":'behalotecha',"Beha'alotecha":'behalotecha',
+    "Sh'lach":'shelah','Shelach':'shelah',
+    'Korach':'korah',
+    'Chukat':'choukat','Chukat-Balak':'balak',
+    'Balak':'balak',
+    'Pinchas':'pinhas','Pinhas':'pinhas',
+    'Matot':'matot','Masei':'matot','Matot-Masei':'matot',
+    'Devarim':'devarim',
+    'Vaetchanan':'vaethanan',
+    'Eikev':'ekev',
+    "Re'eh":'reeh',
+    'Shoftim':'choftim',
+    'Ki Tavo':'kitavo',
+    'Nitzavim':'nitsavim','Vayelech':'nitsavim','Nitzavim-Vayelech':'nitsavim'
+  };
+  var currentPrefix = HEBCAL_TO_KEY[currentParashaName] || null;
   var currentIdx = PARASHOT_ORDER.findIndex(function(p){return p.key===currentPrefix;});
   var dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven'];
 
+  // Uniquement la paracha de la semaine courante
+  var p = currentIdx >= 0 ? PARASHOT_ORDER[currentIdx] : null;
+  var todayDay = now.getDay(); // 0=Dim … 5=Ven, 6=Sam (pas de cours)
+
   var h = '<div style="padding:16px 16px 0;">'
-    +'<div style="font-size:20px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;">📚 Tous les cours</div>'
-    +'<div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:16px;">Torah · Rachi · Rabbi · Behar → Nitsavim</div>'
+    +'<div style="font-size:20px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:4px;">📖 Cours de la semaine</div>'
+    +'<div style="font-size:13px;color:var(--gray-4);font-family:Poppins,sans-serif;margin-bottom:16px;">Torah · Rachi · Rabbi'+(p?' · '+p.nom:'')+'</div>'
     +'</div>';
 
-  PARASHOT_ORDER.forEach(function(p, idx){
-    var isCurrent = (idx === currentIdx);
-    var isPast    = (idx < currentIdx);
-    var border    = isCurrent ? 'border-left:3px solid var(--purple);' : '';
-    var bg        = isCurrent ? 'background:rgba(124,58,237,0.04);' : 'background:#fff;';
-    var badge     = isCurrent ? '<span style="font-size:10px;background:var(--purple);color:#fff;padding:2px 7px;border-radius:10px;font-family:Poppins,sans-serif;margin-left:6px;">Cette semaine</span>' : '';
-    var nameCol   = isCurrent ? 'color:var(--purple);font-weight:800;' : isPast ? 'color:var(--dark);font-weight:700;' : 'color:var(--gray-4);font-weight:700;';
-
-    h += '<div style="margin:0 16px 10px;border-radius:var(--radius);'+bg+'box-shadow:var(--shadow-sm);overflow:hidden;'+border+'">';
-    h += '<div style="padding:11px 14px 6px;'+nameCol+'font-size:15px;font-family:Poppins,sans-serif;">'+p.nom+badge+'</div>';
+  if(!p){
+    h += '<div style="padding:32px 16px;text-align:center;color:var(--gray-3);font-family:Poppins,sans-serif;">Cours à venir — revenez bientôt.</div>';
+  } else {
+    h += '<div style="margin:0 16px 10px;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow-sm);overflow:hidden;border-left:3px solid var(--purple);">';
+    h += '<div style="padding:11px 14px 6px;color:var(--purple);font-weight:800;font-size:15px;font-family:Poppins,sans-serif;">'+p.nom+'</div>';
 
     for(var i=0; i<=5; i++){
       var k = p.key+'-'+i;
       if(!COURS_DATA[k]) continue;
       var c = COURS_DATA[k];
-      var canClick = isPast || isCurrent;
-      var dotCol = canClick ? 'color:var(--purple)' : 'color:#ddd';
-      var textCol = canClick ? 'color:var(--dark)' : 'color:#bbb';
-      var clickAttr = canClick ? 'onclick="openCours(\'' + k + '\')"' : '';
-      var cursor = canClick ? 'cursor:pointer;' : 'cursor:default;';
-      h += '<div '+clickAttr+' style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-top:1px solid rgba(0,0,0,0.04);'+cursor+'">';
+      var isToday   = (i === todayDay);
+      var isPastDay = (i < todayDay);
+      var canClick  = isPastDay || isToday;
+      var dotCol    = canClick ? 'color:var(--purple)' : 'color:#ddd';
+      var textCol   = isToday ? 'color:var(--purple);font-weight:700;' : canClick ? 'color:var(--dark);' : 'color:#bbb;';
+      var todayBg   = isToday ? 'background:rgba(124,58,237,0.06);' : '';
+      var clickAttr = canClick ? 'onclick="openCours(\''+k+'\')"' : '';
+      var cursor    = canClick ? 'cursor:pointer;' : 'cursor:default;';
+      var todayBadge = isToday ? '<span style="font-size:9px;background:var(--purple);color:#fff;padding:1px 6px;border-radius:8px;font-family:Poppins,sans-serif;margin-left:6px;">Aujourd\'hui</span>' : '';
+      h += '<div '+clickAttr+' style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid rgba(0,0,0,0.04);'+cursor+todayBg+'">';
       h += '<span style="font-size:11px;min-width:28px;font-family:Poppins,sans-serif;'+textCol+'font-weight:600;">'+dayNames[i]+'</span>';
-      h += '<span style="font-size:12px;'+textCol+'font-family:Poppins,sans-serif;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+c.accroche+'</span>';
-      h += '<span style="font-size:12px;'+dotCol+'">›</span>';
+      h += '<span style="font-size:12px;'+textCol+'font-family:Poppins,sans-serif;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+c.accroche+todayBadge+'</span>';
+      h += '<span style="font-size:12px;'+dotCol+'">'+( canClick ? '›' : '')+'</span>';
       h += '</div>';
     }
     h += '</div>';
-  });
+  }
 
   document.getElementById('view-histoires').innerHTML = h;
 }
