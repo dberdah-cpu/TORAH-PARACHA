@@ -1450,6 +1450,8 @@ body{
   <div id="cal-date-bar-greg"></div>
   <div id="cal-date-bar-heb"></div>
  </div>
+ <!-- Zmanim du jour -->
+ <div id="cal-zmanim"></div>
  <!-- Grille -->
  <div id="cal-body"></div>
  <!-- Utilitaires -->
@@ -2144,7 +2146,7 @@ function loadHebcalAll(lat,lng,cb){
   var startDate=t2.getFullYear()+'-'+pad2(t2.getMonth()+1)+'-01';
   var endT=new Date(t2.getFullYear(),t2.getMonth()+6,0);
   var endDate=endT.getFullYear()+'-'+pad2(endT.getMonth()+1)+'-'+pad2(endT.getDate());
-  var holUrl='https://www.hebcal.com/hebcal?cfg=json&v=1&maj=on&min=on&mf=on&ss=on&s=off&c=off&start='+startDate+'&end='+endDate;
+  var holUrl='https://www.hebcal.com/hebcal?cfg=json&v=1&maj=on&min=on&mf=on&ss=on&s=off&c=on&geo=pos&latitude='+lat+'&longitude='+lng+'&b=18&M=on&lg=fr&start='+startDate+'&end='+endDate;
 
   var done=0; var total=4; // +1 pour l'API sédrot
   function check(){done++;if(done===total)cb();}
@@ -2195,18 +2197,30 @@ function loadHebcalAll(lat,lng,cb){
         }
         if(it.category==='candles') candleTime=fmtHebcalTime(it.date);
         if(it.category==='havdalah') havdalaTime=fmtHebcalTime(it.date);
-        // Détecter prochaine fête (holiday avec candles associé)
-        if(it.category==='holiday' && it.date){
+        // Détecter prochaine fête OU jeûne (holiday/fast avec horaires associés)
+        var isFast = (it.category==='fast' || it.subcat==='fast' || /jeûne|jeune|fast|tzom|ta.anit|tish.a/i.test(it.title||''));
+        if((it.category==='holiday' || isFast) && it.date){
           var feteDate = new Date(it.date);
           var now = new Date();
           var diffDays = Math.ceil((feteDate - now) / (1000*60*60*24));
-          // Fête dans les 7 prochains jours (pas Chabbat)
+          // Fête/jeûne dans les 7 prochains jours (pas Chabbat)
           var nom = it.title||'';
           var isChabbat = nom.toLowerCase().indexOf('shabbat')>=0 || nom.toLowerCase().indexOf('chabbat')>=0;
           if(!isChabbat && diffDays >= 0 && diffDays <= 7){
             if(!nextFete || feteDate < new Date(nextFete.date)){
-              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', diffDays: diffDays };
+              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', fastStart: '', fastEnd: '', isFast: isFast, diffDays: diffDays };
             }
+          }
+        }
+        // Capturer les horaires de jeûne : Hebcal envoie des events "Fast begins"/"Fast ends"
+        // (en français : "Le jeûne commence"/"Le jeûne se termine")
+        if(it.date && it.date.indexOf('T')>=0){
+          var titL = (it.title||'').toLowerCase();
+          var isFastBegin = titL.indexOf('fast begins')>=0 || titL.indexOf('jeûne commence')>=0 || titL.indexOf('jeune commence')>=0 || titL.indexOf('début du jeûne')>=0;
+          var isFastEnd = titL.indexOf('fast ends')>=0 || titL.indexOf('jeûne se termine')>=0 || titL.indexOf('jeune se termine')>=0 || titL.indexOf('fin du jeûne')>=0;
+          if(nextFete && (isFastBegin || isFastEnd)){
+            if(isFastBegin) nextFete.fastStart = fmtHebcalTime(it.date);
+            if(isFastEnd) nextFete.fastEnd = fmtHebcalTime(it.date);
           }
         }
         // Associer les candles/havdala à la fête si c'est le même jour
@@ -2215,11 +2229,32 @@ function loadHebcalAll(lat,lng,cb){
           var fDate = nextFete.date ? nextFete.date.split('T')[0] : '';
           if(cDate === fDate) nextFete.candleTime = fmtHebcalTime(it.date);
         }
+        if(it.category==='havdalah' && nextFete && it.date){
+          var hvDate = it.date.split('T')[0];
+          var hfDate = nextFete.date ? nextFete.date.split('T')[0] : '';
+          if(hvDate === hfDate) nextFete.havdalaTime = fmtHebcalTime(it.date);
+        }
       });
-      check();
+      // Fallback : si jeûne détecté sans horaires, récupérer alot/tzeit via API zmanim
+      if(nextFete && nextFete.isFast && (!nextFete.fastStart || !nextFete.fastEnd) && nextFete.date){
+        var fDay = nextFete.date.split('T')[0];
+        var zLat = (lat||48.8566), zLng = (lng||2.3522);
+        var zUrl = 'https://www.hebcal.com/zmanim?cfg=json&date='+fDay+'&latitude='+zLat+'&longitude='+zLng;
+        fetch(zUrl).then(function(r){return r.json();}).then(function(zd){
+          if(zd && zd.times){
+            if(!nextFete.fastStart && zd.times.alotHaShachar){
+              var ta=new Date(zd.times.alotHaShachar); nextFete.fastStart=ta.getHours()+'h'+String(ta.getMinutes()).padStart(2,'0');
+            }
+            if(!nextFete.fastEnd && zd.times.tzeit85deg){
+              var te=new Date(zd.times.tzeit85deg); nextFete.fastEnd=te.getHours()+'h'+String(te.getMinutes()).padStart(2,'0');
+            }
+          }
+          check();
+        }).catch(function(){check();});
+      } else {
+        check();
+      }
     }).catch(function(){check();});
-
-  // Tsét HaKochavim via API Zmanim Hebcal
   (function(){
     var now2 = new Date();
     var dateStr2 = now2.getFullYear()+'-'+String(now2.getMonth()+1).padStart(2,'0')+'-'+String(now2.getDate()).padStart(2,'0');
@@ -2702,6 +2737,7 @@ function openCal(){
   renderCalGrid();
   renderCalFetes();
   updateCalDateBar(t);
+  renderCalZmanim(t);
   var calOv=document.getElementById('cal-overlay');
   if(calOv){ calOv.classList.add('open'); calOv.scrollTop=0; }
   else { console.error('[Cal] cal-overlay introuvable!'); }
@@ -2738,6 +2774,46 @@ function calMove(dir){
   if(calM<0){calM=11;calY--;}
   renderCalGrid();
   renderCalFetes();
+}
+
+function renderCalZmanim(d){
+  var box=document.getElementById('cal-zmanim');
+  if(!box) return;
+  var lat=(typeof userLat!=='undefined'&&userLat?userLat:48.8566);
+  var lng=(typeof userLng!=='undefined'&&userLng?userLng:2.3522);
+  var ds=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+  box.innerHTML='<div style="font-size:11px;color:#9a8860;font-family:Poppins,sans-serif;text-align:center;padding:6px;">Chargement des horaires…</div>';
+  var url='https://www.hebcal.com/zmanim?cfg=json&date='+ds+'&latitude='+lat.toFixed(4)+'&longitude='+lng.toFixed(4);
+  fetch(url).then(function(r){return r.json();}).then(function(zd){
+    if(!zd||!zd.times){ box.innerHTML=''; return; }
+    var T=zd.times;
+    function hm(iso){ if(!iso) return '—'; var t=new Date(iso); return t.getHours()+'h'+String(t.getMinutes()).padStart(2,'0'); }
+    // Horaires clés (simplifiés)
+    var rows=[
+      ['🌅','Aube (Alot haCha\'har)', T.alotHaShachar],
+      ['🪢','Talit & Téfilines', T.misheyakir],
+      ['☀️','Lever du soleil', T.sunrise],
+      ['📖','Fin du Chéma (Gra)', T.sofZmanShma],
+      ['🙏','Fin Téfila (Gra)', T.sofZmanTfilla],
+      ['🕛','Milieu du jour (\'Hatsot)', T.chatzot],
+      ['🕐','Min\'ha Guédola', T.minchaGedola],
+      ['🕒','Min\'ha Kétana', T.minchaKetana],
+      ['🌆','Plag Hamin\'ha', T.plagHaMincha],
+      ['🌇','Coucher du soleil', T.sunset],
+      ['⭐','Sortie des étoiles', T.tzeit85deg]
+    ];
+    var h='<div style="background:#faf7f0;border-radius:12px;padding:10px 12px;margin:0 4px 6px;border:1px solid #ece4d4;">';
+    h+='<div style="font-size:11px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;text-align:center;margin-bottom:8px;letter-spacing:.3px;">⏰ HORAIRES DU JOUR</div>';
+    rows.forEach(function(r){
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 2px;border-bottom:1px solid #f0e9da;font-family:Poppins,sans-serif;">';
+      h+='<span style="font-size:12px;color:#4a3f2a;">'+r[0]+' '+r[1]+'</span>';
+      h+='<span style="font-size:12px;font-weight:700;color:#3a2f1a;">'+hm(r[2])+'</span>';
+      h+='</div>';
+    });
+    h+='<div style="font-size:9px;color:#b0a585;font-family:Poppins,sans-serif;text-align:center;margin-top:6px;">Selon votre position · source Hebcal</div>';
+    h+='</div>';
+    box.innerHTML=h;
+  }).catch(function(){ box.innerHTML=''; });
 }
 
 function updateCalDateBar(d){
@@ -2846,6 +2922,7 @@ function renderUpcomingFetes(){renderCalFetes();}
 function calDayClick(d){
   calSel={d:d,m:calM,y:calY};
   updateCalDateBar(new Date(calY,calM,d));
+  renderCalZmanim(new Date(calY,calM,d));
   updEvDisp();
   updateAddEventDateDisplay();
   renderCalGrid(); // re-render pour mettre à jour la sélection
@@ -3711,15 +3788,27 @@ function buildHome(){
       .replace(/Simchat Torah/i,'Simhat Torah')
       .replace(/Shemini Atzeret/i,'Chemini Atseret')
       .replace(/Passover/i,'Pessah')
-      .replace(/Shavuot/i,'Chavouot');
+      .replace(/Shavuot/i,'Chavouot')
+      .replace(/Tzom Tammuz/i,'17 Tamouz')
+      .replace(/Tish.a B.Av/i,'Ticha BeAv')
+      .replace(/Tzom Gedaliah/i,'Tsom Guedalia')
+      .replace(/Asara B.Tevet/i,'10 Tevet')
+      .replace(/Ta.anit Esther/i,'Jeûne d\'Esther')
+      .replace(/Fast of /i,'Jeûne ');
     // Date de la fête
     var feteDate = new Date(nextFete.date);
     var FR_MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
     var feteJour = feteDate.getDate() + ' ' + FR_MOIS[feteDate.getMonth()];
-    h += '<div onclick="openFetePanel()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:10px;padding:8px 10px;cursor:pointer;min-width:0;">';
-    h += '<div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:2px;white-space:nowrap;">✨ FÊTE · ' + feteJour + '</div>';
+    h += '<div style="flex:1;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:10px;padding:8px 10px;min-width:0;">';
+    h += '<div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:2px;white-space:nowrap;">' + (nextFete.isFast?'🕊 JEÛNE · ':'✨ FÊTE · ') + feteJour + '</div>';
     h += '<div style="font-size:11px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + feteLabel + '</div>';
-    if(nextFete.candleTime) h += '<div style="font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;">🕯 ' + nextFete.candleTime + '</div>';
+    if(nextFete.isFast){
+      if(nextFete.fastStart) h += '<div style="font-size:9px;color:rgba(255,255,255,.85);white-space:nowrap;">🌅 Début ' + nextFete.fastStart + '</div>';
+      if(nextFete.fastEnd) h += '<div style="font-size:9px;color:rgba(255,255,255,.85);white-space:nowrap;">⭐ Fin ' + nextFete.fastEnd + '</div>';
+    } else {
+      if(nextFete.candleTime) h += '<div style="font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;">🕯 ' + nextFete.candleTime + '</div>';
+      if(nextFete.havdalaTime) h += '<div style="font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;">✨ ' + nextFete.havdalaTime + '</div>';
+    }
     h += '</div>';
   }
 
