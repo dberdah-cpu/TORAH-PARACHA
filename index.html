@@ -1444,13 +1444,13 @@ body{
    <div class="cal-dow" style="color:#AF52DE">Sa</div>
   </div>
  </div>
+ <!-- Zmanim du jour (accordéon, au-dessus de la date bar) -->
+ <div id="cal-zmanim"></div>
  <!-- Date info bar -->
  <div id="cal-date-bar">
   <div id="cal-date-bar-greg"></div>
   <div id="cal-date-bar-heb"></div>
  </div>
- <!-- Zmanim du jour -->
- <div id="cal-zmanim"></div>
  <!-- Grille -->
  <div id="cal-body"></div>
  <!-- Utilitaires -->
@@ -2781,7 +2781,7 @@ function renderCalZmanim(d){
   var lat=(typeof userLat!=='undefined'&&userLat?userLat:48.8566);
   var lng=(typeof userLng!=='undefined'&&userLng?userLng:2.3522);
   var ds=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
-  box.innerHTML='<div style="font-size:11px;color:#9a8860;font-family:Poppins,sans-serif;text-align:center;padding:6px;">Chargement des horaires…</div>';
+  box.innerHTML='';
   var url='https://www.hebcal.com/zmanim?cfg=json&date='+ds+'&latitude='+lat.toFixed(4)+'&longitude='+lng.toFixed(4);
   fetch(url).then(function(r){return r.json();}).then(function(zd){
     if(!zd||!zd.times){ box.innerHTML=''; return; }
@@ -2801,15 +2801,22 @@ function renderCalZmanim(d){
       ['🌇','Coucher du soleil', T.sunset],
       ['⭐','Sortie des étoiles', T.tzeit85deg]
     ];
-    var h='<div style="background:#faf7f0;border-radius:12px;padding:10px 12px;margin:0 4px 6px;border:1px solid #ece4d4;">';
-    h+='<div style="font-size:11px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;text-align:center;margin-bottom:8px;letter-spacing:.3px;">⏰ HORAIRES DU JOUR</div>';
+    var rowsHtml='';
     rows.forEach(function(r){
-      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 2px;border-bottom:1px solid #f0e9da;font-family:Poppins,sans-serif;">';
-      h+='<span style="font-size:12px;color:#4a3f2a;">'+r[0]+' '+r[1]+'</span>';
-      h+='<span style="font-size:12px;font-weight:700;color:#3a2f1a;">'+hm(r[2])+'</span>';
-      h+='</div>';
+      rowsHtml+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 2px;border-bottom:1px solid #f0e9da;font-family:Poppins,sans-serif;">';
+      rowsHtml+='<span style="font-size:12px;color:#4a3f2a;">'+r[0]+' '+r[1]+'</span>';
+      rowsHtml+='<span style="font-size:12px;font-weight:700;color:#3a2f1a;">'+hm(r[2])+'</span>';
+      rowsHtml+='</div>';
     });
+    var h='<div style="background:#faf7f0;border-radius:12px;margin:0 4px 6px;border:1px solid #ece4d4;overflow:hidden;">';
+    h+='<div onclick="(function(el){var b=el.nextElementSibling;var open=b.style.display!==\'none\';b.style.display=open?\'none\':\'block\';el.querySelector(\'.zm-arrow\').textContent=open?\'›\':\'‹\';})(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer;">';
+    h+='<span style="font-size:11px;font-weight:800;color:#7c3aed;font-family:Poppins,sans-serif;letter-spacing:.3px;">⏰ Horaires du jour</span>';
+    h+='<span class="zm-arrow" style="font-size:16px;color:#7c3aed;font-weight:700;">›</span>';
+    h+='</div>';
+    h+='<div style="display:none;padding:0 12px 10px;">';
+    h+=rowsHtml;
     h+='<div style="font-size:9px;color:#b0a585;font-family:Poppins,sans-serif;text-align:center;margin-top:6px;">Selon votre position · source Hebcal</div>';
+    h+='</div>';
     h+='</div>';
     box.innerHTML=h;
   }).catch(function(){ box.innerHTML=''; });
