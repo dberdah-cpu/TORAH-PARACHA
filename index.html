@@ -3727,12 +3727,7 @@ function buildHome(){
     +'</div>'
     +'</div>';
   // ── COURS DU JOUR (remonté en priorité) ──
-  var _cc = buildCoursCard();
-  h += '<div id="cours-card-container">'+_cc+'</div>';
-  h += '<div id="dedicace-home-card"></div>';
-
-  // ── CARTE FÊTE + CHABBAT côte à côte ───────────────────────
-  // Calculer la date du prochain Chabbat
+  // ── CARTE CHABBAT (2e position) ──────────────────────────
   var nextFri = new Date(t);
   var jsDay0 = t.getDay();
   var daysToFri = (5-jsDay0+7)%7||7;
@@ -3742,11 +3737,8 @@ function buildHome(){
       if(t.getHours()>hv0||(t.getHours()===hv0&&t.getMinutes()>=parseInt(hm0[2])))daysToFri=7;}
   }
   nextFri.setDate(t.getDate()+daysToFri);
-  var nextShabbatLabel = nextFri.getDate()+' '+FR_M[nextFri.getMonth()];
 
-  // ── CARTE CHABBAT INDÉPENDANTE ──────────────────────────
   if(candleTime||havdalaTime){
-    // Calculer dates vendredi et samedi
     var nFri = new Date(t); var jsD = t.getDay();
     var dTF = (5-jsD+7)%7||7;
     if(jsD===6){ var hm3=havdalaTime?havdalaTime.match(/(\d+)[h:](\d+)/):null;
@@ -3773,12 +3765,7 @@ function buildHome(){
       + '</div>';
   }
 
-  
-
-  var hasFete = !!nextFete;
-  var hasShabbat = !!(candleTime||havdalaTime);
-  if(hasFete || hasShabbat) h += '<div style="display:flex;gap:8px;margin:0 16px 12px;">';
-
+  // ── CARTE FÊTE (3e position) ──────────────────────────
   if(nextFete){
     var feteDiff = nextFete.diffDays;
     var feteLabel = nextFete.nom
@@ -3797,26 +3784,26 @@ function buildHome(){
       .replace(/Asara B.Tevet/i,'10 Tevet')
       .replace(/Ta.anit Esther/i,'Jeûne d\'Esther')
       .replace(/Fast of /i,'Jeûne ');
-    // Date de la fête
     var feteDate = new Date(nextFete.date);
     var FR_MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
     var feteJour = feteDate.getDate() + ' ' + FR_MOIS[feteDate.getMonth()];
-    h += '<div style="flex:1;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:10px;padding:8px 10px;min-width:0;">';
-    h += '<div style="font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:2px;white-space:nowrap;">' + (nextFete.isFast?'🕊 JEÛNE · ':'✨ FÊTE · ') + feteJour + '</div>';
-    h += '<div style="font-size:11px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + feteLabel + '</div>';
+    h += '<div style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:var(--radius);padding:12px 16px;">';
+    h += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:4px;">' + (nextFete.isFast?'🕊 JEÛNE · ':'✨ FÊTE · ') + feteJour + '</div>';
+    h += '<div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">' + feteLabel + '</div>';
     if(nextFete.isFast){
-      if(nextFete.fastStart) h += '<div style="font-size:9px;color:rgba(255,255,255,.85);white-space:nowrap;">🌅 Début ' + nextFete.fastStart + '</div>';
-      if(nextFete.fastEnd) h += '<div style="font-size:9px;color:rgba(255,255,255,.85);white-space:nowrap;">⭐ Fin ' + nextFete.fastEnd + '</div>';
+      if(nextFete.fastStart) h += '<div style="font-size:11px;color:rgba(255,255,255,.85);">🌅 Début ' + nextFete.fastStart + '</div>';
+      if(nextFete.fastEnd) h += '<div style="font-size:11px;color:rgba(255,255,255,.85);">⭐ Fin ' + nextFete.fastEnd + '</div>';
     } else {
-      if(nextFete.candleTime) h += '<div style="font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;">🕯 ' + nextFete.candleTime + '</div>';
-      if(nextFete.havdalaTime) h += '<div style="font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;">✨ ' + nextFete.havdalaTime + '</div>';
+      if(nextFete.candleTime) h += '<div style="font-size:11px;color:rgba(255,255,255,.8);">🕯 Allumage ' + nextFete.candleTime + '</div>';
+      if(nextFete.havdalaTime) h += '<div style="font-size:11px;color:rgba(255,255,255,.8);">✨ Havdala ' + nextFete.havdalaTime + '</div>';
     }
     h += '</div>';
   }
 
-  
-  if(hasFete || hasShabbat) h += '</div>'; // fermer flex
-  else h+='</div>';
+  // ── COURS DU JOUR (4e position) ──
+  var _cc = buildCoursCard();
+  h += '<div id="cours-card-container">'+_cc+'</div>';
+  h += '<div id="dedicace-home-card"></div>';
 
   // ── BANNIÈRE CONSEIL / FÊTE ──
   h+=getHomeBanners();
