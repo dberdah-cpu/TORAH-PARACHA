@@ -467,6 +467,7 @@ body.text-xl { --font-scale: 1.3; }
 .sefer-text, .mitsva-card,
 .teh-reader-text,
 .ens-detail-texte,
+.sumblock, .comblock,
 .admin-card, .vid-title, .vid-meta {
   font-size: calc(1em * var(--font-scale)) !important;
 }
@@ -1622,7 +1623,7 @@ body{
     <div class="text-slider-wrap" style="background:rgba(45,11,94,.15);border-radius:8px;margin:8px 16px 0;">
       <span class="text-slider-label" style="color:rgba(255,255,255,.7);font-size:10px;">A</span>
       <input type="range" min="0" max="100" value="50" class="text-slider" id="slider_d-summary"
-        oninput="applySliderSize('d-summary',this.value)">
+        oninput="setPageScale('detail-tabs-wrap',this.value)">
       <span class="text-slider-label" style="font-size:15px;color:rgba(255,255,255,.9);font-weight:700;">A</span>
     </div>
     <div style="display:flex;gap:8px;margin:10px 16px 0;">
@@ -1637,6 +1638,7 @@ body{
     <button class="seg-btn" onclick="showTab('com')">Commentaire</button>
     <button class="seg-btn" onclick="showTab('sichot')">Si'hot</button>
   </div>
+  <div id="detail-tabs-wrap">
   <div id="tab-bilingual" class="tab-panel active">
     <div id="d-bilingual">
       <div class="loading-txt">Chargement…<br><div class="dots"><span></span><span></span><span></span></div></div>
@@ -1646,6 +1648,7 @@ body{
   <div id="tab-sum" class="tab-panel"><div class="sumblock" id="d-summary"></div></div>
   <div id="tab-com" class="tab-panel"><div class="comblock" id="d-commentary"></div></div>
   <div id="tab-sichot" class="tab-panel"><div class="comblock" id="d-sichot"></div></div>
+  </div><!-- /detail-tabs-wrap -->
 </div>
 <script>
 // PARACHIOT
@@ -6294,8 +6297,8 @@ function openP(id){
   var btnKriat = document.getElementById("btn-kriat-p");
   if(btnKriat){ btnKriat.style.display="inline-block"; (function(pn){ btnKriat.onclick=function(){ openKriatTorah(pn); }; })(p.name); }
   var old1min = document.getElementById("btn-1min-p"); if(old1min) old1min.remove();
-  // Initialiser le curseur de taille
-  setTimeout(function(){ initSlider("d-summary"); }, 100);
+  // Initialiser le curseur de taille (affecte tous les onglets)
+  setTimeout(function(){ initPageScale("detail-tabs-wrap"); }, 100);
   window.scrollTo(0,0);
 }
 
