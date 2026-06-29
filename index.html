@@ -1623,7 +1623,7 @@ body{
     <div class="text-slider-wrap" style="background:rgba(45,11,94,.15);border-radius:8px;margin:8px 16px 0;">
       <span class="text-slider-label" style="color:rgba(255,255,255,.7);font-size:10px;">A</span>
       <input type="range" min="0" max="100" value="50" class="text-slider" id="slider_d-summary"
-        oninput="setPageScale('detail-tabs-wrap',this.value)">
+        oninput="setDetailTabsScale(this.value)">
       <span class="text-slider-label" style="font-size:15px;color:rgba(255,255,255,.9);font-weight:700;">A</span>
     </div>
     <div style="display:flex;gap:8px;margin:10px 16px 0;">
@@ -6298,7 +6298,7 @@ function openP(id){
   if(btnKriat){ btnKriat.style.display="inline-block"; (function(pn){ btnKriat.onclick=function(){ openKriatTorah(pn); }; })(p.name); }
   var old1min = document.getElementById("btn-1min-p"); if(old1min) old1min.remove();
   // Initialiser le curseur de taille (affecte tous les onglets)
-  setTimeout(function(){ initPageScale("detail-tabs-wrap"); }, 100);
+  setTimeout(function(){ initDetailTabsScale(); }, 100);
   window.scrollTo(0,0);
 }
 
@@ -13275,6 +13275,21 @@ function applySliderSize(containerId, val){
   var scale = 0.85 + (val/100)*0.65;
   el.style.fontSize = scale+'rem';
   try { localStorage.setItem('slider_'+containerId, val); } catch(e){}
+}
+function setDetailTabsScale(val){
+  var scale = 0.85 + (val/100)*0.65;
+  ['d-summary','d-commentary','d-sichot','d-bilingual'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.fontSize = scale+'rem';
+  });
+  try { localStorage.setItem('pgscale_detail-tabs', val); } catch(e){}
+}
+function initDetailTabsScale(){
+  var saved = localStorage.getItem('pgscale_detail-tabs');
+  var val = saved ? parseInt(saved) : 50;
+  setDetailTabsScale(val);
+  var sl = document.getElementById('slider_d-summary');
+  if(sl) sl.value = val;
 }
 function setPageScale(containerId, val){
   var el = document.getElementById(containerId);
