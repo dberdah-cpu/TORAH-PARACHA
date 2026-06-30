@@ -12137,6 +12137,30 @@ function openVideos(){
   renderVideos();
 }
 
+function videoEmbedHtml(url, style){
+  if(!url) return '';
+  style = style || 'width:100%;max-height:320px;border-radius:8px;';
+  // YouTube
+  var ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+  if(ytMatch){
+    return '<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">'
+      +'<iframe src="https://www.youtube.com/embed/'+ytMatch[1]+'?rel=0&playsinline=1" '
+      +'style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" '
+      +'allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>'
+      +'</div>';
+  }
+  // Vimeo
+  var viMatch = url.match(/vimeo\.com\/(\d+)/);
+  if(viMatch){
+    return '<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">'
+      +'<iframe src="https://player.vimeo.com/video/'+viMatch[1]+'?title=0&byline=0" '
+      +'style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe>'
+      +'</div>';
+  }
+  // Fichier MP4 direct
+  return '<video style="'+style+'" controls playsinline preload="metadata" src="'+url+'"></video>';
+}
+
 function renderVideos(){
   var view = document.getElementById('view-videos');
   view.innerHTML = '<div class="vid-header"><div class="vid-header-title">🎬 Vidéos Torah</div>'
@@ -12195,14 +12219,13 @@ function renderVideos(){
               +'<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);font-family:Poppins,sans-serif;margin-bottom:6px;">⭐ VIDÉO À LA UNE</div>'
               +'<div style="font-size:15px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;margin-bottom:8px;">'+uneVid.titre+'</div>'
               +(uneVid.message?'<div style="font-size:12px;color:rgba(255,255,255,0.7);font-family:Poppins,sans-serif;margin-bottom:8px;">'+uneVid.message+'</div>':'')
-              +'<video style="width:100%;max-height:280px;border-radius:8px;" controls preload="none" src="'+uneVid.url+'" poster="'+( uneVid.photo_url||'')+'"></video>'
+              +videoEmbedHtml(uneVid.url,'width:100%;max-height:280px;border-radius:8px;')
               +'</div>';
           }
           qHtml += '<div style="margin:0 16px 6px;font-size:11px;font-weight:700;color:var(--gray-4);letter-spacing:1px;font-family:Poppins,sans-serif;">MES VIDÉOS</div>';
           dbVids.forEach(function(v){
             qHtml += '<div style="margin:0 0 2px;background:#000;overflow:hidden;">'
-              + '<video style="width:100%;max-height:420px;background:#000;display:block;object-fit:cover;" controls preload="metadata" playsinline>'
-              + '<source src="' + v.url + '" type="video/mp4"></video>'
+              + videoEmbedHtml(v.url, 'width:100%;max-height:420px;background:#000;display:block;object-fit:cover;')
               + '<div style="padding:10px 14px 14px;background:#fff;">'
               + '<div style="font-size:14px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;margin-bottom:3px;">' + v.titre + '</div>'
               + (v.message ? '<div style="font-size:13px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + v.message + '</div>' : '')
@@ -12388,8 +12411,8 @@ function renderVideosHardcoded(){
     + '<div style="padding:10px 14px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;font-family:Poppins,sans-serif;">📺 VIDÉO DU JOUR</div>'
     + '<div style="padding:0 14px 6px;font-size:16px;font-weight:700;color:#fff;font-family:Poppins,sans-serif;">' + featured.titre + '</div>'
     + '<div style="padding:0 14px 12px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;font-family:Poppins,sans-serif;">' + (featured.message||'') + '</div>'
-    + '<video style="width:100%;max-height:240px;background:#000;display:block;" controls preload="metadata" playsinline>'
-    + '<source src="' + featured.url + '" type="video/mp4"></video></div>';
+    + videoEmbedHtml(featured.url, 'width:100%;max-height:240px;background:#000;display:block;')
+    + '</div>';
 }
 function getSidraURL(){
   var now = new Date();
