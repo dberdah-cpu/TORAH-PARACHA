@@ -12318,8 +12318,7 @@ function renderVideos(){
           extra += '<div style="margin:0 16px 12px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;">'
             + '<div style="padding:10px 14px 6px;font-size:14px;font-weight:800;color:var(--dark);font-family:Poppins,sans-serif;">' + v.titre + '</div>'
             + (v.message ? '<div style="padding:0 14px 8px;font-size:12px;color:var(--gray-4);line-height:1.5;font-family:Poppins,sans-serif;">' + v.message + '</div>' : '')
-            + '<video style="width:100%;display:block;background:#000;" controls preload="metadata" playsinline webkit-playsinline>'
-            + '<source src="' + v.url + '" type="video/mp4"></video>'
+            + videoEmbedHtml(v.url, 'width:100%;display:block;background:#000;')
             + '</div>';
         });
         view.innerHTML = h + extra;
