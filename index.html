@@ -2084,17 +2084,24 @@ var FETE_FR = {
 
 // Lectures Torah spéciales des fêtes (pour la carte d'accueil)
 var FETE_LECTURE = {
-  'Rosh Hashana': ['Genèse 21 (J1) · Genèse 22 (J2)', 'Nombres 29:1-6'],
-  'Yom Kippur':   ['Lévitique 16 (matin) · Lévitique 18 (minha)', 'Nombres 29:7-11'],
-  'Sukkot':       ['Lévitique 22:26–23:44 (J1-2)', 'Nombres 29:12-16'],
-  'Shmini Atzeret':['Deutéronome 14:22–16:17', 'Nombres 29:35–30:1'],
-  'Simchat Torah':['Deutéronome 33-34 + Genèse 1:1-2:3', ''],
-  'Chanukah':     ['Nombres 6:22–8:4 (selon le jour)', ''],
-  'Purim':        ['Exode 17:8-16', ''],
-  'Pesach':       ['Exode 12:21-51 (J1) · Lévitique 22:26–23:44 (J2)', 'Nombres 28:16-25'],
-  'Shavuot':      ['Exode 19-20 (J1) · Deutéronome 15:19–16:17 (J2)', 'Nombres 28:26-31'],
-  'Tish\'a B\'Av':['Deutéronome 4:25-40 (matin) · Exode 32:11-14, 34:1-10 (minha)', ''],
-  'Yom HaAtzma\'ut':['Isaïe 10:32–12:6', '']
+  // Fêtes
+  'Rosh Hashana':   ['Genèse 21 (J1) · Genèse 22 (J2)', 'Nombres 29:1-6'],
+  'Yom Kippur':     ['Lévitique 16 (matin) · Lévitique 18 (minha)', 'Nombres 29:7-11'],
+  'Sukkot':         ['Lévitique 22:26–23:44 (J1-2)', 'Nombres 29:12-16'],
+  'Shmini Atzeret': ['Deutéronome 14:22–16:17', 'Nombres 29:35–30:1'],
+  'Simchat Torah':  ['Deutéronome 33-34 + Genèse 1:1-2:3', ''],
+  'Chanukah':       ['Nombres 6:22–8:4 (selon le jour)', ''],
+  'Purim':          ['Exode 17:8-16', ''],
+  'Pesach':         ['Exode 12:21-51 (J1) · Lévitique 22:26–23:44 (J2)', 'Nombres 28:16-25'],
+  'Shavuot':        ['Exode 19-20 (J1) · Deutéronome 15:19–16:17 (J2)', 'Nombres 28:26-31'],
+  'Yom HaAtzma\'ut':['Isaïe 10:32–12:6', ''],
+  // Jours de jeûne
+  'Tish\'a B\'Av':  ['Deutéronome 4:25-40 (matin) · Exode 32:11-14, 34:1-10 (minha)', ''],
+  'Tzom':           ['Exode 32:11-14 (matin) · Exode 34:1-10 (minha)', ''],
+  'Ta\'anit':       ['Exode 32:11-14 (matin) · Exode 34:1-10 (minha)', ''],
+  'Fast':           ['Exode 32:11-14 (matin) · Exode 34:1-10 (minha)', ''],
+  // Roch Hodech
+  'Rosh Chodesh':   ['Nombres 28:1-15', '']
 };
 
 function getFeteLecture(nom){
@@ -2280,7 +2287,8 @@ function loadHebcalAll(lat,lng,cb){
         if(it.category==='havdalah') havdalaTime=fmtHebcalTime(it.date);
         // Détecter prochaine fête OU jeûne (holiday/fast avec horaires associés)
         var isFast = (it.category==='fast' || it.subcat==='fast' || /jeûne|jeune|fast|tzom|ta.anit|tish.a/i.test(it.title||''));
-        if((it.category==='holiday' || isFast) && it.date){
+        var isRoshChodesh = it.category==='roshchodesh';
+        if((it.category==='holiday' || isFast || isRoshChodesh) && it.date){
           var feteDate = new Date(it.date);
           var now = new Date();
           var diffDays = Math.ceil((feteDate - now) / (1000*60*60*24));
@@ -2289,7 +2297,7 @@ function loadHebcalAll(lat,lng,cb){
           var isChabbat = nom.toLowerCase().indexOf('shabbat')>=0 || nom.toLowerCase().indexOf('chabbat')>=0;
           if(!isChabbat && diffDays >= 0 && diffDays <= 7){
             if(!nextFete || feteDate < new Date(nextFete.date)){
-              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', fastStart: '', fastEnd: '', isFast: isFast, diffDays: diffDays };
+              nextFete = { nom: nom, date: it.date, candleTime: '', havdalaTime: '', fastStart: '', fastEnd: '', isFast: isFast, isRoshChodesh: isRoshChodesh, diffDays: diffDays };
             }
           }
         }
@@ -3877,7 +3885,8 @@ function buildHome(){
     var FR_MOIS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
     var feteJour = feteDate.getDate() + ' ' + FR_MOIS[feteDate.getMonth()];
     h += '<div style="margin:0 16px 12px;background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:var(--radius);padding:14px 16px;text-align:center;">';
-    h += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:6px;">' + (nextFete.isFast?'🕊 JEÛNE · ':'✨ FÊTE · ') + feteJour + '</div>';
+    var feteTypeLabel = nextFete.isRoshChodesh ? '🌙 ROCH HODECH · ' : (nextFete.isFast ? '🕊 JEÛNE · ' : '✨ FÊTE · ');
+    h += '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:6px;">' + feteTypeLabel + feteJour + '</div>';
     h += '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;">' + feteLabel + '</div>';
     if(nextFete.isFast){
       if(nextFete.fastStart) h += '<div style="font-size:12px;color:rgba(255,255,255,.85);">🌅 Début ' + nextFete.fastStart + '</div>';
